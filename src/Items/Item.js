@@ -1,0 +1,44 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Item = /** @class */ (function () {
+    function Item() {
+    }
+    Item.prototype.canBeForged = function (character) {
+        return true;
+    };
+    Item.list = [
+        {
+            name: "skull of first warrior",
+            description: 'increases your might by 10 for 10 seconds after 10 kills'
+        },
+        {
+            name: "glacial chain",
+            description: 'after using your not utility skill you have 25% chance to spell frost nova'
+        },
+        {
+            name: "red potion",
+            description: 'when you reach 1 life restores your life to full, uses only one time'
+        },
+        {
+            name: "soul accumulator",
+            description: 'when you teammate dies your get 5 to all stats'
+        },
+        {
+            name: "doom mantia",
+            description: 'if you take lethal damage, there is a chance to direct your death to nearest creature'
+        },
+        {
+            name: "wall of bones",
+            description: 'when you kill enemy you increase u armour by 1 for 10 seconds'
+        },
+        {
+            name: "flame ring",
+            description: '??'
+        }, {
+            name: "sparkling helmet",
+            description: '??'
+        },
+    ];
+    return Item;
+}());
+exports.default = Item;

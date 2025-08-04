@@ -1,0 +1,99 @@
+import Func from "../../Func.js";
+import Level from "../../Level.js";
+import TimeStoped from "../../Status/TimeStoped.js";
+import Effect from "./Effects.js";
+import Star from "./Star.js";
+import Teacher from "./Teacher.js";
+
+export default class Grace extends Effect{
+    time: number
+    gatedPlayers: any
+    not_deserving: any
+
+    constructor(level: Level){
+        super(level)
+        this.name = 'grace'
+        this.time = Date.now()
+        this.box_r = 2
+        this.gatedPlayers = []
+        this.not_deserving = []
+    }
+
+    act(time: number){
+        if(time - this.time >= 15000){
+            this.closeGate()
+
+            this.level.deleted.push(this.id)
+            this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem != this)
+            return
+        }
+
+        this.level.players.forEach(elem => {
+            if(Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
+                if(elem.grace <= 0 && !this.not_deserving.includes(elem.id)){
+                    this.level.addSound('not deserving', elem.x, elem.y)
+                    this.not_deserving.push(elem.id)
+                }
+                else if(elem.grace > 0){
+                    if(this.gatedPlayers.length === 0){
+                        this.generateEffects()
+                    }
+                    this.gatedPlayers.push({
+                        x: elem.x,
+                        y: elem.y,
+                        player: elem
+                    })
+
+                    let status = new TimeStoped(elem.time, 15000 - (time - this.time))
+                    this.level.setStatus(elem, status)
+
+                    elem.setZone(1, 180, 60)
+                    elem.light_r = 32
+                    
+                    this.time += 5000
+                }
+            } 
+        })
+    }
+
+    closeGate(){
+        this.gatedPlayers.forEach(player_data => {
+            player_data.player.light_r = 16
+            player_data.player.removeUpgrades()
+            player_data.player.closeUpgrades()
+            player_data.player.setZone(0, player_data.x, player_data.y)
+            player_data.player.can_generate_upgrades = true
+        })
+
+        this.deleteEffects()
+    }
+
+    generateEffects(){
+        let teacher = new Teacher(this.level)
+        this.level.bindedEffects.push(teacher)
+
+        let stars_count = 60
+        let centr_x = 180
+        let centr_y = 60
+
+        for(let i = 0; i < stars_count; i++){
+            let angle = Math.random() * 6.28
+
+            let star = new Star(this.level)
+            star.setZone(1,
+                        Math.round(centr_x + Math.sin(angle) * Func.random(12, 80)),
+                        Math.round(centr_y + Math.cos(angle) * Func.random(12, 80))
+                        )
+    
+            this.level.bindedEffects.push(star)
+        }
+    }
+
+    deleteEffects(){
+        let to_delete = this.level.bindedEffects.filter(elem => elem.zone_id === 1)
+        to_delete.forEach(elem => {
+            this.level.deleted.push(elem.id)
+        })
+        this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem.zone_id != 1)
+    }
+}
