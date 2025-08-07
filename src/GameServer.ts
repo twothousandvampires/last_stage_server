@@ -25,6 +25,10 @@ export default class GameServer{
     }
 
     private createNewClient(socket: any): Client{
+        if(this.game_started){
+            return
+        } 
+
         let client = new Client(socket.id)
         this.clients.set(socket.id, client)
         this.updateLobby()
@@ -35,7 +39,9 @@ export default class GameServer{
     endOfLevel(){
         this.level = undefined
         this.clients = new Map()
+        this.game_started = false
         clearInterval(this.game_loop)
+
         this.socket.emit('game_is_over')
     }
 
@@ -43,8 +49,9 @@ export default class GameServer{
         this.socket.on('connection', (socket: any) => {
 
             socket.emit('server_status', this.game_started)
+
             let client = this.createNewClient(socket)
-            
+       
             socket.on('change_class', (class_name: string) => {
                 client.template.setTemplate(class_name)
                 this.updateLobby()                
@@ -96,7 +103,7 @@ export default class GameServer{
                                 value.character = char
                                 this.level.assignPlayer(char)
                             })
-                    
+                            this.game_started = true
                             this.level.start()
                             this.socket.emit('start', Array.from(this.clients.values()))
                             this.start()
@@ -116,6 +123,7 @@ export default class GameServer{
                 if(this.clients.size === 0){
                     this.level = undefined
                     clearInterval(this.game_loop)
+                    this.game_started = false
                     console.log('level was DELETED')
                 }
             })

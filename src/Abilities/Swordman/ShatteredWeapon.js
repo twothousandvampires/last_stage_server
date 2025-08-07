@@ -64,6 +64,7 @@ var ShatteredWeapon = /** @class */ (function (_super) {
     };
     ShatteredWeapon.prototype.act = function () {
         if (this.action && !this.hit) {
+            var second = this.getSecondResource();
             this.hit = true;
             var a = undefined;
             var target = this.getTarget();
@@ -71,7 +72,7 @@ var ShatteredWeapon = /** @class */ (function (_super) {
                 a = Func_1.default.angle(this.x, this.y, target.x, target.y);
             }
             a = a ? a : this.attack_angle;
-            var count = 3;
+            var count = 3 + Math.round(second / 3);
             var zone_per_tooth = 0.6;
             a -= (Math.round(count / 2) * zone_per_tooth);
             for (var i = 1; i <= count; i++) {

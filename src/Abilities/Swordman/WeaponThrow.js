@@ -79,12 +79,13 @@ var WeaponThrow = /** @class */ (function (_super) {
             });
             this.hit = true;
             var proj = new ThrowedWeapon_1.ThrowedWeapon(this.level);
-            var is_returning = !this.first_ab.shattering && this.first_ab.returning && Func_1.default.chance(40 + this.will * 10);
+            var second = this.getSecondResource();
+            var is_returning = !this.first_ab.shattering && this.first_ab.returning && Func_1.default.chance(40 + second * 5);
             if (is_returning) {
                 proj.returned = true;
             }
             else {
-                var is_shatter = this.first_ab.shattering && !this.first_ab.returning;
+                var is_shatter = this.first_ab.shattering && !this.first_ab.returning && Func_1.default.chance(40 + second * 5);
                 if (is_shatter) {
                     proj.shattered = true;
                 }

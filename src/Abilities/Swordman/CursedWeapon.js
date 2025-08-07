@@ -57,7 +57,8 @@ var CursedWeapon = /** @class */ (function (_super) {
         var ability = this;
         return function () {
             if (ability.cast) {
-                var status_1 = new CursedWeaponStatus_1.default(this.time, 8000, ability.drinker);
+                var second = this.getSecondResource();
+                var status_1 = new CursedWeaponStatus_1.default(this.time, 8000 + second * 200, ability.drinker);
                 this.level.setStatus(this, status_1);
                 this.level.sounds.push({
                     name: 'dark cast',

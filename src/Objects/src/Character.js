@@ -648,7 +648,7 @@ var Character = /** @class */ (function (_super) {
         var _this = this;
         this.state = 'defend';
         this.stateAct = this.defendAct;
-        var reduce = 80 - this.agility * 5;
+        var reduce = 80;
         this.addMoveSpeedPenalty(-reduce);
         this.cancelAct = function () {
             _this.addMoveSpeedPenalty(reduce);

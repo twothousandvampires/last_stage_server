@@ -81,9 +81,10 @@ var Jump = /** @class */ (function (_super) {
         var point_added = false;
         return function () {
             if (ability.impact) {
+                var second = owner.getSecondResource();
                 var enemies = owner.level.enemies;
                 var attack_elipse_1 = owner.getBoxElipse();
-                attack_elipse_1.r = owner.attack_radius + (ability.stomp ? 5 : 0);
+                attack_elipse_1.r = owner.attack_radius + (ability.stomp ? 5 : 0) + second;
                 var filtered_by_attack_radius = enemies.filter(function (elem) { return Func_1.default.elipseCollision(attack_elipse_1, elem.getBoxElipse()); });
                 var count_1 = filtered_by_attack_radius.length;
                 if (filtered_by_attack_radius.length) {

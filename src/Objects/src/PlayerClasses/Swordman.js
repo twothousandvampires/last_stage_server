@@ -45,7 +45,6 @@ var Swordman = /** @class */ (function (_super) {
         _this.max_resource = 7;
         _this.life_status = 3;
         _this.base_regen_time = 10000;
-        _this.grace = 100;
         _this.recent_kills = [];
         return _this;
     }
@@ -57,6 +56,9 @@ var Swordman = /** @class */ (function (_super) {
         this.onKillTriggers.forEach(function (elem) {
             elem.trigger(_this);
         });
+        if (Func_1.default.chance(this.knowledge * 3)) {
+            this.recent_kills.push(this.time);
+        }
         this.recent_kills.push(this.time);
     };
     Swordman.prototype.getAttackMoveSpeedPenalty = function () {
@@ -142,7 +144,9 @@ var Swordman = /** @class */ (function (_super) {
         e.setPoint(Func_1.default.random(this.x - 2, this.x + 2), this.y);
         e.z = Func_1.default.random(2, 8);
         this.level.effects.push(e);
-        this.recent_kills = this.recent_kills.filter(function (elem, index) { return index >= 4; });
+        if (!Func_1.default.chance(this.might * 6)) {
+            this.recent_kills = this.recent_kills.filter(function (elem, index) { return index >= 4; });
+        }
         this.subLife(unit, options);
     };
     Swordman.prototype.getSkipDamageStateChance = function () {
@@ -530,19 +534,29 @@ var Swordman = /** @class */ (function (_super) {
         if (count === void 0) { count = 1; }
         if (!this.can_regen_resource)
             return;
-        if (Func_1.default.random() <= this.knowledge * 15) {
+        if (this.resource > this.max_resource) {
+            return;
+        }
+        if (Func_1.default.chance(this.knowledge * 6)) {
             count++;
         }
         this.resource += count;
-        if (this.resource > this.max_resource) {
-            this.resource = this.max_resource;
-        }
     };
     Swordman.prototype.succesefulHit = function () {
         var _this = this;
         this.onHitTriggers.forEach(function (elem) {
             elem.trigger(_this);
         });
+    };
+    Swordman.prototype.setDefend = function () {
+        var _this = this;
+        this.state = 'defend';
+        this.stateAct = this.defendAct;
+        var reduce = 80 - this.speed * 5;
+        this.addMoveSpeedPenalty(-reduce);
+        this.cancelAct = function () {
+            _this.addMoveSpeedPenalty(reduce);
+        };
     };
     return Swordman;
 }(Character_1.default));

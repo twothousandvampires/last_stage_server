@@ -69,7 +69,7 @@ var Whirlwind = /** @class */ (function (_super) {
             var players = this.level.players;
             var targets = enemies.concat(players);
             var e_1 = this.getBoxElipse();
-            e_1.r += 5 + Math.ceil(second);
+            e_1.r += 5 + Math.ceil(second / 2);
             var was_hit_1 = false;
             var kill_count_1 = 0;
             targets.forEach(function (elem) {

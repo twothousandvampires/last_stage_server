@@ -572,6 +572,7 @@ export default class Swordman extends Character{
 
     addPoint(count: number = 1){
        if(!this.can_regen_resource) return
+       
        if(this.resource > this.max_resource){
           return
        }

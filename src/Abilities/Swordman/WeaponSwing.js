@@ -67,10 +67,11 @@ var WeaponSwing = /** @class */ (function (_super) {
             this.hit = true;
             var enemies_1 = this.level.enemies;
             var players = this.level.players;
+            var second_1 = this.getSecondResource();
             var attack_elipse_1 = this.getBoxElipse();
             attack_elipse_1.r = this.attack_radius + Math.round(this.might / 2);
             var attack_angle_1 = this.attack_angle;
-            var f = enemies_1.filter(function (elem) { return Func_1.default.checkAngle(_this, elem, _this.attack_angle, _this.weapon_angle + _this.agility / 10); });
+            var f = enemies_1.filter(function (elem) { return Func_1.default.checkAngle(_this, elem, _this.attack_angle, _this.weapon_angle + second_1 / 10); });
             var filtered_by_attack_radius = f.filter(function (elem) { return Func_1.default.elipseCollision(attack_elipse_1, elem.getBoxElipse()); });
             filtered_by_attack_radius.sort(function (a, b) { return Func_1.default.distance(a, _this) - Func_1.default.distance(b, _this); });
             var target = undefined;

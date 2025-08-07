@@ -32,7 +32,9 @@ var GameServer = /** @class */ (function () {
         var _this = this;
         this.socket.on('connection', function (socket) {
             socket.emit('server_status', _this.game_started);
-            var client = _this.createNewClient(socket);
+            if (!_this.game_started) {
+                var client = _this.createNewClient(socket);
+            }
             socket.on('change_class', function (class_name) {
                 client.template.setTemplate(class_name);
                 _this.updateLobby();
@@ -76,6 +78,7 @@ var GameServer = /** @class */ (function () {
                                 value.character = char;
                                 _this.level.assignPlayer(char);
                             });
+                            _this.game_started = true;
                             _this.level.start();
                             _this.socket.emit('start', Array.from(_this.clients.values()));
                             _this.start();
@@ -91,6 +94,7 @@ var GameServer = /** @class */ (function () {
                 if (_this.clients.size === 0) {
                     _this.level = undefined;
                     clearInterval(_this.game_loop);
+                    _this.game_started = false;
                     console.log('level was DELETED');
                 }
             });

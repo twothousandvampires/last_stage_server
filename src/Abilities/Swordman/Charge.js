@@ -76,13 +76,13 @@ var Charge = /** @class */ (function (_super) {
         this.owner.stateAct = this.getAct();
     };
     Charge.prototype.getAct = function () {
-        var _this = this;
         var owner = this.owner;
         var ability = this;
-        var count = this.owner.getTargetsCount();
+        var second = this.owner.getSecondResource();
+        var count = this.owner.getTargetsCount() + second;
         return function () {
             if (ability.end) {
-                if (ability.possibilities && ability.hited.length >= 3 && Func_1.default.chance(50)) {
+                if (ability.possibilities && ability.hited.length >= 3 && Func_1.default.chance(50 + second)) {
                     owner.addPoint();
                 }
                 owner.getState();
@@ -99,7 +99,7 @@ var Charge = /** @class */ (function (_super) {
                 owner.level.enemies.forEach(function (elem) {
                     if (!ability.hited.includes(elem) && Func_1.default.elipseCollision(owner.getBoxElipse(), elem.getBoxElipse())) {
                         ability.hited.push(elem);
-                        if (count > 0 && ability.destroyer && Func_1.default.chance(35 + _this.owner.getSecondResource())) {
+                        if (count > 0 && ability.destroyer && Func_1.default.chance(35 + second)) {
                             elem.takeDamage(owner, {
                                 explode: true
                             });
