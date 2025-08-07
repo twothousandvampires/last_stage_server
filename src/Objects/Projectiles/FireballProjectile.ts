@@ -139,7 +139,7 @@ export class FireballProjectile extends Projectiles {
         explosion.r = explosion_radius
 
         this.level.players.forEach(p => {
-            if(Func.elipseCollision(explosion, p.getBoxElipse())){
+            if(p != this.owner && Func.elipseCollision(explosion, p.getBoxElipse())){
                 p.takeDamage(this.owner, {
                     burn: true
                 })

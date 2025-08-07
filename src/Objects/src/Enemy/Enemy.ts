@@ -29,7 +29,7 @@ export abstract class Enemy extends Unit{
         this.is_corpse = false
         this.dying_time = 1200
         this.spawn_time = 1200
-        this.create_grace_chance = 15
+        this.create_grace_chance = 18
         this.create_energy_chance = 5
         this.create_entity_chance = 5
         this.create_intervention_chance = 2

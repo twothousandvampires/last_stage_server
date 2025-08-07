@@ -84,7 +84,7 @@ export default abstract class Character extends Unit{
         this.a = 0.2
         this.can_be_lethaled = true
         this.base_regen_time = 10000
-        this.grace = 0
+        this.grace = 1
         this.mastery = 0
         this.avoid_damaged_state_chance = 0
 

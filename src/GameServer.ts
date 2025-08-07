@@ -35,6 +35,7 @@ export default class GameServer{
     endOfLevel(){
         this.level = undefined
         this.clients = new Map()
+        this.game_started = false
         clearInterval(this.game_loop)
         this.socket.emit('game_is_over')
     }
@@ -43,110 +44,115 @@ export default class GameServer{
         this.socket.on('connection', (socket: any) => {
 
             socket.emit('server_status', this.game_started)
-            let client = this.createNewClient(socket)
-            
-            socket.on('change_class', (class_name: string) => {
-                client.template.setTemplate(class_name)
-                this.updateLobby()                
-            })
 
-            socket.on('increase_stat', (stat: string) => {
-                client.template.increseStat(stat)
-                this.updateLobby()                
-            })
+            if(!this.game_started){
+                
+                let client = this.createNewClient(socket)
 
-            socket.on('decrease_stat', (stat: string) => {
-                client.template.decreaseStat(stat)
-                this.updateLobby()                
-            })
-
-            socket.on('pick_item', (item_name: string) => {
-                client.template.item = item_name
-                this.updateLobby()                
-            })
-
-            socket.on('unpick_item', (item_name: string) => {
-                client.template.item = undefined
-                this.updateLobby()                
-            })
-
-            socket.on('select_skill', (skill_name: string) => {
-                let selected = client.template.abilities.find(elem => elem.name === skill_name)
-                let type = selected?.type
-                client.template.abilities.filter(elem => elem.type === type).forEach(elem => elem.selected = false)
-                if (selected) {
-                    selected.selected = true;
-                }
-                this.updateLobby()                
-            })
-
-            socket.on('inputs', (inputs: any) => {               
-                client.character?.setLastInputs(inputs)
-            })
-
-            socket.on('player_ready', () => {
-                client.ready = !client.ready
-
-                if(this.allPlayersReady()){
-                    setTimeout(() => {
-                        let all_still_ready = this.allPlayersReady()
-                        if(all_still_ready){
-                            this.level = new Level(this.socket, this)
-
-                            this.clients.forEach((value, key, map) => {
-                                let char = Builder.createCharacter(value, this.level)
-                                value.character = char
-                                this.level.assignPlayer(char)
-                            })
-                    
-                            this.level.start()
-                            this.socket.emit('start', Array.from(this.clients.values()))
-                            this.start()
-                        }
-                    }, 3000)
-                }
-
-                this.updateLobby()
-            })
-            
-            socket.on('disconnect', () => {
-                console.log('player LEFT')
-
-                this.clients.delete(socket.id)
-                this.updateLobby()
-
-                if(this.clients.size === 0){
-                    this.level = undefined
-                    clearInterval(this.game_loop)
-                    console.log('level was DELETED')
-                }
-            })
-            socket.on('action', (id) => {
-                let actor = this.level?.enemies.find(elem => {
-                    return elem.id === id
+                socket.on('change_class', (class_name: string) => {
+                    client.template.setTemplate(class_name)
+                    this.updateLobby()                
                 })
-                if(!actor){
-                    actor = this.level?.players.find(elem => {
+
+                socket.on('increase_stat', (stat: string) => {
+                    client.template.increseStat(stat)
+                    this.updateLobby()                
+                })
+
+                socket.on('decrease_stat', (stat: string) => {
+                    client.template.decreaseStat(stat)
+                    this.updateLobby()                
+                })
+
+                socket.on('pick_item', (item_name: string) => {
+                    client.template.item = item_name
+                    this.updateLobby()                
+                })
+
+                socket.on('unpick_item', (item_name: string) => {
+                    client.template.item = undefined
+                    this.updateLobby()                
+                })
+
+                socket.on('select_skill', (skill_name: string) => {
+                    let selected = client.template.abilities.find(elem => elem.name === skill_name)
+                    let type = selected?.type
+                    client.template.abilities.filter(elem => elem.type === type).forEach(elem => elem.selected = false)
+                    if (selected) {
+                        selected.selected = true;
+                    }
+                    this.updateLobby()                
+                })
+
+                socket.on('inputs', (inputs: any) => {               
+                    client.character?.setLastInputs(inputs)
+                })
+
+                socket.on('player_ready', () => {
+                    client.ready = !client.ready
+
+                    if(this.allPlayersReady()){
+                        setTimeout(() => {
+                            let all_still_ready = this.allPlayersReady()
+                            if(all_still_ready){
+                                this.level = new Level(this.socket, this)
+
+                                this.clients.forEach((value, key, map) => {
+                                    let char = Builder.createCharacter(value, this.level)
+                                    value.character = char
+                                    this.level.assignPlayer(char)
+                                })
+                                this.game_started = true
+                                this.level.start()
+                                this.socket.emit('start', Array.from(this.clients.values()))
+                                this.start()
+                            }
+                        }, 3000)
+                    }
+
+                    this.updateLobby()
+                })
+
+                socket.on('disconnect', () => {
+                    console.log('player LEFT')
+
+                    this.clients.delete(socket.id)
+                    this.updateLobby()
+
+                    if(this.clients.size === 0){
+                        this.level = undefined
+                        clearInterval(this.game_loop)
+                        console.log('level was DELETED')
+                        this.game_started = false
+                    }
+                })
+
+                socket.on('action', (id) => {
+                    let actor = this.level?.enemies.find(elem => {
                         return elem.id === id
                     })
-                }
-                if(actor){
-                    actor.action = true
-                }
-            })
+                    if(!actor){
+                        actor = this.level?.players.find(elem => {
+                            return elem.id === id
+                        })
+                    }
+                    if(actor){
+                        actor.action = true
+                    }
+                })
 
-            socket.on('set_target', (id) => {
-                client.character?.setTarget(id)
-            })
+                socket.on('set_target', (id) => {
+                    client.character?.setTarget(id)
+                })
 
-            socket.on('select_upgrade', (upgrade_name) => {
-                client.character?.upgrade(upgrade_name)
-            })
+                socket.on('select_upgrade', (upgrade_name) => {
+                    client.character?.upgrade(upgrade_name)
+                })
 
-            socket.on('hold_grace', () => {
-                client.character?.holdGrace()
-            })
-           
+                socket.on('hold_grace', () => {
+                    client.character?.holdGrace()
+                })
+            }
         })
     }
 
