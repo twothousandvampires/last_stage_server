@@ -103,7 +103,7 @@ export default class LightningBolt extends FlyerAbility{
 
             for(let i = 0; i < targets.length; i++){
                 let elem = targets[i]
-                if(Func.elipseCollision(hiting_box, elem.getBoxElipse())){
+                if(elem != this && Func.elipseCollision(hiting_box, elem.getBoxElipse())){
                     if(!high_voltage && max_targets === 0){
                         let status = new ShockStatus(time, 5000, 20)
                         this.level.setStatus(elem, status)
@@ -156,7 +156,7 @@ export default class LightningBolt extends FlyerAbility{
 
                     for(let i = 0; i < targets.length; i++){
                         let elem = targets[i]
-                        if(Func.elipseCollision(hiting_box, elem.getBoxElipse())){
+                        if(elem != this && Func.elipseCollision(hiting_box, elem.getBoxElipse())){
                             if(!high_voltage && max_targets === 0){
                                 let status = new ShockStatus(time, 5000, 20)
                                 this.level.setStatus(elem, status)
