@@ -46,19 +46,19 @@ export default class Level{
        },
        {
          'name': 'bones',
-         'weight': 35
+         'weight': 30
        },
        {
          'name': 'flamy',
-         'weight': 25
+         'weight': 20
        },
        {
          'name': 'solid',
-         'weight': 15
+         'weight': 12
        },  
        {
          'name': 'flying bones',
-         'weight': 12
+         'weight': 10
        },
         {
          'name': 'pile',
@@ -66,7 +66,7 @@ export default class Level{
        },  
         {
          'name': 'specter',
-         'weight': 5
+         'weight': 3
        },      
         {
          'name': 'gifter',
@@ -144,7 +144,7 @@ export default class Level{
 
         let count = Func.random(1, 3)
 
-        count += Math.floor(this.kill_count / 35)
+        count += Math.floor(this.kill_count / 25)
 
         for(let i = 0; i < count; i++){
 

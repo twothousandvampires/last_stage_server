@@ -38,7 +38,7 @@ export default class Builder{
         if(template.item){
             character.createItem(template.item)
         }
-        character.setPoint(60, 60)
+        character.setPoint(88, 22)
         return character
     }
 
