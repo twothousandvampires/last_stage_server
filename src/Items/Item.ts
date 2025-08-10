@@ -16,11 +16,11 @@ export default abstract class Item{
         },
         {
             name: "soul accumulator",
-            description: 'when you teammate dies your get 5 to all stats'
+            description: 'when you teammate dies you get 5 to all stats'
         },
         {
             name: "doom mantia",
-            description: 'if you take lethal damage, there is a chance to direct your death to nearest creature'
+            description: 'if you take lethal damage, there is a chance to redirect your death to nearest creature'
         },
         {
             name: "wall of bones",
@@ -28,10 +28,10 @@ export default abstract class Item{
         },
         {
             name: "flame ring",
-            description: '??'
+            description: 'when you recive damage nearest enemy take damage'
         },{
             name: "sparkling helmet",
-            description: '??'
+            description: 'if you do not use any skills for 7 seconds it creates a shock ring'
         },
     ]
 

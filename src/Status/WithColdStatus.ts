@@ -27,13 +27,16 @@ export default class WithColdStatus extends Status{
 
     act(tick_time: number){
         if(tick_time > this.last_checked){
-            this.last_checked += 5000
-            let distance = Func.random(10, 20)
+            this.last_checked += 5000 - this.power * 200
+
+            let distance_x = Func.random(10, 20)
+            let distance_y = Func.random(10, 20)
+            
             let angle = Math.random() * 6.28
 
             let point = {
-                x: this.unit.x + Math.sin(angle) * distance,
-                y: this.unit.y + Math.sin(angle) * distance,
+                x: this.unit.x + Math.sin(angle) * distance_x,
+                y: this.unit.y + Math.sin(angle) * distance_y,
                 r: 3 + this.power
             }
 

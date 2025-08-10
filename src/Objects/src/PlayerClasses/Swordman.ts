@@ -131,7 +131,11 @@ export default class Swordman extends Character{
             return
         } 
 
-        let arm = this.armour_rate > 95 ? 95 : this.armour_rate
+        let arm = this.armour_rate + this.durability
+
+        if(arm > 90){
+            arm = 90
+        }
 
         if(Func.chance(arm)){
             this.level.sounds.push({
@@ -157,7 +161,7 @@ export default class Swordman extends Character{
         e.z = Func.random(2, 8)
         this.level.effects.push(e)
 
-        if(!Func.chance(this.might * 6)){
+        if(!Func.chance(this.might * 10)){
             this.recent_kills = this.recent_kills.filter((elem, index) => index >= 4)
         }
        
@@ -175,7 +179,7 @@ export default class Swordman extends Character{
     getAllUpgrades(){
         return [
             {
-                name: 'echo swing',
+                name: 'echo swing (weapon swing)',
                 canUse: (character: Character) => {
                     return character.first_ab instanceof WeaponSwing && !character.first_ab.echo_swing
                 },
@@ -188,7 +192,7 @@ export default class Swordman extends Character{
                 desc: 'gives your weapon swing chance to land an additional swing after a short time'
             },
             {
-                name: 'improved swing technology',
+                name: 'improved swing technology (weapon swing)',
                 canUse: (character: Character) => {
                     return character.first_ab instanceof WeaponSwing && !character.first_ab.improved_swing_technology
                 },
@@ -201,7 +205,7 @@ export default class Swordman extends Character{
                 desc: 'gives your weapon swing chance to increase move and attack speed for a short period'
             },
             {
-                name: 'light grip',
+                name: 'light grip (weapon throw)',
                 canUse: (character: Character) => {
                     return character.first_ab instanceof WeaponThrow && !character.first_ab.light_grip
                 },
@@ -214,7 +218,7 @@ export default class Swordman extends Character{
                 desc: 'gives your weapon throw ability a chance to reduce cd time between uses by 50%'
             },
             {
-                name: 'returning',
+                name: 'returning (weapon throw)',
                 canUse: (character: Character) => {
                     return character.first_ab instanceof WeaponThrow && !character.first_ab.returning && !character.first_ab.shattering
                 },
@@ -224,10 +228,10 @@ export default class Swordman extends Character{
                     }
                 },
                 cost: 3,
-                desc: 'gives your weapon throw ability a chance to return, will icreases that chance'
+                desc: 'gives your weapon throw ability a chance to return'
             },
             {
-                name: 'shattering',
+                name: 'shattering (weapon throw)',
                 canUse: (character: Character) => {
                     return character.first_ab instanceof WeaponThrow && !character.first_ab.returning && !character.first_ab.shattering
                 },
@@ -240,7 +244,7 @@ export default class Swordman extends Character{
                 desc: 'gives your weapon throw ability a chance to shatter up to 3 shards'
             },
             {
-                name: 'heavy landing',
+                name: 'heavy landing (jump)',
                 canUse: (character: Character) => {
                     return character.second_ab instanceof Jump && !character.second_ab.heavy_landing
                 },
@@ -250,10 +254,10 @@ export default class Swordman extends Character{
                     }
                 },
                 cost: 2,
-                desc: 'after landing your get armour by each hited enemy'
+                desc: 'after landing by jump ability your will get armour by each hited enemy'
             },
              {
-                name: 'stomp',
+                name: 'stomp (jump)',
                 canUse: (character: Character) => {
                     return character.second_ab instanceof Jump && !character.second_ab.stomp
                 },
@@ -266,7 +270,7 @@ export default class Swordman extends Character{
                 desc: 'increases the radius in which enemies will take damage'
             },
             {
-                name: 'destroyer',
+                name: 'destroyer (charge)',
                 canUse: (character: Character) => {
                     return character.second_ab instanceof Charge && !character.second_ab.destroyer
                 },
@@ -276,10 +280,10 @@ export default class Swordman extends Character{
                     }
                 },
                 cost: 3,
-                desc: 'gives a chance based by your might to deal damage to your charge ability'
+                desc: 'gives a chance to deal damage by charge ability'
             },
             {
-                name: 'vision of possibilities',
+                name: 'vision of possibilities (charge)',
                 canUse: (character: Character) => {
                     return character.second_ab instanceof Charge && !character.second_ab.possibilities
                 },
@@ -289,10 +293,10 @@ export default class Swordman extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'if you hit 3 or more enemies you have a chance to get resourse(chance increases by agility)'
+                desc: 'if you hit 3 or more enemies by charge ability you have a chance to get resourse'
             },
             {
-                name: 'blood harvest',
+                name: 'blood harvest (whirlwind)',
                 canUse: (character: Character) => {
                     return character.third_ab instanceof Whirlwind && !character.third_ab.blood_harvest
                 },
@@ -302,10 +306,10 @@ export default class Swordman extends Character{
                     }
                 },
                 cost: 3,
-                desc: 'after use whirlwind you have a chance to create blood sphere based of count of killed enemies'
+                desc: 'after using whirlwind you have a chance to create blood sphere'
             },
             {
-                name: 'fan of swords',
+                name: 'fan of swords (whirlwind)',
                 canUse: (character: Character) => {
                     return character.third_ab instanceof Whirlwind && !character.third_ab.fan_of_swords
                 },
@@ -314,11 +318,11 @@ export default class Swordman extends Character{
                         character.third_ab.fan_of_swords = true
                     }
                 },
-                cost: 10,
-                desc: 'your whirlwind now fires fan of swords equals your strength inproves of weapon throw ability also works'
+                cost: 8,
+                desc: 'your whirlwind now fires fan of swords, inproves of weapon throw ability also works'
             },
             {
-                name: 'consequences',
+                name: 'consequences (quake)',
                 canUse: (character: Character) => {
                     return character.third_ab instanceof Quake && !character.third_ab.consequences
                 },
@@ -328,10 +332,10 @@ export default class Swordman extends Character{
                     }
                 },
                 cost: 3,
-                desc: 'quake have a biger radius but also have incresed weakness duration'
+                desc: 'quake has a biger radius but incresed weakness duration'
             },
             {
-                name: 'selfcare',
+                name: 'selfcare (quake)',
                 canUse: (character: Character) => {
                     return character.third_ab instanceof Quake && !character.third_ab.selfcare
                 },
@@ -341,11 +345,11 @@ export default class Swordman extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'your quake ability dont deal damage to you'
+                desc: 'your quake ability dont deals damage to you'
             },
         
             {
-                name: 'drinker',
+                name: 'drinker (cursed weapon)',
                 canUse: (character: Character) => {
                     return character.utility instanceof CursedWeapon && !character.utility.drinker
                 },
@@ -355,10 +359,10 @@ export default class Swordman extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'while you affect by cursed weapon after kill you have a chance to restore life'
+                desc: 'while you are affected by cursed weapon you have a chance to restore life after killing enemy'
             },
             {
-                name: 'fast commands',
+                name: 'fast commands (commands)',
                 canUse: (character: Character) => {
                     return character.utility instanceof Commands && !character.utility.fast_commands
                 },
@@ -368,10 +372,10 @@ export default class Swordman extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'buff is shorter but stronger'
+                desc: 'buff becomes shorter but stronger'
             },
             {
-                name: 'shattered weapon',
+                name: 'shattered weapon (new ability)',
                 canUse: (character: Character) => {
                     return !(character.second_ab instanceof ShatteredWeapon)
                 },
@@ -382,7 +386,7 @@ export default class Swordman extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'fires a magic fragments of your weapon when it hits walls or enemies when it returns and gives armour'
+                desc: 'fires a magic fragments of your weapon when it hits walls or enemies it will returns and increases your armour rate'
             },
             {
                 name: 'searching weapon',
@@ -395,7 +399,7 @@ export default class Swordman extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'increases weapon attack range'
+                desc: 'increases attack range'
             },
             {
                 name: 'attack speed',
@@ -404,11 +408,11 @@ export default class Swordman extends Character{
                 },
                 teach: (character: Character) => {
                     if(character instanceof Swordman){
-                        character.attack_speed -= 100
+                        character.attack_speed -= 80
                     }
                 },
                 cost: 1,
-                desc: 'increases weapon attack speed'
+                desc: 'increases attack speed'
             },
             {
                 name: 'discipline',
@@ -420,8 +424,8 @@ export default class Swordman extends Character{
                         character.max_resource ++
                     }
                 },
-                cost: 1,
-                desc: 'increases maximum of resources'
+                cost: 2,
+                desc: 'increases maximum of resource'
             },
         ]
     }
@@ -484,17 +488,15 @@ export default class Swordman extends Character{
     addLife(count = 1, ignore_poison = false){
         if(!this.can_regen_life && !ignore_poison) return
 
+        if(Func.chance(this.durability)){
+            count ++
+        }
+        
         for(let i = 0; i < count; i++){
             let previous = this.life_status
 
             if(previous > 3){
                 return
-            }
-
-            if(previous === 3){
-                if(Func.random() >= this.durability * 10){
-                    return
-                }
             }
 
             this.life_status ++
@@ -519,7 +521,7 @@ export default class Swordman extends Character{
             this.damaged = false
         }
 
-        this.setTimerToGetState(300 - this.durability * 20)
+        this.setTimerToGetState(300)
     }
 
     useUtility(){
@@ -593,6 +595,9 @@ export default class Swordman extends Character{
         this.state = 'defend'
         this.stateAct = this.defendAct
         let reduce = 80 - this.speed * 5
+        if(reduce < 0){
+            reduce = 0
+        }
         this.addMoveSpeedPenalty(-reduce)
 
         this.cancelAct = () => {

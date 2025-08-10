@@ -94,9 +94,18 @@ export default abstract class Unit extends GameObject {
         this.setTimerToGetState(duration)
     }
 
-    setTimerToGetState(ms: number){
+    setTimerToGetState(ms: number, callback: any = undefined){
         this.getStateTimer = setTimeout(() => {
-            this.getState()
+            if(callback){
+                if(this.cancelAct){
+                    this.cancelAct()
+                    this.cancelAct = undefined
+                }
+                callback()
+            }
+            else{
+                this.getState()
+            } 
         }, ms)
     }
 

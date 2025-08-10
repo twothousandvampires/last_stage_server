@@ -39,6 +39,7 @@ export default class Level{
     grace_trashold: number
     time_between_wave_ms = 7500
     time: number
+    started: number
     static enemy_list = [
        {
          'name': 'impy',
@@ -77,6 +78,7 @@ export default class Level{
     constructor(socket: any, public server: any){
         this.socket = socket
         this.enemies = []
+        this.started = 0
         this.players = []
         this.projectiles = []
         this.effects = []
@@ -236,7 +238,7 @@ export default class Level{
 
     public start(){
         console.log('level was STARTED')  
-
+        this.started = Date.now()
         this.create = setInterval(() => {
             this.createWave()
         }, this.time_between_wave_ms)
@@ -246,7 +248,11 @@ export default class Level{
         return {
             actors: [...this.players, ...this.enemies, ...this.projectiles, ...this.effects, ...this.bindedEffects],
             deleted: this.deleted,
-            sounds: this.sounds
+            sounds: this.sounds,
+            meta: {
+                ms: this.time - this.started,       
+                killed: this.kill_count
+            }
         }
     }
 

@@ -28,7 +28,7 @@ export default class WithStormStatus extends Status{
     act(tick_time: number){
         if(tick_time > this.last_checked){
             this.last_checked += 5000 - (this.power * 200)
-            let check_distance = 20
+            let check_distance = 20 + this.power * 2
 
             let area = this.unit.getBoxElipse()
             area.r = check_distance
@@ -47,11 +47,11 @@ export default class WithStormStatus extends Status{
                     r: 5
                 }
 
-                let targets_to_hit = this.unit.level.enemies.filter(elem => Func.elipseCollision(elem.getBoxElipse(), hit_area))
+                let targets_to_hit = targets.filter(elem => Func.elipseCollision(elem.getBoxElipse(), hit_area))
                 this.unit.level.addSound('lightning bolt', random_target.x, random_target.y)
 
                 targets_to_hit.forEach(elem => {
-                    let timer = Func.random(100, 2000)
+                    let timer = Func.random(1000, 4000)
                     elem.setZap(timer)
                 })
             }

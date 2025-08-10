@@ -24,18 +24,23 @@ export default class characterTemplate{
             this.stats = {
                 might: 1,
                 speed: 0,
-                knowledge: 0,
+                knowledge: 0, 
                 will: 0,
                 agility: 0,
                 durability: 1,
             }
             this.stats_description = {
-                might: 'increases your attack area',
-                speed: 'increases your attack speed',
-                knowledge: 'gives a chance to get additional resource',
-                will: 'increases your life regeneration rate',
-                agility: 'increases a block chance, number of targets that attack can hit',
-                durability: 'gives a chance to get a additional life when regen'
+                might: `- affects the number of targets hit by your abilities
+                        - affects the chance of not losing courage when receiving damage`,
+                speed: `- increases your attack speed
+                        - reduses penalty of speed when you defend`,
+                knowledge: `- gives a chance to get additional resource and courage`,
+                will: `- increases your life regeneration rate
+                       - increases the chance to skip damage state`,
+                agility: `- increases a block chance
+                          - reduces penalty of speed when your attcking`,
+                durability: `- gives a chance to get a additional life while regen
+                             - increases your armour rate`
             }
             this.abilities = [
                 {
@@ -43,35 +48,35 @@ export default class characterTemplate{
                     name: 'swing',
                     type: 1,
                     selected: true,
-                    desc: 'Cuts nearby enemies. The number of possible enemies and cutting angle depends on the might. Speed ​​increases the attacking speed.'
+                    desc: 'cuts nearby enemies.'
                 },
                 {
                     id: 2,
                     name: 'weapon throw',
                     type: 1,
                     selected: false,
-                    desc: 'You throw your weapon. The throwing range and number of targets affected depend on might. Speed ​​increases the throwing speed. Dexterity reduces the cooldown between uses.'
+                    desc: 'throw your weapon.'
                 },
                 {
                     id: 3,
                     name: 'jump',
                     type: 2,
                     selected: true,
-                    desc: 'You jump. There is a minimum and maximum distance. Upon landing, you deal damage to units in front of you. While in the air, you are immune to ground effects.'
+                    desc: 'You jump. There is a minimum and maximum distance. Upon landing, you deal damage to units. While in the air you are immune to ground effects.'
                 },
                 {
                     id: 4,
                     name: 'charge',
                     type: 2,
                     selected: false,
-                    desc: 'You dash forward, stunning everyone in your path. The duration of the stun depends on your might. The range depends on your speed.'
+                    desc: 'You dash forward, stunning everyone in your path.'
                 },
                 {
                     id: 5,
                     name: 'whirlwind',
                     type: 3,
                     selected: true,
-                    desc: 'You spin your sword, dealing damage to everyone around you. The radius increases with might'
+                    desc: 'You spin your sword, dealing damage to everyone around you. High courage can give additinals spins'
                 },
                 {
                     id: 6,
@@ -85,14 +90,14 @@ export default class characterTemplate{
                     name: 'cursed weapon',
                     type: 4,
                     selected: true,
-                    desc: 'Your weapon gains a cursed power, increasing attack speed and attack radius for 12 seconds. After this time, you will take damage. High will gives a chance to avoid damage.'
+                    desc: 'Your weapon gains a cursed power, increasing attack speed and attack radius for 12 seconds. After this time, you will take damage. High courage gives a chance to avoid damage.'
                 },
                 {
                     id: 8,
                     name: 'commands',
                     type: 4,
                     selected: false,
-                    desc: 'Grants nearby allies speed and armor for 12 seconds. Effect increases with will.'
+                    desc: 'Grants nearby allies speed and armor for 12 seconds. Effect increases by courage.'
                 },
             ]
         }

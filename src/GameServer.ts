@@ -152,6 +152,10 @@ export default class GameServer{
                 socket.on('hold_grace', () => {
                     client.character?.holdGrace()
                 })
+
+                socket.on('exit_grace', () => {
+                    client.character?.exitGrace()
+                })
             }
         })
     }

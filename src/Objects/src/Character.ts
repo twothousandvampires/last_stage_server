@@ -45,6 +45,7 @@ export default abstract class Character extends Unit{
     avoid_damaged_state_chance: number 
     can_be_lethaled: boolean
     can_regen_resource: boolean
+    spend_grace: boolean
     target: string | undefined
     a: number
     can_be_damaged: boolean
@@ -109,6 +110,7 @@ export default abstract class Character extends Unit{
         this.status_resistance = 5
         this.can_attack = true
         this.can_cast = true
+        this.spend_grace = false
 
         this.getState()
     }
@@ -141,7 +143,7 @@ export default abstract class Character extends Unit{
         
         return [
                 {
-                    name: 'with storm',
+                    name: 'with storm (status)',
                     canUse: (character: Character) => {
                         return true
                     },
@@ -150,10 +152,10 @@ export default abstract class Character extends Unit{
                         character.level.setStatus(character, status, true)
                     },
                     cost: 2,
-                    desc: 'with strom'
+                    desc: 'creates lightning periodically which shocks enemies, upgrade increases frequency and radius of searching enemies'
                 },
                 {
-                    name: 'with fire',
+                    name: 'with fire (status)',
                     canUse: (character: Character) => {
                         return true
                     },
@@ -162,10 +164,10 @@ export default abstract class Character extends Unit{
                         character.level.setStatus(character, status, true)
                     },
                     cost: 2,
-                    desc: 'with fire'
+                    desc: 'creates flames periodically which burn enemies and players, upgrade increases size of flames and stop damaging players'
                 },
                 {
-                    name: 'with cold',
+                    name: 'with cold (status)',
                     canUse: (character: Character) => {
                         return true
                     },
@@ -174,7 +176,7 @@ export default abstract class Character extends Unit{
                         character.level.setStatus(character, status, true)
                     },
                     cost: 2,
-                    desc: 'with cold'
+                    desc: 'creates cold explosion periodically which freeze enemies and players, upgrade increases radius and frequency'
                 },
                 {
                     name: 'increase agility',
@@ -254,7 +256,7 @@ export default abstract class Character extends Unit{
                     desc: 'give a life'
                 },
                 {
-                    name: 'forge',
+                    name: 'forge item',
                     canUse: (character: Character) => {
                         return character.item?.canBeForged(character)
                     },
@@ -284,7 +286,7 @@ export default abstract class Character extends Unit{
                         character.blessed = true
                     },
                     cost: 1,
-                    desc: 'bones killed by your hit have reduced chance to ressurect'
+                    desc: 'bones killed by your have reduced chance to ressurect'
                 },
                  {
                     name: 'pressure',
@@ -350,6 +352,7 @@ export default abstract class Character extends Unit{
         let up = this.upgrades.find(elem => elem.name === upgrade_name)
         up.teach(this)
         this.grace -= up.cost
+        this.spend_grace = true
 
         this.removeUpgrades()
         this.closeUpgrades()
@@ -358,8 +361,17 @@ export default abstract class Character extends Unit{
     showUpgrades(){
         this.level.socket.to(this.id).emit('show_upgrades', {
             upgrades: this.upgrades,
-            grace: this.grace
+            grace: this.grace,
+            can_hold: !this.spend_grace
         })
+    }
+
+    exitGrace(){
+        let portal = this.level.bindedEffects.find(elem => elem.name === 'grace')
+
+        if(portal){
+            portal.playerLeave(this)
+        }
     }
 
     updateClientSkill(){
@@ -384,9 +396,8 @@ export default abstract class Character extends Unit{
     }
 
     holdGrace(){
-        this.grace += 2
-        this.can_generate_upgrades = false
-        this.upgrades = []
+        this.grace += 3
+        this.exitGrace()
     }
 
     closeUpgrades(){

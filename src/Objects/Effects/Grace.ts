@@ -1,6 +1,7 @@
 import Func from "../../Func";
 import Level from "../../Level";
 import TimeStoped from "../../Status/TimeStoped";
+import Character from "../src/Character";
 import Effect from "./Effects";
 import Star from "./Star";
 import Teacher from "./Teacher";
@@ -9,6 +10,7 @@ export default class Grace extends Effect{
     time: number
     gatedPlayers: any
     not_deserving: any
+    leaved: any
 
     constructor(level: Level){
         super(level)
@@ -16,20 +18,18 @@ export default class Grace extends Effect{
         this.time = Date.now()
         this.box_r = 2
         this.gatedPlayers = []
+        this.leaved = []
         this.not_deserving = []
     }
 
     act(time: number){
-        if(time - this.time >= 15000){
+        if(time - this.time >= 30000){
             this.closeGate()
-
-            this.level.deleted.push(this.id)
-            this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem != this)
             return
         }
 
         this.level.players.forEach(elem => {
-            if(Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
+            if(!this.leaved.includes(elem.id) && Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
                 if(elem.grace <= 0 && !this.not_deserving.includes(elem.id)){
                     this.level.addSound('not deserving', elem.x, elem.y)
                     this.not_deserving.push(elem.id)
@@ -49,11 +49,29 @@ export default class Grace extends Effect{
 
                     elem.setZone(1, 180, 60)
                     elem.light_r = 32
-                    
-                    this.time += 5000
                 }
             } 
         })
+    }
+
+    playerLeave(player: Character){
+        let player_data = this.gatedPlayers.find(elem => elem.player.id === player.id)
+
+        if(!player_data)  return
+
+        player.light_r = 16
+        player.removeUpgrades()
+        player.closeUpgrades()
+        player.setZone(0, player_data.x, player_data.y)
+        player.can_generate_upgrades = true
+        player.spend_grace = false
+
+        this.gatedPlayers = this.gatedPlayers.filter(elem => elem.id != player.id)
+        this.leaved.push(player.id)
+        
+        if(this.gatedPlayers.length === 0) {
+            this.deleteEffects()
+        }
     }
 
     closeGate(){
@@ -63,8 +81,9 @@ export default class Grace extends Effect{
             player_data.player.closeUpgrades()
             player_data.player.setZone(0, player_data.x, player_data.y)
             player_data.player.can_generate_upgrades = true
+            player_data.player.spend_grace = false
         })
-
+    
         this.deleteEffects()
     }
 
@@ -95,5 +114,8 @@ export default class Grace extends Effect{
             this.level.deleted.push(elem.id)
         })
         this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem.zone_id != 1)
+
+        this.level.deleted.push(this.id)
+        this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem != this)
     }
 }
