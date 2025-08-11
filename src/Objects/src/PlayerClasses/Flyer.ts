@@ -370,7 +370,7 @@ export default class Flyer extends Character{
     }
     getMoveSpeed(): number{
         let total_inc = this.move_speed_penalty
-        let speed = this.move_speed + (this.speed / 30)
+        let speed = this.move_speed + (this.speed / 40)
         if(!total_inc) return speed
         if(total_inc > 100) total_inc = 100
         if(total_inc < -90) total_inc = -90
@@ -556,11 +556,11 @@ export default class Flyer extends Character{
     }
 
     getSkipDamageStateChance(){
-        return this.avoid_damaged_state_chance + this.durability * 5
+        return this.avoid_damaged_state_chance + this.durability * 7
     }
 
     getRegenTimer(){
-        return 15000 - this.durability * 200
+        return 15000 - this.durability * 500
     }
 
     getManaRegenTimer(){

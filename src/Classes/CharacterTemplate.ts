@@ -113,12 +113,17 @@ export default class characterTemplate{
                 durability: 0,
             }
             this.stats_description = {
-                might: 'increases power of your spells, aoe, count of targets etc.',
-                speed: 'increases your move speed',
-                knowledge: 'increases your mana pool',
-                will: 'gives a chance to regen one more mana then regen tick',
-                agility: 'reduces the move speed penalty then you cast a spell',
-                durability: 'gives a chance not ot get damaged animation when hit'
+                might: `- affects the your abilities(increases AOE, number of projectiles etc.)`,
+                speed: `- increases your move speed
+                        - gives a chance to get additional courage`,
+                knowledge: `- gives a chance not to pay mana when cast
+                            - affect to start maximum mana pool`,
+                will: `- gives a chance not to lose mana when block
+                       - gives a chance to get additional mana`,
+                agility: `- increases your armour rate
+                          - reduces penalty of speed when your cast`,
+                durability: `- gives a chance to avoid damage state
+                             - increases life regen rate`
             }
             this.abilities = [
                 {
@@ -126,63 +131,63 @@ export default class characterTemplate{
                     name: 'fireball',
                     type: 1,
                     selected: true,
-                    desc: 'Create a ball of flame. Explosion radius is icreased by might.'
+                    desc: 'Create a ball of flame.'
                 },
                 {
                     id: 2,
                     name: 'frost sphere',
                     type: 1,
                     selected: false,
-                    desc: 'Create a ball of ice. Explosion radius is icreased by might.'
+                    desc: 'Create a sphere of ice.'
                 },
                 {
                     id: 9,
                     name: 'lightning bolt',
                     type: 1,
                     selected: false,
-                    desc: 'Create a pile of electricity. Deals damage to target. High might increses number of targets'
+                    desc: 'Create a pile of electricity. Deals damage to one arget and shocks closest.'
                 },
                 {
                     id: 3,
                     name: 'forked lightning',
                     type: 2,
                     selected: true,
-                    desc: 'Create a forked electricity charge. When it deals damage it have chance to fork creating two new charges. High might increases the chance.'
+                    desc: 'Create a forked electricity charge. When it deals damage it have chance to fork creating two new ones.'
                 },
                 {
                     id: 4,
                     name: 'flamewall',
                     type: 2,
                     selected: false,
-                    desc: 'Create e ring of fire. High migth increases duration.'
+                    desc: 'Create e ring of fire.'
                 },
                 {
                     id: 5,
                     name: 'light beacon',
                     type: 3,
                     selected: true,
-                    desc: 'You fly up and share your vision also you create electricity charges. Frequency depends on your might.'
+                    desc: 'You fly up and share your vision also you create electricity charges.'
                 },
                 {
                     id: 6,
                     name: 'frost nova',
                     type: 3,
                     selected: false,
-                    desc: 'Create a circle of frost. Enemies in close range will be shatered other will be frozen. Radius is increases by might.'
+                    desc: 'Create a circle of frost. Enemies in close range will be shatered other will be frozen.'
                 },
                 {
                     id: 7,
                     name: 'teleportaion',
                     type: 4,
                     selected: true,
-                    desc: 'Teleports you in certain place. High will reduces cd.'
+                    desc: 'Teleports you in certain place.'
                 },
                 {
                     id: 8,
                     name: 'static field',
                     type: 4,
                     selected: false,
-                    desc: 'Grants nearby allies speed and armor for 12 seconds. Effect increases with will.'
+                    desc: 'units and projectiles cannot move in static field.'
                 },
             ]
         }
@@ -198,12 +203,18 @@ export default class characterTemplate{
                 durability: 2,
             }
             this.stats_description = {
-                might: 'increases power of your spells, aoe, count of targets etc.',
-                speed: 'increases your move speed',
-                knowledge: 'increases your mana pool',
-                will: 'gives a chance to regen one more mana then regen tick',
-                agility: 'reduces the move speed penalty then you cast a spell',
-                durability: 'gives a chance not ot get damaged animation when hit'
+                 might: `- increases attack speed
+                         - increases armour rate`,
+                speed: `- increases your cast speed
+                        - increases life regen rate`,
+                knowledge: `- gives a chance not to pay resource when cast
+                            - reduces courage lose rate`,
+                will: `- gives a chance to avoid damage
+                       - increases status resist`,
+                agility: `- increases move speed
+                          - increases chance to avoid damage state`,
+                durability: `- increases block chance
+                             - gives a chance to get additional resourse`
             }
             this.abilities = [
                 {
@@ -211,56 +222,56 @@ export default class characterTemplate{
                     name: 'slam',
                     type: 1,
                     selected: true,
-                    desc: 'Create a ball of flame. Explosion radius is icreased by might.'
+                    desc: 'slam the ground and deals damage to nearest targets.'
                 },
                 {
                     id: 2,
                     name: 'rune',
                     type: 1,
                     selected: false,
-                    desc: 'Create a ball of flame. Explosion radius is icreased by might.'
+                    desc: 'create explosive rune.'
                 },
                 {
                     id: 3,
                     name: 'shield bash',
                     type: 2,
                     selected: true,
-                    desc: 'Create a forked electricity charge. When it deals damage it have chance to fork creating two new charges. High might increases the chance.'
+                    desc: 'hit with your shield. deal damage to closest targets and bash the farest'
                 },
                 {
                     id: 4,
                     name: 'grim pile',
                     type: 2,
                     selected: false,
-                    desc: 'Create a forked electricity charge. When it deals damage it have chance to fork creating two new charges. High might increases the chance.'
+                    desc: 'create a pile of bones which periodicly increase armour rate and move speed to you and your teammates.'
                 },
                 {
                     id: 5,
                     name: 'unleash pain',
                     type: 3,
                     selected: true,
-                    desc: 'Create a circle of frost. Enemies in close range will be shatered other will be frozen. Radius is increases by might.'
+                    desc: 'summon a ghost warriors which will hit enemies.'
                 },
                 {
                     id: 6,
                     name: 'pile of thorns',
                     type: 3,
                     selected: false,
-                    desc: 'Create a circle of frost. Enemies in close range will be shatered other will be frozen. Radius is increases by might.'
+                    desc: 'create a pile of bones which periodicly damage enemies around it'
                 },
                 {
                     id: 7,
                     name: 'self flagellation',
                     type: 4,
                     selected: true,
-                    desc: 'Grants nearby allies speed and armor for 12 seconds. Effect increases with will.'
+                    desc: 'deals damage to you.'
                 },
                 {
                     id: 8,
                     name: 'ghost form',
                     type: 4,
                     selected: false,
-                    desc: 'Grants nearby allies speed and armor for 12 seconds. Effect increases with will.'
+                    desc: 'become into shost form getting immune to damage and phasing.'
                 },
             ]
         }

@@ -30,9 +30,9 @@ export default class ChargedSphere extends Effect{
                 }
                 this.level.deleted.push(this.id)
                 this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem != this)
-                elem.move_speed += 0.1
+                elem.move_speed += 0.15
                 setTimeout(() => {
-                    elem.move_speed -= 0.1
+                    elem.move_speed -= 0.15
                 }, 5000)
             } 
         })

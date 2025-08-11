@@ -251,7 +251,7 @@ export default class Cultist extends Character{
     getAllUpgrades(){
         return [
             {
-                name: 'runefield',
+                name: 'runefield (rune)',
                 canUse: (character: Character) => {
                     return character.first_ab instanceof Rune && !character.first_ab.runefield
                 },
@@ -262,10 +262,10 @@ export default class Cultist extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'gives your weapon swing chance to land an additional swing after a short time'
+                desc: 'you will create additional rune for each resourse but now it has coldown for each rune created by this way'
             },
             {
-                name: 'explosive runes',
+                name: 'explosive runes (rune)',
                 canUse: (character: Character) => {
                     return character.first_ab instanceof Rune && !character.first_ab.explosive
                 },
@@ -276,10 +276,10 @@ export default class Cultist extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'gives your weapon swing chance to land an additional swing after a short time'
+                desc: 'increases radius of explosion'
             },
             {
-                name: 'fast detonation',
+                name: 'fast detonation (rune)',
                 canUse: (character: Character) => {
                     return character.first_ab instanceof Rune && !character.first_ab.fast_detonation
                 },
@@ -289,10 +289,10 @@ export default class Cultist extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'gives your weapon swing chance to land an additional swing after a short time'
+                desc: 'increases detonation rate'
             },
             {
-                name: 'second detanation',
+                name: 'second detanation (rune)',
                 canUse: (character: Character) => {
                     return character.first_ab instanceof Rune && !character.first_ab.second_detanation
                 },
@@ -302,10 +302,10 @@ export default class Cultist extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'gives your weapon swing chance to land an additional swing after a short time'
+                desc: 'your runes have a chance to explode additional time'
             },
             {
-                name: 'soul shatter',
+                name: 'soul shatter (new ability)',
                 canUse: (character: Character) => {
                     return !(character.first_ab instanceof SoulShatter)
                 },
@@ -314,10 +314,10 @@ export default class Cultist extends Character{
                     character.updateClientSkill()
                 },
                 cost: 1,
-                desc: 'gives your weapon swing chance to land an additional swing after a short time'
+                desc: 'hit the single enemy if they died, create a soul projectiles count them based of your resourses'
             },
             {
-                name: 'slaming',
+                name: 'slaming (slam)',
                 canUse: (character: Character) => {
                     return character.first_ab instanceof Slam && !character.first_ab.slaming
                 },
@@ -330,7 +330,7 @@ export default class Cultist extends Character{
                 desc: 'increases the radius of slam hit'
             },
             {
-                name: 'soul extraction',
+                name: 'soul extraction (slam)',
                 canUse: (character: Character) => {
                     return character.first_ab instanceof Slam && !character.first_ab.soul_extraction
                 },
@@ -343,7 +343,7 @@ export default class Cultist extends Character{
                 desc: 'increases the chance to get grace from killing enemies'
             },
             {
-                name: 'deafening wave',
+                name: 'deafening wave (shield bash)',
                 canUse: (character: Character) => {
                     return character.second_ab instanceof ShieldBash &&
                     !character.second_ab.deafening_wave &&
@@ -356,10 +356,10 @@ export default class Cultist extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'increases duration the radius of stuning'
+                desc: 'increases duration and radius of stuning'
             },
             {
-                name: 'hate',
+                name: 'hate (shield bash)',
                 canUse: (character: Character) => {
                      return character.second_ab instanceof ShieldBash &&
                     !character.second_ab.deafening_wave &&
@@ -374,7 +374,7 @@ export default class Cultist extends Character{
                 desc: 'now your shield bash does not stun instead it has a chance to shatter enemy and to realise they bones that also can damage enemy'
             },
             {
-                name: 'coordination',
+                name: 'coordination (shield bash)',
                 canUse: (character: Character) => {
                      return character.second_ab instanceof ShieldBash &&
                     !character.second_ab.coordination
@@ -385,10 +385,10 @@ export default class Cultist extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'now your shield bash has a chance to reduce attack speed by 50%'
+                desc: 'now your shield bash has a chance to reduce attack speed by 50% and now it has reduced cost'
             },
             {
-                name: 'increase grim pile effect',
+                name: 'increase grim pile effect (grim pile)',
                 canUse: (character: Character) => {
                      return character.second_ab instanceof GrimPile &&
                     !character.second_ab.increased_effect
@@ -399,10 +399,10 @@ export default class Cultist extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'now your shield bash has a chance to reduce attack speed by 50%'
+                desc: 'increases armour rate and move speed which it gives'
             },
             {
-                name: 'grim pile of will',
+                name: 'grim pile of will (grim pile)',
                 canUse: (character: Character) => {
                      return character.second_ab instanceof GrimPile &&
                     !character.second_ab.resistance
@@ -413,10 +413,10 @@ export default class Cultist extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'now your shield bash has a chance to reduce attack speed by 50%'
+                desc: 'now it also increase status resist'
             },
             {
-                name: 'reign of pain',
+                name: 'reign of pain (unleash pain)',
                 canUse: (character: Character) => {
                      return character.third_ab instanceof UnleashPain &&
                     !character.third_ab.reign_of_pain
@@ -427,10 +427,10 @@ export default class Cultist extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'increases radius for searching enemies and count of ghost warriors for each damage you get recently'
+                desc: 'increases radius for searching enemies and count of ghost warriors for each resourse'
             },
             {
-                name: 'restless warriors',
+                name: 'restless warriors (unleash pain)',
                 canUse: (character: Character) => {
                      return character.third_ab instanceof UnleashPain &&
                     !character.third_ab.restless_warriors
@@ -444,7 +444,7 @@ export default class Cultist extends Character{
                 desc: 'your ghost warriors from unleash pain ability deal 2 hits'
             },
             {
-                name: 'ring of pain',
+                name: 'ring of pain (pile of thorns)',
                 canUse: (character: Character) => {
                      return character.third_ab instanceof PileOfThornCast &&
                     !character.third_ab.ring_of_pain
@@ -455,10 +455,10 @@ export default class Cultist extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'your ghost warriors from unleash pain ability deal 2 hits'
+                desc: 'increases radius'
             },
             {
-                name: 'collection of bones',
+                name: 'collection of bones (pile of thorns)',
                 canUse: (character: Character) => {
                      return character.third_ab instanceof PileOfThornCast &&
                     !character.third_ab.collection_of_bones
@@ -469,10 +469,10 @@ export default class Cultist extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'your ghost warriors from unleash pain ability deal 2 hits'
+                desc: 'after duration realise bones for each killed enemy'
             },
             {
-                name: 'pack with dead',
+                name: 'pack with dead (self flagellation)',
                 canUse: (character: Character) => {
                      return character.utility instanceof SelfFlagellation &&
                     !character.utility.pack
@@ -483,10 +483,10 @@ export default class Cultist extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'your ghost warriors from unleash pain ability deal 2 hits'
+                desc: 'you cannot die by ability'
             },
             {
-                name: 'lesson of pain',
+                name: 'lesson of pain (self flagellation)' ,
                 canUse: (character: Character) => {
                      return character.utility instanceof SelfFlagellation &&
                     !character.utility.lesson
@@ -497,10 +497,10 @@ export default class Cultist extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'your ghost warriors from unleash pain ability deal 2 hits'
+                desc: 'increases move speed for short period after use'
             },
             {
-                name: 'leaded by shost',
+                name: 'leaded by shost (ghost form)',
                 canUse: (character: Character) => {
                      return character.utility instanceof GhostForm &&
                     !character.utility.lead
@@ -511,10 +511,10 @@ export default class Cultist extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'your ghost warriors from unleash pain ability deal 2 hits'
+                desc: 'your teammates also give buff'
             },
             {
-                name: 'afterlife cold',
+                name: 'afterlife cold (ghost form)',
                 canUse: (character: Character) => {
                      return character.utility instanceof GhostForm &&
                     !character.utility.afterlife_cold
@@ -525,7 +525,7 @@ export default class Cultist extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'your ghost warriors from unleash pain ability deal 2 hits'
+                desc: 'freeze enemies on the way'
             },
             {
                 name: 'service',
@@ -536,7 +536,7 @@ export default class Cultist extends Character{
                     character.service = true
                 },
                 cost: 1,
-                desc: 'your ghost warriors from unleash pain ability deal 2 hits'
+                desc: 'you have a chance to get resourse when you regen life'
             },
             {
                 name: 'conduct of pain',
@@ -547,7 +547,7 @@ export default class Cultist extends Character{
                     character.conduct_of_pain = true
                 },
                 cost: 1,
-                desc: 'your ghost warriors from unleash pain ability deal 2 hits'
+                desc: 'you have a chance to get resourse when you block hit'
             },
             {
                 name: 'pain extract',
@@ -557,8 +557,8 @@ export default class Cultist extends Character{
                 teach: (character: Character) => {
                     character.pain_extract = true
                 },
-                cost: 1,
-                desc: 'your ghost warriors from unleash pain ability deal 2 hits'
+                cost: 1
+                desc: 'you have a chance to get resourse when you kill enemies'
             },
         ]
     }
@@ -593,7 +593,7 @@ export default class Cultist extends Character{
     }
 
     getSecondResourceTimer(){
-        return 20000 + this.knowledge * 100
+        return 40000 + this.knowledge * 1000
     }
 
     regen(){

@@ -1,6 +1,7 @@
 import Func from "../../Func";
 import Level from "../../Level";
-import Effect from "./Effects";
+import Grace from "../../Status/Grace";
+import Effect from "./Effects"
 
 export default class GraceShard extends Effect{
     time: number
@@ -20,7 +21,10 @@ export default class GraceShard extends Effect{
 
         this.level.players.forEach(elem => {
             if(Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
-                elem.grace++
+                elem.grace ++
+                let status = new Grace(elem.time, 8000)
+                this.level.setStatus(elem, status)
+
                 this.level.deleted.push(this.id)
                 this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem != this)
             }
