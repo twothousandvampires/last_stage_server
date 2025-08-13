@@ -2,25 +2,14 @@ import Player from "./Objects/src/Character"
 import Projectiles from "./Objects/Projectiles/Projectiles"
 import Unit from "./Objects/src/Unit"
 import Effect from "./Objects/Effects/Effects"
-import Impy from "./Objects/src/Enemy/Impy"
-import { Flamy } from "./Objects/src/Enemy/Flamy"
-import Solid from "./Objects/src/Enemy/Solid"
-import Bones from "./Objects/src/Enemy/Bones"
 import GraceShard from "./Objects/Effects/GraceShard"
 import Func from "./Func"
 import Split from "./Objects/Effects/Split"
 import ChargedSphere from "./Objects/Effects/ChargedSphere"
 import Grace from "./Objects/Effects/Grace"
-import FlyingBones from "./Objects/src/Enemy/FlyingBones"
-import Specter from "./Objects/src/Enemy/Specter"
-import PileOfVeil from "./Objects/src/Piles/PileOfVeil"
-import PileOfFrost from "./Objects/src/Piles/PileOfFrost"
-import PileOfStorm from "./Objects/src/Piles/PileOfStorm"
-import PileOfEvil from "./Objects/src/Piles/PileOfEvil"
-import PileOfSummoning from "./Objects/src/Piles/PileOfSummoning"
-import BannerOfArmour from "./Status/BannerOfArmour"
 import Intervention from "./Objects/Effects/Intervention"
-import Gifter from "./Objects/src/Enemy/Gifter"
+import Default from "./Scenarios/Default"
+import CircleOfGhostWarriors from "./Scenarios/CircleOfGhostWarriors"
 
 export default class Level{
     enemies: Unit[]
@@ -40,6 +29,7 @@ export default class Level{
     time_between_wave_ms = 7500
     time: number
     started: number
+    script: any
     static enemy_list = [
        {
          'name': 'impy',
@@ -78,7 +68,6 @@ export default class Level{
     constructor(socket: any, public server: any){
         this.socket = socket
         this.enemies = []
-        this.started = 0
         this.players = []
         this.projectiles = []
         this.effects = []
@@ -90,8 +79,9 @@ export default class Level{
         this.last_id = 0
         this.kill_count = 0
         this.grace_trashold = 5
+        this.script = new CircleOfGhostWarriors()
         this.time = Date.now()
-
+        this.started = this.time
     }
 
     addSoundObject(sound: any){
@@ -139,109 +129,11 @@ export default class Level{
         this.sounds.length = 0
         this.effects.length = 0
     }
-    
-    createWave(){
-        let player_in_zone = this.players.some(elem =>  elem.zone_id === 0)
-        if(!player_in_zone) return
-
-        let count = Func.random(1, 3)
-
-        count += Math.floor(this.kill_count / 25)
-
-        for(let i = 0; i < count; i++){
-
-            let enemy_name = undefined
-
-            let w = Math.random() * Level.enemy_list.reduce((acc, elem) => acc + elem.weight, 0)
-            let w2 = 0;
-            
-            for (let item of Level.enemy_list) {
-                w2 += item.weight;
-                if (w <= w2) {
-                    enemy_name = item.name;
-                    break;
-                }
-            }
-
-            if(enemy_name === undefined){
-                continue
-            }
-
-            let enemy = undefined
-
-            if(enemy_name === 'solid'){
-                enemy = new Solid(this)
-            }
-            else if(enemy_name === 'flying bones'){
-                enemy = new FlyingBones(this)
-            }
-            else if(enemy_name === 'bones'){
-               enemy = new Bones(this)
-            }
-            else if(enemy_name === 'flamy'){
-               enemy = new Flamy(this)
-            }
-            else if(enemy_name === 'specter'){
-                enemy = new Specter(this)
-            }
-            else if(enemy_name === 'impy'){
-                enemy = new Impy(this)
-            }
-            else if(enemy_name === 'gifter'){
-                enemy = new Gifter(this)
-            }
-            else if(enemy_name === 'pile'){
-                let variants = ['evil', 'frost', 'blind', 'shock', 'summon']
-                let name = variants[Math.floor(Math.random() * variants.length)]
-
-                switch(name){
-                    case 'evil':
-                        enemy = new PileOfEvil(this)
-                        break;
-                    case 'frost':
-                         enemy = new PileOfFrost(this)
-                         break;
-                    case 'blind':
-                         enemy = new PileOfVeil(this)
-                         break;
-                    case 'shock':
-                        enemy =  new PileOfStorm(this)
-                        break;
-                    case 'shock':
-                        enemy =  new PileOfSummoning(this)
-                        break;
-                }
-            }
-
-            if(!enemy){
-                continue
-            }
-
-            while(enemy.isOutOfMap()){
-                let players_in_zone = this.players.filter(elem => elem.zone_id === 0)
-                let random_player = players_in_zone[Math.floor(Math.random() * players_in_zone.length)]
-                let angle = Math.random() * 6.28
-                let distance_x = Func.random(15, 30)
-                let distance_y = Func.random(15, 30)
-
-                enemy.setPoint(random_player.x + Math.sin(angle) * distance_x, random_player.y + Math.cos(angle) * distance_y)
-            }
-
-            if(enemy instanceof Solid && Func.chance(15)){
-                let status = new BannerOfArmour(this.time, 0)
-                this.setStatus(enemy, status)
-            }
-
-            this.enemies.push(enemy)
-        }       
-    }
 
     public start(){
         console.log('level was STARTED')  
+        this.script.start(this)
         this.started = Date.now()
-        this.create = setInterval(() => {
-            this.createWave()
-        }, this.time_between_wave_ms)
     }
 
     toJSON(){
@@ -278,6 +170,7 @@ export default class Level{
     public tick(): void{
        
         this.time = Date.now()
+        this.script.checkTime(this)
 
         this.players.forEach(player => {
             player.act(this.time)

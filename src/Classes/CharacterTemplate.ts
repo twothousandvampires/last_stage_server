@@ -13,14 +13,16 @@ export default class characterTemplate{
     abilities: ability[]
     item: string | undefined
     stats_description: any
+    item_description: any
+
     constructor(){
         this.setTemplate()
     }
-
+    
     setTemplate(class_name: string = 'swordman'): void{
         if(class_name === 'swordman'){
             this.name = 'swordman'
-            this.stat_count = 3
+            this.stat_count = 5
             this.stats = {
                 might: 1,
                 speed: 0,
@@ -103,7 +105,7 @@ export default class characterTemplate{
         }
         else if(class_name === 'flyer'){
             this.name = 'flyer'
-            this.stat_count = 3
+            this.stat_count = 5
             this.stats = {
                 might: 1,
                 speed: 0,
@@ -193,7 +195,7 @@ export default class characterTemplate{
         }
         else if(class_name === 'cultist'){
             this.name = 'cultist'
-            this.stat_count = 3
+            this.stat_count = 5
             this.stats = {
                 might: 0,
                 speed: 0,

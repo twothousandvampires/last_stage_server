@@ -557,7 +557,7 @@ export default class Cultist extends Character{
                 teach: (character: Character) => {
                     character.pain_extract = true
                 },
-                cost: 1
+                cost: 1,
                 desc: 'you have a chance to get resourse when you kill enemies'
             },
         ]

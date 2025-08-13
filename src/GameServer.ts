@@ -1,5 +1,6 @@
 import Builder from './Classes/Builder'
 import Client from './Client'
+import Item from './Items/Item'
 import item from './Items/Item'
 import Level from './Level'
 
@@ -66,6 +67,7 @@ export default class GameServer{
 
                 socket.on('pick_item', (item_name: string) => {
                     client.template.item = item_name
+                    client.template.item_description = Item.list.find(elem => elem.name === item_name)?.description
                     this.updateLobby()                
                 })
 
