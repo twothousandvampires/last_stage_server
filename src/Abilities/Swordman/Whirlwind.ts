@@ -33,23 +33,37 @@ export default class Whirlwind extends SwordmanAbility{
         
     }
 
-    use(){
-        if(this.owner.is_attacking) return
+    use(echo = false){
+        if(this.owner.is_attacking && !echo) return
 
-        this.owner.is_attacking = true
-        this.owner.state = 'swing'
-        this.owner.can_move_by_player = false
+        let action_time = this.owner.attack_speed / 2
 
-        this.owner.stateAct = this.act
+        if(!echo){
+            this.owner.is_attacking = true
+            this.owner.state = 'swing'
 
-        this.owner.cancelAct = () => {
-            this.owner.is_attacking = false
-            this.owner.action = false
-            this.owner.can_move_by_player = true
-            this.owner.hit = false
+            this.owner.stateAct = this.act
+            this.owner.action_time = action_time
+
+            this.owner.cancelAct = () => {
+                this.owner.is_attacking = false
+                this.owner.action = false
+                this.owner.hit = false
+            }
         }
-        
-        this.owner.setTimerToGetState(this.owner.attack_speed / 2)
+        else{
+            this.owner.hit = false
+            this.owner.action = false
+        }
+       
+        if(Func.chance(this.owner.getSecondResource() * 10)){
+            setTimeout(() => {
+               this.use(true)
+            }, action_time)
+        }
+        else{
+            this.owner.setTimerToGetState(action_time)
+        }   
     }
 
     act(){
@@ -57,8 +71,7 @@ export default class Whirlwind extends SwordmanAbility{
             this.hit = true
 
             let second = this.getSecondResource()
-            let to_damage_count = this.getTargetsCount() * 2
-
+           
             let enemies = this.level.enemies
             let players = this.level.players
 
@@ -72,10 +85,9 @@ export default class Whirlwind extends SwordmanAbility{
             let kill_count = 0
     
             targets.forEach(elem => {
-                if(to_damage_count > 0 && elem != this && Func.elipseCollision(e, elem.getBoxElipse())){
+                if(elem != this && Func.elipseCollision(e, elem.getBoxElipse())){
                     was_hit = true
                     elem.takeDamage(this)
-                    to_damage_count--
                     this.level.sounds.push(elem.getWeaponHitedSound())
                     if(elem.is_dead){
                         kill_count ++
@@ -107,7 +119,7 @@ export default class Whirlwind extends SwordmanAbility{
             }
 
             if(this.third_ab.fan_of_swords){
-                let count = to_damage_count / 2
+                let count = this.getTargetsCount()
                 
                 let zones = 6.28 / count
         

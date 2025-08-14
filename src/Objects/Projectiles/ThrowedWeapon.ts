@@ -116,7 +116,7 @@ export class ThrowedWeapon extends Projectiles{
             this.level.projectiles.push(returned)
         }
         else if(this.shattered){
-            let count = Func.random(1, 3)
+            let count = Func.random(2, 5)
             
             let zones = 6.28 / count
     

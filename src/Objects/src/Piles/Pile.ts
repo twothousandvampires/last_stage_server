@@ -8,6 +8,7 @@ export default class Pile extends Enemy{
     frequency: number
     duration: number
     created: number
+    cast_time: number
 
     constructor(level: Level){
         super(level)
@@ -19,6 +20,7 @@ export default class Pile extends Enemy{
         this.life_status = 4
         this.frequency = 2000
         this.duration = 10000
+        this.cast_time = 200
         this.created = Date.now()
     }
 
@@ -73,7 +75,7 @@ export default class Pile extends Enemy{
         this.state = 'cast'
         this.is_attacking = true
         this.stateAct = this.castAct
-        this.action_time = 2000
+        this.action_time = this.cast_time
 
         this.cancelAct = () => {
             this.action = false
@@ -81,7 +83,7 @@ export default class Pile extends Enemy{
             this.hit = false
         }
 
-        this.setTimerToGetState(2000)
+        this.setTimerToGetState(this.cast_time)
     }
 
     idleAct(time: number){

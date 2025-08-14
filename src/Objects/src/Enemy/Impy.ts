@@ -9,7 +9,7 @@ export default class Impy extends Enemy{
         super(level)
         this.name = 'impy'
         this.box_r = 2
-        this.move_speed = 0.4
+        this.move_speed = 0.35
         this.attack_radius = 5
         this.attack_speed = 1200
         this.spawn_time = 1000
@@ -33,7 +33,7 @@ export default class Impy extends Enemy{
 
             if(this.target?.z < 5 && Func.elipseCollision(e, this.target?.getBoxElipse())){
                 this.target?.takeDamage()
-                if(Math.random() < 0.15){
+                if(Math.random() < 0.10){
                     let status = new Bleed(Date.now(), 4000)
                     this.level.setStatus(this.target, status)
                 }

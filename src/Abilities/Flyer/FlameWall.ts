@@ -40,7 +40,8 @@ export default class FlameWall extends FlyerAbility{
 
         this.owner.is_attacking = true
         this.owner.state = 'cast'
-        this.owner.addMoveSpeedPenalty(-70)
+        let v =  this.owner.getMoveSpeedPenaltyValue()  
+        this.owner.addMoveSpeedPenalty(-v)
 
         this.owner.stateAct = this.act
         let cast_speed = this.owner.getCastSpeed()
@@ -49,7 +50,7 @@ export default class FlameWall extends FlyerAbility{
 
         this.owner.cancelAct = () => {
             this.owner.action = false
-            this.owner.addMoveSpeedPenalty(70)
+            this.owner.addMoveSpeedPenalty(v)
 
             setTimeout(()=>{
                 this.owner.hit = false
@@ -76,7 +77,7 @@ export default class FlameWall extends FlyerAbility{
                 let n_x = Math.sin(a) * l * 18
                 let n_y = Math.cos(a) * l * 18
 
-                let flame = new FlameWallObject(this.level, this.scorching ? 500 : 1000)
+                let flame = new FlameWallObject(this.level, this.scorching ? 500 : 1000, 9000)
                 flame.frendly_flame = this.frendly_flame
                 
                 flame.setOwner(this)

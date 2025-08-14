@@ -21,7 +21,7 @@ export class FireballProjectile extends Projectiles {
     
     constructor(level: Level, public pierce: boolean = false){
         super(level)
-        this.box_r = 0.7
+        this.box_r = 1
         this.name = 'fireball'
         this.move_speed = 0.30
         this.size = 3

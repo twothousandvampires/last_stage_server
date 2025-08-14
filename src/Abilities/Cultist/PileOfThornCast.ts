@@ -83,8 +83,6 @@ export default class PileOfThornCast extends CultistAbility{
                     y: this.y
             })
 
-            this.payCost()
-            
             let rel_distance = Math.sqrt(((this.x - this.c_x) ** 2) + ((this.y - this.c_y) ** 2))
 
             let distance = rel_distance > this.first_ab.distance ? this.first_ab.distance : rel_distance
@@ -103,6 +101,8 @@ export default class PileOfThornCast extends CultistAbility{
             pile.setPoint(hit_x, hit_y)
           
             this.level.enemies.push(pile)
+            
+            this.payCost()
         }
     }
 }

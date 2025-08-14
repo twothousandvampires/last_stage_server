@@ -45,6 +45,7 @@ export default abstract class Character extends Unit{
     avoid_damaged_state_chance: number 
     can_be_lethaled: boolean
     can_regen_resource: boolean
+    spend_grace: boolean
     target: string | undefined
     a: number
     can_be_damaged: boolean
@@ -62,10 +63,15 @@ export default abstract class Character extends Unit{
     status_resistance: number
     can_attack: boolean
     can_cast: boolean
+    invisible: boolean
+    lust_for_life: boolean
+    can_be_enlighten: boolean
   
     constructor(level: Level){
         super(level)
         this.pay_to_cost = 0
+        this.can_be_enlighten = true
+        this.invisible = false
         this.pressed = {}
         this.box_r = 2.5
         this.can_move_by_player = true
@@ -87,6 +93,7 @@ export default abstract class Character extends Unit{
         this.grace = 1
         this.mastery = 0
         this.avoid_damaged_state_chance = 0
+        this.lust_for_life = false
 
         this.onKillTriggers = []
         this.onHitTriggers = []
@@ -109,6 +116,7 @@ export default abstract class Character extends Unit{
         this.status_resistance = 5
         this.can_attack = true
         this.can_cast = true
+        this.spend_grace = false
 
         this.getState()
     }
@@ -118,6 +126,10 @@ export default abstract class Character extends Unit{
 
     isStatusResist(){
         return Func.chance(this.status_resistance)
+    }
+
+    getEnlightenTimer(){
+        return 20000
     }
 
     createItem(item_name: string){
@@ -142,6 +154,7 @@ export default abstract class Character extends Unit{
         return [
                 {
                     name: 'with storm',
+                    type: 'status',
                     canUse: (character: Character) => {
                         return true
                     },
@@ -150,10 +163,11 @@ export default abstract class Character extends Unit{
                         character.level.setStatus(character, status, true)
                     },
                     cost: 2,
-                    desc: 'with strom'
+                    desc: 'creates lightning periodically which shocks enemies, upgrade increases frequency and radius of searching enemies'
                 },
                 {
                     name: 'with fire',
+                    type: 'status',
                     canUse: (character: Character) => {
                         return true
                     },
@@ -162,10 +176,11 @@ export default abstract class Character extends Unit{
                         character.level.setStatus(character, status, true)
                     },
                     cost: 2,
-                    desc: 'with fire'
+                    desc: 'creates flames periodically which burn enemies and players, upgrade increases size of flames and stop damaging players'
                 },
                 {
                     name: 'with cold',
+                    type: 'status',
                     canUse: (character: Character) => {
                         return true
                     },
@@ -174,7 +189,7 @@ export default abstract class Character extends Unit{
                         character.level.setStatus(character, status, true)
                     },
                     cost: 2,
-                    desc: 'with cold'
+                    desc: 'creates cold explosion periodically which freeze enemies and players, upgrade increases radius and frequency'
                 },
                 {
                     name: 'increase agility',
@@ -284,7 +299,7 @@ export default abstract class Character extends Unit{
                         character.blessed = true
                     },
                     cost: 1,
-                    desc: 'bones killed by your hit have reduced chance to ressurect'
+                    desc: 'bones killed by your have reduced chance to ressurect'
                 },
                  {
                     name: 'pressure',
@@ -335,6 +350,28 @@ export default abstract class Character extends Unit{
                     cost: 1,
                     desc: 'lose or get grace'
                 },
+                {
+                    name: 'resist',
+                    canUse: (character: Character) => {
+                        return character.status_resistance < 50
+                    },
+                    teach: (character: Character) => {
+                        character.status_resistance += 10
+                    },
+                    cost: 1,
+                    desc: 'increases chance to resist status'
+                },
+                {
+                    name: 'lust for life',
+                    canUse: (character: Character) => {
+                        return !character.lust_for_life
+                    },
+                    teach: (character: Character) => {
+                        character.lust_for_life = true
+                    },
+                    cost: 1,
+                    desc: 'you have a chance based of your courage to regen more than life status limit("good")'
+                },
         ]
     }
 
@@ -350,6 +387,7 @@ export default abstract class Character extends Unit{
         let up = this.upgrades.find(elem => elem.name === upgrade_name)
         up.teach(this)
         this.grace -= up.cost
+        this.spend_grace = true
 
         this.removeUpgrades()
         this.closeUpgrades()
@@ -358,8 +396,17 @@ export default abstract class Character extends Unit{
     showUpgrades(){
         this.level.socket.to(this.id).emit('show_upgrades', {
             upgrades: this.upgrades,
-            grace: this.grace
+            grace: this.grace,
+            can_hold: !this.spend_grace
         })
+    }
+
+    exitGrace(){
+        let portal = this.level.bindedEffects.find(elem => elem.name === 'grace')
+
+        if(portal){
+            portal.playerLeave(this)
+        }
     }
 
     updateClientSkill(){
@@ -384,9 +431,8 @@ export default abstract class Character extends Unit{
     }
 
     holdGrace(){
-        this.grace += 2
-        this.can_generate_upgrades = false
-        this.upgrades = []
+        this.grace += 3
+        this.exitGrace()
     }
 
     closeUpgrades(){
@@ -400,14 +446,20 @@ export default abstract class Character extends Unit{
 
         this.level.socket.to(this.id).emit('change_level', this.zone_id)
     }
-    addLife(count = 1, ignore_poison = false){
+
+    addLife(count = 1, ignore_poison = false, ignore_limit = false){
         if(!this.can_regen_life && !ignore_poison) return
         
         for(let i = 0; i < count; i++){
             let previous = this.life_status
 
-            if(previous >= 3){
-                return
+            if(previous >= 3 && !ignore_limit){
+                if(this.lust_for_life && Func.chance(this.getSecondResource() * 4)){
+
+                }
+                else{
+                    return
+                } 
             }
 
             this.life_status ++
@@ -789,5 +841,9 @@ export default abstract class Character extends Unit{
 
     public setLastInputs(pressed: any) {
         this.pressed = pressed
+    }
+
+    emitStatusEnd(name: string){
+        this.level.socket.to(this.id).emit('status_end', name)
     }
 }

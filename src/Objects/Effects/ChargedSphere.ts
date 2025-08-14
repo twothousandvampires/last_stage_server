@@ -12,7 +12,7 @@ export default class ChargedSphere extends Effect{
         this.name = 'charged sphere'
         this.x = undefined
         this.y = undefined
-        this.box_r = 2
+        this.box_r = 1.6
         this.time = Date.now()
     }
 
@@ -30,9 +30,9 @@ export default class ChargedSphere extends Effect{
                 }
                 this.level.deleted.push(this.id)
                 this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem != this)
-                elem.move_speed += 0.1
+                elem.move_speed += 0.15
                 setTimeout(() => {
-                    elem.move_speed -= 0.1
+                    elem.move_speed -= 0.15
                 }, 5000)
             } 
         })

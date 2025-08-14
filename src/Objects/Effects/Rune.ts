@@ -84,7 +84,7 @@ export default class Rune extends Effect{
     act(time: number){
         if(this.already_exploded) return
 
-        if(time - this.time >= (this.fast_detonation ? 2500 : 4000)){
+        if(time - this.time >= (this.fast_detonation ? 1250 : 2500)){
             this.explode()
             this.already_exploded = true
         }

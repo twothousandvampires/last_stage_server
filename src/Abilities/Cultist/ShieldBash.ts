@@ -81,8 +81,7 @@ export default class ShieldBash extends CultistAbility{
         if(this.action && !this.hit){
             this.hit = true
             let second_resource = this.getSecondResource()
-            this.payCost()
-
+        
             let enemies = this.level.enemies
             let players = this.level.players 
             let attack_elipse = this.getBoxElipse()
@@ -147,6 +146,8 @@ export default class ShieldBash extends CultistAbility{
                 x: this.x,
                 y: this.y
             })
+
+            this.payCost()
         }
     }
 }

@@ -51,7 +51,7 @@ export default class Rune extends CultistAbility{
 
         this.owner.stateAct = this.act
        
-        this.owner.action_time = 2000
+        this.owner.action_time = this.owner.getCastSpeed()
 
         this.owner.cancelAct = () => {
             this.owner.action = false
@@ -65,7 +65,7 @@ export default class Rune extends CultistAbility{
             },50)
         }
 
-        this.owner.setTimerToGetState(2000)
+        this.owner.setTimerToGetState(this.owner.getCastSpeed())
     }
 
     async act(){

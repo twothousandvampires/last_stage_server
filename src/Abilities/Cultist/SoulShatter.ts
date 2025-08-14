@@ -89,13 +89,13 @@ export default class SoulShatter extends CultistAbility{
             let t = f[0]
            
             if(t){
-                if(Func.chance(40) + this.getSecondResource() * 2){
+                if(Func.chance(50 + this.getSecondResource() * 5)){
                     t.takeDamage(this, {
                         explode: true
                     })
 
                     if(t.is_dead){
-                        let count = 3 + this.will
+                        let count = 3 + this.getSecondResource()
                         let zones = 6.28 / count
                 
                         for(let i = 1; i <= count; i++){

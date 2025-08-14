@@ -1,7 +1,9 @@
 import Builder from './Classes/Builder'
 import Client from './Client'
+import Item from './Items/Item'
 import item from './Items/Item'
 import Level from './Level'
+const mysql = require('mysql2');
 
 export default class GameServer{
 
@@ -41,6 +43,21 @@ export default class GameServer{
     }
 
     private initSocket(): void {
+        const connection = mysql.createConnection({
+            host: 'localhost',     // адрес сервера
+            user: 'root',         // имя пользователя
+            password: '11235813', // пароль
+            database: 'game_data' // имя базы данных
+        });
+
+        connection.query('SELECT * FROM last_stage', (err, results, fields) => {
+        if (err) {
+            console.error('Ошибка запроса: ' + err.stack);
+            return;
+        }
+        console.log('Результаты запроса:', results);
+        });
+
         this.socket.on('connection', (socket: any) => {
 
             socket.emit('server_status', this.game_started)
@@ -66,6 +83,7 @@ export default class GameServer{
 
                 socket.on('pick_item', (item_name: string) => {
                     client.template.item = item_name
+                    client.template.item_description = Item.list.find(elem => elem.name === item_name)?.description
                     this.updateLobby()                
                 })
 
@@ -151,6 +169,10 @@ export default class GameServer{
 
                 socket.on('hold_grace', () => {
                     client.character?.holdGrace()
+                })
+
+                socket.on('exit_grace', () => {
+                    client.character?.exitGrace()
                 })
             }
         })
