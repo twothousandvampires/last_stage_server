@@ -3,6 +3,7 @@ import Client from './Client'
 import Item from './Items/Item'
 import item from './Items/Item'
 import Level from './Level'
+const mysql = require('mysql2');
 
 export default class GameServer{
 
@@ -42,6 +43,21 @@ export default class GameServer{
     }
 
     private initSocket(): void {
+        const connection = mysql.createConnection({
+            host: 'localhost',     // адрес сервера
+            user: 'root',         // имя пользователя
+            password: '11235813', // пароль
+            database: 'game_data' // имя базы данных
+        });
+
+        connection.query('SELECT * FROM last_stage', (err, results, fields) => {
+        if (err) {
+            console.error('Ошибка запроса: ' + err.stack);
+            return;
+        }
+        console.log('Результаты запроса:', results);
+        });
+
         this.socket.on('connection', (socket: any) => {
 
             socket.emit('server_status', this.game_started)

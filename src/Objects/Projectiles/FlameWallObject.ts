@@ -12,7 +12,7 @@ export class FlameWallObject extends Projectiles{
 
     constructor(level: Level, public burn_time: number = 1000, public duration: number = 3000){
         super(level)
-        this.box_r = 1
+        this.box_r = 2
         this.name = 'flame'
         this.move_speed = 0
         this.interval = undefined
@@ -34,11 +34,10 @@ export class FlameWallObject extends Projectiles{
             this.level.projectiles = this.level.projectiles.filter(elem => elem != this)
         }, this.duration)
         
-        setTimeout(() => {
-            this.interval = setInterval(() => {
-                this.hitted = []
-            }, this.burn_time)
-        }, this.burn_time) 
+        this.interval = setInterval(() => {
+            this.hitted = []
+        }, this.burn_time)
+        
     }
     act(): void { 
 
@@ -49,22 +48,22 @@ export class FlameWallObject extends Projectiles{
             for(let i = 0; i < players.length; i++){
                 let p = players[i]
             
-                if(p.z < this.w && !this.hitted.includes(p) && Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
+                if(p.z < this.w && !this.hitted.includes(p.id) && Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
                     p.takeDamage(undefined, {
                         burn: true
                     })
-                    this.hitted.push(p)
+                    this.hitted.push(p.id)
                 }
             }
         }
 
         for(let i = 0; i < enemies.length; i++){
             let e = enemies[i]
-            if(!this.hitted.includes(e) && Func.elipseCollision(this.getBoxElipse(), e.getBoxElipse())){
+            if(!this.hitted.includes(e.id) && Func.elipseCollision(this.getBoxElipse(), e.getBoxElipse())){
                 e.takeDamage(undefined, {
                     burn: true
                 })
-                this.hitted.push(e)
+                this.hitted.push(e.id)
             }
         }
     }

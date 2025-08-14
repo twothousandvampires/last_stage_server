@@ -44,7 +44,7 @@ export default class Grace extends Effect{
                         player: elem
                     })
 
-                    let status = new TimeStoped(elem.time, 15000 - (time - this.time))
+                    let status = new TimeStoped(elem.time, 30000)
                     this.level.setStatus(elem, status)
 
                     elem.setZone(1, 180, 60)
@@ -52,6 +52,18 @@ export default class Grace extends Effect{
                 }
             } 
         })
+    }
+
+    deleteStatus(player: Character){
+        for(let i = 0; i < this.level.statusPull.length; i++){
+            let s = this.level.statusPull[i]
+
+            if(s.unit === player && s.name === 'time stoped'){
+                s.clear()
+                this.level.statusPull.splice(i, 1)
+                break
+            }
+        }   
     }
 
     playerLeave(player: Character){
@@ -66,9 +78,11 @@ export default class Grace extends Effect{
         player.can_generate_upgrades = true
         player.spend_grace = false
 
-        this.gatedPlayers = this.gatedPlayers.filter(elem => elem.id != player.id)
+        this.gatedPlayers = this.gatedPlayers.filter(elem => elem.player.id != player.id)
         this.leaved.push(player.id)
         
+        this.deleteStatus(player)
+
         if(this.gatedPlayers.length === 0) {
             this.deleteEffects()
         }
@@ -76,12 +90,16 @@ export default class Grace extends Effect{
 
     closeGate(){
         this.gatedPlayers.forEach(player_data => {
-            player_data.player.light_r = 16
-            player_data.player.removeUpgrades()
-            player_data.player.closeUpgrades()
-            player_data.player.setZone(0, player_data.x, player_data.y)
-            player_data.player.can_generate_upgrades = true
-            player_data.player.spend_grace = false
+            if(!this.leaved.includes(player_data.player.id)){
+                player_data.player.light_r = 16
+                player_data.player.removeUpgrades()
+                player_data.player.closeUpgrades()
+                player_data.player.setZone(0, player_data.x, player_data.y)
+                player_data.player.can_generate_upgrades = true
+                player_data.player.spend_grace = false
+
+                this.deleteStatus(player_data.player)
+            }
         })
     
         this.deleteEffects()

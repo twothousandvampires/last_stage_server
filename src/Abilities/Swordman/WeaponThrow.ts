@@ -8,6 +8,7 @@ export default class WeaponThrow extends SwordmanAbility{
     light_grip: boolean
     returning: boolean
     shattering: boolean
+    multiple: boolean
 
     constructor(owner: Swordman){
         super(owner)
@@ -16,6 +17,7 @@ export default class WeaponThrow extends SwordmanAbility{
         this.returning = false
         this.shattering = false
         this.name = 'weapon throw'
+        this.multiple = true
     }
 
     canUse(): boolean {
@@ -96,12 +98,36 @@ export default class WeaponThrow extends SwordmanAbility{
                     proj.shattered = true
                 }
             }
-        
+
             proj.setAngle(this.attack_angle)
             proj.setOwner(this)
             proj.setPoint(this.x, this.y)
 
             this.level.projectiles.push(proj)
+        
+            if(this.first_ab.multiple){
+                let chance = Func.chance(50 + second * 5)
+                if(chance){
+                    let add_proj = new ThrowedWeapon(this.level)
+                    add_proj.shattered = proj.shattered
+                    add_proj.returned = proj.returned
+
+                    add_proj.setAngle(proj.angle - 0.31)
+                    add_proj.setOwner(this)
+                    add_proj.setPoint(this.x, this.y)
+                    this.level.projectiles.push(add_proj)
+
+
+                    let add_proj2 = new ThrowedWeapon(this.level)
+                    add_proj2.shattered = proj.shattered
+                    add_proj2.returned = proj.returned
+
+                    add_proj2.setAngle(proj.angle + 0.31)
+                    add_proj2.setOwner(this)
+                    add_proj2.setPoint(this.x, this.y)
+                    this.level.projectiles.push(add_proj2)
+                }
+            }
         }
     }
 }

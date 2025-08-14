@@ -10,6 +10,10 @@ import Grace from "./Objects/Effects/Grace"
 import Intervention from "./Objects/Effects/Intervention"
 import Default from "./Scenarios/Default"
 import CircleOfGhostWarriors from "./Scenarios/CircleOfGhostWarriors"
+import Bones from "./Objects/src/Enemy/Bones"
+import BonesAttack from "./Scenarios/BonesAttack"
+import Penta from "./Scenarios/Penta"
+import DeadByPiles from "./Scenarios/DeadByPiles"
 
 export default class Level{
     enemies: Unit[]
@@ -79,7 +83,7 @@ export default class Level{
         this.last_id = 0
         this.kill_count = 0
         this.grace_trashold = 5
-        this.script = new CircleOfGhostWarriors()
+        this.script = new Default()
         this.time = Date.now()
         this.started = this.time
     }
@@ -131,7 +135,7 @@ export default class Level{
     }
 
     public start(){
-        console.log('level was STARTED')  
+        console.log('level was STARTED')
         this.script.start(this)
         this.started = Date.now()
     }

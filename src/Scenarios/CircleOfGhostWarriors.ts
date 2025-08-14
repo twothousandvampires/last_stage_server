@@ -1,110 +1,93 @@
-import LightningBolt from "../Abilities/Flyer/LightningBolt";
 import Level from "../Level";
 import LightningBoltEffect from "../Objects/Effects/LightningBoltEffect";
 import ToothExplode from "../Objects/Effects/ToothExplode";
 import Specter from "../Objects/src/Enemy/Specter";
-import PileOfFrost from "../Objects/src/Piles/PileOfFrost";
-import PileOfStorm from "../Objects/src/Piles/PileOfStorm";
 
 export default class CircleOfGhostWarriors{
     map: any
+    targets: any
     constructor(){
+        this.targets = []
         this.map = [
             {
-                time: 1200,
+                time: 1000,
                 action: (level: Level) => {
-                    this.createGhost(level)
-                }
-            },
-            {
-                time: 2400,
-                action: (level: Level) => {
-                    this.createGhost(level)
-                }
-            },
-            {
-                time: 3600,
-                action: (level: Level) => {
-                    this.createGhost(level)
-                }
-            },
-            {
-                time: 4800,
-                action: (level: Level) => {
-                    this.createGhost(level)
-                }
-            },
-             {
-                time: 6000,
-                action: (level: Level) => {
-                    this.createGhost(level)
-                }
-            },
-             {
-                time: 7200,
-                action: (level: Level) => {
-                    this.createGhost(level)
-                }
-            },
-             {
-                time: 8400,
-                action: (level: Level) => {
-                    this.createGhost(level)
-                }
-            },
-            {
-                time: 10000,
-                action(level: Level){
-                    let p = level.players[0]
-                    p.pressed['d'] = false
-                    p.getState()
-                   
-                    setTimeout(() => {
-                         let pile = new PileOfStorm(level)
-                         pile.setCastState = () => {
-                        
-                            pile.state = 'cast'
-                            pile.is_attacking = true
-                            pile.stateAct = this.castAct
-                            pile.action_time = 600
+                   let p = level.players[0]
+                   let count = 7
+                   let zones = 6.28 / count
+                   let distance = 12
 
-                            setTimeout(() => {
-                                let x = p.x
-                                let y = p.y
-                                let distance = 5
-                                let count = 5
+                   for(let i = 1; i <= count; i++){
+                        let min_a = (i - 1) * zones
+                  
+                        let angle = min_a
+                        let e = new Specter(level)
+                        e.x = p.x + (Math.sin(angle) * distance)
+                        e.y = p.y + (Math.cos(angle) * distance)
+                        e.getStateTimer = undefined
+                        level.enemies.push(e)
+                    }
+                }
+            },
+            {
+                time: 2600,
+                action: (level: Level) => {
+                   level.enemies.forEach(elem => {
+                     elem.castAct = () => {
                         
-                                let zones = 6.28 / count
-                        
-                                for(let i = 1; i <= count; i++){
-                                    let min_a = (i - 1) * zones
-                                    let max_a = i * zones
-                        
-                                    let angle = min_a
-                                    let e = new LightningBoltEffect(level)
-                                    e.x = x + (Math.sin(angle) * distance)
-                                    e.y = y + (Math.cos(angle) * distance)
-                            
-                                    level.effects.push(e)
-                                    p.setZap(20000)
-                                }
-                            }, 600)
-
-                            pile.cancelAct = () => {
-                                pile.action = false
-                                pile.is_attacking = false
-                                pile.hit = false
-                            }
-
-                            pile.setTimerToGetState(600)
+                     }
+                     elem.setCastState()
+                   })
+                }
+            },
+            {
+                time: 3800,
+                action: (level: Level) => {
+                   level.enemies.forEach(elem => {
+                        let x = elem.x
+                        let y = elem.y
+                        let distance = 5
+                        let count = 5
+                
+                        let zones = 6.28 / count
+        
+                        for(let i = 1; i <= count; i++){
+                            let min_a = (i - 1) * zones
+                            let max_a = i * zones
+                
+                            let angle = min_a
+                            let e = new ToothExplode(level)
+                            e.x = x + (Math.sin(angle) * distance)
+                            e.y = y + (Math.cos(angle) * distance)
+                    
+                            level.effects.push(e)
                         }
-                         pile.frequency = 100
-                         pile.spawn_time = 500
-                        pile.x = p.x + 8
-                        pile.y = p.y
+                        this.targets.push(elem)
+                        level.deleted.push(elem.id)
+                   })
 
-                        level.enemies.push(pile)
-                    }, 1500)
+                   level.enemies = []
+                }
+            },
+            {
+                time: 4500,
+                action: (level: Level) => {
+                    this.targets.forEach(elem => {
+                        let x = elem.x
+                        let y = elem.y
+                      
+        
+                       
+                            let e = new LightningBoltEffect(level)
+                            e.x = x 
+                            e.y = y 
+                
+                            level.effects.push(e)
+                        
+                        
+                        let p = level.players[0]
+                        p.setZap(10000)
+                    })
                 }
             }
         ]
@@ -191,15 +174,10 @@ export default class CircleOfGhostWarriors{
 
     start(level: Level){
         level.players.forEach((elem) => {
-            elem.x = 20
+            elem.x = 60
             elem.y = 60
-            elem.light_r = 28
+            elem.light_r = 20
             elem.can_move_by_player = true
-            elem.pressed['d'] = true
-            elem.move_speed = 0.1
-            elem.setLastInputs = () => {
-                return
-            }
         })
     }
 

@@ -71,9 +71,7 @@ export default class GrimPile extends CultistAbility{
     act(){
         if(this.action && !this.hit){
             this.hit = true
-                    
-            this.payCost()
-
+                
             let rel_distance = Math.sqrt(((this.x - this.c_x) ** 2) + ((this.y - this.c_y) ** 2))
 
             this.level.sounds.push({
@@ -96,6 +94,8 @@ export default class GrimPile extends CultistAbility{
             pile.setPoint(hit_x, hit_y)
           
             this.level.enemies.push(pile)
+
+            this.payCost()
         }
     }
 }

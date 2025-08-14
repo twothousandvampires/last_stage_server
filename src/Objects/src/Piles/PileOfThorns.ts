@@ -10,9 +10,11 @@ export default class PileOfThorns extends Pile{
 
     constructor(level: Level, public power: number = 0){
         super(level)
-        this.frequency = 4000
+        this.frequency = 3000
         this.collection_of_bones = false
         this.kill_count = 0
+        this.duration = 12000
+        this.cast_time = 1800
         this.getState()
     }
 

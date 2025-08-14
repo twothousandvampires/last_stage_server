@@ -64,8 +64,6 @@ export default class UnleashPain extends CultistAbility{
                     y: this.y
             })
 
-            this.payCost()
-
             let e = this.getBoxElipse()
 
             e.r = 18 + this.getSecondResource()
@@ -90,6 +88,8 @@ export default class UnleashPain extends CultistAbility{
 
                 this.level.bindedEffects.push(ghost)
             })
+
+            this.payCost()
         }
     }
 }

@@ -19,7 +19,7 @@ export class FrostSphereProjectile extends Projectiles{
 
     constructor(level: Level){
         super(level)
-        this.box_r = 0.8
+        this.box_r = 1
         this.name = 'big frost sphere'
         this.move_speed = 0.25
         this.size = 3

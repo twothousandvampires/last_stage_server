@@ -1,3 +1,4 @@
+import AnnihilatorBeam from "../../../Abilities/Flyer/AnnihilatorBeam";
 import Fireball from "../../../Abilities/Flyer/Fireball";
 import FlameWall from "../../../Abilities/Flyer/FlameWall";
 import ForkedLightning from "../../../Abilities/Flyer/ForkedLightning";
@@ -12,6 +13,7 @@ import Func from "../../../Func";
 import Level from "../../../Level";
 import Armour from "../../Effects/Armour";
 import Blood from "../../Effects/Blood";
+import ToothExplode from "../../Effects/ToothExplode";
 import { Lightning } from "../../Projectiles/Lightning";
 import Character from "../Character";
 
@@ -25,6 +27,7 @@ export default class Flyer extends Character{
     charged_shield: boolean
     recent_cast: any[]
     check_recent_hits_timer: any
+    mental_shield: boolean
 
     constructor(level: Level){
         super(level)
@@ -41,6 +44,7 @@ export default class Flyer extends Character{
         this.takeoff = false
         this.allow_mana_regen_while_def = false
         this.charged_shield = false
+        this.mental_shield = false
         this.recent_cast = []
     }
 
@@ -51,7 +55,8 @@ export default class Flyer extends Character{
     getAllUpgrades(){
         return [
                 {
-                    name: 'scorching (flame wall)',
+                    name: 'scorching',
+                    type: '(flame wall)',
                     canUse: (character: Character) => {
                         return character.second_ab instanceof FlameWall && !character.second_ab.scorching
                     },
@@ -64,7 +69,8 @@ export default class Flyer extends Character{
                     desc: 'your flamewall burn faster'
                 },
                 {
-                    name: 'frendly flame (flame wall)',
+                    name: 'frendly flame',
+                    type: '(flame wall)',
                     canUse: (character: Character) => {
                         return character.second_ab instanceof FlameWall && !character.second_ab.frendly_flame
                     },
@@ -86,7 +92,8 @@ export default class Flyer extends Character{
                     desc: 'gives your phasing while you are defended'
                 },
                  {
-                    name: 'teeth (new ability)',
+                    name: 'teeth',
+                    type: 'new ability',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && !(character.first_ab instanceof Teeth)
                     },
@@ -100,7 +107,8 @@ export default class Flyer extends Character{
                     desc: 'fires a sereral of teeth'
                 },
                 {
-                    name: 'body melting (fireball)',
+                    name: 'body melting',
+                    type: 'fireball',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && (character.first_ab instanceof Fireball) && !character.first_ab.body_melting
                     },
@@ -113,7 +121,8 @@ export default class Flyer extends Character{
                     desc: 'gives your fireball a chance to pierce the enemy'
                 },
                 {
-                    name: 'ignite (fireball)',
+                    name: 'ignite',
+                    type: 'fireball',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && (character.first_ab instanceof Fireball) && !character.first_ab.ignite
                     },
@@ -126,7 +135,8 @@ export default class Flyer extends Character{
                     desc: 'your fireball ignites the floor after explosion'
                 },
                 {
-                    name: 'hand of frost (frost sphere)',
+                    name: 'hand of frost',
+                    type: 'frost sphere',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && (character.first_ab instanceof FrostSphere) && !character.first_ab.frost_rich
                     },
@@ -139,7 +149,8 @@ export default class Flyer extends Character{
                     desc: 'increases radius of explosion'
                 },
                 {
-                    name: 'reign of frost (frost sphere)',
+                    name: 'reign of frost',
+                    type: 'frost sphere',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && (character.first_ab instanceof FrostSphere) && !character.first_ab.reign_of_frost
                     },
@@ -152,7 +163,8 @@ export default class Flyer extends Character{
                     desc: 'increases freeze duration'
                 },
                 {
-                    name: 'high voltage (lightning bolt)',
+                    name: 'high voltage',
+                    type: 'lightning bolt',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && (character.first_ab instanceof LightningBolt) && !character.first_ab.high_voltage
                     },
@@ -165,7 +177,8 @@ export default class Flyer extends Character{
                     desc: 'now your lightning bolt does not apply shock and hit up to 3 targets by default also number of hitting enemies is increased by might'
                 },
                 {
-                    name: 'storm (lightning bolt)',
+                    name: 'storm',
+                    type: 'lightning bolt',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && (character.first_ab instanceof LightningBolt) && !character.first_ab.storm
                     },
@@ -179,7 +192,8 @@ export default class Flyer extends Character{
                     desc: 'now your lightning bolt also hit 2 additional times in close area but mana cost is increased'
                 },
                 {
-                    name: 'improved chain reaction (forking lightning)',
+                    name: 'improved chain reaction',
+                    type: 'forking lightning',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && (character.second_ab instanceof ForkedLightning) && !character.second_ab.improved_chain_reaction
                     },
@@ -192,7 +206,8 @@ export default class Flyer extends Character{
                     desc: 'increases the chain chance'
                 },
                 {
-                    name: 'lightning eye (forking lightning)',
+                    name: 'lightning eye',
+                    type: 'forking lightning',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && (character.second_ab instanceof ForkedLightning) && !character.second_ab.lightning_eye
                     },
@@ -205,7 +220,8 @@ export default class Flyer extends Character{
                     desc: 'increases the radius of checking targets for chain'
                 },
                 {
-                    name: 'lightning waves (light beacon)',
+                    name: 'lightning waves',
+                    type: 'light beacon',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && (character.third_ab instanceof LightBeacon) && !character.third_ab.lightning_waves
                     },
@@ -218,7 +234,8 @@ export default class Flyer extends Character{
                     desc: 'now you crates wavas of electricity instead lightnings'
                 },
                 {
-                    name: 'air form (light beacon)',
+                    name: 'air form',
+                    type: 'light beacon',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && (character.third_ab instanceof LightBeacon) && !character.third_ab.air_form
                     },
@@ -231,7 +248,8 @@ export default class Flyer extends Character{
                     desc: 'after cast you cant take damage for 3 seconds'
                 },
                 {
-                    name: 'ice genesis (frostnova)',
+                    name: 'ice genesis',
+                    type: 'frostnova',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && (character.third_ab instanceof Frostnova) && !character.third_ab.ice_genesis
                     },
@@ -244,7 +262,8 @@ export default class Flyer extends Character{
                     desc: 'if you kill the enemy there is a chance to create frost sphere'
                 },
                 {
-                    name: 'cold spires (frostnova)',
+                    name: 'cold spires',
+                    type: 'frostnova',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && (character.third_ab instanceof Frostnova) && !character.third_ab.cold_spires
                     },
@@ -257,7 +276,8 @@ export default class Flyer extends Character{
                     desc: 'after cast you create a cold spires which freeze enemies and explodes'
                 },
                 {
-                    name: 'hand cuffing (static field)',
+                    name: 'hand cuffing',
+                    type: 'static field',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && (character.utility instanceof StaticField) && !character.utility.hand_cuffing
                     },
@@ -270,7 +290,8 @@ export default class Flyer extends Character{
                     desc: 'targets cant attack'
                 },
                 {
-                    name: 'collapse (static field)',
+                    name: 'collapse',
+                    type: 'static field',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && (character.utility instanceof StaticField) && !character.utility.hand_cuffing
                     },
@@ -283,7 +304,8 @@ export default class Flyer extends Character{
                     desc: 'targets take damage after duration'
                 },
                 {
-                    name: 'protected teleportation (teleportation)',
+                    name: 'protected teleportation',
+                    type: 'teleportation',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && (character.utility instanceof Teleportation) && !character.utility.protected
                     },
@@ -296,7 +318,8 @@ export default class Flyer extends Character{
                     desc: 'you cannot take damage after you start teleportating'
                 },
                 {
-                    name: 'increased gate (teleportation)',
+                    name: 'increased gate',
+                    type: 'teleportation',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && (character.utility instanceof Teleportation) && !character.utility.increased_gate
                     },
@@ -321,7 +344,7 @@ export default class Flyer extends Character{
                     cost: 1,
                     desc: 'you can regen mana while you are defended'
                 },
-                 {
+                {
                     name: 'charged shield',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && !character.charged_shield
@@ -333,6 +356,62 @@ export default class Flyer extends Character{
                     },
                     cost: 1,
                     desc: 'there is a chance to create lightning when you block damage while you are defended'
+                },
+                {
+                    name: 'annihilator beam',
+                    type: 'new ability',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && !(character.second_ab instanceof AnnihilatorBeam)
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer){
+                            character.second_ab = new AnnihilatorBeam(character)
+                            character.updateClientSkill()
+                        }
+                    },
+                    cost: 1,
+                    desc: 'creates a beam of energy which burn enemies'
+                },
+                {
+                    name: 'light stream',
+                    type: '(annihilator beam)',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && character.second_ab instanceof AnnihilatorBeam
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.second_ab instanceof AnnihilatorBeam){
+                            character.second_ab.cost -= 2
+                        }
+                    },
+                    cost: 1,
+                    desc: 'reduses mana cost'
+                },
+                {
+                    name: 'concentrating energy',
+                    type: '(annihilator beam)',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && character.second_ab instanceof AnnihilatorBeam
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && !character.second_ab.concentrating_energy){
+                            character.second_ab.concentrating_energy = true
+                        }
+                    },
+                    cost: 1,
+                    desc: 'now it ignores armour'
+                },
+                {
+                    name: 'mental shield',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && !character.mental_shield
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer){
+                            character.mental_shield = true
+                        }
+                    },
+                    cost: 1,
+                    desc: 'courage increase your armour rate'
                 },
         ]
     }
@@ -357,7 +436,7 @@ export default class Flyer extends Character{
 
         //add to this.upgrades
 
-        this.upgrades = this.upgrades.concat(filtered)
+        this.upgrades = filtered
     }
 
 
@@ -496,7 +575,7 @@ export default class Flyer extends Character{
             return
         }
 
-        let arm = this.armour_rate + (this.agility * 5)
+        let arm = this.armour_rate + (this.agility * 3) + (this.mental_shield ? this.getSecondResource() * 3 : 0)
 
         arm = arm > 95 ? 95 : arm
 
@@ -603,8 +682,10 @@ export default class Flyer extends Character{
         }
     }
 
-    addResourse(count: number = 1){
-        if(this.resource < this.max_resource){
+    addResourse(count: number = 1, ignore_limit = false){
+        if(!this.can_regen_resource) return
+        
+        if(this.resource < this.max_resource || ignore_limit){
             this.resource += count
         }
         
@@ -642,9 +723,39 @@ export default class Flyer extends Character{
         this.pay_to_cost = 0
         this.recent_cast.push(this.time)
 
+        if(this.can_be_enlighten && this.recent_cast.length >= 10){
+            this.can_be_enlighten = false
+
+            this.enlight()
+
+            setTimeout(() => {
+                this.can_be_enlighten = true
+            }, this.getEnlightenTimer())
+        }
+
         if(Func.chance(this.speed * 2.5)){
             this.recent_cast.push(this.time)
         }
+    }
+
+    enlight(){
+        let count = 10
+                
+        let zones = 6.28 / count
+
+        for(let i = 1; i <= count; i++){
+            let min_a = (i - 1) * zones
+            
+            let angle = min_a
+            let proj = new ToothExplode(this.level)
+            proj.setPoint(this.x + (7 * Math.sin(angle)), this.y + (7 * Math.cos(angle)))
+
+            this.level.effects.push(proj)
+        }
+
+        this.level.players.forEach((elem) => {
+            elem.addResourse(5, true)
+        })
     }
 
     getSecondResource(){

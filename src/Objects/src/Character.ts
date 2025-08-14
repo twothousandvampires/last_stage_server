@@ -63,10 +63,15 @@ export default abstract class Character extends Unit{
     status_resistance: number
     can_attack: boolean
     can_cast: boolean
+    invisible: boolean
+    lust_for_life: boolean
+    can_be_enlighten: boolean
   
     constructor(level: Level){
         super(level)
         this.pay_to_cost = 0
+        this.can_be_enlighten = true
+        this.invisible = false
         this.pressed = {}
         this.box_r = 2.5
         this.can_move_by_player = true
@@ -88,6 +93,7 @@ export default abstract class Character extends Unit{
         this.grace = 1
         this.mastery = 0
         this.avoid_damaged_state_chance = 0
+        this.lust_for_life = false
 
         this.onKillTriggers = []
         this.onHitTriggers = []
@@ -122,6 +128,10 @@ export default abstract class Character extends Unit{
         return Func.chance(this.status_resistance)
     }
 
+    getEnlightenTimer(){
+        return 20000
+    }
+
     createItem(item_name: string){
         this.item = Builder.createItem(item_name)
     }
@@ -143,7 +153,8 @@ export default abstract class Character extends Unit{
         
         return [
                 {
-                    name: 'with storm (status)',
+                    name: 'with storm',
+                    type: 'status',
                     canUse: (character: Character) => {
                         return true
                     },
@@ -155,7 +166,8 @@ export default abstract class Character extends Unit{
                     desc: 'creates lightning periodically which shocks enemies, upgrade increases frequency and radius of searching enemies'
                 },
                 {
-                    name: 'with fire (status)',
+                    name: 'with fire',
+                    type: 'status',
                     canUse: (character: Character) => {
                         return true
                     },
@@ -167,7 +179,8 @@ export default abstract class Character extends Unit{
                     desc: 'creates flames periodically which burn enemies and players, upgrade increases size of flames and stop damaging players'
                 },
                 {
-                    name: 'with cold (status)',
+                    name: 'with cold',
+                    type: 'status',
                     canUse: (character: Character) => {
                         return true
                     },
@@ -256,7 +269,7 @@ export default abstract class Character extends Unit{
                     desc: 'give a life'
                 },
                 {
-                    name: 'forge item',
+                    name: 'forge',
                     canUse: (character: Character) => {
                         return character.item?.canBeForged(character)
                     },
@@ -337,6 +350,28 @@ export default abstract class Character extends Unit{
                     cost: 1,
                     desc: 'lose or get grace'
                 },
+                {
+                    name: 'resist',
+                    canUse: (character: Character) => {
+                        return character.status_resistance < 50
+                    },
+                    teach: (character: Character) => {
+                        character.status_resistance += 10
+                    },
+                    cost: 1,
+                    desc: 'increases chance to resist status'
+                },
+                {
+                    name: 'lust for life',
+                    canUse: (character: Character) => {
+                        return !character.lust_for_life
+                    },
+                    teach: (character: Character) => {
+                        character.lust_for_life = true
+                    },
+                    cost: 1,
+                    desc: 'you have a chance based of your courage to regen more than life status limit("good")'
+                },
         ]
     }
 
@@ -411,14 +446,20 @@ export default abstract class Character extends Unit{
 
         this.level.socket.to(this.id).emit('change_level', this.zone_id)
     }
-    addLife(count = 1, ignore_poison = false){
+
+    addLife(count = 1, ignore_poison = false, ignore_limit = false){
         if(!this.can_regen_life && !ignore_poison) return
         
         for(let i = 0; i < count; i++){
             let previous = this.life_status
 
-            if(previous >= 3){
-                return
+            if(previous >= 3 && !ignore_limit){
+                if(this.lust_for_life && Func.chance(this.getSecondResource() * 4)){
+
+                }
+                else{
+                    return
+                } 
             }
 
             this.life_status ++
@@ -800,5 +841,9 @@ export default abstract class Character extends Unit{
 
     public setLastInputs(pressed: any) {
         this.pressed = pressed
+    }
+
+    emitStatusEnd(name: string){
+        this.level.socket.to(this.id).emit('status_end', name)
     }
 }

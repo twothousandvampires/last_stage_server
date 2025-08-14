@@ -7,6 +7,7 @@ import Gifter from "../Objects/src/Enemy/Gifter";
 import Impy from "../Objects/src/Enemy/Impy";
 import Solid from "../Objects/src/Enemy/Solid";
 import Specter from "../Objects/src/Enemy/Specter";
+import PileOfDead from "../Objects/src/Piles/PileOfDead";
 import PileOfEvil from "../Objects/src/Piles/PileOfEvil";
 import PileOfFrost from "../Objects/src/Piles/PileOfFrost";
 import PileOfStorm from "../Objects/src/Piles/PileOfStorm";
@@ -85,7 +86,7 @@ export default class Default{
                     enemy = new Gifter(level)
                 }
                 else if(enemy_name === 'pile'){
-                    let variants = ['evil', 'frost', 'blind', 'shock', 'summon']
+                    let variants = ['evil', 'frost', 'blind', 'shock', 'summon', 'dead']
                     let name = variants[Math.floor(Math.random() * variants.length)]
     
                     switch(name){
@@ -103,6 +104,9 @@ export default class Default{
                             break;
                         case 'shock':
                             enemy =  new PileOfSummoning(level)
+                            break;
+                        case 'dead':
+                            enemy =  new PileOfDead(level)
                             break;
                     }
                 }

@@ -5,6 +5,7 @@ export default class TimeStoped extends Status{
  
     constructor(public time: number,public duration: number){
         super(time, duration)
+        this.name = 'time stoped'
     }
 
     apply(unit: any){
@@ -28,6 +29,8 @@ export default class TimeStoped extends Status{
 
         this.unit.can_regen_life = true
         this.unit.can_regen_resource = true
+
+        this.unit.emitStatusEnd(this.name)
     }
 
     update(status: any){

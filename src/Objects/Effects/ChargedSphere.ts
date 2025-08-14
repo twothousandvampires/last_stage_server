@@ -12,7 +12,7 @@ export default class ChargedSphere extends Effect{
         this.name = 'charged sphere'
         this.x = undefined
         this.y = undefined
-        this.box_r = 2
+        this.box_r = 1.6
         this.time = Date.now()
     }
 
