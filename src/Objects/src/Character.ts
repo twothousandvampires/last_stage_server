@@ -12,6 +12,7 @@ export default abstract class Character extends Unit{
 
     pressed: { [key: string]: any, }
     can_move_by_player: boolean
+    direct_angle_to_move: any
     c_x: number
     c_y: number
     max_resource: number
@@ -66,6 +67,8 @@ export default abstract class Character extends Unit{
     invisible: boolean
     lust_for_life: boolean
     can_be_enlighten: boolean
+    cast_speed: number
+    mad_target: any
   
     constructor(level: Level){
         super(level)
@@ -117,6 +120,7 @@ export default abstract class Character extends Unit{
         this.can_attack = true
         this.can_cast = true
         this.spend_grace = false
+        this.cast_speed = 0
 
         this.getState()
     }
@@ -159,7 +163,7 @@ export default abstract class Character extends Unit{
                         return true
                     },
                     teach: (character: Character) => {
-                        let status = new WithStormStatus(character.time, 10000, 0)
+                        let status = new WithStormStatus(character.time, 100000, 0)
                         character.level.setStatus(character, status, true)
                     },
                     cost: 2,
@@ -172,7 +176,7 @@ export default abstract class Character extends Unit{
                         return true
                     },
                     teach: (character: Character) => {
-                        let status = new WithFireStatus(character.time, 10000, 0)
+                        let status = new WithFireStatus(character.time, 100000, 0)
                         character.level.setStatus(character, status, true)
                     },
                     cost: 2,
@@ -185,7 +189,7 @@ export default abstract class Character extends Unit{
                         return true
                     },
                     teach: (character: Character) => {
-                        let status = new WithColdStatus(character.time, 10000, 0)
+                        let status = new WithColdStatus(character.time, 100000, 0)
                         character.level.setStatus(character, status, true)
                     },
                     cost: 2,
@@ -653,8 +657,90 @@ export default abstract class Character extends Unit{
         return this.can_move_by_player && !this.freezed && !this.zaped
     }
 
+    directMove(){
+        let a = this.direct_angle_to_move
+        
+        let l = 1 - Math.abs(0.5 * Math.cos(a))
+
+        let next_step_x = Math.sin(a) * l
+        let next_step_y = Math.cos(a) * l
+        
+        let speed = this.getMoveSpeed()
+
+        if(next_step_x < 0 && !this.is_attacking){
+            this.flipped = true
+        }
+        else if(!this.is_attacking && next_step_x > 0){
+            this.flipped = false
+        }
+
+        next_step_x *= speed
+        next_step_y *= speed
+
+        next_step_x *= this.a
+        next_step_y *= this.a
+
+        let coll_e_x = undefined
+        let coll_e_y = undefined
+        
+        let x_coll = false
+        let y_coll = false
+
+        if(!this.phasing){
+            for(let i = 0; i < this.level.enemies.length; i++){
+
+                let enemy = this.level.enemies[i]
+
+                if(enemy.phasing) continue
+
+                if(Func.elipseCollision(this.getBoxElipse(next_step_x, 0), enemy.getBoxElipse())){
+                    x_coll = true
+                    next_step_x = 0
+                    coll_e_x = enemy
+                    if(y_coll){
+                        break
+                    }
+                }
+                
+                if(Func.elipseCollision(this.getBoxElipse(0, next_step_y), enemy.getBoxElipse())){
+                    y_coll = true
+                    next_step_y = 0
+                    coll_e_y = enemy
+                    if(x_coll){
+                        break
+                    }
+                }
+            }
+        }
+        
+        if(!this.isOutOfMap(this.x + next_step_x, this.y + next_step_y)){
+            if(x_coll && next_step_y === 0){
+                if(this.y <= coll_e_x.y){
+                    next_step_y = - 0.2
+                }
+                else{
+                    next_step_y = 0.2
+                }
+            }
+
+            if(y_coll && next_step_x === 0){
+                if(this.x <= coll_e_y.x){
+                    next_step_x = -0.2
+                }
+                else{
+                    next_step_x = 0.2
+                }
+            }
+
+            this.addToPoint(next_step_x, next_step_y)
+        }
+    }
+
     private moveAct(){
-      
+        if(this.direct_angle_to_move){
+            this.directMove()
+            return
+        }
         if(this.moveIsPressed() && this.canMove()){
             this.is_moving = true
             if(this.state === 'idle'){

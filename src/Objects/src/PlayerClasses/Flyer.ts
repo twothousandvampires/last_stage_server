@@ -19,7 +19,6 @@ import Character from "../Character";
 
 export default class Flyer extends Character{
 
-    cast_speed: number
     next_life_regen_time: any
     next_mana_regen_time: any
     takeoff: boolean
@@ -449,7 +448,9 @@ export default class Flyer extends Character{
     }
     getMoveSpeed(): number{
         let total_inc = this.move_speed_penalty
+
         let speed = this.move_speed + (this.speed / 40)
+
         if(!total_inc) return speed
         if(total_inc > 100) total_inc = 100
         if(total_inc < -90) total_inc = -90

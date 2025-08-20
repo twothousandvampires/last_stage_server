@@ -14,6 +14,8 @@ import Bones from "./Objects/src/Enemy/Bones"
 import BonesAttack from "./Scenarios/BonesAttack"
 import Penta from "./Scenarios/Penta"
 import DeadByPiles from "./Scenarios/DeadByPiles"
+import BossMeeting from "./Scenarios/BossMeeting"
+import Scenario from "./Scenarios/Scenario"
 
 export default class Level{
     enemies: Unit[]
@@ -169,6 +171,11 @@ export default class Level{
         status.apply(unit)
 
         this.statusPull.push(status)
+    }
+
+    setScript(script: Scenario): void{
+        this.script = script
+        this.script.start(this)
     }
 
     public tick(): void{

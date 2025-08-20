@@ -7,7 +7,7 @@ export default class WithColdStatus extends Status{
     last_checked: number
     name: string
 
-    constructor(public time: number,public duration: number, public power: number){
+    constructor(public time: number, public duration: number, public power: number){
         super(time, duration)
         this.last_checked = time
         this.name = 'with cold status'

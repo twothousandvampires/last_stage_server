@@ -135,6 +135,21 @@ export default class Swordman extends Character{
         }
     }
 
+    madAct(){
+        if(this.can_use_skills && this.first_ab?.canUse()){
+            this.useNotUtilityTriggers.forEach(elem => {
+                elem.trigger(this)
+            })
+            this.first_ab?.use()
+            this.last_skill_used_time = this.time
+        }
+        this.useSecond()
+    }
+
+    setMadAct(){
+        this.stateAct = this.madAct
+    }
+
     takeDamage(unit:any = undefined, options: any = {}){
         if(!this.can_be_damaged) return
         

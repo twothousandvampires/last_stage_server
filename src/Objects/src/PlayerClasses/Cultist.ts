@@ -27,7 +27,6 @@ export default class Cultist extends Character{
     hit_x: number | undefined
     hit_y: number | undefined
     weapon_angle: number
-    cast_speed: number
     recent_hits: any
     check_recent_hits_timer: any
     service: boolean

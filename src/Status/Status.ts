@@ -8,7 +8,7 @@ export default abstract class Status{
     need_to_check_resist: boolean
     name: string | undefined
 
-    constructor(public time: number, public duration: number){
+    constructor(public time: number, public duration: number = 1000000){
         this.last_checked = time
         this.need_to_check_resist = false
     }
