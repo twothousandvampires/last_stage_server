@@ -1,3 +1,4 @@
+import BurningCircle from "../../../Abilities/Cultist/BurningCircle";
 import GhostForm from "../../../Abilities/Cultist/GhostForm";
 import GrimPile from "../../../Abilities/Cultist/GrimPile";
 import PileOfThornCast from "../../../Abilities/Cultist/PileOfThornCast";
@@ -13,6 +14,7 @@ import Armour from "../../Effects/Armour";
 import Blood from "../../Effects/Blood";
 import ToothExplode from "../../Effects/ToothExplode";
 import Character from "../Character";
+import Flyer from "./Flyer";
 
 export default class Cultist extends Character{
     
@@ -88,7 +90,7 @@ export default class Cultist extends Character{
         let secondary_name = abilities.find(elem => elem.type === 2 && elem.selected).name
         
         if(secondary_name === 'shield bash'){
-            this.second_ab = new ShieldBash(this)
+            this.second_ab = new BurningCircle(this)
         }
         else if(secondary_name === 'grim pile'){
             this.second_ab = new GrimPile(this)
@@ -609,6 +611,21 @@ export default class Cultist extends Character{
                 },
                 teach: (character: Character) => {
                     character.pain_extract = true
+                },
+                cost: 1,
+                desc: 'you have a chance to get resourse when you kill enemies'
+            },
+             {
+                name: 'burning circle',
+                type: 'new ability',
+                canUse: (character: Character) => {
+                    return character instanceof Cultist && !(character.second_ab instanceof BurningCircle)
+                },
+                teach: (character: Character) => {
+                    if(character instanceof Cultist){
+                       character.second_ab = new BurningCircle(character)
+                       character.updateClientSkill()
+                    }  
                 },
                 cost: 1,
                 desc: 'you have a chance to get resourse when you kill enemies'

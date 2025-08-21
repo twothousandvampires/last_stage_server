@@ -30,7 +30,7 @@ export default class Default{
     }
 
     checkTime(level: Level){
-        if(level.kill_count >= 0){
+        if(level.kill_count >= 220){
             level.setScript(new BossFight())
             return
         }
