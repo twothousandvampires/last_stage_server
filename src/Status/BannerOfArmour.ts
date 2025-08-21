@@ -43,7 +43,7 @@ export default class BannerOfArmour extends Status{
                 if(Func.elipseCollision(box, elem.getBoxElipse())){
                     let status = new BannerOfArmourStatus(tick_time)
                     status.setDuration(4000)
-                    this.unit.level.setStatus(elem, status)
+                    this.unit.level.setStatus(elem, status, true)
                 }
             })
         }
