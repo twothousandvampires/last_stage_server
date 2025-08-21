@@ -9,6 +9,7 @@ import Impy from "../Objects/src/Enemy/Impy";
 import Solid from "../Objects/src/Enemy/Solid";
 import Specter from "../Objects/src/Enemy/Specter";
 import Statue from "../Objects/src/Enemy/Statue";
+import Madness from "../Status/Madness";
 import Scenario from "./Scenario";
 
 export default class BossFight extends Scenario{
@@ -132,8 +133,18 @@ export default class BossFight extends Scenario{
                     boss.setPoint(p.x + 14, p.y)
 
                     level.enemies.push(boss)
+                    
+                    let e = new CureseOfDamnedArea(level)
 
-                    level.players[0].setMadAct()
+                    e.setPoint(60, 60)
+
+                    setInterval(() => {
+                        level.players.forEach(elem => {
+                            if(Func.distance(e, elem) > 40){
+                                elem.setPoint(boss.x, boss.y)
+                            }
+                        })
+                    }, 2000)
                 }
             },
         ]

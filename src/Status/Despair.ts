@@ -1,43 +1,48 @@
 import Character from "../Objects/src/Character"
 import Status from "./Status"
 
-export default class Weakness extends Status{
-  
+export default class Despair extends Status{
+   
     name: string
-
+    
     constructor(public time: number){
         super(time)
-        this.name = 'weakness'
+        this.name = 'despair'
         this.need_to_check_resist = true
     }
 
     apply(unit: any){
         this.unit = unit
         if(this.unit instanceof Character){
-            this.unit.can_regen_resource = false
+            this.unit.whenHitedTriggers.push(this)
+
             this.unit.statusWasApplied()
-            
+
             this.unit.newStatus({
-                name: 'weakness',
+                name: 'despair',
                 duration: this.duration,
-                desc: 'weakness'
+                desc: 'lose resourse when get damage'
             })
         }
     }
 
     clear(){
         if(this.unit instanceof Character){
-            this.unit.can_regen_resource = true
+            this.unit.whenHitedTriggers = this.unit.whenHitedTriggers.filter(elem => elem != this)
         }
     }
 
-    update(status: any){
+     update(status: any){
         this.time = Date.now()
-        
-        this.unit.newStatus({
-            name: 'weakness',
-            duration: status.duration,
-            desc: 'weakness'
+
+         this.unit.newStatus({
+            name: 'despair',
+            duration: this.duration,
+            desc: 'lose resourse when get damage'
         })
+    }
+
+    trigger(){
+        this.unit.resource -= 2
     }
 }

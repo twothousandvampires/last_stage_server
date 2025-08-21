@@ -1,4 +1,3 @@
-
 import Func from "../../Func";
 import Level from "../../Level";
 import Projectiles from "./Projectiles";

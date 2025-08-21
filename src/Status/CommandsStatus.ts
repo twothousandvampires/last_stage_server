@@ -3,8 +3,8 @@ import Status from "./Status"
 
 export default class CommandsStatus extends Status{
     
-    constructor(public time: number, public duration: number, public add_ms: number = 0, public add_armour: number = 0){
-        super(time, duration)
+    constructor(public time: number, public add_ms: number = 0, public add_armour: number = 0){
+        super(time)
     }
 
     apply(unit: any){

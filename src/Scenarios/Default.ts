@@ -131,7 +131,7 @@ export default class Default{
             }
 
             if(enemy instanceof Solid && Func.chance(15)){
-                let status = new BannerOfArmour(level.time, 0)
+                let status = new BannerOfArmour(level.time)
                 level.setStatus(enemy, status)
             }
 

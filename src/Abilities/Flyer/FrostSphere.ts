@@ -28,7 +28,6 @@ export default class FrostSphere extends FlyerAbility{
 
         let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
-        let angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
         
         if(rel_x < this.owner.x){
             this.owner.flipped = true
@@ -37,7 +36,10 @@ export default class FrostSphere extends FlyerAbility{
             this.owner.flipped = false    
         }
 
-        this.owner.attack_angle = angle
+        if(!this.owner.attack_angle){
+            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        }
+
         this.owner.is_attacking = true
         this.owner.state = 'cast'
 

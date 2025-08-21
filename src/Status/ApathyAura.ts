@@ -6,8 +6,8 @@ export default class ApathyAura extends Status{
 
     radius: number
  
-    constructor(public time: number, public duration: number){
-        super(time, duration)
+    constructor(public time: number){
+        super(time)
         this.radius = 10
         this.name = 'apathy aura'
     }
@@ -33,7 +33,8 @@ export default class ApathyAura extends Status{
 
             this.unit.level.players.forEach(elem => {
                 if(Func.elipseCollision(box, elem.getBoxElipse())){
-                    let status = new Apathy(tick_time, 5000)
+                    let status = new Apathy(tick_time)
+                    status.setDuration(5000)
                     this.unit.level.setStatus(elem, status, true)
                 }
             })

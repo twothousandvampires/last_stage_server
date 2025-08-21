@@ -21,8 +21,8 @@ export default class WeaponSwing extends SwordmanAbility{
     use(){
         if(this.owner.is_attacking) return
        
-        let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
-        let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
+        let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
+        let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
 
         if(rel_x < this.owner.x){
             this.owner.flipped = true
@@ -31,7 +31,9 @@ export default class WeaponSwing extends SwordmanAbility{
             this.owner.flipped = false    
         } 
       
-        this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y )
+        if(!this.owner.attack_angle){
+            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        }
         
         this.owner.is_attacking = true
         this.owner.state = 'attack'
@@ -70,7 +72,7 @@ export default class WeaponSwing extends SwordmanAbility{
 
             let attack_angle = this.attack_angle
 
-            let f = enemies.filter(elem => Func.checkAngle(this, elem, this.attack_angle, this.weapon_angle + second / 10))
+            let f = enemies.concat(players).filter(elem => Func.checkAngle(this, elem, this.attack_angle, this.weapon_angle + second / 10))
             let filtered_by_attack_radius = f.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
             filtered_by_attack_radius.sort((a,b) => Func.distance(a, this) - Func.distance(b, this))
 
@@ -123,7 +125,9 @@ export default class WeaponSwing extends SwordmanAbility{
             }
             else{
                 if(this.first_ab?.improved_swing_technology && Func.chance(30)){
-                    let status = new ImprovedSwingTechnology(this.time, 5000)
+                    let status = new ImprovedSwingTechnology(this.time)
+                    status.setDuration(5000)
+
                     this.level.setStatus(this, status, true)
                 }
             }
@@ -140,7 +144,8 @@ export default class WeaponSwing extends SwordmanAbility{
                     })
 
                     if(this.first_ab?.improved_swing_technology && Func.chance(30) && filtered_by_attack_radius.length){
-                        let status = new ImprovedSwingTechnology(this.time, 5000)
+                        let status = new ImprovedSwingTechnology(this.time)
+                        status.setDuration(5000)
                         this.level.setStatus(this, status, true)
                     }
 

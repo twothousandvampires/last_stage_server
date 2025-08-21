@@ -9,8 +9,8 @@ export default class CurseOfDamned extends Status{
 
     effect: any
 
-    constructor(public time: number,public duration: number){
-      super(time, duration)
+    constructor(public time: number){
+      super(time)
       this.need_to_check_resist = true
     }
 
@@ -31,7 +31,8 @@ export default class CurseOfDamned extends Status{
             let ppl = this.unit.level.players.filter(elem => Func.distance(elem, this.unit) <= 20)
 
             ppl.forEach(elem => {
-                let s = new Curse(elem.time, 5000)
+                let s = new Curse(elem.time)
+                s.setDuration(5000)
                 this.unit.level.setStatus(elem, s)
             })
 

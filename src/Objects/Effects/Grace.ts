@@ -44,7 +44,9 @@ export default class Grace extends Effect{
                         player: elem
                     })
 
-                    let status = new TimeStoped(elem.time, 30000)
+                    let status = new TimeStoped(elem.time)
+                    status.setDuration(30000)
+
                     this.level.setStatus(elem, status)
 
                     elem.setZone(1, 180, 60)

@@ -4,8 +4,8 @@ import Status from "./Status"
 
 export default class CursedWeaponStatus extends Status{
    
-    constructor(public time: number,public duration: number, public drinker: boolean = false){
-        super(time, duration)
+    constructor(public time: number, public drinker: boolean = false){
+        super(time)
     }
 
     apply(unit: any){

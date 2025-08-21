@@ -33,6 +33,10 @@ export default abstract class Item{
             name: "sparkling helmet",
             description: 'if you do not use any skills for 7 seconds it creates a shock ring'
         },
+        {
+            name: "glass sword",
+            description: 'always deal double damage, always get double damage'
+        },
     ]
 
     abstract equip(character: Character): void

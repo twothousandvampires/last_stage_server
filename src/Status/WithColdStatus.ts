@@ -7,8 +7,8 @@ export default class WithColdStatus extends Status{
     last_checked: number
     name: string
 
-    constructor(public time: number, public duration: number, public power: number){
-        super(time, duration)
+    constructor(public time: number){
+        super(time)
         this.last_checked = time
         this.name = 'with cold status'
     }
@@ -19,10 +19,6 @@ export default class WithColdStatus extends Status{
 
     update(status: any){
         this.power ++
-    }
-
-    isExpired(tick_time: number){
-        return false
     }
 
     act(tick_time: number){

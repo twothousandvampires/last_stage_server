@@ -145,16 +145,21 @@ export abstract class Enemy extends Unit{
             return
         }
 
+        let damage_value = 1
+
         if(options?.damage_value){
-           this.life_status -= options.damage_value
+           damage_value = options.damage_value
         }
-        else{
-            this.life_status --
+       
+        if(unit?.critical && Func.chance(unit.critical)){
+            damage_value *= 2
         }
 
-        if(unit?.critical && Func.chance(unit.critical)){
-            this.life_status --
+        if(Func.chance(this.fragility)){
+            damage_value *= 2
         }
+
+        this.life_status -= damage_value
 
         if(this.life_status <= 0){
            

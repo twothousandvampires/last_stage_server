@@ -7,8 +7,8 @@ export default class Apathy extends Status{
     name: string
     power: number
 
-    constructor(public time: number,public duration: number){
-        super(time, duration)
+    constructor(public time: number){
+        super(time)
         this.name = 'apathy'
         this.need_to_check_resist = true
         this.power = 1

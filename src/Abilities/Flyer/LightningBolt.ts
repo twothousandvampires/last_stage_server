@@ -40,8 +40,10 @@ export default class LightningBolt extends FlyerAbility{
         else{
             this.owner.flipped = false    
         }
-
-        this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        
+        if(!this.owner.attack_angle){
+            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        }
 
         this.owner.is_attacking = true
         this.owner.state = 'cast'
@@ -105,7 +107,10 @@ export default class LightningBolt extends FlyerAbility{
                 let elem = targets[i]
                 if(elem != this && Func.elipseCollision(hiting_box, elem.getBoxElipse())){
                     if(!high_voltage && max_targets === 0){
-                        let status = new ShockStatus(time, 5000, 20)
+                        let status = new ShockStatus(time)
+                        status.setDuration(5000)
+                        status.setPower(20)
+
                         this.level.setStatus(elem, status)
                     }
                     else if(max_targets > 0){
@@ -159,6 +164,9 @@ export default class LightningBolt extends FlyerAbility{
                         if(elem != this && Func.elipseCollision(hiting_box, elem.getBoxElipse())){
                             if(!high_voltage && max_targets === 0){
                                 let status = new ShockStatus(time, 5000, 20)
+                                status.setDuration(5000)
+                                status.setPower(20)
+                                
                                 this.level.setStatus(elem, status)
                             }
                             else if(max_targets > 0){

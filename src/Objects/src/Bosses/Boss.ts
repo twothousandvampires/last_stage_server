@@ -1,26 +1,34 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
 import ApathyAura from "../../../Status/ApathyAura";
+import Fear from "../../../Status/Fear";
+import Madness from "../../../Status/Madness";
 import Poison from "../../../Status/Poison";
 import Armour from "../../Effects/Armour";
+import CureseOfDamnedArea from "../../Effects/CureseOfDamnedArea";
 import { Enemy } from "../Enemy/Enemy";
 
 export default class Boss extends Enemy{
 
     apathy_radius: number
+    can_cast_fear: boolean
+    can_cast_madness: boolean
 
     constructor(level: Level){
         super(level)
         this.name = 'boss'
         this.box_r = 4
-        this.move_speed = 0.3
+        this.move_speed = 0.05
         this.attack_radius = 6
         this.attack_speed = 1600
         this.life_status = 20
         this.spawn_time = 2200
         this.apathy_radius = 10
         this.getState()
-        this.level.setStatus(this, new ApathyAura(this.level.time, 1000000))
+        this.level.setStatus(this, new ApathyAura(this.level.time))
+        this.can_cast_fear = true
+        this.can_cast_madness = true
+        this.phasing = true
     }
 
     takeDamage(unit: any = undefined, options: any = {}){
@@ -156,13 +164,12 @@ export default class Boss extends Enemy{
     }
 
     idleAct(){
-        return
         
         if(this.can_check_player){
            if(!this.target){
                 this.can_check_player = false
             
-                let p = this.level.players.filter(elem => Func.distance(this, elem) <= this.player_check_radius && !elem.is_dead && elem.z < 5)
+                let p = this.level.players.filter(elem => !elem.is_dead)
 
                 p.sort((a, b) => {
                     return Func.distance(a, this) - Func.distance(b, this)
@@ -171,29 +178,68 @@ export default class Boss extends Enemy{
                 this.target = p[0]
            }
            else{
-                if(Func.distance(this, this.target) > this.player_check_radius || this.target.is_dead){
+                if(this.target.is_dead){
                     this.target = undefined
                 }
            }
            
            setTimeout(() => {
                 this.can_check_player = true
-           }, 2000)
+           }, 1000)
         }
        
         if(!this.target){
             return
         } 
 
-        let a_e = this.getBoxElipse()
-        a_e.r = this.attack_radius
+        if(this.can_cast_fear || this.can_cast_madness){
+            this.can_cast_fear = false
+            this.can_cast_madness = false
 
-        if(Func.elipseCollision(a_e, this.target.getBoxElipse())){
-           
-            this.setState(this.setAttackState)
+            if(Func.chance(50)){
+                let a = 6.28 * Math.random()
+                let d_x = Func.random(7, 25)
+                let d_y = Func.random(7, 25)
+
+                let x = this.x + d_x * Math.sin(a)
+                let y = this.y + d_y * Math.cos(a)
+
+                let e = new CureseOfDamnedArea(this.level)
+                e.setPoint(x, y)
+
+                let hit = e.getBoxElipse()
+                hit.r = 10
+
+                this.level.players.forEach(elem => {
+                    if(Func.elipseCollision(hit, elem.getBoxElipse())){
+                        let status = new Fear(this.level.time)
+                        status.setFearTarget(this)
+                        status.setDuration(10000)
+                        this.level.setStatus(elem, status)
+                    }
+                })
+
+                this.level.effects.push(e)
+            }
+            else{
+                let posible = this.level.players.filter(elem => !elem.is_dead)
+
+                let target = posible[Math.floor(Math.random() * posible.length)]
+
+                if(target && posible.length > 1){
+                    let status = new Madness(this.level.time)
+                    status.setDuration(10000)
+
+                    this.level.setStatus(target, status)
+                }
+            }
+
+            setTimeout(() => {
+                this.can_cast_fear = true
+                this.can_cast_madness = true
+            }, 5000);
         }
-        else{
-            this.moveAct()
-        }
+
+        this.moveAct() 
     }
 }

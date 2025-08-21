@@ -30,8 +30,11 @@ export default class SoulShatter extends CultistAbility{
         else{
             this.owner.flipped = false    
         } 
-      
-        this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+
+
+        if(!this.owner.attack_angle){
+            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        }
 
         this.owner.is_attacking = true
         this.owner.state = 'attack'

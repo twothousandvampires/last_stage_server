@@ -114,7 +114,7 @@ export default class Cultist extends Character{
     }
 
     addResourse(count: number = 1, ignore_limit = false){
-        if(!this.can_regen_resource) return
+        if(!this.can_regen_resource || !this.can_get_courage) return
         
         for(let i = 0; i < count;i ++){
             this.recent_hits.push(this.time)
@@ -764,6 +764,7 @@ export default class Cultist extends Character{
         if(this.third_ab?.canUse()){
             this.third_ab?.use()
             this.third_ab.afterUse()
+              this.attack_angle = undefined
         }
         else if(this.second_ab?.canUse()){
             this.useNotUtilityTriggers.forEach(elem => {
@@ -772,7 +773,10 @@ export default class Cultist extends Character{
 
             this.second_ab.use()
             this.last_skill_used_time = this.time
+              this.attack_angle = undefined
         }
+
+        
     }
 
     succesefulHit(){

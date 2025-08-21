@@ -34,7 +34,9 @@ export default class SpecterVortex extends Effect{
 
             this.level.players.forEach(elem => {
                 if(Func.elipseCollision(this.getBoxElipse(), elem.getBoxElipse())){
-                    let status = new Weakness(game_tick, 1000)
+                    let status = new Weakness(game_tick)
+                    status.setDuration(1000)
+
                     this.level.setStatus(elem, status, true)
                 }
             })

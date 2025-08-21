@@ -7,8 +7,8 @@ export default class GhostGrip extends Status{
     effect: any
     name: string
 
-    constructor(public time: number,public duration: number){
-        super(time, duration)
+    constructor(public time: number){
+        super(time)
         this.name = 'ghost grip'
         this.need_to_check_resist = true
     }

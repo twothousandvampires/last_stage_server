@@ -11,8 +11,8 @@ export default class Drained extends Status{
     durability_drained: number
     name: string
     
-    constructor(public time: number,public duration: number){
-      super(time, duration)
+    constructor(public time: number){
+      super(time)
       this.might_drained = 0
       this.speed_drained = 0
       this.will_drained = 0

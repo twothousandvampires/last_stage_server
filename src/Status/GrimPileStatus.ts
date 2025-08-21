@@ -8,8 +8,8 @@ export default class GrimPileStatus extends Status{
     add_speed: number
     add_resistance: number
 
-    constructor(public time: number,public duration: number){
-        super(time, duration)
+    constructor(public time: number){
+        super(time)
         this.name = 'grim pile status'
         this.add_armour = 10
         this.add_speed = 0.1

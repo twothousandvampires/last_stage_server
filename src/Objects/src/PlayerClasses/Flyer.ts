@@ -722,6 +722,12 @@ export default class Flyer extends Character{
         }
         
         this.pay_to_cost = 0
+        this.addCourage()
+    }
+
+    addCourage(){
+        if(!this.can_get_courage) return
+
         this.recent_cast.push(this.time)
 
         if(this.can_be_enlighten && this.recent_cast.length >= 10){
@@ -791,6 +797,7 @@ export default class Flyer extends Character{
             })
             this.third_ab?.use()
             this.last_skill_used_time = this.time
+              this.attack_angle = undefined
         }
         else if(this.second_ab?.canUse()){
             this.useNotUtilityTriggers.forEach(elem => {
@@ -798,7 +805,10 @@ export default class Flyer extends Character{
             })
             this.second_ab.use()
             this.last_skill_used_time = this.time
+              this.attack_angle = undefined
         }
+
+    
     }
 
     succesefulHit(){

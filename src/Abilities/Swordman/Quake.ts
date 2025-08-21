@@ -127,7 +127,9 @@ export default class Quake extends SwordmanAbility{
                 effect2.setPoint(owner.x, owner.y)
 
                 owner.level.effects.push(effect2)
-                let status = new Weakness(owner.time, ability.consequences ? 6000 : 3000)
+                let status = new Weakness(owner.time)
+                status.setDuration(ability.consequences ? 6000 : 3000)
+                
                 owner.level.setStatus(owner, status)
 
                 return

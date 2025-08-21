@@ -10,8 +10,8 @@ export default class BannerOfArmour extends Status{
     y: any
     effect: any
 
-    constructor(public time: number,public duration: number){
-        super(time, duration)
+    constructor(public time: number){
+        super(time)
         this.radius = 10
         this.name = 'banner of armour'
     }
@@ -32,10 +32,6 @@ export default class BannerOfArmour extends Status{
         unit.level.bindedEffects.push(effect)
     }
 
-    isExpired(tick_time: number){
-        return false
-    }
-
     act(tick_time: number){
         if(tick_time > this.last_checked){
             this.last_checked += 2000
@@ -45,7 +41,8 @@ export default class BannerOfArmour extends Status{
 
             this.unit.level.enemies.forEach(elem => {
                 if(Func.elipseCollision(box, elem.getBoxElipse())){
-                    let status = new BannerOfArmourStatus(tick_time, 4000)
+                    let status = new BannerOfArmourStatus(tick_time)
+                    status.setDuration(4000)
                     this.unit.level.setStatus(elem, status)
                 }
             })

@@ -34,6 +34,7 @@ export default abstract class Character extends Unit{
     base_regen_time: number
     grace: number
     mastery: number
+    can_get_courage: boolean
 
     onKillTriggers: any[]
     onHitTriggers: any[]
@@ -97,7 +98,7 @@ export default abstract class Character extends Unit{
         this.mastery = 0
         this.avoid_damaged_state_chance = 0
         this.lust_for_life = false
-
+        this.can_get_courage = true
         this.onKillTriggers = []
         this.onHitTriggers = []
         this.useNotUtilityTriggers = []
@@ -107,7 +108,7 @@ export default abstract class Character extends Unit{
         this.whenHitedTriggers = []
         this.can_regen_resource = true
         this.can_regen_life = true
-        this.light_r = 16
+        this.light_r = 18
         this.can_use_skills = true
         this.upgrades = []
         this.can_generate_upgrades = true
@@ -163,7 +164,8 @@ export default abstract class Character extends Unit{
                         return true
                     },
                     teach: (character: Character) => {
-                        let status = new WithStormStatus(character.time, 100000, 0)
+                        let status = new WithStormStatus(character.time)
+                        status.setPower(1)
                         character.level.setStatus(character, status, true)
                     },
                     cost: 2,
@@ -176,7 +178,8 @@ export default abstract class Character extends Unit{
                         return true
                     },
                     teach: (character: Character) => {
-                        let status = new WithFireStatus(character.time, 100000, 0)
+                        let status = new WithFireStatus(character.time)
+                        status.setPower(0)
                         character.level.setStatus(character, status, true)
                     },
                     cost: 2,
@@ -189,7 +192,8 @@ export default abstract class Character extends Unit{
                         return true
                     },
                     teach: (character: Character) => {
-                        let status = new WithColdStatus(character.time, 100000, 0)
+                        let status = new WithColdStatus(character.time)
+                        status.setPower(0)
                         character.level.setStatus(character, status, true)
                     },
                     cost: 2,
@@ -487,6 +491,10 @@ export default abstract class Character extends Unit{
     subLife(unit: any = undefined, options = {}){
         this.life_status --
 
+        if(Func.chance(this.fragility)){
+            this.life_status --
+        }
+
         if(this.life_status <= 0){
             this.playerTakeLethalDamage()
 
@@ -519,6 +527,7 @@ export default abstract class Character extends Unit{
             }
         }
     }
+    
     playerWasHited(){
         this.whenHitedTriggers.forEach(elem => {
             elem.trigger(this)
@@ -571,6 +580,7 @@ export default abstract class Character extends Unit{
 
     setDyingState(){
         this.can_move_by_player = false
+
         if(this.freezed){
             this.state = 'freezed_dying'
             this.level.sounds.push({
@@ -602,6 +612,7 @@ export default abstract class Character extends Unit{
         this.damaged = true
         this.state = 'damaged'
         this.can_move_by_player = false
+
         this.stateAct = this.damagedAct
 
         this.cancelAct = () => {
@@ -654,10 +665,25 @@ export default abstract class Character extends Unit{
     }
     
     canMove(){
-        return this.can_move_by_player && !this.freezed && !this.zaped
+        return !this.freezed && !this.zaped
     }
 
     directMove(){
+        if(this.canMove()){
+            this.is_moving = true
+            if(this.state === 'idle'){
+                this.state = 'move'
+            }
+        }
+        else if(!this.canMove()){
+            this.reaA()
+            this.is_moving = false
+            if(this.state === 'move'){
+                this.state = 'idle'
+            }
+            return
+        }
+
         let a = this.direct_angle_to_move
         
         let l = 1 - Math.abs(0.5 * Math.cos(a))
@@ -871,6 +897,7 @@ export default abstract class Character extends Unit{
                 })
                 this.first_ab?.use()
                 this.last_skill_used_time = this.time
+                  this.attack_angle = undefined
             }
         }
         else if(this.pressed.r_click){
@@ -926,6 +953,10 @@ export default abstract class Character extends Unit{
     }
 
     public setLastInputs(pressed: any) {
+        if(!this.can_move_by_player){
+            this.pressed = {}
+            return
+        }
         this.pressed = pressed
     }
 

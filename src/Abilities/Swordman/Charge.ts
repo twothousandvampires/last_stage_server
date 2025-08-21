@@ -54,7 +54,9 @@ export default class Charge extends SwordmanAbility{
             this.owner.flipped = false    
         }
 
-        this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)     
+        if(!this.owner.attack_angle){
+            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        }  
         this.owner.state = 'charge'
         this.owner.can_move_by_player = false
         

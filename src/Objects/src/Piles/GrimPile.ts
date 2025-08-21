@@ -31,7 +31,8 @@ export default class GrimPile extends Pile{
 
             this.level.players.forEach(elem => {
                 if(Func.elipseCollision(e, elem.getBoxElipse())){
-                    let status = new GrimPileStatus(elem.time, 2000)
+                    let status = new GrimPileStatus(elem.time)
+                    status.setDuration(2000)
                     status.add_armour += this.power
                     status.add_speed += this.power / 15
                     if(this.increased_effect){

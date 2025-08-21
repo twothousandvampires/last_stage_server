@@ -10,7 +10,7 @@ export class FlameWallObject extends Projectiles{
     w: number
     frendly_flame: boolean
 
-    constructor(level: Level, public burn_time: number = 1000, public duration: number = 3000){
+    constructor(level: Level, public burn_time: number = 1000, public duration = 3000){
         super(level)
         this.box_r = 2
         this.name = 'flame'

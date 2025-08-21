@@ -2,6 +2,7 @@ import Client from "../Client"
 import DoomMantia from "../Items/DoomMantia"
 import FlameRing from "../Items/FlameRing"
 import GlacialChain from "../Items/GlacialChain"
+import GlassSword from "../Items/GlassSword"
 import Item from "../Items/Item"
 import RedPotion from "../Items/RedPotion"
 import SkullOfFirstWarrior from "../Items/SkullOfFirstWarrior"
@@ -66,6 +67,9 @@ export default class Builder{
         }
         else if(item_name === 'sparkling helmet'){
             return new SparklingHelmet()
+        }
+        else if(item_name === 'glass sword'){
+            return new GlassSword()
         }
     }
 }

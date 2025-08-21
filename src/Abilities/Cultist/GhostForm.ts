@@ -44,7 +44,9 @@ export default class GhostForm extends CultistAbility{
             this.owner.setTimerToGetState(ghost_time)
 
             if(this.afterlife_cold){
-                let status = new AfterlifeCold(this.owner.time, ghost_time)
+                let status = new AfterlifeCold(this.owner.time)
+                status.setDuration(ghost_time)
+
                 this.owner.level.setStatus(this.owner, status)
             }
 
@@ -54,7 +56,9 @@ export default class GhostForm extends CultistAbility{
                 this.owner.level.players.forEach(elem => {
                     if(elem != this.owner && Func.elipseCollision(elem.getBoxElipse(), r)){
                         elem.phasing = true
-                        let status = new Weakness(this.owner.time, ghost_time)
+                        let status = new Weakness(this.owner.time)
+                        status.setDuration(ghost_time)
+
                         this.owner.level.setStatus(elem, status)
 
                         setTimeout(() => {
