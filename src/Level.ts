@@ -155,7 +155,8 @@ export default class Level{
     }
 
     setStatus(unit: any, status: any, with_check: boolean = false){
-
+        status.time = this.time
+        
         if(status.checkResist(unit)){
             return
         }

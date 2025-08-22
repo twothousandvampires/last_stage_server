@@ -114,6 +114,7 @@ export default class AnnihilatorBeam extends FlyerAbility{
                 this.pierce -= 100
             }
             this.payCost()
+            this.attack_angle = undefined
             // if(true){
             //     let angle = point.isOutOfMap(point.x - n_x, point.y) ? 0 : 90
 

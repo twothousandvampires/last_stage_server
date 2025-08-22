@@ -134,6 +134,8 @@ export default class Rune extends CultistAbility{
                     }, count * 2000)
                 }
             }
+
+            this.attack_angle = undefined
         }
     }
 }

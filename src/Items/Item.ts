@@ -12,7 +12,7 @@ export default abstract class Item{
         },
         {
             name: "red potion",
-            description: 'when you reach 1 life restores your life to full, uses only one time'
+            description: 'when you reach 1 life restores your life to full and get immortality for short periodR, uses only one time'
         },
         {
             name: "soul accumulator",
@@ -36,6 +36,10 @@ export default abstract class Item{
         {
             name: "glass sword",
             description: 'always deal double damage, always get double damage'
+        },
+        {
+            name: "cloak",
+            description: 'gives a chance to get phasing when get hit'
         },
     ]
 

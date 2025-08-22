@@ -35,7 +35,6 @@ export default class Slam extends CultistAbility{
             this.owner.flipped = false    
         } 
       
-       
         if(!this.owner.attack_angle){
             this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
         }
@@ -115,6 +114,8 @@ export default class Slam extends CultistAbility{
             if(this.first_ab.soul_extraction){
                 this.additional_chance_grace_create -= 10
             }
+
+            this.attack_angle = undefined
         }
     }
 }

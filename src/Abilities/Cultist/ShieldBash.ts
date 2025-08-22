@@ -151,6 +151,7 @@ export default class ShieldBash extends CultistAbility{
             })
 
             this.payCost()
+            this.attack_angle = undefined
         }
     }
 }

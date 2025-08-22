@@ -37,7 +37,6 @@ export default class Madness extends Status {
             if(this.unit.is_attacking) return
             
             if(!this.target || this?.target.is_dead){
-               
                 this.target = this.unit.level.players.filter(elem => elem != this.unit && !elem.is_dead)[0]
                 if(!this.target){
                     return

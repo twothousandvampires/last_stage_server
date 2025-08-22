@@ -86,6 +86,8 @@ export default class FlameWall extends FlyerAbility{
                 flame.setPoint(this.x + n_x, this.y + n_y)
                 this.level.projectiles.push(flame)
             })
+
+            this.attack_angle = undefined
         }
     }
 }

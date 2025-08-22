@@ -92,6 +92,7 @@ export default class ShatteredWeapon extends SwordmanAbility{
     
                 this.level.projectiles.push(proj)
             }
+            this.attack_angle = undefined
         }
     }
 }

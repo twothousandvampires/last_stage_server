@@ -3,6 +3,8 @@ import Builder from "../../Classes/Builder"
 import Func from "../../Func"
 import item from "../../Items/Item"
 import Level from "../../Level"
+import BlessedArmour from "../../Status/BlessedArmour"
+import Touch from "../../Status/Touch"
 import WithColdStatus from "../../Status/WithColdStatus"
 import WithFireStatus from "../../Status/WithFireStatus"
 import WithStormStatus from "../../Status/WithStormStatus"
@@ -70,10 +72,12 @@ export default abstract class Character extends Unit{
     can_be_enlighten: boolean
     cast_speed: number
     mad_target: any
+    after_grace_statuses: any
   
     constructor(level: Level){
         super(level)
         this.pay_to_cost = 0
+        this.after_grace_statuses = []
         this.can_be_enlighten = true
         this.invisible = false
         this.pressed = {}
@@ -108,7 +112,7 @@ export default abstract class Character extends Unit{
         this.whenHitedTriggers = []
         this.can_regen_resource = true
         this.can_regen_life = true
-        this.light_r = 18
+        this.light_r = 16
         this.can_use_skills = true
         this.upgrades = []
         this.can_generate_upgrades = true
@@ -379,6 +383,45 @@ export default abstract class Character extends Unit{
                     },
                     cost: 1,
                     desc: 'you have a chance based of your courage to regen more than life status limit("good")'
+                },
+                {
+                    name: 'vision',
+                    canUse: (character: Character) => {
+                        return character.light_r < 30
+                    },
+                    teach: (character: Character) => {
+                        character.light_r += 2
+                    },
+                    cost: 2,
+                    desc: 'increases your vision'
+                },
+                {
+                    name: 'touch',
+                    type: 'buff',
+                    canUse: (character: Character) => {
+                        return character.after_grace_statuses.filter(elem => elem.name === 'touch').length === 0
+                    },
+                    teach: (character: Character) => {
+                        let status = new Touch(character.time)
+                        status.setDuration(30000)
+                        character.after_grace_statuses.push(status)
+                    },
+                    cost: 1,
+                    desc: 'gives a buff after living grace which increases all stats by 10'
+                },
+                {
+                    name: 'blessed armour',
+                    type: 'buff',
+                    canUse: (character: Character) => {
+                        return character.after_grace_statuses.filter(elem => elem.name === 'blessed armour').length === 0
+                    },
+                    teach: (character: Character) => {
+                        let status = new BlessedArmour(character.time)
+                        status.setDuration(30000)
+                        character.after_grace_statuses.push(status)
+                    },
+                    cost: 1,
+                    desc: 'gives a buff after living grace which increases all stats by 10'
                 },
         ]
     }
@@ -897,7 +940,6 @@ export default abstract class Character extends Unit{
                 })
                 this.first_ab?.use()
                 this.last_skill_used_time = this.time
-                  this.attack_angle = undefined
             }
         }
         else if(this.pressed.r_click){

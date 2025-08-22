@@ -651,7 +651,7 @@ export default class Swordman extends Character{
         if(this.third_ab?.canUse()){
             this.third_ab?.use()
             this.third_ab.afterUse()
-              this.attack_angle = undefined
+            
         }
         else if(this.second_ab?.canUse()){
             this.useNotUtilityTriggers.forEach(elem => {
@@ -660,7 +660,7 @@ export default class Swordman extends Character{
 
             this.second_ab.use()
             this.last_skill_used_time = this.time
-              this.attack_angle = undefined
+    
         }
 
       

@@ -74,8 +74,10 @@ export default class BossFight extends Scenario{
             time: 7000,
             action: (level: Level) => {
                 level.players.forEach((elem, index) => {
-                    elem.x = 60 + index * 2
-                    elem.y = 60 + index * 2
+                    if(elem.zone_id === 0){
+                         elem.x = 60 + index * 2
+                         elem.y = 60 + index * 2
+                    }
                 })
             }
         },
@@ -83,12 +85,13 @@ export default class BossFight extends Scenario{
             time: 7500,
             action: (level: Level) => {
                 level.players.forEach((elem, index) => {
-    
-                    let effect = new CureseOfDamnedArea(level)
-                    effect.x = elem.x
-                    effect.y = elem.y
+                    if(elem.zone_id === 0){
+                         let effect = new CureseOfDamnedArea(level)
+                        effect.x = elem.x
+                        effect.y = elem.y
 
-                    level.effects.push(effect)
+                        level.effects.push(effect)
+                    }
                 })
             }
         },

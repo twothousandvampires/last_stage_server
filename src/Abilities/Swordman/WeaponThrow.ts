@@ -130,6 +130,7 @@ export default class WeaponThrow extends SwordmanAbility{
                     this.level.projectiles.push(add_proj2)
                 }
             }
+            this.attack_angle = undefined
         }
     }
 }

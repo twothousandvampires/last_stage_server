@@ -98,6 +98,7 @@ export default class GrimPile extends CultistAbility{
             this.level.enemies.push(pile)
 
             this.payCost()
+            this.attack_angle = undefined
         }
     }
 }

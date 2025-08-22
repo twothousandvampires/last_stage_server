@@ -193,6 +193,7 @@ export default class LightningBolt extends FlyerAbility{
                     }, 400)
                 }               
             }
+            this.attack_angle = undefined
         }
     }
 }

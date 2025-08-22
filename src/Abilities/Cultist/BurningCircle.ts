@@ -4,10 +4,17 @@ import CultistAbility from "./CultistAbility";
 
 export default class BurningCircle extends CultistAbility{
 
+    consuming: boolean
+    hatred: boolean
+    devouring: boolean
+
     constructor(owner: Cultist){
         super(owner)
         this.name = 'burning circle'
         this.cost = 4
+        this.consuming = false
+        this.hatred = false
+        this.devouring = false
     }
 
     canUse(): boolean {
@@ -30,6 +37,7 @@ export default class BurningCircle extends CultistAbility{
      
         this.owner.stateAct = this.act
         let cact_speed = this.owner.getCastSpeed()
+        this.owner.addMoveSpeedPenalty(-70)
 
         this.owner.action_time = cact_speed
 
@@ -37,6 +45,7 @@ export default class BurningCircle extends CultistAbility{
             this.owner.action = false
     
             setTimeout(()=>{
+                this.owner.addMoveSpeedPenalty(70)
                 this.owner.hit = false
                 this.owner.is_attacking = false
             },50)
@@ -49,14 +58,29 @@ export default class BurningCircle extends CultistAbility{
         if(this.action && !this.hit){
             this.hit = true
             
-             this.level.sounds.push({
+            this.takeDamage()
+
+            this.level.sounds.push({
                     name:'fire cast',
                     x: this.x,
                     y: this.y
             })
 
             let status = new BurningCircleStatus(this.time)
-            status.setDuration(20000)
+            let second = this.getSecondResource()
+            status.setFrequency(1800 - second * 150)
+            
+            status.setDuration(8000)
+
+            if(this.second_ab.consuming){
+                status.setRadius(20)
+            }
+
+            if(this.second_ab.hatred){
+                status.hatred = true
+            }
+            
+            status.devouring = this.second_ab.devouring
 
             this.level.setStatus(this, status)
 

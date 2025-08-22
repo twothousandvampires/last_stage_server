@@ -797,7 +797,7 @@ export default class Flyer extends Character{
             })
             this.third_ab?.use()
             this.last_skill_used_time = this.time
-              this.attack_angle = undefined
+              
         }
         else if(this.second_ab?.canUse()){
             this.useNotUtilityTriggers.forEach(elem => {
@@ -805,7 +805,7 @@ export default class Flyer extends Character{
             })
             this.second_ab.use()
             this.last_skill_used_time = this.time
-              this.attack_angle = undefined
+              
         }
 
     

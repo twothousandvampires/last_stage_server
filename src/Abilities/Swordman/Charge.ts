@@ -95,6 +95,7 @@ export default class Charge extends SwordmanAbility{
                     owner.addPoint()
                 }
                 owner.getState()
+                owner.attack_angle = undefined
             }
             else if(owner.action || ability.start){
                 ability.start = true

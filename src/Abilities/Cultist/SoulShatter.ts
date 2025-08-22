@@ -123,6 +123,7 @@ export default class SoulShatter extends CultistAbility{
             }
           
             this.target = undefined
+            this.attack_angle = undefined
         }
     }
 }

@@ -92,6 +92,7 @@ export default class Teeth extends FlyerAbility{
                 proj.setPoint(this.x, this.y)
     
                 this.level.projectiles.push(proj)
+                this.attack_angle = undefined
             }
         }
     }

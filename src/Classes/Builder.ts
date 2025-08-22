@@ -1,4 +1,6 @@
 import Client from "../Client"
+import Cloak from "../Items/Cloak"
+import Clock from "../Items/Clock"
 import DoomMantia from "../Items/DoomMantia"
 import FlameRing from "../Items/FlameRing"
 import GlacialChain from "../Items/GlacialChain"
@@ -70,6 +72,9 @@ export default class Builder{
         }
         else if(item_name === 'glass sword'){
             return new GlassSword()
+        }
+        else if(item_name === 'cloak'){
+            return new Cloak()
         }
     }
 }

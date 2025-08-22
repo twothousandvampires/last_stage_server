@@ -615,7 +615,7 @@ export default class Cultist extends Character{
                 cost: 1,
                 desc: 'you have a chance to get resourse when you kill enemies'
             },
-             {
+            {
                 name: 'burning circle',
                 type: 'new ability',
                 canUse: (character: Character) => {
@@ -628,7 +628,49 @@ export default class Cultist extends Character{
                     }  
                 },
                 cost: 1,
-                desc: 'you have a chance to get resourse when you kill enemies'
+                desc: 'creates a circle of fire by damaging youself in which enemies take damage, the frequency of receiving damage depends on courage'
+            },
+            {
+                name: 'all-consuming flame',
+                type: 'burning circle',
+                canUse: (character: Character) => {
+                    return character instanceof Cultist && character.second_ab instanceof BurningCircle && !character.second_ab.consuming
+                },
+                teach: (character: Character) => {
+                    if(character instanceof Cultist){
+                       character.second_ab.consuming = true
+                    }  
+                },
+                cost: 1,
+                desc: 'increases radius'
+            },
+            {
+                name: 'fire hatred',
+                type: 'burning circle',
+                canUse: (character: Character) => {
+                    return character instanceof Cultist && character.second_ab instanceof BurningCircle && !character.second_ab.hatred
+                },
+                teach: (character: Character) => {
+                    if(character instanceof Cultist){
+                       character.second_ab.hatred = true
+                    }  
+                },
+                cost: 1,
+                desc: 'gives a chance to create explode when your kill enemy'
+            },
+             {
+                name: 'devouring flame',
+                type: 'burning circle',
+                canUse: (character: Character) => {
+                    return character instanceof Cultist && character.second_ab instanceof BurningCircle && !character.second_ab.devouring
+                },
+                teach: (character: Character) => {
+                    if(character instanceof Cultist){
+                       character.second_ab.devouring = true
+                    }  
+                },
+                cost: 1,
+                desc: 'gives a chance to increase duration when you kill enemy'
             },
         ]
     }
@@ -781,7 +823,7 @@ export default class Cultist extends Character{
         if(this.third_ab?.canUse()){
             this.third_ab?.use()
             this.third_ab.afterUse()
-              this.attack_angle = undefined
+        
         }
         else if(this.second_ab?.canUse()){
             this.useNotUtilityTriggers.forEach(elem => {
@@ -790,7 +832,7 @@ export default class Cultist extends Character{
 
             this.second_ab.use()
             this.last_skill_used_time = this.time
-              this.attack_angle = undefined
+              
         }
 
         

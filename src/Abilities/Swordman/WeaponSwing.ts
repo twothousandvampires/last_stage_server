@@ -156,6 +156,7 @@ export default class WeaponSwing extends SwordmanAbility{
                     })
                 }, 500)
             }
+            this.attack_angle = undefined
         }
     }
 }

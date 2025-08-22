@@ -82,6 +82,7 @@ export default class StaticField extends FlyerAbility{
 
             e.setPoint(this.c_x, this.c_y)
             this.level.bindedEffects.push(e)
+            this.attack_angle = undefined
         }
     }
 }
