@@ -4,21 +4,17 @@ import Item from './Items/Item'
 import item from './Items/Item'
 import Level from './Level'
 
-
 export default class GameServer{
 
-    socket: any
-    level: Level | undefined
-    clients: any
-    game_started: boolean
-    game_loop: any
+    private socket: any
+    private level: Level | undefined = undefined
+    private clients: Map<string, Client> = new Map()
+    private game_started: boolean = false
+    private game_loop: number | null = null
 
     constructor(socket: any){
         this.socket = socket
-        this.level = undefined
         this.initSocket()
-        this.clients = new Map()
-        this.game_started = false
     }
 
     private updateLobby(){
@@ -26,7 +22,7 @@ export default class GameServer{
         this.socket.emit('update_lobby_data', data, item.list)
     }
 
-    private createNewClient(socket: any): Client{
+    private createNewClient(socket: any): Client {
         let client = new Client(socket.id)
         this.clients.set(socket.id, client)
         this.updateLobby()

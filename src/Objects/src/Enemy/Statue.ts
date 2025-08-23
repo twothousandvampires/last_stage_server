@@ -1,6 +1,5 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
-import PileOfEvilStatus from "../../../Status/PileOfEvilStatus";
 import { MagicStar } from "../../Projectiles/MagicStar";
 import Pile from "../Piles/Pile";
 
@@ -15,6 +14,8 @@ export default class Statue extends Pile{
         this.frequency = 4000
         this.cast_time = 1400
         this.casted = false
+        this.create_chance = 0
+        this.count_as_killed = false
         this.getState()
     }
 

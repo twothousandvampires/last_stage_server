@@ -18,6 +18,7 @@ import BossFight from "./BossFight";
 import Scenario from "./Scenario";
 
 export default class Default extends Scenario{ 
+
     last_checked: number
     time_between_wave_ms: number
 
@@ -25,7 +26,6 @@ export default class Default extends Scenario{
         super()
         this.last_checked = 0
         this.time_between_wave_ms = 7500
-        this.kills_to_boss = 1]
     }
 
     start(level: Level){
@@ -33,7 +33,7 @@ export default class Default extends Scenario{
     }
 
     checkTime(level: Level){
-        if(level.kill_count >= 1){
+        if(level.kill_count >= level.boss_kills_trashold){
             level.setScript(new BossFight())
             return
         }

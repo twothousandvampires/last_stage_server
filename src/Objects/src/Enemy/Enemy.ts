@@ -20,10 +20,12 @@ export abstract class Enemy extends Unit{
     create_entity_chance: number
     create_intervention_chance: number
     create_chance: number
+    count_as_killed: boolean
   
     constructor(level: Level){
         super(level)
         this.is_spawning = true
+        this.count_as_killed = true
         this.name = 'enemy'
         this.can_check_player = true
         this.is_corpse = false

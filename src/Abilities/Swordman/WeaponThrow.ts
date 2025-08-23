@@ -17,7 +17,7 @@ export default class WeaponThrow extends SwordmanAbility{
         this.returning = false
         this.shattering = false
         this.name = 'weapon throw'
-        this.multiple = true
+        this.multiple = false
     }
 
     canUse(): boolean {

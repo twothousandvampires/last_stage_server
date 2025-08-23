@@ -9,15 +9,11 @@ import ChargedSphere from "./Objects/Effects/ChargedSphere"
 import Grace from "./Objects/Effects/Grace"
 import Intervention from "./Objects/Effects/Intervention"
 import Default from "./Scenarios/Default"
-import CircleOfGhostWarriors from "./Scenarios/CircleOfGhostWarriors"
-import Bones from "./Objects/src/Enemy/Bones"
-import BonesAttack from "./Scenarios/BonesAttack"
-import Penta from "./Scenarios/Penta"
-import DeadByPiles from "./Scenarios/DeadByPiles"
-import BossMeeting from "./Scenarios/BossMeeting"
 import Scenario from "./Scenarios/Scenario"
 
 export default class Level{
+    boss_kills_trashold: number
+    need_to_check_grace: boolean
     enemies: Unit[]
     players: Player[]
     projectiles: Projectiles[]
@@ -72,6 +68,8 @@ export default class Level{
     ]
     
     constructor(socket: any, public server: any){
+        this.need_to_check_grace = true
+        this.boss_kills_trashold = 150
         this.socket = socket
         this.enemies = []
         this.players = []
@@ -214,6 +212,8 @@ export default class Level{
     }
 
     checkGraceCreating(){
+        if(!this.need_to_check_grace) return
+
         let diff = this.grace_trashold - this.kill_count
         if(diff > 0) return
 
@@ -249,7 +249,11 @@ export default class Level{
         for(let i = 0; i < this.enemies.length; i++){
             let enemy = this.enemies[i]
             if(enemy.is_corpse){
-                this.kill_count ++
+
+                if(enemy.count_as_killed){
+                     this.kill_count ++
+                }
+        
                 this.checkGraceCreating()
 
                 if(Func.chance(enemy.create_chance)){

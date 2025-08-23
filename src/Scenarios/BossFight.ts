@@ -3,17 +3,15 @@ import Level from "../Level";
 import CureseOfDamnedArea from "../Objects/Effects/CureseOfDamnedArea";
 import Boss from "../Objects/src/Bosses/Boss";
 import Bones from "../Objects/src/Enemy/Bones";
-import { Flamy } from "../Objects/src/Enemy/Flamy";
 import FlyingBones from "../Objects/src/Enemy/FlyingBones";
-import Impy from "../Objects/src/Enemy/Impy";
-import Solid from "../Objects/src/Enemy/Solid";
-import Specter from "../Objects/src/Enemy/Specter";
 import Statue from "../Objects/src/Enemy/Statue";
-import Madness from "../Status/Madness";
 import Default from "./Default";
 import Scenario from "./Scenario";
 
-export default class BossFight extends Scenario{
+export default class BossFight extends Scenario {
+
+    check_players_interval: any
+
     constructor(){
         super()
         this.map = [{
@@ -55,7 +53,7 @@ export default class BossFight extends Scenario{
                 })
 
                 //todo return this method
-                level.checkGraceCreating = () => {}
+                level.need_to_check_grace = false
             }
         },
         {
@@ -142,7 +140,7 @@ export default class BossFight extends Scenario{
 
                     e.setPoint(60, 60)
 
-                    setInterval(() => {
+                    this.check_players_interval = setInterval(() => {
                         level.players.forEach(elem => {
                             if(Func.distance(e, elem) > 40){
                                 elem.setPoint(boss.x, boss.y)
@@ -154,92 +152,19 @@ export default class BossFight extends Scenario{
         ]
     }
 
-    createWave(level: Level){
-        let player_in_zone = level.players.some(elem =>  elem.zone_id === 0)
-        if(!player_in_zone) return
-
-        let count = 100
-
-        for(let i = 0; i < count; i++){
-
-            let enemy_name = undefined
-
-            let w = Math.random() * Level.enemy_list.reduce((acc, elem) => acc + elem.weight, 0)
-            let w2 = 0;
-            
-            for (let item of Level.enemy_list) {
-                w2 += item.weight;
-                if (w <= w2) {
-                    enemy_name = item.name;
-                    break;
-                }
-            }
-
-            if(enemy_name === undefined){
-                continue
-            }
-
-            let enemy = undefined
-
-            if(enemy_name === 'solid'){
-                enemy = new Solid(level)
-            }
-            else if(enemy_name === 'flying bones'){
-                enemy = new FlyingBones(level)
-            }
-            else if(enemy_name === 'bones'){
-                enemy = new Bones(level)
-            }
-            else if(enemy_name === 'flamy'){
-                enemy = new Flamy(level)
-            }
-            else if(enemy_name === 'specter'){
-                enemy = new Specter(level)
-            }
-            else if(enemy_name === 'impy'){
-                enemy = new Impy(level)
-            }if(!this.freezed && this.state != 'burn_dying' && !Func.chance(this.ressurect_chance)){
-            this.is_corpse = true
-            this.state = 'dead'
-            this.stateAct = this.deadAct
-            let skull = new Skull(this.level)
-            skull.setPoint(this.x, this.y)
-            this.level.enemies.push(skull)
-        }
-        else{
-            this.state = 'dead_with_skull'
-            this.stateAct = this.deadAct
-            setTimeout(() => {
-                this.setState(this.setResurectAct)
-            }, 3000)
-        }
-        
-            if(!enemy){
-                continue
-            }
-
-            while(enemy.isOutOfMap()){
-                let players_in_zone = level.players.filter(elem => elem.zone_id === 0)
-                let random_player = players_in_zone[Math.floor(Math.random() * players_in_zone.length)]
-                let angle = Math.random() * 6.28
-                let distance_x = Func.random(15, 80)
-                let distance_y = Func.random(15, 80)
-
-                enemy.setPoint(random_player.x + Math.sin(angle) * distance_x, random_player.y + Math.cos(angle) * distance_y)
-            }
-
-            level.enemies.push(enemy)
-        }       
-    }
-
     end(level: Level){
+        clearInterval(this.check_players_interval)
+        this.check_players_interval = undefined
+
         let statues = level.enemies.filter(elem => elem.name === 'statue')
 
         statues.forEach(elem => {
             elem.is_corpse = true
-            level.deleted.push(elem.id)
+            elem.setDyingAct()
         })
 
+        level.need_to_check_grace = true
+        level.boss_kills_trashold += 150
         level.setScript(new Default())
     }
 
