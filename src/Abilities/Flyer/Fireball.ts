@@ -23,7 +23,7 @@ export default class Fireball extends FlyerAbility{
     use(){
         if(this.owner.is_attacking) return
 
-        this.owner.pay_to_cost = this.cost
+        // this.owner.pay_to_cost = this.cost
 
         let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y =  Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
@@ -34,7 +34,7 @@ export default class Fireball extends FlyerAbility{
         else{
             this.owner.flipped = false    
         }
-        console.log(this.owner.attack_angle)
+        
         if(!this.owner.attack_angle){
             this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
         }
@@ -64,7 +64,8 @@ export default class Fireball extends FlyerAbility{
 
     act(){
         if(this.action && !this.hit){
-            this.payCost()
+            this.addCourage()
+            // this.payCost()
             this.hit = true
             this.level.addSound('fire cast', this.x, this.y)
 

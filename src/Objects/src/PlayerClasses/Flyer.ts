@@ -602,6 +602,10 @@ export default class Flyer extends Character{
     subLife(unit: any = undefined, options = {}){
         this.life_status --
 
+        if(Func.chance(this.fragility)){
+            this.life_status --
+        }
+
         if(this.life_status <= 0){
             this.playerTakeLethalDamage()
 
@@ -620,7 +624,6 @@ export default class Flyer extends Character{
             } 
         }   
         else{
-
             if(!Func.chance(this.getSkipDamageStateChance())){
                 this.setState(this.setDamagedAct)
             }
@@ -644,7 +647,7 @@ export default class Flyer extends Character{
     }
 
     getManaRegenTimer(){
-        return 3000 - this.getSecondResource() * 100
+        return 5000 - this.getSecondResource() * 100
     }
 
     startGame(){
@@ -712,17 +715,22 @@ export default class Flyer extends Character{
     useUtility(){
         this.utility?.use()
     }
+
     payCost(){
         let chance = this.knowledge * 2
+
         if(chance > 70){
             chance = 70
         }
+
         if(!Func.chance(chance)){
             this.resource -= this.pay_to_cost
         }
         
         this.pay_to_cost = 0
-        this.addCourage()
+        if(this.second_ab){
+            this.second_ab.used = false
+        }
     }
 
     addCourage(){
@@ -730,7 +738,7 @@ export default class Flyer extends Character{
 
         this.recent_cast.push(this.time)
 
-        if(this.can_be_enlighten && this.recent_cast.length >= 10){
+        if(this.can_be_enlighten && this.recent_cast.length >= 8){
             this.can_be_enlighten = false
 
             this.enlight()
@@ -805,15 +813,6 @@ export default class Flyer extends Character{
             })
             this.second_ab.use()
             this.last_skill_used_time = this.time
-              
-        }
-
-    
-    }
-
-    succesefulHit(){
-        this.onHitTriggers.forEach(elem => {
-            elem.trigger(this)
-        })
+        }  
     }
 }

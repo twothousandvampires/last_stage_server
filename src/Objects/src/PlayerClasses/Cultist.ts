@@ -48,7 +48,7 @@ export default class Cultist extends Character{
         this.avoid_damaged_state_chance = 15
         this.armour_rate = 25
         this.resource = 0
-        this.max_resource = 666
+        this.max_resource = 7
         this.hit_x = undefined
         this.hit_y = undefined
 
@@ -90,7 +90,7 @@ export default class Cultist extends Character{
         let secondary_name = abilities.find(elem => elem.type === 2 && elem.selected).name
         
         if(secondary_name === 'shield bash'){
-            this.second_ab = new BurningCircle(this)
+            this.second_ab = new ShieldBash(this)
         }
         else if(secondary_name === 'grim pile'){
             this.second_ab = new GrimPile(this)
@@ -115,18 +115,18 @@ export default class Cultist extends Character{
         }
     }
 
-    addResourse(count: number = 1, ignore_limit = false){
-        if(!this.can_regen_resource || !this.can_get_courage) return
-        
+    addCourage(count = 1){
+        if(!this.can_get_courage) return
+
         for(let i = 0; i < count;i ++){
             this.recent_hits.push(this.time)
         }
     
-        if(Func.chance(this.durability * 2)){
-            this.recent_hits.push(this.time)
-        }
+        // if(Func.chance(this.durability * 2)){
+        //     this.recent_hits.push(this.time)
+        // }
 
-        if(this.can_be_enlighten && this.recent_hits.length >= 12){
+        if(this.can_be_enlighten && this.recent_hits.length >= 8){
             this.can_be_enlighten = false
 
             this.enlight()
@@ -134,6 +134,20 @@ export default class Cultist extends Character{
             setTimeout(() => {
                 this.can_be_enlighten = true
             }, this.getEnlightenTimer())
+        }
+    }
+
+    addResourse(count: number = 1, ignore_limit = false){
+        if(!this.can_regen_resource) return
+                
+        if(this.resource < this.max_resource || ignore_limit){
+            this.resource += count
+        }
+
+        if(Func.chance(this.durability * 3)){
+            if(this.resource < this.max_resource){
+                this.resource ++
+            }
         }
     }
 
@@ -163,6 +177,10 @@ export default class Cultist extends Character{
     subLife(unit: any = undefined, options = {}){
         this.life_status --
 
+        if(Func.chance(this.fragility)){
+            this.life_status --
+        }
+
         if(this.life_status <= 0){
             this.playerTakeLethalDamage()
 
@@ -183,8 +201,7 @@ export default class Cultist extends Character{
         else{
             if(!Func.chance(this.getSkipDamageStateChance())){
                 this.setState(this.setDamagedAct)
-            }
-           
+            }         
             if(this.life_status === 2){
                 this.addMoveSpeedPenalty(-5)
             }
@@ -231,6 +248,7 @@ export default class Cultist extends Character{
         } 
 
         this.addResourse()
+        this.addCourage()
 
         let arm = this.armour_rate + this.might
         
@@ -430,7 +448,7 @@ export default class Cultist extends Character{
                     }
                 },
                 cost: 1,
-                desc: 'now your shield bash has a chance to reduce attack speed by 50% and now it has reduced cost'
+                desc: 'now your shield bash has a chance to reduce attack speed by 50% and now it has chance not to be used after using'
             },
             {
                 name: 'increase grim pile effect',
@@ -705,7 +723,7 @@ export default class Cultist extends Character{
     }
 
     getSecondResourceTimer(){
-        return 40000 + this.knowledge * 1000
+        return 10000 + this.knowledge * 1000
     }
 
     regen(){
@@ -752,19 +770,17 @@ export default class Cultist extends Character{
         for(let i = 0; i < count; i++){
             let previous = this.life_status
 
-            if(previous >= 3 && !ignore_limit){
-                if(previous >= 3 && !ignore_limit){
-                    if(this.lust_for_life && Func.chance(this.getSecondResource() * 5)){
-                
-                    }
-                    else{
-                        return
-                    } 
+            if(previous >= 3){
+                if(ignore_limit || (this.lust_for_life && Func.chance(this.getSecondResource() * 4))){
+
                 }
+                else{
+                    return
+                } 
             }
             
             this.life_status ++
-
+            this.playerWasHealed()
             if(previous === 1){
                 this.addMoveSpeedPenalty(10)
             }
@@ -795,7 +811,7 @@ export default class Cultist extends Character{
     toJSON(){
         return Object.assign(super.toJSON(),
             {
-                resource: this.getSecondResource(),
+                resource: this.resource,
                 max_resource: this.max_resource,
                 life_status: this.life_status,
                 first: this.first_ab?.canUse(),
@@ -832,16 +848,7 @@ export default class Cultist extends Character{
 
             this.second_ab.use()
             this.last_skill_used_time = this.time
-              
         }
-
-        
-    }
-
-    succesefulHit(){
-        this.onHitTriggers.forEach(elem => {
-            elem.trigger(this)
-        })
     }
 
     getCastSpeed(){
@@ -855,11 +862,15 @@ export default class Cultist extends Character{
     }
 
     payCost(){
-        if(!Func.chance(this.knowledge * 3)){
-            this.recent_hits = this.recent_hits.filter((elem, index) => index >= this.pay_to_cost) 
+        if(!Func.chance(this.knowledge * 4)){
+            this.resource -= this.pay_to_cost
         }
-       
+        
         this.pay_to_cost = 0 
+
+        if(this.second_ab){
+            this.second_ab.used = false
+        }
     }
 
     isStatusResist(){

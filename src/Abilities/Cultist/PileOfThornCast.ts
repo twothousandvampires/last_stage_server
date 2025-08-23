@@ -15,11 +15,11 @@ export default class PileOfThornCast extends CultistAbility{
         this.distance = 25
         this.ring_of_pain = false
         this.collection_of_bones = false
-        this.cost = 5
+        this.cost = 7
     }
 
     canUse(): boolean {
-        return this.owner.getSecondResource() >= this.cost && this.owner.can_cast
+        return this.owner.resource >= this.cost && this.owner.can_cast
     }
 
     afterUse(){

@@ -17,12 +17,12 @@ export default class UnleashPain extends CultistAbility{
     }
 
     canUse(): boolean {
-        return this.owner.getSecondResource() >= this.cost && this.owner.can_attack
+        return this.owner.resource >= this.cost && this.owner.can_attack
     }
 
     afterUse(){
         this.owner.useNotUtilityTriggers.forEach(elem => {
-                elem.trigger(this.owner)
+            elem.trigger(this.owner)
         })
     }
 
@@ -31,10 +31,10 @@ export default class UnleashPain extends CultistAbility{
         
         this.owner.pay_to_cost = this.cost
 
-        this.owner.can_move_by_player = false
-
         this.owner.is_attacking = true
         this.owner.state = 'attack'
+        let move_speed_reduce = this.owner.getMoveSpeedReduceWhenUseSkill()
+        this.owner.addMoveSpeedPenalty(-move_speed_reduce)
      
         this.owner.stateAct = this.act
         let attack_speed = this.owner.getAttackSpeed()
@@ -47,7 +47,7 @@ export default class UnleashPain extends CultistAbility{
             setTimeout(()=>{
                 this.owner.hit = false
                 this.owner.is_attacking = false
-                this.owner.can_move_by_player = true
+                this.owner.addMoveSpeedPenalty(move_speed_reduce)
             },50)
         }
 
@@ -72,10 +72,10 @@ export default class UnleashPain extends CultistAbility{
                 return Func.elipseCollision(elem.getBoxElipse(), e)
             })
 
-            let count = 5
+            let count = 7
 
             if(this.third_ab.reign_of_pain){
-                count += this.getSecondResource() * 2
+                count += this.getSecondResource() * 3
             }
 
             let enemyw = enemy.slice(0, 30)

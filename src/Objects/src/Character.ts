@@ -45,6 +45,7 @@ export default abstract class Character extends Unit{
     playerDeadTriggers: any[]
     playerTakeLethalDamageTriggers: any[]
     whenHitedTriggers: any[]
+    onHealTriggers: any[]
 
     avoid_damaged_state_chance: number 
     can_be_lethaled: boolean
@@ -73,10 +74,12 @@ export default abstract class Character extends Unit{
     cast_speed: number
     mad_target: any
     after_grace_statuses: any
+    chance_second_skill_not_to_be_used: number
   
     constructor(level: Level){
         super(level)
         this.pay_to_cost = 0
+        this.chance_second_skill_not_to_be_used = 0
         this.after_grace_statuses = []
         this.can_be_enlighten = true
         this.invisible = false
@@ -110,6 +113,7 @@ export default abstract class Character extends Unit{
         this.playerDeadTriggers = []
         this.playerTakeLethalDamageTriggers = []
         this.whenHitedTriggers = []
+        this.onHealTriggers = []
         this.can_regen_resource = true
         this.can_regen_life = true
         this.light_r = 16
@@ -426,6 +430,12 @@ export default abstract class Character extends Unit{
         ]
     }
 
+    afterUseSecond(){
+        if(this.second_ab && !Func.chance(this.chance_second_skill_not_to_be_used)){
+            this.second_ab.used = true
+        }
+    }
+
     takePureDamage(){
         this.subLife()
     }
@@ -504,8 +514,8 @@ export default abstract class Character extends Unit{
         for(let i = 0; i < count; i++){
             let previous = this.life_status
 
-            if(previous >= 3 && !ignore_limit){
-                if(this.lust_for_life && Func.chance(this.getSecondResource() * 4)){
+            if(previous >= 3){
+                if(ignore_limit || (this.lust_for_life && Func.chance(this.getSecondResource() * 4))){
 
                 }
                 else{
@@ -514,6 +524,7 @@ export default abstract class Character extends Unit{
             }
 
             this.life_status ++
+            this.playerWasHealed()
             if(previous === 1){
                 this.addMoveSpeedPenalty(30)
             }
@@ -521,6 +532,12 @@ export default abstract class Character extends Unit{
                 this.addMoveSpeedPenalty(10)
             }
         }
+    }
+
+    playerWasHealed(){
+        this.onHealTriggers.forEach(elem => {
+            elem.trigger(this)
+        })
     }
 
     getWeaponHitedSound(){
@@ -601,9 +618,9 @@ export default abstract class Character extends Unit{
         })
     }
 
-    succesefulHit(){
+    succesefulHit(target = undefined){
         this.onHitTriggers.forEach(elem => {
-            elem.trigger(this)
+            elem.trigger(this, target)
         })
     }
 

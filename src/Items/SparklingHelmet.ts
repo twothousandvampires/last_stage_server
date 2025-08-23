@@ -12,7 +12,7 @@ export default class SparklingHelmet extends Item{
     constructor(){
         super()
         this.power = 0
-        this.time_beetween_proc = 7000
+        this.time_beetween_proc = 5000
     }
     
     equip(character: Character): void {
@@ -29,7 +29,7 @@ export default class SparklingHelmet extends Item{
                 
     forge(character: Character): void {
         this.power ++
-        this.time_beetween_proc -= 1000       
+        this.time_beetween_proc -= 500       
     }
 
     apply(unit: any){
@@ -52,6 +52,7 @@ export default class SparklingHelmet extends Item{
     isExpired(){
         return false
     }
+
     act(tick_time: number){
         if(tick_time - this.unit.last_skill_used_time >= this.time_beetween_proc){
             if(tick_time >= this.last_trigger_time){
@@ -60,6 +61,7 @@ export default class SparklingHelmet extends Item{
             }
         }
     }
+
     trigger(){
         let e = new BigShockNova(this.unit.level)
         e.setOwner(this.unit)

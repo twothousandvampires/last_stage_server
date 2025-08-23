@@ -26,8 +26,6 @@ export default class LightningBolt extends FlyerAbility{
     use(){
         if(this.owner.is_attacking) return
 
-        this.owner.pay_to_cost = this.cost
-
         let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
         
@@ -71,7 +69,7 @@ export default class LightningBolt extends FlyerAbility{
 
     async act(){
         if(this.action && !this.hit){
-            this.payCost()
+            this.addCourage()
             this.hit = true
           
             if(this.target){
@@ -115,7 +113,6 @@ export default class LightningBolt extends FlyerAbility{
                     }
                     else if(max_targets > 0){
                         max_targets--
-                        this.succesefulHit()
                         elem.takeDamage(this, {
                             burn: true
                         })
@@ -171,7 +168,6 @@ export default class LightningBolt extends FlyerAbility{
                             }
                             else if(max_targets > 0){
                                 max_targets--
-                                this.succesefulHit()
                                 elem.takeDamage(this, {
                                     burn: true
                                 })

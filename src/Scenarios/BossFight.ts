@@ -10,6 +10,7 @@ import Solid from "../Objects/src/Enemy/Solid";
 import Specter from "../Objects/src/Enemy/Specter";
 import Statue from "../Objects/src/Enemy/Statue";
 import Madness from "../Status/Madness";
+import Default from "./Default";
 import Scenario from "./Scenario";
 
 export default class BossFight extends Scenario{
@@ -197,7 +198,21 @@ export default class BossFight extends Scenario{
             }
             else if(enemy_name === 'impy'){
                 enemy = new Impy(level)
-            }
+            }if(!this.freezed && this.state != 'burn_dying' && !Func.chance(this.ressurect_chance)){
+            this.is_corpse = true
+            this.state = 'dead'
+            this.stateAct = this.deadAct
+            let skull = new Skull(this.level)
+            skull.setPoint(this.x, this.y)
+            this.level.enemies.push(skull)
+        }
+        else{
+            this.state = 'dead_with_skull'
+            this.stateAct = this.deadAct
+            setTimeout(() => {
+                this.setState(this.setResurectAct)
+            }, 3000)
+        }
         
             if(!enemy){
                 continue
@@ -215,6 +230,17 @@ export default class BossFight extends Scenario{
 
             level.enemies.push(enemy)
         }       
+    }
+
+    end(level: Level){
+        let statues = level.enemies.filter(elem => elem.name === 'statue')
+
+        statues.forEach(elem => {
+            elem.is_corpse = true
+            level.deleted.push(elem.id)
+        })
+
+        level.setScript(new Default())
     }
 
     start(level: Level): void {

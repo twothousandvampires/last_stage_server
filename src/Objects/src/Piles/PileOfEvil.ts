@@ -7,7 +7,7 @@ export default class PileOfEvil extends Pile{
 
     constructor(level: Level){
         super(level)
-        this.frequency = 4000
+        this.frequency = 3000
         this.getState()
     }
 

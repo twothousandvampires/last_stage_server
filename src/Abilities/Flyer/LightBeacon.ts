@@ -49,6 +49,7 @@ export default class LightBeacon extends FlyerAbility{
             this.owner.can_move_by_player = true
             this.owner.hit = false
             this.owner.is_attacking = false
+            this.owner.can_regen_resource = true
             this.owner.z = 0
             this.owner.light_r -= 5
             if(this.air_form){
@@ -76,7 +77,7 @@ export default class LightBeacon extends FlyerAbility{
                     owner.state = 'light beacon'
                     owner.z += 2
                     owner.light_r += 5
-
+                    owner.can_regen_resource = false
                     let box = owner.getBoxElipse()
                     box.r = 17
 
@@ -99,8 +100,6 @@ export default class LightBeacon extends FlyerAbility{
                             }
                         })
                         }, timer_freq)
-
-                       
                     }
                     else{
                         let timer_freq = 150 - (owner.getAdditionalRadius() * 10)

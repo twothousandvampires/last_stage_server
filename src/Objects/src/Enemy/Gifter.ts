@@ -51,26 +51,28 @@ export default class Gifter extends Pile{
     takeDamage(unit: any = undefined, options: any = {}){
         if(this.is_dead) return
         
-        this.life_status --
+        let damage_value = 1
 
         if(options?.damage_value){
-            this.life_status -= options.damage_value
+            damage_value = options.damage_value
         }
-        else{
-            this.life_status --
-        }
-
-        if(unit?.critical && Func.chance(unit.critical)){
-            this.life_status --
+        
+        if(unit && unit?.critical && Func.chance(unit.critical)){
+            damage_value *= 2
         }
 
+        if(Func.chance(this.fragility)){
+            damage_value *= 2
+        }
+
+        this.life_status -= damage_value
+        
+        unit?.succesefulHit(this)
+        
         if(this.life_status <= 0){
             this.is_dead = true
             unit?.succesefulKill()
             this.setDyingAct()
-        }
-        else{
-            unit?.succesefulHit()
         }
     }
 

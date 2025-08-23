@@ -12,17 +12,15 @@ export default class AnnihilatorBeam extends FlyerAbility{
         super(owner)
         this.cost = 5
         this.name = 'annihilator beam'
-        this.concentrating_energy = true
+        this.concentrating_energy = false
     }
 
     canUse(){
-        return this.owner.resource >= this.cost
+        return this.owner.resource >= this.cost && !this.used
     }
 
     use(){
         if(this.owner.is_attacking) return
-
-        this.owner.pay_to_cost = this.cost
 
         let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
@@ -113,8 +111,9 @@ export default class AnnihilatorBeam extends FlyerAbility{
              if(this.second_ab.concentrating_energy){
                 this.pierce -= 100
             }
-            this.payCost()
+            this.addCourage()
             this.attack_angle = undefined
+            this.afterUseSecond()
             // if(true){
             //     let angle = point.isOutOfMap(point.x - n_x, point.y) ? 0 : 90
 

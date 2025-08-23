@@ -110,7 +110,6 @@ export default class WeaponSwing extends SwordmanAbility{
                 elem.takeDamage(this)
                 if(!point_added){
                     this.level.addSoundObject(elem.getWeaponHitedSound())
-                    this.succesefulHit()
                     this.addPoint()
                     point_added = true
                 }

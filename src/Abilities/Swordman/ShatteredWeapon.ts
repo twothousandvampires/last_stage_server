@@ -21,7 +21,6 @@ export default class ShatteredWeapon extends SwordmanAbility{
         if(this.owner.is_attacking) return
 
         this.owner.is_attacking = true
-        this.used = true
 
         let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
@@ -93,6 +92,7 @@ export default class ShatteredWeapon extends SwordmanAbility{
                 this.level.projectiles.push(proj)
             }
             this.attack_angle = undefined
+            this.afterUseSecond()
         }
     }
 }

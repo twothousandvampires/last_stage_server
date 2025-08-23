@@ -39,7 +39,6 @@ export default class Charge extends SwordmanAbility{
         if(this.owner.is_attacking) return
 
         this.owner.is_attacking = true
-        this.used = true
 
         this.start_x = this.owner.x
         this.start_y = this.owner.y
@@ -96,6 +95,7 @@ export default class Charge extends SwordmanAbility{
                 }
                 owner.getState()
                 owner.attack_angle = undefined
+                owner.afterUseSecond()
             }
             else if(owner.action || ability.start){
                 ability.start = true

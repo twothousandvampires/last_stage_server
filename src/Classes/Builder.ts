@@ -1,6 +1,8 @@
 import Client from "../Client"
+import ChargedBow from "../Items/ChargedBow"
 import Cloak from "../Items/Cloak"
 import Clock from "../Items/Clock"
+import DaggerOfSmoke from "../Items/DaggerOfSmoke"
 import DoomMantia from "../Items/DoomMantia"
 import FlameRing from "../Items/FlameRing"
 import GlacialChain from "../Items/GlacialChain"
@@ -10,6 +12,7 @@ import RedPotion from "../Items/RedPotion"
 import SkullOfFirstWarrior from "../Items/SkullOfFirstWarrior"
 import SoulAccumulator from "../Items/SoulAccumulator"
 import SparklingHelmet from "../Items/SparklingHelmet"
+import Staff from "../Items/Staff"
 import WallOfBones from "../Items/WallOfBones"
 import Level from "../Level"
 import Character from "../Objects/src/Character"
@@ -75,6 +78,15 @@ export default class Builder{
         }
         else if(item_name === 'cloak'){
             return new Cloak()
+        }
+        else if(item_name === 'staff'){
+            return new Staff()
+        }
+        else if(item_name === 'charged bow'){
+            return new ChargedBow()
+        }
+        else if(item_name === 'dagger of smoke'){
+            return new DaggerOfSmoke()
         }
     }
 }

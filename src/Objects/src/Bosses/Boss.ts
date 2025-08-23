@@ -21,7 +21,7 @@ export default class Boss extends Enemy{
         this.move_speed = 0.05
         this.attack_radius = 6
         this.attack_speed = 1600
-        this.life_status = 20
+        this.life_status = 2
         this.spawn_time = 2200
         this.apathy_radius = 10
         this.getState()
@@ -32,16 +32,14 @@ export default class Boss extends Enemy{
     }
 
     takeDamage(unit: any = undefined, options: any = {}){
-            return
-
             if(this.is_dead) return
             
-            if(options?.instant_death){
-                unit?.succesefulKill()
-                this.is_dead = true
-                this.setDyingAct()
-                return
-            }
+            // if(options?.instant_death){
+            //     unit?.succesefulKill()
+            //     this.is_dead = true
+            //     this.setDyingAct()
+            //     return
+            // }
     
             if(this.checkArmour(unit)){
                 this.level.sounds.push({
@@ -56,57 +54,45 @@ export default class Boss extends Enemy{
                 return
             }
     
-           if(options?.damage_value){
-                this.life_status -= options.damage_value
+           let damage_value = 1
+           
+            if(options?.damage_value){
+                damage_value = options.damage_value
             }
-            else{
-                this.life_status --
-            }
-
-            if(unit?.critical && Func.chance(unit.critical)){
-                this.life_status --
+            
+            if(unit && unit?.critical && Func.chance(unit.critical)){
+                damage_value *= 2
             }
     
+            if(Func.chance(this.fragility)){
+                damage_value *= 2
+            }
+    
+            this.life_status -= damage_value
+            unit?.succesefulHit(this)
+    
             if(this.life_status <= 0){
-                if(unit?.blessed){
-                    this.ressurect_chance = Math.round(this.ressurect_chance / 2)
-                }
-                if(options?.explode){
-                    this.dead_type = 'explode'
-                    this.is_corpse = true
-                    this.level.addSoundObject(this.getExplodedSound())
-                }
-                else if(options?.burn){
-                    this.dead_type = 'burn_dying'
-                    this.is_corpse = true
-                }
-                
                 this.is_dead = true
-                this.create_grace_chance += unit?.additional_chance_grace_create ? unit?.additional_chance_grace_create : 0
                 unit?.succesefulKill()
                 this.setDyingAct()
             }
-            else{
-                unit?.succesefulHit()
-            }
+    }
+
+    setDyingAct(){
+        this.state = 'dying'
+        this.is_corpse = true
+        this.level.deleted.push(this.id)
+        this.stateAct = this.DyingAct
+        this.setTimerToGetState(this.dying_time)
+
+        setTimeout(() => {
+            this.level.script.end(this.level)
+        }, 2000)
     }
 
     setDeadState(){
-        if(!this.freezed && this.state != 'burn_dying' && !Func.chance(this.ressurect_chance)){
-            this.is_corpse = true
-            this.state = 'dead'
-            this.stateAct = this.deadAct
-            let skull = new Skull(this.level)
-            skull.setPoint(this.x, this.y)
-            this.level.enemies.push(skull)
-        }
-        else{
-            this.state = 'dead_with_skull'
-            this.stateAct = this.deadAct
-            setTimeout(() => {
-                this.setState(this.setResurectAct)
-            }, 3000)
-        }
+        this.state = 'dead'
+        this.stateAct = this.deadAct
     }
 
     getWeaponHitedSound(){

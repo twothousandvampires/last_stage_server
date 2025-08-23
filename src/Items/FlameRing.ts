@@ -29,9 +29,7 @@ export default class FlameRing extends Item{
     }
     
     trigger(character: Character){
-       
         if(Func.chance(this.chance)){
-           
             let targets = character.level.enemies.concat(character.level.players.filter(elem => elem != character))
             targets = targets.filter(elem => Func.distance(elem, character) <= this.distance)
 

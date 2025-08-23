@@ -18,17 +18,18 @@ export default class ForkedLightning extends FlyerAbility{
     }
 
     canUse(){
-        return this.owner.resource >= this.cost
+        return this.owner.resource >= this.cost && !this.used
     }
 
     use(){
         if(this.owner.is_attacking) return
-
-        this.owner.pay_to_cost = this.cost
+        
+        // this.owner.pay_to_cost = this.cost
 
         let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
-        
+       
+
         if(rel_x < this.owner.x){
             this.owner.flipped = true
         }
@@ -66,7 +67,10 @@ export default class ForkedLightning extends FlyerAbility{
 
     act(){
         if(this.action && !this.hit){
-            this.payCost()
+
+            // this.payCost()
+            this.addCourage()
+
             this.hit = true
             this.level.addSound('lightning cast', this.x, this.y)
 
@@ -87,6 +91,7 @@ export default class ForkedLightning extends FlyerAbility{
 
             this.level.projectiles.push(proj)
             this.attack_angle = undefined
+            this.afterUseSecond()
         }
     }
 }

@@ -93,6 +93,7 @@ export abstract class Enemy extends Unit{
         else{
             this.state = this.dead_type ? this.dead_type : 'dying'
         }
+
         this.stateAct = this.DyingAct
         this.setTimerToGetState(this.dying_time)
     }
@@ -151,7 +152,7 @@ export abstract class Enemy extends Unit{
            damage_value = options.damage_value
         }
        
-        if(unit?.critical && Func.chance(unit.critical)){
+        if(unit && unit?.critical && Func.chance(unit.critical)){
             damage_value *= 2
         }
 
@@ -160,9 +161,9 @@ export abstract class Enemy extends Unit{
         }
 
         this.life_status -= damage_value
-
+        unit?.succesefulHit(this)
+        
         if(this.life_status <= 0){
-           
             if(options?.explode){
                 this.dead_type = 'explode'
                 this.is_corpse = true
@@ -178,9 +179,8 @@ export abstract class Enemy extends Unit{
             unit?.succesefulKill()
             this.setDyingAct()
         }
-        else{
-            unit?.succesefulHit()
-        }
+        
+        
     }
 
     getWeaponHitedSound(){

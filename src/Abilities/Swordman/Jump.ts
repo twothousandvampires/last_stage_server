@@ -126,6 +126,7 @@ export default class Jump extends SwordmanAbility{
 
                 owner.getState()
                 owner.attack_angle = undefined
+                owner.afterUseSecond()
                 return
             }
             

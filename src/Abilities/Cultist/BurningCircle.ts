@@ -18,19 +18,17 @@ export default class BurningCircle extends CultistAbility{
     }
 
     canUse(): boolean {
-        return this.owner.getSecondResource() >= this.cost && this.owner.can_attack
+        return this.owner.resource >= this.cost && !this.used
     }
 
     afterUse(){
         this.owner.useNotUtilityTriggers.forEach(elem => {
-                elem.trigger(this.owner)
+            elem.trigger(this.owner)
         })
     }
 
     use(){
         if(this.owner.is_attacking) return
-        
-        this.owner.pay_to_cost = this.cost
 
         this.owner.is_attacking = true
         this.owner.state = 'cast'
@@ -84,7 +82,7 @@ export default class BurningCircle extends CultistAbility{
 
             this.level.setStatus(this, status)
 
-            this.payCost()
+            this.afterUseSecond()
         }
     }
 }

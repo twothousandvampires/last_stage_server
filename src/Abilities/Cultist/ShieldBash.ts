@@ -19,7 +19,7 @@ export default class ShieldBash extends CultistAbility{
     }
 
     canUse(): boolean {
-        return this.owner.getSecondResource() >= this.cost && this.owner.can_attack
+        return this.owner.resource >= this.cost && this.owner.can_attack && !this.used
     }
 
     use(){
@@ -27,13 +27,6 @@ export default class ShieldBash extends CultistAbility{
        
         let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
-
-        if(this.coordination){
-            this.owner.pay_to_cost = Math.round(this.cost /  2)
-        }
-        else{
-            this.owner.pay_to_cost = this.cost
-        }
         
         this.owner.c_x = rel_x
         this.owner.c_y = rel_y  
@@ -44,7 +37,6 @@ export default class ShieldBash extends CultistAbility{
         else{
             this.owner.flipped = false    
         } 
-        
         
         if(!this.owner.attack_angle){
             this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
@@ -73,7 +65,6 @@ export default class ShieldBash extends CultistAbility{
                 this.owner.is_attacking = false
                 this.owner.hit_x = undefined
                 this.owner.hit_y = undefined
-                this.used = false
             },50)
         }
 
@@ -150,8 +141,12 @@ export default class ShieldBash extends CultistAbility{
                 y: this.y
             })
 
-            this.payCost()
             this.attack_angle = undefined
+            this.afterUseSecond()
+
+            if(this.second_ab.used === true && this.second_ab.coordination && Func.chance(30)){
+                this.second_ab.used = false
+            }
         }
     }
 }

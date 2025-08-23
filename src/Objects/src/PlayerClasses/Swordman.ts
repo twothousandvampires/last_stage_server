@@ -582,19 +582,17 @@ export default class Swordman extends Character{
         for(let i = 0; i < count; i++){
             let previous = this.life_status
 
-            if(previous >= 3 && !ignore_limit){
-                if(previous >= 3 && !ignore_limit){
-                    if(this.lust_for_life && Func.chance(this.getSecondResource() * 3)){
-                
-                    }
-                    else{
-                        return
-                    } 
+            if(previous >= 3){
+                if(ignore_limit || (this.lust_for_life && Func.chance(this.getSecondResource() * 4))){
+
                 }
+                else{
+                    return
+                } 
             }
 
             this.life_status ++
-
+            this.playerWasHealed()
             if(previous === 1){
                 this.addMoveSpeedPenalty(30)
             }
@@ -660,10 +658,7 @@ export default class Swordman extends Character{
 
             this.second_ab.use()
             this.last_skill_used_time = this.time
-    
         }
-
-      
     }
 
     addResourse(count: number = 1, ignore_limit = false){
@@ -683,12 +678,6 @@ export default class Swordman extends Character{
        }
 
        this.resource += count
-    }
-
-    succesefulHit(){
-        this.onHitTriggers.forEach(elem => {
-            elem.trigger(this)
-        })
     }
 
     setDefend(){

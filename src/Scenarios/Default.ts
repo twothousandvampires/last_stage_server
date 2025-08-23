@@ -15,14 +15,17 @@ import PileOfSummoning from "../Objects/src/Piles/PileOfSummoning";
 import PileOfVeil from "../Objects/src/Piles/PileOfVeil";
 import BannerOfArmour from "../Status/BannerOfArmour";
 import BossFight from "./BossFight";
+import Scenario from "./Scenario";
 
-export default class Default{
+export default class Default extends Scenario{ 
     last_checked: number
     time_between_wave_ms: number
 
     constructor(){
+        super()
         this.last_checked = 0
         this.time_between_wave_ms = 7500
+        this.kills_to_boss = 1]
     }
 
     start(level: Level){
@@ -30,7 +33,7 @@ export default class Default{
     }
 
     checkTime(level: Level){
-        if(level.kill_count >= 220){
+        if(level.kill_count >= 1){
             level.setScript(new BossFight())
             return
         }
@@ -107,7 +110,7 @@ export default class Default{
                     case 'shock':
                         enemy =  new PileOfStorm(level)
                         break;
-                    case 'shock':
+                    case 'summon':
                         enemy =  new PileOfSummoning(level)
                         break;
                     case 'dead':
