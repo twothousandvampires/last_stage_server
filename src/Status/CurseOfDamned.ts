@@ -22,7 +22,7 @@ export default class CurseOfDamned extends Status{
 
         this.unit.statusWasApplied()
             
-        this.unit.level.bindedEffects.push(this.effect)
+        this.unit.level.binded_effects.push(this.effect)
     }
 
     clear(){
@@ -41,7 +41,7 @@ export default class CurseOfDamned extends Status{
             this.unit.level.effects.push(e)
 
             this.unit.level.deleted.push(this.effect.id)
-            this.unit.level.bindedEffects = this.unit.level.bindedEffects.filter(e => e != this.effect)
+            this.unit.level.binded_effects = this.unit.level.binded_effects.filter(e => e != this.effect)
         }
     }
 }

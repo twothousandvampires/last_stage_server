@@ -22,7 +22,7 @@ export default class GlacialChain extends Item{
     }
     
     equip(character: Character): void {
-        character.useNotUtilityTriggers.push(this)
+        character.use_not_utility_triggers.push(this)
     }
 
     trigger(character: Character){

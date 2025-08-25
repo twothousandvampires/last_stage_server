@@ -90,7 +90,7 @@ export default class ShieldBash extends CultistAbility{
             this.target = undefined
          
             filtered_to_damage.concat(filtered_to_damage_players).forEach(elem => {
-                if(this.second_ab.hate && Func.chance(40)){
+                if(this.second_ability.hate && Func.chance(40)){
 
                     elem.takeDamage(this, {
                         explode: true
@@ -119,12 +119,12 @@ export default class ShieldBash extends CultistAbility{
                 }   
             })
 
-            if(!this.second_ab.hate){
-                let stan_duration = this.second_ab.deafening_wave ? 3000 : 2000
+            if(!this.second_ability.hate){
+                let stan_duration = this.second_ability.deafening_wave ? 3000 : 2000
                 stan_duration += second_resource * 100
                 attack_elipse.r = 12
 
-                if(this.second_ab.deafening_wave){
+                if(this.second_ability.deafening_wave){
                     attack_elipse.r += 8
                 }
                 let filtered_to_stun = f.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
@@ -144,8 +144,8 @@ export default class ShieldBash extends CultistAbility{
             this.attack_angle = undefined
             this.afterUseSecond()
 
-            if(this.second_ab.used === true && this.second_ab.coordination && Func.chance(30)){
-                this.second_ab.used = false
+            if(this.second_ability.used === true && this.second_ability.coordination && Func.chance(30)){
+                this.second_ability.used = false
             }
         }
     }

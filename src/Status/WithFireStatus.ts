@@ -3,13 +3,9 @@ import { FlameWallObject } from "../Objects/Projectiles/FlameWallObject"
 import Status from "./Status"
 
 export default class WithFireStatus extends Status{
-   
-    last_checked: number
-    name: string
 
-    constructor(public time: number){
+    constructor(time: number){
         super(time)
-        this.last_checked = time
         this.name = 'with fire status'
     }
 

@@ -57,12 +57,12 @@ export default class Grace extends Effect{
     }
 
     deleteStatus(player: Character){
-        for(let i = 0; i < this.level.statusPull.length; i++){
-            let s = this.level.statusPull[i]
+        for(let i = 0; i < this.level.status_pull.length; i++){
+            let s = this.level.status_pull[i]
 
             if(s.unit === player && s.name === 'time stoped'){
                 s.clear()
-                this.level.statusPull.splice(i, 1)
+                this.level.status_pull.splice(i, 1)
                 break
             }
         }   
@@ -119,7 +119,7 @@ export default class Grace extends Effect{
 
     generateEffects(){
         let teacher = new Teacher(this.level)
-        this.level.bindedEffects.push(teacher)
+        this.level.binded_effects.push(teacher)
 
         let stars_count = 60
         let centr_x = 180
@@ -134,18 +134,18 @@ export default class Grace extends Effect{
                         Math.round(centr_y + Math.cos(angle) * Func.random(12, 80))
                         )
     
-            this.level.bindedEffects.push(star)
+            this.level.binded_effects.push(star)
         }
     }
 
     deleteEffects(){
-        let to_delete = this.level.bindedEffects.filter(elem => elem.zone_id === 1)
+        let to_delete = this.level.binded_effects.filter(elem => elem.zone_id === 1)
         to_delete.forEach(elem => {
             this.level.deleted.push(elem.id)
         })
-        this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem.zone_id != 1)
+        this.level.binded_effects = this.level.binded_effects.filter(elem => elem.zone_id != 1)
 
         this.level.deleted.push(this.id)
-        this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem != this)
+        this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
     }
 }

@@ -26,11 +26,11 @@ export default class Quake extends SwordmanAbility{
     }
 
     afterUse(){
-        this.owner.useNotUtilityTriggers.forEach(elem => {
+        this.owner.use_not_utility_triggers.forEach(elem => {
                 elem.trigger(this.owner)
         })
         this.owner.resource -= this.cost
-        this.owner.second_ab.used = false
+        this.owner.second_ability.used = false
         this.owner.last_skill_used_time = this.owner.time
     }
 

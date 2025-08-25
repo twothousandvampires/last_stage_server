@@ -4,166 +4,128 @@ import Func from "../../Func"
 import item from "../../Items/Item"
 import Level from "../../Level"
 import BlessedArmour from "../../Status/BlessedArmour"
+import Status from "../../Status/Status"
 import Touch from "../../Status/Touch"
 import WithColdStatus from "../../Status/WithColdStatus"
 import WithFireStatus from "../../Status/WithFireStatus"
 import WithStormStatus from "../../Status/WithStormStatus"
+import Sound from "../../Types/Sound"
+import Upgrade from "../../Types/Upgrade"
+import Effect from "../Effects/Effects"
+import Grace from "../Effects/Grace"
 import Unit from "./Unit"
 
 export default abstract class Character extends Unit{
 
-    pressed: { [key: string]: any, }
-    can_move_by_player: boolean
+    pressed: { [key: string]: any, } = {}
+    can_move_by_player: boolean = true
     direct_angle_to_move: any
-    c_x: number
-    c_y: number
-    max_resource: number
-    resource: number
-    exploded: boolean
-    first_ab: Ability | undefined
-    second_ab: Ability | undefined
-    third_ab: Ability | undefined
+    c_x: number = 0
+    c_y: number = 0
+    max_resource: number = 7
+    resource: number = 0
+    exploded: boolean = false
+    first_ability: Ability | undefined
+    second_ability: Ability | undefined
+    third_ability: Ability | undefined
     utility: Ability | undefined
     item: item | undefined
-    time: any
-    last_skill_used_time: any
-    knowledge: number
-    agility: number
-    speed: number
-    will: number
-    durability: number
-    might: number
-    base_regen_time: number
-    grace: number
-    mastery: number
-    can_get_courage: boolean
+    time: number | undefined
+    last_skill_used_time: number | undefined
 
-    onKillTriggers: any[]
-    onHitTriggers: any[]
-    useNotUtilityTriggers: any[]
-    reachNearDeadTriggers: any[]
-    playerDeadTriggers: any[]
-    playerTakeLethalDamageTriggers: any[]
-    whenHitedTriggers: any[]
-    onHealTriggers: any[]
+    knowledge: number = 0
+    agility: number = 0
+    speed: number = 0
+    will: number = 0
+    durability: number = 0
+    might: number = 0
 
-    avoid_damaged_state_chance: number 
-    can_be_lethaled: boolean
-    can_regen_resource: boolean
-    spend_grace: boolean
+    base_regen_time: number = 10000
+    grace: number = 1
+    can_get_courage: boolean = true
+
+    on_kill_triggers: any[] = []
+    on_hit_triggers: any[] = []
+    use_not_utility_triggers: any[] = []
+    reach_near_dead_triggers: any[] = []
+    player_dead_triggers: any[] = []
+    player_take_lethal_damage_triggers: any[] = []
+    when_hited_triggers: any[] = []
+    on_heal_triggers: any[] = []
+
+    avoid_damaged_state_chance: number = 0
+    can_be_lethaled: boolean = true
+    can_regen_resource: boolean = true
+    spend_grace: boolean = false
     target: string | undefined
-    a: number
-    can_be_damaged: boolean
-    can_regen_life: boolean
-    can_use_skills: boolean
-    upgrades: any
-    can_generate_upgrades: boolean
-    pay_to_cost: number
-    time_stopped: boolean
-    additional_chance_grace_create: number
+    a: number = 0.2
+    can_be_damaged: boolean = true
+    can_regen_life: boolean = true
+    can_use_skills: boolean = true
+    upgrades: any[] = []
+    can_generate_upgrades: boolean = true
+    pay_to_cost: number = 0
+    time_stopped: boolean = false
+    additional_chance_grace_create: number = 0
     killed_by: any
-    blessed: boolean
-    pierce: number
-    critical: number
-    status_resistance: number
-    can_attack: boolean
-    can_cast: boolean
-    invisible: boolean
-    lust_for_life: boolean
-    can_be_enlighten: boolean
-    cast_speed: number
+    blessed: boolean = false
+    pierce: number = 0
+    critical: number = 0
+    status_resistance: number = 5
+    can_attack: boolean = true
+    can_cast: boolean = true
+    invisible: boolean = false
+    lust_for_life: boolean = false
+    can_be_enlighten: boolean = true
+    cast_speed: number = 2000
     mad_target: any
-    after_grace_statuses: any
-    chance_second_skill_not_to_be_used: number
+    after_grace_statuses: Status[] = []
+    chance_second_skill_not_to_be_used: number = 0
   
     constructor(level: Level){
         super(level)
-        this.pay_to_cost = 0
-        this.chance_second_skill_not_to_be_used = 0
-        this.after_grace_statuses = []
-        this.can_be_enlighten = true
-        this.invisible = false
-        this.pressed = {}
         this.box_r = 2.5
-        this.can_move_by_player = true
-        this.resource = 0
-        this.max_resource = 7
-        this.knowledge = 0
-        this.agility = 0
-        this.speed = 0
-        this.will = 0
-        this.durability = 0
-        this.might = 0
-        this.can_be_damaged = true
-        this.c_x = 0
-        this.c_y = 0
-        this.exploded = false
-        this.a = 0.2
-        this.can_be_lethaled = true
-        this.base_regen_time = 10000
-        this.grace = 1
-        this.mastery = 0
-        this.avoid_damaged_state_chance = 0
-        this.lust_for_life = false
-        this.can_get_courage = true
-        this.onKillTriggers = []
-        this.onHitTriggers = []
-        this.useNotUtilityTriggers = []
-        this.reachNearDeadTriggers = []
-        this.playerDeadTriggers = []
-        this.playerTakeLethalDamageTriggers = []
-        this.whenHitedTriggers = []
-        this.onHealTriggers = []
-        this.can_regen_resource = true
-        this.can_regen_life = true
         this.light_r = 16
-        this.can_use_skills = true
-        this.upgrades = []
-        this.can_generate_upgrades = true
-        this.time_stopped = false
-        this.additional_chance_grace_create = 0
-        this.blessed = false
-        this.pierce = 0
-        this.critical = 0
-        this.status_resistance = 5
-        this.can_attack = true
-        this.can_cast = true
-        this.spend_grace = false
-        this.cast_speed = 0
-
+    
         this.getState()
     }
 
     abstract startGame(): void
     abstract createAbilities(abilities: any): void
+    abstract takeDamage(unut: Unit, options: object): void
+    abstract getSkipDamageStateChance(): number
+    abstract useUtility(): void
+    abstract useSecond(): void
+    abstract regen(): void
 
-    isStatusResist(){
-        return Func.chance(this.status_resistance)
+    public isStatusResist(): boolean{
+        let result = Func.chance(this.status_resistance)
+        console.log(result)
+        return result
     }
 
-    getEnlightenTimer(){
+    protected getEnlightenTimer(): number{
         return 20000
     }
 
-    createItem(item_name: string){
+    public createItem(item_name: string): void{
         this.item = Builder.createItem(item_name)
     }
     
-    payCost(){
+    protected payCost(): void{
         this.resource -= this.pay_to_cost
         this.pay_to_cost = 0
     }
 
-    statusWasApplied(){
+    public statusWasApplied(): void{
         
     }
 
-    getMoveSpeedReduceWhenUseSkill(){
+    protected getMoveSpeedReduceWhenUseSkill(): number{
         return 70
     }
     
-    getAllUpgrades(){
-        
+    protected getAllUpgrades(): Upgrade[]{
         return [
                 {
                     name: 'with storm',
@@ -171,9 +133,9 @@ export default abstract class Character extends Unit{
                     canUse: (character: Character) => {
                         return true
                     },
-                    teach: (character: Character) => {
-                        let status = new WithStormStatus(character.time)
-                        status.setPower(1)
+                    teach: (character: Character): void => {
+                        let status = new WithStormStatus(character.level.time)
+                        status.setPower(0)
                         character.level.setStatus(character, status, true)
                     },
                     cost: 2,
@@ -186,7 +148,7 @@ export default abstract class Character extends Unit{
                         return true
                     },
                     teach: (character: Character) => {
-                        let status = new WithFireStatus(character.time)
+                        let status = new WithFireStatus(character.level.time)
                         status.setPower(0)
                         character.level.setStatus(character, status, true)
                     },
@@ -200,7 +162,7 @@ export default abstract class Character extends Unit{
                         return true
                     },
                     teach: (character: Character) => {
-                        let status = new WithColdStatus(character.time)
+                        let status = new WithColdStatus(character.level.time)
                         status.setPower(0)
                         character.level.setStatus(character, status, true)
                     },
@@ -287,7 +249,9 @@ export default abstract class Character extends Unit{
                 {
                     name: 'forge',
                     canUse: (character: Character) => {
-                        return character.item?.canBeForged(character)
+                        if(!character.item) return false
+
+                        return character.item.canBeForged(character)
                     },
                     teach: (character: Character) => {
                         character.item?.forge(character)
@@ -430,31 +394,32 @@ export default abstract class Character extends Unit{
         ]
     }
 
-    afterUseSecond(){
-        if(this.second_ab && !Func.chance(this.chance_second_skill_not_to_be_used)){
-            this.second_ab.used = true
+    protected afterUseSecond(): void{
+        if(this.second_ability && !Func.chance(this.chance_second_skill_not_to_be_used)){
+            this.second_ability.used = true
         }
     }
 
-    takePureDamage(){
+    public takePureDamage(): void{
         this.subLife()
     }
 
-    removeUpgrades(){
+    public removeUpgrades(): void{
         this.upgrades.length = 0
     }
 
-    upgrade(upgrade_name: string){
-        let up = this.upgrades.find(elem => elem.name === upgrade_name)
-        up.teach(this)
-        this.grace -= up.cost
+    public upgrade(upgrade_name: string): void{
+        let upgrade: Upgrade = this.upgrades.find(elem => elem.name === upgrade_name)
+        upgrade.teach(this)
+
+        this.grace -= upgrade.cost
         this.spend_grace = true
 
         this.removeUpgrades()
         this.closeUpgrades()
     }
 
-    showUpgrades(){
+    public showUpgrades(): void{
         this.level.socket.to(this.id).emit('show_upgrades', {
             upgrades: this.upgrades,
             grace: this.grace,
@@ -462,26 +427,27 @@ export default abstract class Character extends Unit{
         })
     }
 
-    exitGrace(){
-        let portal = this.level.bindedEffects.find(elem => elem.name === 'grace')
+    public exitGrace(): void{
+        let portal: Effect | undefined = this.level.binded_effects.find(elem => elem.name === 'grace')
 
-        if(portal){
+        if(portal instanceof Grace){
             portal.playerLeave(this)
         }
     }
 
-    updateClientSkill(){
-        let data = [{
+    protected updateClientSkill(): void{
+        let data = [
+            {
                 type: 'first',
-                name: this?.first_ab?.name
+                name: this?.first_ability?.name
             },
             {
                 type: 'secondary',
-                name: this?.second_ab?.name
+                name: this?.second_ability?.name
             },
             {
                 type: 'finisher',
-                name: this?.third_ab?.name
+                name: this?.third_ability?.name
             },
             {
                 type: 'utility',
@@ -491,16 +457,16 @@ export default abstract class Character extends Unit{
         this.level.socket.to(this.id).emit('update_skill', data)
     }
 
-    holdGrace(){
+    public holdGrace(): void{
         this.grace += 3
         this.exitGrace()
     }
 
-    closeUpgrades(){
+    public closeUpgrades(): void{
         this.level.socket.to(this.id).emit('close_upgrades')
     }
 
-    setZone(zone_id: number, x: number, y: number){
+    public setZone(zone_id: number, x: number, y: number): void{
         this.zone_id = zone_id
         this.x = x
         this.y = y
@@ -508,7 +474,7 @@ export default abstract class Character extends Unit{
         this.level.socket.to(this.id).emit('change_level', this.zone_id)
     }
 
-    addLife(count = 1, ignore_poison = false, ignore_limit = false){
+    public addLife(count: number = 1, ignore_poison: boolean = false, ignore_limit: boolean = false): void{
         if(!this.can_regen_life && !ignore_poison) return
         
         for(let i = 0; i < count; i++){
@@ -525,6 +491,7 @@ export default abstract class Character extends Unit{
 
             this.life_status ++
             this.playerWasHealed()
+
             if(previous === 1){
                 this.addMoveSpeedPenalty(30)
             }
@@ -534,21 +501,21 @@ export default abstract class Character extends Unit{
         }
     }
 
-    playerWasHealed(){
-        this.onHealTriggers.forEach(elem => {
+    private playerWasHealed(): void{
+        this.on_heal_triggers.forEach(elem => {
             elem.trigger(this)
         })
     }
 
-    getWeaponHitedSound(){
-        return  {
+    protected getWeaponHitedSound(): Sound{
+        return {
             name: 'sword hit',
-            x:this.x,
-            y:this.y
+            x: this.x,
+            y: this.y
         }
     }
     
-    subLife(unit: any = undefined, options = {}){
+    private subLife(unit: any = undefined, options = {}): void{
         this.life_status --
 
         if(Func.chance(this.fragility)){
@@ -568,16 +535,14 @@ export default abstract class Character extends Unit{
                 this.level.playerDead()
             }
             else{
-                this.life_status ++
+                this.life_status = 1
                 this.can_be_lethaled = true
             } 
         }   
         else{
-
             if(!Func.chance(this.getSkipDamageStateChance())){
                 this.setState(this.setDamagedAct)
             }
-           
             if(this.life_status === 2){
                 this.addMoveSpeedPenalty(-10)
             }
@@ -588,62 +553,84 @@ export default abstract class Character extends Unit{
         }
     }
     
-    playerWasHited(){
-        this.whenHitedTriggers.forEach(elem => {
+    private playerWasHited(): void{
+        this.when_hited_triggers.forEach(elem => {
             elem.trigger(this)
         })
     }
 
-    playerTakeLethalDamage(){
-        this.playerTakeLethalDamageTriggers.forEach(elem => {
+    private playerTakeLethalDamage(): void{
+        this.player_take_lethal_damage_triggers.forEach(elem => {
             elem.trigger(this)
         })
     }
 
-    playerDead(){
-        this.playerDeadTriggers.forEach(elem => {
+    public playerDead(): void{
+        this.player_dead_triggers.forEach(elem => {
             elem.trigger(this)
         })
     }
 
-    reachNearDead(){
-        this.reachNearDeadTriggers.forEach(elem => {
+    private reachNearDead(): void{
+        this.reach_near_dead_triggers.forEach(elem => {
             elem.trigger(this)
         })
     }
 
-    succesefulKill(){
-        this.onKillTriggers.forEach(elem => {
+    public succesefulKill(): void{
+        this.on_kill_triggers.forEach(elem => {
             elem.trigger(this)
         })
     }
 
-    succesefulHit(target = undefined){
-        this.onHitTriggers.forEach(elem => {
+    public succesefulHit(target = undefined): void{
+        this.on_hit_triggers.forEach(elem => {
             elem.trigger(this, target)
         })
     }
 
-    applyStats(stats: any){
+    public applyStats(stats: any): void{
         for(let stat in stats){
-            this[stat] = stats[stat]
+            if(typeof stats[stat] === 'number'){
+                let stat_value = stats[stat]
+                switch (stat){
+                    case 'might':
+                        this.might = stat_value
+                        break;
+                    case 'will':
+                        this.will = stat_value
+                        break;
+                    case 'agility':
+                        this.agility = stat_value
+                        break;
+                    case 'speed':
+                        this.speed = stat_value
+                        break;
+                    case 'durability':
+                        this.durability = stat_value
+                        break;
+                    case 'knowledge':
+                        this.knowledge = stat_value
+                        break;
+                }
+            }
         }
     }
 
-    damagedAct(){
+    protected damagedAct(): void{
         
     }
     
-    dyingAct(){
+    protected dyingAct(): void{
         
     }
 
-    setDyingState(){
+    public setDyingState(): void{
         this.can_move_by_player = false
 
         if(this.freezed){
             this.state = 'freezed_dying'
-            this.level.sounds.push({
+            this.level.addSound({
                 name: 'shatter',
                 x: this.x,
                 y: this.y
@@ -659,16 +646,16 @@ export default abstract class Character extends Unit{
         this.stateAct = this.dyingAct
     }
 
-    setDeadState(){
+    protected setDeadState(): void{
         this.state = 'dead'
         this.stateAct = this.deadAct
     }
 
-    deadAct(){
+    protected deadAct(): void{
 
     }
 
-    setDamagedAct(){
+    protected setDamagedAct(): void{
         this.damaged = true
         this.state = 'damaged'
         this.can_move_by_player = false
@@ -683,32 +670,25 @@ export default abstract class Character extends Unit{
         this.setTimerToGetState(300)
     }
 
-    takeDamage(unut: any = undefined, options: any = {}){
-        if(this.damaged) return
-        
-        this.setState(this.setDamagedAct)
-    }
-
-    setTarget(id: string){
+    public setTarget(id: string): void{
         if(!this.target){
             this.target = id
         }
     }   
 
-    reaA(){
+    protected reaA(): void{
         if(this.a <= 0.2) return
 
         this.a -= 0.03
     }
 
-    incA(){
-        if(this.a >= 1){
-            return
-        }
+    protected incA(): void{
+        if(this.a >= 1) return
 
         this.a += 0.03
     }
-    getTarget(){
+
+    protected getTarget(): Unit | undefined {
         if(!this.target) return undefined
 
         let t = this.level.enemies.find(elem => elem.id === this.target)
@@ -724,11 +704,11 @@ export default abstract class Character extends Unit{
         return undefined
     }
     
-    canMove(){
+    protected canMove(): boolean{
         return !this.freezed && !this.zaped
     }
 
-    directMove(){
+    private directMove(): void{
         if(this.canMove()){
             this.is_moving = true
             if(this.state === 'idle'){
@@ -744,9 +724,9 @@ export default abstract class Character extends Unit{
             return
         }
 
-        let a = this.direct_angle_to_move
+        let a: number = this.direct_angle_to_move
         
-        let l = 1 - Math.abs(0.5 * Math.cos(a))
+        let l: number = 1 - Math.abs(0.5 * Math.cos(a))
 
         let next_step_x = Math.sin(a) * l
         let next_step_y = Math.cos(a) * l
@@ -822,7 +802,7 @@ export default abstract class Character extends Unit{
         }
     }
 
-    private moveAct(){
+    private moveAct(): void{
         if(this.direct_angle_to_move){
             this.directMove()
             return
@@ -914,7 +894,6 @@ export default abstract class Character extends Unit{
                 }
             }
         }
-        
 
         if(!this.isOutOfMap(this.x + next_step_x, this.y + next_step_y)){
 
@@ -939,23 +918,23 @@ export default abstract class Character extends Unit{
             this.addToPoint(next_step_x, next_step_y)
         }
     }
-    newStatus(status: any){
+
+    public newStatus(status: any): void{
         this.level.socket.to(this.id).emit('new_status', status)
     }
-    updateStatus(){
 
-    }
     private moveIsPressed(): boolean{
         return this.pressed['w'] || this.pressed['s'] || this.pressed['d'] || this.pressed['a']
     }
 
-    private idleAct() {
+    private idleAct(): void{
         if(this.pressed.l_click){
-            if(this.can_use_skills && this.first_ab?.canUse()){
-                this.useNotUtilityTriggers.forEach(elem => {
+            if(this.can_use_skills && this.first_ability?.canUse()){
+                this.use_not_utility_triggers.forEach(elem => {
                     elem.trigger(this)
                 })
-                this.first_ab?.use()
+
+                this.first_ability?.use()
                 this.last_skill_used_time = this.time
             }
         }
@@ -970,7 +949,7 @@ export default abstract class Character extends Unit{
         }
     }
 
-    setDefend(){
+    public setDefend(): void{
         this.state = 'defend'
         this.stateAct = this.defendAct
         let reduce = 80
@@ -981,7 +960,7 @@ export default abstract class Character extends Unit{
         }
     }
 
-    defendAct(){
+    public defendAct(): void{
         if(!this.pressed[' ']){
             this.getState()
         }
@@ -991,7 +970,6 @@ export default abstract class Character extends Unit{
         this.time = time
         if(!this.can_act || !this.stateAct) return
         
-        // console.log(this.z)
         this.stateAct()
         this.moveAct()
         this.regen()
@@ -1011,7 +989,7 @@ export default abstract class Character extends Unit{
         }
     }
 
-    public setLastInputs(pressed: any) {
+    public setLastInputs(pressed: object): void{
         if(!this.can_move_by_player){
             this.pressed = {}
             return
@@ -1019,7 +997,7 @@ export default abstract class Character extends Unit{
         this.pressed = pressed
     }
 
-    emitStatusEnd(name: string){
+    public emitStatusEnd(name: string): void{
         this.level.socket.to(this.id).emit('status_end', name)
     }
 }

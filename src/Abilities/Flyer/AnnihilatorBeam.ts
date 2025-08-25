@@ -75,7 +75,7 @@ export default class AnnihilatorBeam extends FlyerAbility{
             let n_x = 0
             let n_y = 0
 
-            if(this.second_ab.concentrating_energy){
+            if(this.second_ability.concentrating_energy){
                 this.pierce += 100
             }
             
@@ -108,7 +108,8 @@ export default class AnnihilatorBeam extends FlyerAbility{
 
                 this.level.effects.push(point)
             }
-             if(this.second_ab.concentrating_energy){
+            
+            if(this.second_ability.concentrating_energy){
                 this.pierce -= 100
             }
             this.addCourage()

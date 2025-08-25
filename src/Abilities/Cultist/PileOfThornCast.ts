@@ -23,7 +23,7 @@ export default class PileOfThornCast extends CultistAbility{
     }
 
     afterUse(){
-        this.owner.useNotUtilityTriggers.forEach(elem => {
+        this.owner.use_not_utility_triggers.forEach(elem => {
                 elem.trigger(this.owner)
         })
         this.owner.last_skill_used_time = this.owner.time
@@ -87,16 +87,16 @@ export default class PileOfThornCast extends CultistAbility{
 
             let rel_distance = Math.sqrt(((this.x - this.c_x) ** 2) + ((this.y - this.c_y) ** 2))
 
-            let distance = rel_distance > this.first_ab.distance ? this.first_ab.distance : rel_distance
+            let distance = rel_distance > this.first_ability.distance ? this.first_ability.distance : rel_distance
             
             let hit_x = this.x + (Math.sin(this.attack_angle) * distance)
             let hit_y = this.y + (Math.cos(this.attack_angle) * distance)
 
             let totem_power = this.getSecondResource()
             let pile = new PileOfThorns(this.level, totem_power)
-            pile.collection_of_bones = this.third_ab.collection_of_bones
+            pile.collection_of_bones = this.third_ability.collection_of_bones
             
-            if(this.third_ab.ring_of_pain){
+            if(this.third_ability.ring_of_pain){
                 pile.frequency = 2500
             }
             

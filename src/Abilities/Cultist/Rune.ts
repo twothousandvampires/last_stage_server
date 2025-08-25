@@ -76,7 +76,7 @@ export default class Rune extends CultistAbility{
         
             let rel_distance = Math.sqrt(((this.x - this.c_x) ** 2) + ((this.y - this.c_y) ** 2))
 
-            let distance = rel_distance > this.first_ab.distance ? this.first_ab.distance : rel_distance
+            let distance = rel_distance > this.first_ability.distance ? this.first_ability.distance : rel_distance
             
              this.level.sounds.push({
                     name:'cast',
@@ -88,16 +88,16 @@ export default class Rune extends CultistAbility{
             let hit_y = this.y + (Math.cos(this.attack_angle) * distance)
 
             let rune = new RuneEffect(this.level)
-            rune.fast_detonation = this.first_ab.fast_detonation
-            rune.explosive = this.first_ab.explosive
-            rune.second_detanation = this.first_ab.second_detanation
+            rune.fast_detonation = this.first_ability.fast_detonation
+            rune.explosive = this.first_ability.explosive
+            rune.second_detanation = this.first_ability.second_detanation
 
             rune.setOwner(this)
             rune.setPoint(hit_x, hit_y)
 
-            this.level.bindedEffects.push(rune)
+            this.level.binded_effects.push(rune)
             
-            if(this.first_ab.runefield){
+            if(this.first_ability.runefield){
                 
                 let count = this.getSecondResource()
                 
@@ -117,20 +117,20 @@ export default class Rune extends CultistAbility{
                     let y = hit_y + (Math.cos(angle) * distance_y)
 
                     let rune = new RuneEffect(this.level)
-                    rune.fast_detonation = this.first_ab.fast_detonation
-                    rune.explosive = this.first_ab.explosive
-                    rune.second_detanation = this.first_ab.second_detanation
+                    rune.fast_detonation = this.first_ability.fast_detonation
+                    rune.explosive = this.first_ability.explosive
+                    rune.second_detanation = this.first_ability.second_detanation
 
                     rune.setOwner(this)
                     rune.setPoint(x, y)
 
-                    this.level.bindedEffects.push(rune)
+                    this.level.binded_effects.push(rune)
                 }
 
                 if(count){
-                    this.first_ab.cd = true
+                    this.first_ability.cd = true
                     setTimeout(() => {
-                        this.first_ab.cd = false
+                        this.first_ability.cd = false
                     }, count * 2000)
                 }
             }

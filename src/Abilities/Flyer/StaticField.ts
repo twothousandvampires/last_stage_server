@@ -81,7 +81,7 @@ export default class StaticField extends FlyerAbility{
             e.collapse = this.utility.collapse
 
             e.setPoint(this.c_x, this.c_y)
-            this.level.bindedEffects.push(e)
+            this.level.binded_effects.push(e)
             this.attack_angle = undefined
         }
     }

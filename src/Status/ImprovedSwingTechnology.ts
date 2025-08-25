@@ -17,7 +17,6 @@ export default class ImprovedSwingTechnology extends Status{
     apply(unit: any){
         this.unit = unit
         if(this.unit instanceof Character){
-            this.stack_count = 1
             this.unit.move_speed += 0.1
             this.unit.attack_speed -= 100
         }

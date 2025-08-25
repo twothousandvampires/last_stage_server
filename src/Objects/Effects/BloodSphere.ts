@@ -39,7 +39,7 @@ export default class BloodSphere extends Effect{
             this.explode()
 
             this.level.deleted.push(this.id)
-            this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem != this)
+            this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
             return
         }
 

@@ -22,7 +22,7 @@ export default class BurningCircle extends CultistAbility{
     }
 
     afterUse(){
-        this.owner.useNotUtilityTriggers.forEach(elem => {
+        this.owner.use_not_utility_triggers.forEach(elem => {
             elem.trigger(this.owner)
         })
     }
@@ -70,15 +70,15 @@ export default class BurningCircle extends CultistAbility{
             
             status.setDuration(8000)
 
-            if(this.second_ab.consuming){
+            if(this.second_ability.consuming){
                 status.setRadius(20)
             }
 
-            if(this.second_ab.hatred){
+            if(this.second_ability.hatred){
                 status.hatred = true
             }
             
-            status.devouring = this.second_ab.devouring
+            status.devouring = this.second_ability.devouring
 
             this.level.setStatus(this, status)
 

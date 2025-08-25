@@ -79,7 +79,7 @@ export default class GrimPile extends CultistAbility{
                     y: this.y
             })
 
-            let distance = rel_distance > this.first_ab.distance ? this.first_ab.distance : rel_distance
+            let distance = rel_distance > this.first_ability.distance ? this.first_ability.distance : rel_distance
             
             let hit_x = this.x + (Math.sin(this.attack_angle) * distance)
             let hit_y = this.y + (Math.cos(this.attack_angle) * distance)
@@ -87,8 +87,8 @@ export default class GrimPile extends CultistAbility{
             let totem_power = this.getSecondResource()
 
             let pile = new GrimPileTotem(this.level, totem_power)
-            pile.increased_effect = this.second_ab.increased_effect
-            pile.resistance = this.second_ab.resistance
+            pile.increased_effect = this.second_ability.increased_effect
+            pile.resistance = this.second_ability.resistance
             
             pile.setPoint(hit_x, hit_y)
           

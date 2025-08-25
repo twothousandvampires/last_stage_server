@@ -59,12 +59,12 @@ export default class Frostnova extends FlyerAbility{
             this.hit = true
 
             let e = new BigFrostNova(this.level)
-            e.spires = this.third_ab.cold_spires
-            e.genesis = this.third_ab.ice_genesis
+            e.spires = this.third_ability.cold_spires
+            e.genesis = this.third_ability.ice_genesis
             e.setOwner(this)
             e.setPoint(this.x, this.y)
 
-            this.level.bindedEffects.push(e)
+            this.level.binded_effects.push(e)
         } 
     }
 }

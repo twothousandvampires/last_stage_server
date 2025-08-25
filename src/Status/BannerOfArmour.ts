@@ -18,7 +18,7 @@ export default class BannerOfArmour extends Status{
 
     clear(){
         this.unit.level.deleted.push(this.effect.id)
-        this.unit.level.bindedEffects = this.unit.level.bindedEffects.filter(elem => elem != this.effect)
+        this.unit.level.binded_effects = this.unit.level.binded_effects.filter(elem => elem != this.effect)
     }
 
     apply(unit: any){
@@ -29,7 +29,7 @@ export default class BannerOfArmour extends Status{
         effect.setPoint(this.unit.x, this.unit.y)
         this.effect = effect
 
-        unit.level.bindedEffects.push(effect)
+        unit.level.binded_effects.push(effect)
     }
 
     act(tick_time: number){

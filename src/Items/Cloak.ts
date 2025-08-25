@@ -24,7 +24,7 @@ export default class Cloak extends Item{
     }
 
     equip(character: Character): void {
-        character.whenHitedTriggers.push(this)
+        character.when_hited_triggers.push(this)
     }
     
     trigger(character: Character){

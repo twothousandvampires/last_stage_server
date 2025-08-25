@@ -1,21 +1,34 @@
 import Func from "../../Func";
+import LightningBoltEffect from "../../Objects/Effects/LightningBoltEffect";
 import Swordman from "../../Objects/src/PlayerClasses/Swordman";
-import ImprovedSwingTechnology from "../../Status/ImprovedSwingTechnology";
 import SwordmanAbility from "./SwordmanAbility";
 
-export default class WeaponSwing extends SwordmanAbility{
-    echo_swing: boolean
-    improved_swing_technology: boolean
+export default class HeavenVengeance extends SwordmanAbility{
+  
+    private cd: number = 4000
+    public eye: boolean = false
+    public grace: boolean = false
 
     constructor(owner: Swordman){
         super(owner)
-        this.echo_swing = false
-        this.improved_swing_technology = false
-        this.name = 'swing'
+        this.name = 'heaven vengeance'
     }
 
     canUse(): boolean {
-        return true
+        return !this.used && this.owner.can_attack
+    }
+
+    trigger(){
+        if(Func.chance(50)){
+             this.used = false
+        }
+    }
+
+    setUsed(){
+        this.used = true
+        setTimeout(() => {
+            this.used = false
+        }, this.cd)
     }
 
     use(){
@@ -60,6 +73,8 @@ export default class WeaponSwing extends SwordmanAbility{
 
     act(){
         if(this.action && !this.hit){
+            this.first_ability.setUsed()
+    
             this.hit = true
         
             let enemies = this.level.enemies
@@ -69,8 +84,6 @@ export default class WeaponSwing extends SwordmanAbility{
 
             let attack_elipse = this.getBoxElipse()
             attack_elipse.r = this.attack_radius
-
-            let attack_angle = this.attack_angle
 
             let f = enemies.concat(players).filter(elem => Func.checkAngle(this, elem, this.attack_angle, this.weapon_angle + second / 10))
             let filtered_by_attack_radius = f.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
@@ -95,26 +108,62 @@ export default class WeaponSwing extends SwordmanAbility{
                 }
             }
 
-            let hit_count = this.getTargetsCount()
-
             let point_added = false
-            
+            let target_to_hit = undefined
+
             if(target){
-                filtered_by_attack_radius.unshift(target)
+                target_to_hit = target
+            }
+            else{
+                target_to_hit = filtered_by_attack_radius[0]
             }
             
             this.target = undefined
-            filtered_by_attack_radius = filtered_by_attack_radius.slice(0, hit_count)
 
-            filtered_by_attack_radius.forEach(elem => {
-                elem.takeDamage(this)
-                if(!point_added){
-                    this.level.addSound(elem.getWeaponHitedSound())
-                    this.addPoint()
-                    point_added = true
+            if(target_to_hit != undefined){
+                target_to_hit.takeDamage(this)
+                this.addPoint()
+                point_added = true
+            }
+
+            let vengeance_count = this.getTargetsCount()
+
+            if(target_to_hit && vengeance_count != 0){
+                let vengeance_radius = 12
+
+                if(this.first_ability.eye){
+                    vengeance_radius += second
                 }
-            })
 
+                let hit = this.getBoxElipse()
+                hit.r = vengeance_radius
+
+                let vengeance_enemies = this.level.enemies.filter(elem => elem != target_to_hit && !elem.is_dead && Func.elipseCollision(hit, elem.getBoxElipse()))
+                let vengeance_players = this.level.players.filter(elem => elem != target_to_hit && elem != this && !elem.is_dead && Func.elipseCollision(hit, elem.getBoxElipse()))
+                let vengeance_targets = vengeance_enemies.concat(vengeance_players)
+
+                let sound = false
+
+                for(let i = 0; i < vengeance_count; i++){
+                    let target = vengeance_targets[i]
+                    if(!target) break
+
+                    target.takeDamage(this, {
+                        burn: true
+                    })
+
+                    if(!sound){
+                        this.level.addSound('lightning bolt', this.x, this.y)
+                        sound = true
+                    }
+
+                    let effect = new LightningBoltEffect(this.level)
+                    effect.setPoint(target.x, target.y)
+
+                    this.level.effects.push(effect)
+                }
+            }
+            
             if(!point_added){
                 this.level.sounds.push({
                     name: 'sword swing',
@@ -122,51 +171,8 @@ export default class WeaponSwing extends SwordmanAbility{
                     y:this.y
                 })
             }
-            else{
-                if(this.first_ability?.improved_swing_technology && Func.chance(30)){
-                    let status = new ImprovedSwingTechnology(this.time)
-                    status.setDuration(5000)
-
-                    this.level.setStatus(this, status, true)
-                }
-            }
-
-            if(this.first_ability?.echo_swing){
-                this.first_ability.echo(40, attack_angle, attack_elipse)
-            }
-
+            
             this.attack_angle = undefined
         }
-    }
-
-    echo(chance: number = 0, attack_angle: number, attack_elipse: any){
-        if(!Func.chance(chance)) return
-
-        setTimeout(() => {
-            attack_elipse.r += 1
-            let second = this.owner.getSecondResource()
-
-            let f = this.owner.level.enemies.filter(elem => Func.checkAngle(this.owner, elem, attack_angle, this.owner.weapon_angle + second / 10))
-            let filtered_by_attack_radius = f.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
-            filtered_by_attack_radius.sort((a,b) => Func.distance(a, this.owner) - Func.distance(b, this.owner))
-
-            filtered_by_attack_radius.forEach(elem => {
-                elem.takeDamage(this.owner)
-            })
-
-            if(this.improved_swing_technology && Func.chance(30) && filtered_by_attack_radius.length){
-                let status = new ImprovedSwingTechnology(this.owner.level.time)
-                status.setDuration(5000)
-                this.owner.level.setStatus(this.owner, status, true)
-            }
-
-            this.owner.level.addSound({
-                name: 'sword swing',
-                x: attack_elipse.x,
-                y: attack_elipse.y
-            })
-
-            this.echo(chance / 2, attack_angle, attack_elipse)
-        }, 700)
     }
 }

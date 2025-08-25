@@ -96,7 +96,7 @@ export default class LightningBolt extends FlyerAbility{
                 r: 4 + Math.round(this.getAdditionalRadius())
             }
 
-            let high_voltage = this.first_ab.high_voltage
+            let high_voltage = this.first_ability.high_voltage
 
             let max_targets = high_voltage ? 3 : 1
             let time = Date.now()
@@ -135,7 +135,7 @@ export default class LightningBolt extends FlyerAbility{
                 this.level.effects.push(r_effect)
             }, 400)
 
-            let storm = this.first_ab.storm
+            let storm = this.first_ability.storm
 
             if(storm){
                 for(let i = 0; i < 2; i++){

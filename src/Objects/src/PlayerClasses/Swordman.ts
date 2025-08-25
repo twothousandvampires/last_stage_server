@@ -4,6 +4,7 @@ import CursedWeapon from "../../../Abilities/Swordman/CursedWeapon";
 import Jump from "../../../Abilities/Swordman/Jump";
 import Quake from "../../../Abilities/Swordman/Quake";
 import ShatteredWeapon from "../../../Abilities/Swordman/ShatteredWeapon";
+import Vengeance from "../../../Abilities/Swordman/HeavenVengeance";
 import WeaponSwing from "../../../Abilities/Swordman/WeaponSwing";
 import WeaponThrow from "../../../Abilities/Swordman/WeaponThrow";
 import Whirlwind from "../../../Abilities/Swordman/Whirlwind";
@@ -13,6 +14,7 @@ import Armour from "../../Effects/Armour";
 import Blood from "../../Effects/Blood";
 import ToothExplode from "../../Effects/ToothExplode";
 import Character from "../Character";
+import HeavenVengeance from "../../../Abilities/Swordman/HeavenVengeance";
 
 export default class Swordman extends Character{
     
@@ -69,7 +71,7 @@ export default class Swordman extends Character{
     }
 
     succesefulKill(){
-        this.onKillTriggers.forEach(elem => {
+        this.on_kill_triggers.forEach(elem => {
             elem.trigger(this)
         })
 
@@ -108,28 +110,28 @@ export default class Swordman extends Character{
         let main_name = abilities.find(elem => elem.type === 1 && elem.selected).name
 
         if(main_name === 'swing'){
-            this.first_ab = new WeaponSwing(this)
+            this.first_ability = new WeaponSwing(this)
         }
         else if(main_name === 'weapon throw'){
-            this.first_ab = new WeaponThrow(this)
+            this.first_ability = new WeaponThrow(this)
         }
 
         let secondary_name = abilities.find(elem => elem.type === 2 && elem.selected).name
 
         if(secondary_name === 'jump'){
-            this.second_ab = new Jump(this)
+            this.second_ability = new Jump(this)
         }
         else if(secondary_name === 'charge'){
-            this.second_ab = new Charge(this)
+            this.second_ability = new Charge(this)
         }
 
         let finisher_name = abilities.find(elem => elem.type === 3 && elem.selected).name
 
         if(finisher_name === 'whirlwind'){
-            this.third_ab = new Whirlwind(this)
+            this.third_ability = new Whirlwind(this)
         }
         else if(finisher_name === 'quake'){
-            this.third_ab = new Quake(this)
+            this.third_ability = new Quake(this)
         }
 
         let utility_name = abilities.find(elem => elem.type === 4 && elem.selected).name
@@ -143,11 +145,11 @@ export default class Swordman extends Character{
     }
 
     madAct(){
-        if(this.can_use_skills && this.first_ab?.canUse()){
-            this.useNotUtilityTriggers.forEach(elem => {
+        if(this.can_use_skills && this.first_ability?.canUse()){
+            this.use_not_utility_triggers.forEach(elem => {
                 elem.trigger(this)
             })
-            this.first_ab?.use()
+            this.first_ability?.use()
             this.last_skill_used_time = this.time
         }
         this.useSecond()
@@ -239,11 +241,11 @@ export default class Swordman extends Character{
                 name: 'echo swing',
                 type: 'weapon swing',
                 canUse: (character: Character) => {
-                    return character.first_ab instanceof WeaponSwing && !character.first_ab.echo_swing
+                    return character.first_ability instanceof WeaponSwing && !character.first_ability.echo_swing
                 },
                 teach: (character: Character) => {
-                    if(character.first_ab && character.first_ab instanceof WeaponSwing){
-                        character.first_ab.echo_swing = true
+                    if(character.first_ability && character.first_ability instanceof WeaponSwing){
+                        character.first_ability.echo_swing = true
                     }
                 },
                 cost: 1,
@@ -253,11 +255,11 @@ export default class Swordman extends Character{
                 name: 'improved swing technology',
                 type: 'weapon swing',
                 canUse: (character: Character) => {
-                    return character.first_ab instanceof WeaponSwing && !character.first_ab.improved_swing_technology
+                    return character.first_ability instanceof WeaponSwing && !character.first_ability.improved_swing_technology
                 },
                 teach: (character: Character) => {
-                    if(character.first_ab && character.first_ab instanceof WeaponSwing){
-                        character.first_ab.improved_swing_technology = true
+                    if(character.first_ability && character.first_ability instanceof WeaponSwing){
+                        character.first_ability.improved_swing_technology = true
                     }
                 },
                 cost: 2,
@@ -267,11 +269,11 @@ export default class Swordman extends Character{
                 name: 'light grip',
                 type: 'weapon throw',
                 canUse: (character: Character) => {
-                    return character.first_ab instanceof WeaponThrow && !character.first_ab.light_grip
+                    return character.first_ability instanceof WeaponThrow && !character.first_ability.light_grip
                 },
                 teach: (character: Character) => {
-                    if(character.first_ab && character.first_ab instanceof WeaponThrow){
-                        character.first_ab.light_grip = true
+                    if(character.first_ability && character.first_ability instanceof WeaponThrow){
+                        character.first_ability.light_grip = true
                     }
                 },
                 cost: 3,
@@ -281,11 +283,11 @@ export default class Swordman extends Character{
                 name: 'multiple blades',
                 type: 'weapon throw',
                 canUse: (character: Character) => {
-                    return character.first_ab instanceof WeaponThrow && !character.first_ab.multiple
+                    return character.first_ability instanceof WeaponThrow && !character.first_ability.multiple
                 },
                 teach: (character: Character) => {
-                    if(character.first_ab && character.first_ab instanceof WeaponThrow){
-                        character.first_ab.multiple = true
+                    if(character.first_ability && character.first_ability instanceof WeaponThrow){
+                        character.first_ability.multiple = true
                     }
                 },
                 cost: 1,
@@ -295,11 +297,11 @@ export default class Swordman extends Character{
                 name: 'returning',
                 type: 'weapon throw',
                 canUse: (character: Character) => {
-                    return character.first_ab instanceof WeaponThrow && !character.first_ab.returning && !character.first_ab.shattering
+                    return character.first_ability instanceof WeaponThrow && !character.first_ability.returning && !character.first_ability.shattering
                 },
                 teach: (character: Character) => {
-                    if(character.first_ab && character.first_ab instanceof WeaponThrow){
-                        character.first_ab.returning = true
+                    if(character.first_ability && character.first_ability instanceof WeaponThrow){
+                        character.first_ability.returning = true
                     }
                 },
                 cost: 3,
@@ -309,11 +311,11 @@ export default class Swordman extends Character{
                 name: 'shattering',
                 type: 'weapon throw',
                 canUse: (character: Character) => {
-                    return character.first_ab instanceof WeaponThrow && !character.first_ab.returning && !character.first_ab.shattering
+                    return character.first_ability instanceof WeaponThrow && !character.first_ability.returning && !character.first_ability.shattering
                 },
                 teach: (character: Character) => {
-                    if(character.first_ab && character.first_ab instanceof WeaponThrow){
-                        character.first_ab.shattering = true
+                    if(character.first_ability && character.first_ability instanceof WeaponThrow){
+                        character.first_ability.shattering = true
                     }
                 },
                 cost: 3,
@@ -323,11 +325,11 @@ export default class Swordman extends Character{
                 name: 'heavy landing',
                 type: 'jump',
                 canUse: (character: Character) => {
-                    return character.second_ab instanceof Jump && !character.second_ab.heavy_landing
+                    return character.second_ability instanceof Jump && !character.second_ability.heavy_landing
                 },
                 teach: (character: Character) => {
-                    if(character.second_ab && character.second_ab instanceof Jump){
-                        character.second_ab.heavy_landing = true
+                    if(character.second_ability && character.second_ability instanceof Jump){
+                        character.second_ability.heavy_landing = true
                     }
                 },
                 cost: 2,
@@ -337,11 +339,11 @@ export default class Swordman extends Character{
                 name: 'stomp',
                 type: 'jump',
                 canUse: (character: Character) => {
-                    return character.second_ab instanceof Jump && !character.second_ab.stomp
+                    return character.second_ability instanceof Jump && !character.second_ability.stomp
                 },
                 teach: (character: Character) => {
-                    if(character.second_ab && character.second_ab instanceof Jump){
-                        character.second_ab.stomp = true
+                    if(character.second_ability && character.second_ability instanceof Jump){
+                        character.second_ability.stomp = true
                     }
                 },
                 cost: 5,
@@ -351,11 +353,11 @@ export default class Swordman extends Character{
                 name: 'destroyer',
                 type: 'charge',
                 canUse: (character: Character) => {
-                    return character.second_ab instanceof Charge && !character.second_ab.destroyer
+                    return character.second_ability instanceof Charge && !character.second_ability.destroyer
                 },
                 teach: (character: Character) => {
-                    if(character.second_ab && character.second_ab instanceof Charge){
-                        character.second_ab.destroyer = true
+                    if(character.second_ability && character.second_ability instanceof Charge){
+                        character.second_ability.destroyer = true
                     }
                 },
                 cost: 3,
@@ -365,11 +367,11 @@ export default class Swordman extends Character{
                 name: 'vision of possibilities',
                 type: 'charge',
                 canUse: (character: Character) => {
-                    return character.second_ab instanceof Charge && !character.second_ab.possibilities
+                    return character.second_ability instanceof Charge && !character.second_ability.possibilities
                 },
                 teach: (character: Character) => {
-                    if(character.second_ab && character.second_ab instanceof Charge){
-                        character.second_ab.possibilities = true
+                    if(character.second_ability && character.second_ability instanceof Charge){
+                        character.second_ability.possibilities = true
                     }
                 },
                 cost: 1,
@@ -379,11 +381,11 @@ export default class Swordman extends Character{
                 name: 'blood harvest',
                 type: 'whirlwind',
                 canUse: (character: Character) => {
-                    return character.third_ab instanceof Whirlwind && !character.third_ab.blood_harvest
+                    return character.third_ability instanceof Whirlwind && !character.third_ability.blood_harvest
                 },
                 teach: (character: Character) => {
-                    if(character.third_ab && character.third_ab instanceof Whirlwind){
-                        character.third_ab.blood_harvest = true
+                    if(character.third_ability && character.third_ability instanceof Whirlwind){
+                        character.third_ability.blood_harvest = true
                     }
                 },
                 cost: 3,
@@ -393,11 +395,11 @@ export default class Swordman extends Character{
                 name: 'fan of swords',
                 type: 'whirlwind',
                 canUse: (character: Character) => {
-                    return character.third_ab instanceof Whirlwind && !character.third_ab.fan_of_swords
+                    return character.third_ability instanceof Whirlwind && !character.third_ability.fan_of_swords
                 },
                 teach: (character: Character) => {
-                    if(character.third_ab && character.third_ab instanceof Whirlwind){
-                        character.third_ab.fan_of_swords = true
+                    if(character.third_ability && character.third_ability instanceof Whirlwind){
+                        character.third_ability.fan_of_swords = true
                     }
                 },
                 cost: 8,
@@ -407,11 +409,11 @@ export default class Swordman extends Character{
                 name: 'consequences',
                 type: 'quake',
                 canUse: (character: Character) => {
-                    return character.third_ab instanceof Quake && !character.third_ab.consequences
+                    return character.third_ability instanceof Quake && !character.third_ability.consequences
                 },
                 teach: (character: Character) => {
-                    if(character.third_ab && character.third_ab instanceof Quake){
-                        character.third_ab.consequences = true
+                    if(character.third_ability && character.third_ability instanceof Quake){
+                        character.third_ability.consequences = true
                     }
                 },
                 cost: 3,
@@ -421,11 +423,11 @@ export default class Swordman extends Character{
                 name: 'selfcare',
                 type: 'quake',
                 canUse: (character: Character) => {
-                    return character.third_ab instanceof Quake && !character.third_ab.selfcare
+                    return character.third_ability instanceof Quake && !character.third_ability.selfcare
                 },
                 teach: (character: Character) => {
-                    if(character.third_ab && character.third_ab instanceof Quake){
-                        character.third_ab.selfcare = true
+                    if(character.third_ability && character.third_ability instanceof Quake){
+                        character.third_ability.selfcare = true
                     }
                 },
                 cost: 1,
@@ -464,11 +466,11 @@ export default class Swordman extends Character{
                 name: 'shattered weapon',
                 type: 'new ability',
                 canUse: (character: Character) => {
-                    return !(character.second_ab instanceof ShatteredWeapon)
+                    return !(character.second_ability instanceof ShatteredWeapon)
                 },
                 teach: (character: Character) => {
                     if(character instanceof Swordman){
-                        character.second_ab = new ShatteredWeapon(character)
+                        character.second_ability = new ShatteredWeapon(character)
                         character.updateClientSkill()
                     }
                 },
@@ -513,6 +515,50 @@ export default class Swordman extends Character{
                 },
                 cost: 2,
                 desc: 'increases maximum of resource'
+            },
+            {
+                name: 'heaven vengeance',
+                type: 'new ability',
+                canUse: (character: Character) => {
+                    return !(character.first_ability instanceof HeavenVengeance)
+                },
+                teach: (character: Character) => {
+                    if(character instanceof Swordman){
+                        character.first_ability = new HeavenVengeance(character)
+                        character.updateClientSkill()
+                    }
+                },
+                cost: 2,
+                desc: 'increases maximum of resource'
+            },
+            {
+                name: 'eye for eye',
+                type: 'heaven vengeance',
+                canUse: (character: Character) => {
+                    return character.first_ability instanceof HeavenVengeance && !character.first_ability.eye
+                },
+                teach: (character: Character) => {
+                    if(character instanceof Swordman && character.first_ability instanceof HeavenVengeance){
+                        character.first_ability.eye = true
+                    }
+                },
+                cost: 2,
+                desc: 'increases radius of serching targets by your courage'
+            },
+            {
+                name: 'heaven grace',
+                type: 'heaven vengeance',
+                canUse: (character: Character) => {
+                    return character.first_ability instanceof HeavenVengeance && !character.first_ability.grace
+                },
+                teach: (character: Character) => {
+                    if(character instanceof Swordman && character.first_ability instanceof HeavenVengeance){
+                        character.first_ability.grace = true
+                        character.when_hited_triggers.push(character.first_ability)
+                    }
+                },
+                cost: 2,
+                desc: 'gives a chance when hit to clear skill cd'
             },
         ]
     }
@@ -626,9 +672,9 @@ export default class Swordman extends Character{
                 resource: this.resource,
                 max_resource: this.max_resource,
                 life_status: this.life_status,
-                first: this.first_ab?.canUse(),
-                secondary: this.second_ab?.canUse(),
-                finisher: this.third_ab?.canUse(),
+                first: this.first_ability?.canUse(),
+                secondary: this.second_ability?.canUse(),
+                finisher: this.third_ability?.canUse(),
                 utility: this.utility?.canUse(),
                 second: this.getSecondResource()
             }
@@ -646,17 +692,17 @@ export default class Swordman extends Character{
     useSecond(){
         if(!this.can_use_skills) return
 
-        if(this.third_ab?.canUse()){
-            this.third_ab?.use()
-            this.third_ab.afterUse()
+        if(this.third_ability?.canUse()){
+            this.third_ability?.use()
+            this.third_ability.afterUse()
             
         }
-        else if(this.second_ab?.canUse()){
-            this.useNotUtilityTriggers.forEach(elem => {
+        else if(this.second_ability?.canUse()){
+            this.use_not_utility_triggers.forEach(elem => {
                 elem.trigger(this)
             })
 
-            this.second_ab.use()
+            this.second_ability.use()
             this.last_skill_used_time = this.time
         }
     }

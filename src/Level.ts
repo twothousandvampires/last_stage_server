@@ -1,4 +1,4 @@
-import Player from "./Objects/src/Character"
+import Character from "./Objects/src/Character"
 import Projectiles from "./Objects/Projectiles/Projectiles"
 import Unit from "./Objects/src/Unit"
 import Effect from "./Objects/Effects/Effects"
@@ -10,28 +10,13 @@ import Grace from "./Objects/Effects/Grace"
 import Intervention from "./Objects/Effects/Intervention"
 import Default from "./Scenarios/Default"
 import Scenario from "./Scenarios/Scenario"
+import { Server, Socket } from "socket.io"
+import Status from "./Status/Status"
+import GameServer from "./GameServer"
+import Sound from "./Types/Sound"
+import { Enemy } from "./Objects/src/Enemy/Enemy"
 
 export default class Level{
-    boss_kills_trashold: number
-    need_to_check_grace: boolean
-    enemies: Unit[]
-    players: Player[]
-    projectiles: Projectiles[]
-    effects: Effect[]
-    bindedEffects: Effect[]
-    create: any
-    dead: Unit[]
-    deleted: string[]
-    sounds: any[]
-    socket: any
-    statusPull: any[]
-    last_id: number
-    kill_count: number
-    grace_trashold: number
-    time_between_wave_ms = 7500
-    time: number
-    started: number
-    script: any
     static enemy_list = [
        {
          'name': 'impy',
@@ -66,83 +51,104 @@ export default class Level{
          'weight': 3
        },
     ]
+
+    public boss_kills_trashold: number = 150
+    public enemies: Enemy[] = []
+    public players: Character[] = []
+    public projectiles: Projectiles[] = []
+    public effects: Effect[] = []
+    public binded_effects: Effect[] = []
+    public deleted: (string | number)[] = []
+    public sounds: Sound[] = []
+    public socket: Server
+ 
+    public time_between_wave_ms: number = 7500
+    public time: number = Date.now()
+    public started: number
+
+    private need_to_check_grace: boolean = true
+    private game_loop: NodeJS.Timeout | undefined = undefined
+    private script: Scenario = new Default()
+    private status_pull: Status[] = []
+    private last_id: number = 0
+    private kill_count: number = 0
+    private grace_trashold: number = 5
     
-    constructor(socket: any, public server: any){
-        this.need_to_check_grace = true
-        this.boss_kills_trashold = 150
-        this.socket = socket
-        this.enemies = []
-        this.players = []
-        this.projectiles = []
-        this.effects = []
-        this.dead = []
-        this.deleted = []
-        this.bindedEffects = []
-        this.sounds = []
-        this.statusPull = []
-        this.last_id = 0
-        this.kill_count = 0
-        this.grace_trashold = 5
-        this.script = new Default()
-        this.time = Date.now()
+    constructor(private server: GameServer){
+        this.server = server
+        this.socket = this.server.socket
         this.started = this.time
     }
 
-    addSoundObject(sound: any){
-        this.sounds.push(sound)
+    public endGame(): void{
+        clearInterval(this.game_loop)
+        this.server.endOfLevel()
     }
 
-    addSound(name: string, x: number, y:number){
-        this.sounds.push({
-            name: name,
-            x: x,
-            y: y
-        })
+    addSound(sound: Sound): void;
+    addSound(sound: string, x: number, y: number): void;
+
+    public addSound(sound: string | Sound, x?: number, y?: number): void{
+        if(typeof sound === 'object'){
+            this.sounds.push(sound)
+        }
+        else if(x && y){
+            let created: Sound = {name: sound, x, y}
+            this.sounds.push(created)
+        }  
     }
 
-    playerDead(){
-        this.players.forEach(p => {
-            p.playerDead()
-        })
-        if(this.players.every(elem => elem.is_dead)){
+    public playerDead(): void{
+        this.players.forEach(p => p.playerDead())
+
+        let are_all_dead: boolean = this.players.every(elem => elem.is_dead)
+        if(are_all_dead){
             setTimeout(() => {
-                this.server.endOfLevel()
+                this.endGame()
             }, 3000)
-            return
         }
     }
 
-    getId(){
+    public getId(): number{
         return this.last_id ++
     }
 
-    public assignPlayer(player: Player): void{
+    public assignPlayer(player: Character): void{
         player.startGame()
         this.players.push(player)
     }
 
-    stop(){
-        console.log('level was STOPPED')
-        clearInterval(this.create)
-        this.create = undefined
-        this.enemies = []
-        this.players = []
-        this.bindedEffects = []
-        this.statusPull = []
-        this.projectiles.length = 0
-        this.sounds.length = 0
-        this.effects.length = 0
-    }
+    // stop(): void{
+    //     this.enemies = []
+    //     this.players = []
+    //     this.binded_effects = []
+    //     this.status_pull = []
+    //     this.projectiles.length = 0
+    //     this.sounds.length = 0
+    //     this.effects.length = 0
+    // }
 
-    public start(){
-        console.log('level was STARTED')
+    public start(): void{
         this.script.start(this)
         this.started = Date.now()
+
+        this.game_loop = setInterval(()=> {
+            if(!this) return
+        
+            this.tick()
+            this.socket.emit('tick_data', this)
+            if(this){
+                this.collectTheDead()
+                this.effects.length = 0
+                this.deleted.length = 0
+                this.sounds.length = 0
+            }
+        }, 30)
     }
 
-    toJSON(){
+    public toJSON(): any{
         return {
-            actors: [...this.players, ...this.enemies, ...this.projectiles, ...this.effects, ...this.bindedEffects],
+            actors: [...this.players, ...this.enemies, ...this.projectiles, ...this.effects, ...this.binded_effects],
             deleted: this.deleted,
             sounds: this.sounds,
             meta: {
@@ -152,33 +158,37 @@ export default class Level{
         }
     }
 
-    setStatus(unit: any, status: any, with_check: boolean = false){
-        status.time = this.time
+    public setStatus(unit: Unit, status: Status, with_check: boolean = false): void{
+        status.setTime(this.time)
         
-        if(status.checkResist(unit)){
+        let resist = status.checkResist(unit)
+
+        if(resist){
             return
         }
     
         if(with_check){
-            let exist = this.statusPull.find(elem => elem.unit === unit && elem.name === status.name)
+            let exist: Status | undefined = this.status_pull.find(elem => elem.unit === unit && elem.name === status.name)
             if(exist){
                 exist.update(status)
-                return
+            }
+            else{
+                status.apply(unit)
+                this.status_pull.push(status)
             }
         }
-
-        status.apply(unit)
-
-        this.statusPull.push(status)
+        else{
+            status.apply(unit)
+            this.status_pull.push(status)
+        } 
     }
 
-    setScript(script: Scenario): void{
+    public setScript(script: Scenario): void{
         this.script = script
         this.script.start(this)
     }
 
     public tick(): void{
-       
         this.time = Date.now()
         this.script.checkTime(this)
 
@@ -191,74 +201,67 @@ export default class Level{
         this.enemies.forEach(enemy => {
             enemy.act(this.time)
         })
-        this.bindedEffects.forEach(effect => {
+        this.binded_effects.forEach(effect => {
             effect.act(this.time)
         })
-        this.statusPull.forEach(status => {
+        this.status_pull.forEach(status => {
             if(status.isExpired(this.time)){
                 status.clear()
-                this.statusPull = this.statusPull.filter(elem => elem != status)
+                this.status_pull = this.status_pull.filter(elem => elem != status)
             }
             else if(status.unit && status.unit.is_dead){
                 status?.unitDead()
                 status.clear()
-                this.statusPull = this.statusPull.filter(elem => elem != status)
+                this.status_pull = this.status_pull.filter(elem => elem != status)
             }
             else{
                 status.act(this.time)
             }
         })
-        // console.log(Date.now() - s)
     }
 
-    checkGraceCreating(){
+    private checkGraceCreating(): void{
         if(!this.need_to_check_grace) return
 
-        let diff = this.grace_trashold - this.kill_count
+        let diff: number = this.grace_trashold - this.kill_count
         if(diff > 0) return
 
-        let exist = this.bindedEffects.some(elem => elem instanceof Grace)
-
+        let exist: boolean = this.binded_effects.some(elem => elem instanceof Grace)
         if(exist){
             this.grace_trashold ++
             return
         }
 
         diff = Math.abs(diff)
-
         let chance = 20 + diff
 
-        if(chance >= Func.random()){
+        if(Func.chance(chance)){
             this.grace_trashold += this.grace_trashold
-
-            let portal = new Grace(this)
-
+            let portal: Grace = new Grace(this)
             while(portal.isOutOfMap()){
-                let random_player = this.players[Math.floor(Math.random() * this.players.length)]
-                let angle = Math.random() * 6.28
-                let distance = Func.random(15, 30)
+                let random_player: Character = this.players[Math.floor(Math.random() * this.players.length)]
+                let angle: number = Math.random() * 6.28
+                let distance: number = Func.random(15, 30)
 
                 portal.setPoint(random_player.x + Math.sin(angle) * distance, random_player.y + Math.cos(angle) * distance)
             }
 
-            this.bindedEffects.push(portal)
+            this.binded_effects.push(portal)
         }
     }
 
-    collectTheDead(){
+    private collectTheDead(): void{
         for(let i = 0; i < this.enemies.length; i++){
-            let enemy = this.enemies[i]
+            let enemy: Enemy = this.enemies[i]
             if(enemy.is_corpse){
 
                 if(enemy.count_as_killed){
-                     this.kill_count ++
+                    this.kill_count ++
+                    this.checkGraceCreating()
                 }
-        
-                this.checkGraceCreating()
 
                 if(Func.chance(enemy.create_chance)){
-
-                    let drop_name = undefined
+                    let drop_name: Effect | undefined | string = undefined
 
                     let total_weights = enemy.getTotalWeights()
                     let sum = total_weights.reduce((acc, elem) => elem[1] + acc, 0)
@@ -284,9 +287,10 @@ export default class Level{
                     else if(drop_name === 'intervention'){
                         drop_name = new Intervention(this)
                     }
-                    if(drop_name){
+
+                    if(drop_name instanceof Effect){
                         drop_name.setPoint(enemy.x, enemy.y)
-                        this.bindedEffects.push(drop_name)
+                        this.binded_effects.push(drop_name)
                     }
                 }
 

@@ -77,7 +77,7 @@ export default class BigFrostNova extends Effect{
                 }
             }
            
-            this.level.bindedEffects = this.level.bindedEffects.filter(e => e != this)
+            this.level.binded_effects = this.level.binded_effects.filter(e => e != this)
             this.level.deleted.push(this.id)
             return
         }

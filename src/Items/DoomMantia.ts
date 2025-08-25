@@ -24,7 +24,7 @@ export default class DoomMantia extends Item{
     }
 
     equip(character: Character): void {
-        character.playerTakeLethalDamageTriggers.push(this)
+        character.player_take_lethal_damage_triggers.push(this)
     }
     
     trigger(character: Character){

@@ -10,7 +10,7 @@ export default class FlameRing extends Item{
 
     constructor(){
         super()
-        this.chance = 25
+        this.chance = 40
         this.distance = 15
         this.power = 0
     }
@@ -25,7 +25,7 @@ export default class FlameRing extends Item{
     }
 
     equip(character: Character): void {
-        character.whenHitedTriggers.push(this)
+        character.when_hited_triggers.push(this)
     }
     
     trigger(character: Character){

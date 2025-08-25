@@ -27,7 +27,7 @@ export default class ApathyAura extends Status{
     act(tick_time: number){
         if(tick_time > this.last_checked){
             this.last_checked += 1000
-
+           
             let box = this.unit.getBoxElipse()
             box.r = this.radius
 

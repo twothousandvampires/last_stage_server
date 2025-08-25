@@ -2,16 +2,15 @@ import Unit from "../Objects/src/Unit"
 
 export default abstract class Status{
 
-    unit: any
+    unit: Unit | undefined
     last_checked: number
-    need_to_check_resist: boolean
+    need_to_check_resist: boolean = false
     name: string | undefined
-    power: any
-    duration: any
+    power: number | undefined
+    duration: any = false
 
     constructor(public time: number){
-        this.last_checked = time
-        this.need_to_check_resist = false
+       this.last_checked = time
     }
 
     checkResist(player: Unit){
@@ -21,6 +20,10 @@ export default abstract class Status{
         else{
             return player.isStatusResist()
         }
+    }
+
+    setTime(time: number){
+        this.time = time
     }
 
     isExpired(tick_time: number){

@@ -81,28 +81,28 @@ export default class Cultist extends Character{
         let main_name = abilities.find(elem => elem.type === 1 && elem.selected).name
 
         if(main_name === 'slam'){
-            this.first_ab = new Slam(this)
+            this.first_ability = new Slam(this)
         }
         else if(main_name === 'rune'){
-            this.first_ab = new Rune(this)
+            this.first_ability = new Rune(this)
         }
     
         let secondary_name = abilities.find(elem => elem.type === 2 && elem.selected).name
         
         if(secondary_name === 'shield bash'){
-            this.second_ab = new ShieldBash(this)
+            this.second_ability = new ShieldBash(this)
         }
         else if(secondary_name === 'grim pile'){
-            this.second_ab = new GrimPile(this)
+            this.second_ability = new GrimPile(this)
         }
 
         let finisher_name = abilities.find(elem => elem.type === 3 && elem.selected).name
 
         if(finisher_name === 'unleash pain'){
-            this.third_ab = new UnleashPain(this)
+            this.third_ability = new UnleashPain(this)
         }
         else if(finisher_name === 'pile of thorns'){
-            this.third_ab = new PileOfThornCast(this)
+            this.third_ability = new PileOfThornCast(this)
         }
 
         let utility_name = abilities.find(elem => elem.type === 4 && elem.selected).name
@@ -307,12 +307,12 @@ export default class Cultist extends Character{
                 name: 'runefield',
                 type: 'rune',
                 canUse: (character: Character) => {
-                    return character.first_ab instanceof Rune && !character.first_ab.runefield
+                    return character.first_ability instanceof Rune && !character.first_ability.runefield
                 },
                 teach: (character: Character) => {
-                    if(character.first_ab && character.first_ab instanceof Rune){
-                        character.first_ab.runefield = true
-                        character.first_ab.cost ++
+                    if(character.first_ability && character.first_ability instanceof Rune){
+                        character.first_ability.runefield = true
+                        character.first_ability.cost ++
                     }
                 },
                 cost: 1,
@@ -322,12 +322,12 @@ export default class Cultist extends Character{
                 name: 'explosive runes',
                 type: 'rune',
                 canUse: (character: Character) => {
-                    return character.first_ab instanceof Rune && !character.first_ab.explosive
+                    return character.first_ability instanceof Rune && !character.first_ability.explosive
                 },
                 teach: (character: Character) => {
-                    if(character.first_ab && character.first_ab instanceof Rune){
-                        character.first_ab.explosive = true
-                        character.first_ab.cost ++
+                    if(character.first_ability && character.first_ability instanceof Rune){
+                        character.first_ability.explosive = true
+                        character.first_ability.cost ++
                     }
                 },
                 cost: 1,
@@ -337,11 +337,11 @@ export default class Cultist extends Character{
                 name: 'fast detonation',
                 type: 'rune',
                 canUse: (character: Character) => {
-                    return character.first_ab instanceof Rune && !character.first_ab.fast_detonation
+                    return character.first_ability instanceof Rune && !character.first_ability.fast_detonation
                 },
                 teach: (character: Character) => {
-                    if(character.first_ab && character.first_ab instanceof Rune){
-                        character.first_ab.fast_detonation = true
+                    if(character.first_ability && character.first_ability instanceof Rune){
+                        character.first_ability.fast_detonation = true
                     }
                 },
                 cost: 1,
@@ -351,11 +351,11 @@ export default class Cultist extends Character{
                 name: 'second detanation',
                 type: 'rune',
                 canUse: (character: Character) => {
-                    return character.first_ab instanceof Rune && !character.first_ab.second_detanation
+                    return character.first_ability instanceof Rune && !character.first_ability.second_detanation
                 },
                 teach: (character: Character) => {
-                    if(character.first_ab && character.first_ab instanceof Rune){
-                        character.first_ab.second_detanation = true
+                    if(character.first_ability && character.first_ability instanceof Rune){
+                        character.first_ability.second_detanation = true
                     }
                 },
                 cost: 1,
@@ -365,10 +365,10 @@ export default class Cultist extends Character{
                 name: 'soul shatter',
                 type: 'new ability',
                 canUse: (character: Character) => {
-                    return !(character.first_ab instanceof SoulShatter)
+                    return !(character.first_ability instanceof SoulShatter)
                 },
                 teach: (character: Character) => {
-                    character.first_ab = new SoulShatter(this)
+                    character.first_ability = new SoulShatter(this)
                     character.updateClientSkill()
                 },
                 cost: 1,
@@ -378,11 +378,11 @@ export default class Cultist extends Character{
                 name: 'slaming',
                 type: 'slam',
                 canUse: (character: Character) => {
-                    return character.first_ab instanceof Slam && !character.first_ab.slaming
+                    return character.first_ability instanceof Slam && !character.first_ability.slaming
                 },
                 teach: (character: Character) => {
-                    if(character.first_ab && character.first_ab instanceof Slam){
-                        character.first_ab.slaming = true
+                    if(character.first_ability && character.first_ability instanceof Slam){
+                        character.first_ability.slaming = true
                     }
                 },
                 cost: 1,
@@ -392,11 +392,11 @@ export default class Cultist extends Character{
                 name: 'soul extraction',
                 type: 'slam',
                 canUse: (character: Character) => {
-                    return character.first_ab instanceof Slam && !character.first_ab.soul_extraction
+                    return character.first_ability instanceof Slam && !character.first_ability.soul_extraction
                 },
                 teach: (character: Character) => {
-                    if(character.first_ab && character.first_ab instanceof Slam){
-                        character.first_ab.soul_extraction = true
+                    if(character.first_ability && character.first_ability instanceof Slam){
+                        character.first_ability.soul_extraction = true
                     }
                 },
                 cost: 1,
@@ -406,14 +406,14 @@ export default class Cultist extends Character{
                 name: 'deafening wave',
                 type: "shield bash",
                 canUse: (character: Character) => {
-                    return character.second_ab instanceof ShieldBash &&
-                    !character.second_ab.deafening_wave &&
-                    !character.second_ab.hate
+                    return character.second_ability instanceof ShieldBash &&
+                    !character.second_ability.deafening_wave &&
+                    !character.second_ability.hate
 
                 },
                 teach: (character: Character) => {
-                    if(character.second_ab && character.second_ab instanceof ShieldBash){
-                        character.second_ab.deafening_wave = true
+                    if(character.second_ability && character.second_ability instanceof ShieldBash){
+                        character.second_ability.deafening_wave = true
                     }
                 },
                 cost: 1,
@@ -423,13 +423,13 @@ export default class Cultist extends Character{
                 name: 'hate',
                 type: "shield bash",
                 canUse: (character: Character) => {
-                     return character.second_ab instanceof ShieldBash &&
-                    !character.second_ab.deafening_wave &&
-                    !character.second_ab.hate
+                     return character.second_ability instanceof ShieldBash &&
+                    !character.second_ability.deafening_wave &&
+                    !character.second_ability.hate
                 },
                 teach: (character: Character) => {
-                    if(character.second_ab && character.second_ab instanceof ShieldBash){
-                        character.second_ab.hate = true
+                    if(character.second_ability && character.second_ability instanceof ShieldBash){
+                        character.second_ability.hate = true
                     }
                 },
                 cost: 1,
@@ -439,12 +439,12 @@ export default class Cultist extends Character{
                 name: 'coordination',
                 type: 'shield bash',
                 canUse: (character: Character) => {
-                     return character.second_ab instanceof ShieldBash &&
-                    !character.second_ab.coordination
+                     return character.second_ability instanceof ShieldBash &&
+                    !character.second_ability.coordination
                 },
                 teach: (character: Character) => {
-                    if(character.second_ab && character.second_ab instanceof ShieldBash){
-                        character.second_ab.coordination = true
+                    if(character.second_ability && character.second_ability instanceof ShieldBash){
+                        character.second_ability.coordination = true
                     }
                 },
                 cost: 1,
@@ -454,12 +454,12 @@ export default class Cultist extends Character{
                 name: 'increase grim pile effect',
                 type: 'grim pile',
                 canUse: (character: Character) => {
-                     return character.second_ab instanceof GrimPile &&
-                    !character.second_ab.increased_effect
+                     return character.second_ability instanceof GrimPile &&
+                    !character.second_ability.increased_effect
                 },
                 teach: (character: Character) => {
-                    if(character.second_ab && character.second_ab instanceof GrimPile){
-                        character.second_ab.increased_effect = true
+                    if(character.second_ability && character.second_ability instanceof GrimPile){
+                        character.second_ability.increased_effect = true
                     }
                 },
                 cost: 1,
@@ -469,12 +469,12 @@ export default class Cultist extends Character{
                 name: 'grim pile of will',
                 type: 'grim pile',
                 canUse: (character: Character) => {
-                     return character.second_ab instanceof GrimPile &&
-                    !character.second_ab.resistance
+                     return character.second_ability instanceof GrimPile &&
+                    !character.second_ability.resistance
                 },
                 teach: (character: Character) => {
-                    if(character.second_ab && character.second_ab instanceof GrimPile){
-                        character.second_ab.resistance = true
+                    if(character.second_ability && character.second_ability instanceof GrimPile){
+                        character.second_ability.resistance = true
                     }
                 },
                 cost: 1,
@@ -484,12 +484,12 @@ export default class Cultist extends Character{
                 name: 'reign of pain',
                 type: "unleash pain",
                 canUse: (character: Character) => {
-                     return character.third_ab instanceof UnleashPain &&
-                    !character.third_ab.reign_of_pain
+                     return character.third_ability instanceof UnleashPain &&
+                    !character.third_ability.reign_of_pain
                 },
                 teach: (character: Character) => {
-                    if(character.third_ab && character.third_ab instanceof UnleashPain){
-                        character.third_ab.reign_of_pain = true
+                    if(character.third_ability && character.third_ability instanceof UnleashPain){
+                        character.third_ability.reign_of_pain = true
                     }
                 },
                 cost: 1,
@@ -499,12 +499,12 @@ export default class Cultist extends Character{
                 name: 'restless warriors',
                 type: "unleash pain",
                 canUse: (character: Character) => {
-                     return character.third_ab instanceof UnleashPain &&
-                    !character.third_ab.restless_warriors
+                     return character.third_ability instanceof UnleashPain &&
+                    !character.third_ability.restless_warriors
                 },
                 teach: (character: Character) => {
-                    if(character.third_ab && character.third_ab instanceof UnleashPain){
-                        character.third_ab.restless_warriors = true
+                    if(character.third_ability && character.third_ability instanceof UnleashPain){
+                        character.third_ability.restless_warriors = true
                     }
                 },
                 cost: 1,
@@ -514,12 +514,12 @@ export default class Cultist extends Character{
                 name: 'ring of pain',
                 type: 'pile of thorns',
                 canUse: (character: Character) => {
-                     return character.third_ab instanceof PileOfThornCast &&
-                    !character.third_ab.ring_of_pain
+                     return character.third_ability instanceof PileOfThornCast &&
+                    !character.third_ability.ring_of_pain
                 },
                 teach: (character: Character) => {
-                    if(character.third_ab && character.third_ab instanceof PileOfThornCast){
-                        character.third_ab.ring_of_pain = true
+                    if(character.third_ability && character.third_ability instanceof PileOfThornCast){
+                        character.third_ability.ring_of_pain = true
                     }
                 },
                 cost: 1,
@@ -529,12 +529,12 @@ export default class Cultist extends Character{
                 name: 'collection of bones',
                 type: 'pile of thorns',
                 canUse: (character: Character) => {
-                     return character.third_ab instanceof PileOfThornCast &&
-                    !character.third_ab.collection_of_bones
+                     return character.third_ability instanceof PileOfThornCast &&
+                    !character.third_ability.collection_of_bones
                 },
                 teach: (character: Character) => {
-                    if(character.third_ab && character.third_ab instanceof PileOfThornCast){
-                        character.third_ab.collection_of_bones = true
+                    if(character.third_ability && character.third_ability instanceof PileOfThornCast){
+                        character.third_ability.collection_of_bones = true
                     }
                 },
                 cost: 1,
@@ -637,11 +637,11 @@ export default class Cultist extends Character{
                 name: 'burning circle',
                 type: 'new ability',
                 canUse: (character: Character) => {
-                    return character instanceof Cultist && !(character.second_ab instanceof BurningCircle)
+                    return character instanceof Cultist && !(character.second_ability instanceof BurningCircle)
                 },
                 teach: (character: Character) => {
                     if(character instanceof Cultist){
-                       character.second_ab = new BurningCircle(character)
+                       character.second_ability = new BurningCircle(character)
                        character.updateClientSkill()
                     }  
                 },
@@ -652,11 +652,11 @@ export default class Cultist extends Character{
                 name: 'all-consuming flame',
                 type: 'burning circle',
                 canUse: (character: Character) => {
-                    return character instanceof Cultist && character.second_ab instanceof BurningCircle && !character.second_ab.consuming
+                    return character instanceof Cultist && character.second_ability instanceof BurningCircle && !character.second_ability.consuming
                 },
                 teach: (character: Character) => {
                     if(character instanceof Cultist){
-                       character.second_ab.consuming = true
+                       character.second_ability.consuming = true
                     }  
                 },
                 cost: 1,
@@ -666,11 +666,11 @@ export default class Cultist extends Character{
                 name: 'fire hatred',
                 type: 'burning circle',
                 canUse: (character: Character) => {
-                    return character instanceof Cultist && character.second_ab instanceof BurningCircle && !character.second_ab.hatred
+                    return character instanceof Cultist && character.second_ability instanceof BurningCircle && !character.second_ability.hatred
                 },
                 teach: (character: Character) => {
                     if(character instanceof Cultist){
-                       character.second_ab.hatred = true
+                       character.second_ability.hatred = true
                     }  
                 },
                 cost: 1,
@@ -680,11 +680,11 @@ export default class Cultist extends Character{
                 name: 'devouring flame',
                 type: 'burning circle',
                 canUse: (character: Character) => {
-                    return character instanceof Cultist && character.second_ab instanceof BurningCircle && !character.second_ab.devouring
+                    return character instanceof Cultist && character.second_ability instanceof BurningCircle && !character.second_ability.devouring
                 },
                 teach: (character: Character) => {
                     if(character instanceof Cultist){
-                       character.second_ab.devouring = true
+                       character.second_ability.devouring = true
                     }  
                 },
                 cost: 1,
@@ -755,7 +755,7 @@ export default class Cultist extends Character{
     }
 
      succesefulKill(){
-        this.onKillTriggers.forEach(elem => {
+        this.on_kill_triggers.forEach(elem => {
             elem.trigger(this)
         })
 
@@ -814,9 +814,9 @@ export default class Cultist extends Character{
                 resource: this.resource,
                 max_resource: this.max_resource,
                 life_status: this.life_status,
-                first: this.first_ab?.canUse(),
-                secondary: this.second_ab?.canUse(),
-                finisher: this.third_ab?.canUse(),
+                first: this.first_ability?.canUse(),
+                secondary: this.second_ability?.canUse(),
+                finisher: this.third_ability?.canUse(),
                 utility: this.utility?.canUse(),
                 second: this.getSecondResource()
             }
@@ -836,17 +836,17 @@ export default class Cultist extends Character{
     useSecond(){
         if(!this.can_use_skills) return
 
-        if(this.third_ab?.canUse()){
-            this.third_ab?.use()
-            this.third_ab.afterUse()
+        if(this.third_ability?.canUse()){
+            this.third_ability?.use()
+            this.third_ability.afterUse()
         
         }
-        else if(this.second_ab?.canUse()){
-            this.useNotUtilityTriggers.forEach(elem => {
+        else if(this.second_ability?.canUse()){
+            this.use_not_utility_triggers.forEach(elem => {
                 elem.trigger(this)
             })
 
-            this.second_ab.use()
+            this.second_ability.use()
             this.last_skill_used_time = this.time
         }
     }
@@ -868,8 +868,8 @@ export default class Cultist extends Character{
         
         this.pay_to_cost = 0 
 
-        if(this.second_ab){
-            this.second_ab.used = false
+        if(this.second_ability){
+            this.second_ability.used = false
         }
     }
 

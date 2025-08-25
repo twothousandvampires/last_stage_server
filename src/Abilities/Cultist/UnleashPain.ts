@@ -21,7 +21,7 @@ export default class UnleashPain extends CultistAbility{
     }
 
     afterUse(){
-        this.owner.useNotUtilityTriggers.forEach(elem => {
+        this.owner.use_not_utility_triggers.forEach(elem => {
             elem.trigger(this.owner)
         })
     }
@@ -74,7 +74,7 @@ export default class UnleashPain extends CultistAbility{
 
             let count = 7
 
-            if(this.third_ab.reign_of_pain){
+            if(this.third_ability.reign_of_pain){
                 count += this.getSecondResource() * 3
             }
 
@@ -83,10 +83,10 @@ export default class UnleashPain extends CultistAbility{
             enemyw.forEach((elem) => {
                 let ghost = new WalkingGhostCultist(this.level)
                 ghost.target = elem
-                ghost.restless = this.third_ab.restless_warriors
+                ghost.restless = this.third_ability.restless_warriors
                 ghost.setPoint(this.x, this.y)
 
-                this.level.bindedEffects.push(ghost)
+                this.level.binded_effects.push(ghost)
             })
 
             this.payCost()

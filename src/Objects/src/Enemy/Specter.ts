@@ -234,7 +234,7 @@ export default class Specter extends Enemy{
                     vortex.setOwner(this)
                     vortex.setPoint(this.x, this.y)
 
-                    this.level.bindedEffects.push(vortex)
+                    this.level.binded_effects.push(vortex)
                 }
                 else if(this.spell_name === 'soul seekers'){
                     let c = 8

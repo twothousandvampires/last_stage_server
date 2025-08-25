@@ -76,8 +76,8 @@ export default class Fireball extends FlyerAbility{
                 a = Func.angle(this.x, this.y, target.x, target.y)
             }
 
-            let proj = new FireballProjectile(this.level, this.first_ab.body_melting)
-            proj.ignite = this.first_ab.ignite
+            let proj = new FireballProjectile(this.level, this.first_ability.body_melting)
+            proj.ignite = this.first_ability.ignite
             proj.setOwner(this)
             proj.setAngle(a ? a : this.attack_angle)
             proj.setPoint(this.x, this.y)

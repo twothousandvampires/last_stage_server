@@ -19,7 +19,7 @@ import Item from "./Item";
         }
 
         equip(character: Character): void {
-            character.reachNearDeadTriggers.push(this)
+            character.reach_near_dead_triggers.push(this)
         }
 
         trigger(character: Character){

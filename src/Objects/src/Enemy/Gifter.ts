@@ -90,7 +90,7 @@ export default class Gifter extends Pile{
             let grace = new GraceShard(this.level)
             grace.setPoint(x, y)
 
-            this.level.bindedEffects.push(grace)
+            this.level.binded_effects.push(grace)
         } 
 
         this.is_corpse = true

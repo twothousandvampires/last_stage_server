@@ -69,7 +69,7 @@ export default class Slam extends CultistAbility{
 
             let second_resource = this.getSecondResource()
 
-            if(this.first_ab.soul_extraction){
+            if(this.first_ability.soul_extraction){
                 this.additional_chance_grace_create += 10
             }
 
@@ -92,7 +92,7 @@ export default class Slam extends CultistAbility{
             r.x = hit_x
             r.y = hit_y
 
-            if(this.first_ab.slaming){
+            if(this.first_ability.slaming){
                 r.r += 2
             }
 
@@ -111,7 +111,7 @@ export default class Slam extends CultistAbility{
                 elem.takeDamage(this)
             })
 
-            if(this.first_ab.soul_extraction){
+            if(this.first_ability.soul_extraction){
                 this.additional_chance_grace_create -= 10
             }
 

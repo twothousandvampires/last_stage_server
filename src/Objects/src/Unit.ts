@@ -59,6 +59,7 @@ export default abstract class Unit extends GameObject {
     abstract getState(): void
     
     isStatusResist(){
+        console.log('unit')
         return false
     }
 

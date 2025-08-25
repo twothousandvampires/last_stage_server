@@ -24,7 +24,7 @@ export default class BurningCircleStatus extends Status{
 
     clear(){
         this.unit.level.deleted.push(this.effect.id)
-        this.unit.level.bindedEffects = this.unit.level.bindedEffects.filter(elem => elem != this.effect)
+        this.unit.level.binded_effects = this.unit.level.binded_effects.filter(elem => elem != this.effect)
     }
 
     setRadius(radius: number){
@@ -47,7 +47,7 @@ export default class BurningCircleStatus extends Status{
 
         this.effect = effect
 
-        unit.level.bindedEffects.push(effect)
+        unit.level.binded_effects.push(effect)
     }
 
     act(tick_time: number){

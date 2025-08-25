@@ -169,7 +169,7 @@ export abstract class Enemy extends Unit{
             if(options?.explode){
                 this.dead_type = 'explode'
                 this.is_corpse = true
-                this.level.addSoundObject(this.getExplodedSound())
+                this.level.addSound(this.getExplodedSound())
             }
             else if(options?.burn){
                 this.dead_type = 'burn_dying'
