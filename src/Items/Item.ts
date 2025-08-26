@@ -53,6 +53,14 @@ export default abstract class Item{
             name: "dagger of smoke",
             description: 'when you are healed there is a chance to create blood shards the amount of which is based on the number of enemies in a small radius'
         },
+        {
+            name: "yellow stone",
+            description: 'increases chance to resist status, when you resist gain a ward'
+        },
+        {
+            name: "white shield",
+            description: 'you have a chance to get ward when block'
+        },
     ]
 
     abstract equip(character: Character): void

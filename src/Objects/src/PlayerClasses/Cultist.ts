@@ -226,6 +226,22 @@ export default class Cultist extends Character{
             return
         }
 
+        if(this.ward){
+            this.ward --
+            let e = new ToothExplode(this.level)
+            e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
+            e.z = Func.random(2, 8)
+            this.level.effects.push(e)
+
+            this.level.addSound({
+                name: 'ward hit',
+                x: this.x,
+                y: this.y
+            })
+
+            return
+        }
+
         this.playerWasHited()
         
         let b_chance = 65 + this.durability
@@ -244,6 +260,9 @@ export default class Cultist extends Character{
             if(this.conduct_of_pain && Func.chance(50)){
                 this.addResourse()
             }
+
+            this.succesefulBlock()
+
             return
         } 
 
@@ -808,21 +827,6 @@ export default class Cultist extends Character{
         this.utility?.use()
     }
 
-    toJSON(){
-        return Object.assign(super.toJSON(),
-            {
-                resource: this.resource,
-                max_resource: this.max_resource,
-                life_status: this.life_status,
-                first: this.first_ability?.canUse(),
-                secondary: this.second_ability?.canUse(),
-                finisher: this.third_ability?.canUse(),
-                utility: this.utility?.canUse(),
-                second: this.getSecondResource()
-            }
-        )
-    }
-
     getAttackSpeed() {
         let value = this.attack_speed - (this.might * 100)
         
@@ -867,10 +871,6 @@ export default class Cultist extends Character{
         }
         
         this.pay_to_cost = 0 
-
-        if(this.second_ability){
-            this.second_ability.used = false
-        }
     }
 
     isStatusResist(){

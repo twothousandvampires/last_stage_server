@@ -47,9 +47,8 @@ export default class Default extends Scenario{
         let player_in_zone = level.players.some(elem =>  elem.zone_id === 0)
         if(!player_in_zone) return
 
-        let count = Func.random(1, 3)
-
-        count += Math.floor(level.kill_count / 25)
+        let add_count = Math.floor(level.kill_count / 25)
+        let count = Func.random(1 + Math.floor(add_count / 2), 3 + add_count)
 
         for(let i = 0; i < count; i++){
 

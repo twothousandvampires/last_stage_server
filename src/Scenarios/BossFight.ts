@@ -143,7 +143,7 @@ export default class BossFight extends Scenario {
                     this.check_players_interval = setInterval(() => {
                         level.players.forEach(elem => {
                             if(Func.distance(e, elem) > 40){
-                                elem.setPoint(boss.x, boss.y)
+                                elem.setPoint(boss.x + 1, boss.y + 1)
                             }
                         })
                     }, 2000)

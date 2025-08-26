@@ -52,7 +52,7 @@ export default class Level{
        },
     ]
 
-    public boss_kills_trashold: number = 150
+    public boss_kills_trashold: number = 300
     public enemies: Enemy[] = []
     public players: Character[] = []
     public projectiles: Projectiles[] = []
@@ -164,6 +164,7 @@ export default class Level{
         let resist = status.checkResist(unit)
 
         if(resist){
+            unit.statusWasResisted(status)
             return
         }
     

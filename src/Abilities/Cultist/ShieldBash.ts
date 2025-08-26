@@ -16,6 +16,7 @@ export default class ShieldBash extends CultistAbility{
         this.hate = false
         this.coordination = false
         this.cost = 4
+        this.cd = 5000
     }
 
     canUse(): boolean {

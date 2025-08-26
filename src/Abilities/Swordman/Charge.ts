@@ -20,7 +20,7 @@ export default class Charge extends SwordmanAbility{
         super(owner)
         this.used = false
         this.cost = 4
-        this.distance = 1200
+        this.distance = 2000
         this.point_added = false
         this.hited = []
         this.start = false
@@ -29,6 +29,7 @@ export default class Charge extends SwordmanAbility{
         this.end_timeout = undefined
         this.possibilities = false
         this.name = 'charge'
+        this.cd = 10000
     }
 
     canUse(){

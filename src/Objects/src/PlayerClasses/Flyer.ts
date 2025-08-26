@@ -553,11 +553,27 @@ export default class Flyer extends Character{
 
         if(this.damaged || this.is_dead) return
 
+        if(this.ward){
+            this.ward --
+            let e = new ToothExplode(this.level)
+            e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
+            e.z = Func.random(2, 8)
+            this.level.effects.push(e)
+
+            this.level.addSound({
+                name: 'ward hit',
+                x: this.x,
+                y: this.y
+            })
+
+            return
+        }
+
         this.playerWasHited()
 
         if(this.state === 'defend' && this.resource > 0){
 
-            if(this.charged_shield && Func.chance(50)){
+            if(this.charged_shield && Func.chance(75)){
                 let target = this.level.enemies[Math.floor(Math.random() * this.level.enemies.length)]
                 if(target){
                     let proj = new Lightning(this.level)
@@ -572,6 +588,8 @@ export default class Flyer extends Character{
             if(!Func.chance(this.will * 5)){
                 this.resource --
             }
+
+            this.succesefulBlock()
             
             return
         }
@@ -728,9 +746,7 @@ export default class Flyer extends Character{
         }
         
         this.pay_to_cost = 0
-        if(this.second_ability){
-            this.second_ability.used = false
-        }
+
     }
 
     addCourage(){
@@ -775,21 +791,6 @@ export default class Flyer extends Character{
 
     getSecondResource(){
         return this.recent_cast.length
-    }
-
-    toJSON(){
-        return Object.assign(super.toJSON(),
-            {
-                resource: this.resource,
-                max_resource: this.max_resource,
-                life_status: this.life_status,
-                first: this.first_ability?.canUse(),
-                secondary: this.second_ability?.canUse(),
-                finisher: this.third_ability?.canUse(),
-                utility: this.utility?.canUse(),
-                second: this.getSecondResource()
-            }
-        )
     }
 
     getCastSpeed() {

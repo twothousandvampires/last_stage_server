@@ -15,6 +15,7 @@ export default class FlameWall extends FlyerAbility{
         this.scorching = false
         this.frendly_flame = false
         this.name = 'flamewall'
+        this.cd = 4000
     }
 
     canUse(){

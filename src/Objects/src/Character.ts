@@ -41,7 +41,7 @@ export default abstract class Character extends Unit{
     might: number = 0
 
     base_regen_time: number = 10000
-    grace: number = 1
+    grace: number = 100
     can_get_courage: boolean = true
 
     on_kill_triggers: any[] = []
@@ -52,6 +52,8 @@ export default abstract class Character extends Unit{
     player_take_lethal_damage_triggers: any[] = []
     when_hited_triggers: any[] = []
     on_heal_triggers: any[] = []
+    on_status_resist_triggers: any[] = []
+    when_block_triggers: any[] = []
 
     avoid_damaged_state_chance: number = 0
     can_be_lethaled: boolean = true
@@ -97,10 +99,39 @@ export default abstract class Character extends Unit{
     abstract useUtility(): void
     abstract useSecond(): void
     abstract regen(): void
+    abstract getSecondResource(): number
+    
+    toJSON(){
+        return {
+            resource: this.resource,
+            max_resource: this.max_resource,
+            life_status: this.life_status,
+            first: this.first_ability?.canUse(),
+            secondary: this.second_ability?.canUse(),
+            finisher: this.third_ability?.canUse(),
+            utility: this.utility?.canUse(),
+            second: this.getSecondResource(),
+            life: this.life_status,
+            x: this.x,
+            y: this.y,
+            id: this.id,
+            state: this.state,
+            flipped: this.flipped,
+            name: this.name,
+            z: this.z,
+            action: this.action,
+            action_time: this.action_time,
+            light_r: this.light_r,
+            ward: this.ward
+        }
+    }
+
+    protected succesefulBlock(): void{
+        this.when_block_triggers.forEach(elem => elem.trigger(this))
+    }
 
     public isStatusResist(): boolean{
         let result = Func.chance(this.status_resistance)
-        console.log(result)
         return result
     }
 
@@ -241,7 +272,7 @@ export default abstract class Character extends Unit{
                         return character.life_status < 3
                     },
                     teach: (character: Character) => {
-                        character.addLife(3, true)
+                        character.addLife(3, true, true)
                     },
                     cost: 1,
                     desc: 'give a life'
@@ -397,6 +428,11 @@ export default abstract class Character extends Unit{
     protected afterUseSecond(): void{
         if(this.second_ability && !Func.chance(this.chance_second_skill_not_to_be_used)){
             this.second_ability.used = true
+            setTimeout(() => {
+                if(this.second_ability){
+                    this.second_ability.used = false
+                }
+            }, this.second_ability.cd)
         }
     }
 
@@ -514,8 +550,14 @@ export default abstract class Character extends Unit{
             y: this.y
         }
     }
+
+    public statusWasResisted(status: Status){
+        this.on_status_resist_triggers.forEach(elem => {
+            elem.trigger(this, status)
+        })
+    }
     
-    private subLife(unit: any = undefined, options = {}): void{
+    protected subLife(unit: any = undefined, options = {}): void{
         this.life_status --
 
         if(Func.chance(this.fragility)){
@@ -553,7 +595,7 @@ export default abstract class Character extends Unit{
         }
     }
     
-    private playerWasHited(): void{
+    protected playerWasHited(): void{
         this.when_hited_triggers.forEach(elem => {
             elem.trigger(this)
         })

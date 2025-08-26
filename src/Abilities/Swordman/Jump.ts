@@ -21,6 +21,7 @@ export default class Jump extends SwordmanAbility{
         this.direction = false
         this.impact = false
         this.cost = 4
+        this.cd = 8000
         this.used = false
         this.heavy_landing = false
         this.stomp = false

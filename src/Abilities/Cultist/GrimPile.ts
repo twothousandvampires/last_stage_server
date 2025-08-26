@@ -16,6 +16,7 @@ export default class GrimPile extends CultistAbility{
         this.resistance = false
         this.distance = 25
         this.cost = 2
+        this.cd = 6000
     }
 
     canUse(): boolean {

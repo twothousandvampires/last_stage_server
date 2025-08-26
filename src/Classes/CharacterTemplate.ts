@@ -31,7 +31,8 @@ export default class characterTemplate{
                         - affects the chance of not losing courage when receiving damage`,
                 speed: `- increases your attack speed
                         - reduses penalty of speed when you defend`,
-                knowledge: `- gives a chance to get additional resource and courage`,
+                knowledge: `- gives a chance to get additional resource and courage
+                            - increases status resistance`,
                 will: `- increases your life regeneration rate
                        - increases the chance to skip damage state`,
                 agility: `- increases a block chance
