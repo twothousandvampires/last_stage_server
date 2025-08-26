@@ -88,6 +88,7 @@ export default class Grace extends Effect{
         player.after_grace_statuses.forEach(status => {
             this.level.setStatus(player, status, true)
         })
+
         player.after_grace_statuses = []
 
         if(this.gatedPlayers.length === 0) {
@@ -108,7 +109,7 @@ export default class Grace extends Effect{
                 this.deleteStatus(player_data.player)
 
                 player_data.player.after_grace_statuses.forEach(status => {
-                    this.level.setStatus(player, status, true)
+                    this.level.setStatus(player_data.player, status, true)
                 })
                 player_data.player.after_grace_statuses = []
             }

@@ -1,5 +1,6 @@
 import Func from "../../Func"
 import Level from "../../Level"
+import Status from "../../Status/Status"
 import GameObject from "./GameObject"
 
 export default abstract class Unit extends GameObject {
@@ -31,6 +32,7 @@ export default abstract class Unit extends GameObject {
     phasing: boolean
     can_act: boolean
     fragility: number
+    ward: number = 0
     
     constructor(level: Level){
         super(level)
@@ -57,9 +59,9 @@ export default abstract class Unit extends GameObject {
     }
 
     abstract getState(): void
+    abstract  toJSON(): object
     
     isStatusResist(){
-        console.log('unit')
         return false
     }
 
@@ -182,7 +184,8 @@ export default abstract class Unit extends GameObject {
             return
         }
 
-        for(let i = 0; i < this.level.enemies.length; i++){
+        if(!this.phasing){
+             for(let i = 0; i < this.level.enemies.length; i++){
             let enemy = this.level.enemies[i]
 
             if(enemy === this) continue
@@ -223,24 +226,10 @@ export default abstract class Unit extends GameObject {
                 n_x = 0.4
             }
         }
+        }
+       
 
         this.addToPoint(n_x, n_y)
-    }
-
-    toJSON(){
-        return {
-            x: this.x,
-            y: this.y,
-            id: this.id,
-            state: this.state,
-            flipped: this.flipped,
-            name: this.name,
-            z: this.z,
-            action: this.action,
-            action_time: this.action_time,
-            light_r: this.light_r,
-            can_act: this.can_act
-        }
     }
 
     succesefulHit(){
@@ -269,6 +258,10 @@ export default abstract class Unit extends GameObject {
     }
 
     freezedAct(){
+
+    }
+
+    public statusWasResisted(status: Status){
 
     }
 }

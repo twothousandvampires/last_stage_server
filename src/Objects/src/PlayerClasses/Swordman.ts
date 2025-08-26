@@ -15,6 +15,7 @@ import Blood from "../../Effects/Blood";
 import ToothExplode from "../../Effects/ToothExplode";
 import Character from "../Character";
 import HeavenVengeance from "../../../Abilities/Swordman/HeavenVengeance";
+import Star from "../../Effects/Star";
 
 export default class Swordman extends Character{
     
@@ -173,6 +174,22 @@ export default class Swordman extends Character{
 
         if(this.damaged || this.is_dead) return
 
+        if(this.ward){
+            this.ward --
+            let e = new ToothExplode(this.level)
+            e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
+            e.z = Func.random(2, 8)
+            this.level.effects.push(e)
+
+            this.level.addSound({
+                name: 'ward hit',
+                x: this.x,
+                y: this.y
+            })
+
+            return
+        }
+
         this.playerWasHited()
 
         let b_chance = 50 + this.agility * 3
@@ -187,6 +204,9 @@ export default class Swordman extends Character{
                 x: this.x,
                 y: this.y
             })
+
+            this.succesefulBlock()
+
             return
         } 
 
@@ -662,23 +682,13 @@ export default class Swordman extends Character{
         this.setTimerToGetState(300)
     }
 
-    useUtility(){
-        this.utility?.use()
+    public isStatusResist(): boolean{
+        let result = Func.chance(this.status_resistance + this.knowledge * 3)
+        return result
     }
 
-    toJSON(){
-        return Object.assign(super.toJSON(),
-            {
-                resource: this.resource,
-                max_resource: this.max_resource,
-                life_status: this.life_status,
-                first: this.first_ability?.canUse(),
-                secondary: this.second_ability?.canUse(),
-                finisher: this.third_ability?.canUse(),
-                utility: this.utility?.canUse(),
-                second: this.getSecondResource()
-            }
-        )
+    useUtility(){
+        this.utility?.use()
     }
 
     getSecondResource(){

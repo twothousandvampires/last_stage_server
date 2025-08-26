@@ -122,8 +122,7 @@ export class WeaponFragment extends Projectiles{
                    
                 }
             }
-           
-
+        
             this.level.projectiles = this.level.projectiles.filter(elem => elem != this)
             this.level.deleted.push(this.id)
         }

@@ -14,6 +14,8 @@ import SoulAccumulator from "../Items/SoulAccumulator"
 import SparklingHelmet from "../Items/SparklingHelmet"
 import Staff from "../Items/Staff"
 import WallOfBones from "../Items/WallOfBones"
+import WhiteShield from "../Items/WhiteShield"
+import YellowStone from "../Items/YellowStone"
 import Level from "../Level"
 import Character from "../Objects/src/Character"
 import Cultist from "../Objects/src/PlayerClasses/Cultist"
@@ -87,6 +89,12 @@ export default class Builder{
         }
         else if(item_name === 'dagger of smoke'){
             return new DaggerOfSmoke()
+        }
+        else if(item_name === 'yellow stone'){
+            return new YellowStone()
+        }
+        else if(item_name === 'white shield'){
+            return new WhiteShield()
         }
     }
 }

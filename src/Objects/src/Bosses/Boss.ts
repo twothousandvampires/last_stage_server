@@ -6,6 +6,7 @@ import Madness from "../../../Status/Madness";
 import Poison from "../../../Status/Poison";
 import Armour from "../../Effects/Armour";
 import CureseOfDamnedArea from "../../Effects/CureseOfDamnedArea";
+import SkullCloud from "../../Effects/SkullCloud";
 import { Enemy } from "../Enemy/Enemy";
 
 export default class Boss extends Enemy{
@@ -149,7 +150,7 @@ export default class Boss extends Enemy{
         this.setTimerToGetState(this.attack_speed)
     }
 
-    idleAct(){
+    async idleAct(){
         
         if(this.can_check_player){
            if(!this.target){
@@ -183,38 +184,52 @@ export default class Boss extends Enemy{
             this.can_cast_madness = false
 
             if(Func.chance(50)){
-                let a = 6.28 * Math.random()
-                let d_x = Func.random(7, 25)
-                let d_y = Func.random(7, 25)
 
-                let x = this.x + d_x * Math.sin(a)
-                let y = this.y + d_y * Math.cos(a)
+                let count = 3
+                
+                let zones = 6.28 / count
+        
+                for(let i = 1; i <= count; i++){
+                    await Func.sleep(300)
+                    
+                    let min_a = (i - 1) * zones
+                    let max_a = i * zones
+        
+                    let a = Math.random() * (max_a - min_a) + min_a
+                    let d_x = Func.random(7, 25)
+                    let d_y = Func.random(7, 25)
 
-                let e = new CureseOfDamnedArea(this.level)
-                e.setPoint(x, y)
+                    let x = this.x + d_x * Math.sin(a)
+                    let y = this.y + d_y * Math.cos(a)
 
-                let hit = e.getBoxElipse()
-                hit.r = 10
+                    let e = new SkullCloud(this.level)
+                    e.setPoint(x, y)
+        
+                    this.level.effects.push(e)
 
-                this.level.players.forEach(elem => {
-                    if(Func.elipseCollision(hit, elem.getBoxElipse())){
-                        let status = new Fear(this.level.time)
-                        status.setFearTarget(this)
-                        status.setDuration(10000)
-                        this.level.setStatus(elem, status)
-                    }
-                })
+                    let hit = e.getBoxElipse()
+                    hit.r = 10
 
-                this.level.effects.push(e)
+                    
+                    this.level.players.forEach(elem => {
+                        if(Func.elipseCollision(hit, elem.getBoxElipse())){
+                            let status = new Fear(this.level.time)
+                            status.setFearTarget(this)
+                            status.setDuration(5000)
+                            this.level.setStatus(elem, status)
+                        }
+                    })
+
+                }   
             }
             else{
                 let posible = this.level.players.filter(elem => !elem.is_dead)
 
                 let target = posible[Math.floor(Math.random() * posible.length)]
 
-                if(target && posible.length > 1){
+                if(target){
                     let status = new Madness(this.level.time)
-                    status.setDuration(10000)
+                    status.setDuration(5000)
 
                     this.level.setStatus(target, status)
                 }
@@ -226,6 +241,7 @@ export default class Boss extends Enemy{
             }, 5000);
         }
 
+        console.log(this.x, this.y)
         this.moveAct() 
     }
 }

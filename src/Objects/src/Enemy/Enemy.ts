@@ -122,6 +122,20 @@ export abstract class Enemy extends Unit{
             y: this.y
         }
     }
+
+    toJSON(){
+        return {
+            x: this.x,
+            y: this.y,
+            id: this.id,
+            state: this.state,
+            flipped: this.flipped,
+            name: this.name,
+            z: this.z,
+            action: this.action,
+            action_time: this.action_time,
+        }
+    }
     
     takeDamage(unit: any = undefined, options: any = {}){
         if(this.is_dead) return

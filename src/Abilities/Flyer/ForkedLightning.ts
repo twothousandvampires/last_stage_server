@@ -15,6 +15,7 @@ export default class ForkedLightning extends FlyerAbility{
         this.name = 'forked lightning'
         this.improved_chain_reaction = false
         this.lightning_eye = false
+        this.cd = 3500
     }
 
     canUse(){

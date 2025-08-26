@@ -30,7 +30,6 @@ export default class Quake extends SwordmanAbility{
                 elem.trigger(this.owner)
         })
         this.owner.resource -= this.cost
-        this.owner.second_ability.used = false
         this.owner.last_skill_used_time = this.owner.time
     }
 

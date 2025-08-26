@@ -15,6 +15,7 @@ export default class BurningCircle extends CultistAbility{
         this.consuming = false
         this.hatred = false
         this.devouring = false
+        this.cd = 12000
     }
 
     canUse(): boolean {

@@ -181,6 +181,7 @@ export default class FlyingBones extends Enemy{
     setRetreatState(){
         this.state = 'move'
         this.retreat_angle = Func.angle(this.target?.x, this.target.y,this.x, this.y)
+        this.retreat_angle += Math.random() * 1.57 * (Func.random(50) ? -1 : 1)
 
         this.stateAct = this.retreatAct
 

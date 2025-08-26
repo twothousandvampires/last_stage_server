@@ -5,7 +5,7 @@ import SwordmanAbility from "./SwordmanAbility";
 
 export default class HeavenVengeance extends SwordmanAbility{
   
-    private cd: number = 4000
+    private cd: number = 3000
     public eye: boolean = false
     public grace: boolean = false
 
@@ -19,9 +19,7 @@ export default class HeavenVengeance extends SwordmanAbility{
     }
 
     trigger(){
-        if(Func.chance(50)){
-             this.used = false
-        }
+        this.used = false
     }
 
     setUsed(){
@@ -129,10 +127,10 @@ export default class HeavenVengeance extends SwordmanAbility{
             let vengeance_count = this.getTargetsCount()
 
             if(target_to_hit && vengeance_count != 0){
-                let vengeance_radius = 12
+                let vengeance_radius = 18
 
                 if(this.first_ability.eye){
-                    vengeance_radius += second
+                    vengeance_radius += second * 2
                 }
 
                 let hit = this.getBoxElipse()

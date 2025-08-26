@@ -74,7 +74,7 @@ export default class ShatteredWeapon extends SwordmanAbility{
 
             a = a ? a : this.attack_angle
 
-            let count = 3 + Math.round(second / 3)
+            let count = 3 + second
             let zone_per_tooth = 0.6
             
             a -= (Math.round(count / 2) * zone_per_tooth)
