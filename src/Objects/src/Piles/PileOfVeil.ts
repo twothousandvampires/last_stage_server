@@ -26,7 +26,8 @@ export default class PileOfVeil extends Pile{
 
             this.level.players.forEach(elem => {
                 if(Func.elipseCollision(e, elem.getBoxElipse())){
-                    let status = new Blind(elem.time, 5000)
+                    let status = new Blind(elem.time)
+                    status.setDuration(5000)
                     this.level.setStatus(elem, status, true)
                 }
             })

@@ -32,7 +32,7 @@ export default class WalkingGhostCultist extends Effect{
 
     delete(){
         this.level.deleted.push(this.id)
-        this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem != this)
+        this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
     }
 
     explode(time: number){
@@ -42,7 +42,7 @@ export default class WalkingGhostCultist extends Effect{
         sprite.setPoint(this.x, this.y)
         sprite.hit_x = this.target.x
         sprite.hit_y = this.target.y
-        this.level.bindedEffects.push(sprite)
+        this.level.binded_effects.push(sprite)
 
         this.delete()
     }

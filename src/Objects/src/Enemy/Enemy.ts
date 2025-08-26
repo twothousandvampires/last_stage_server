@@ -20,10 +20,12 @@ export abstract class Enemy extends Unit{
     create_entity_chance: number
     create_intervention_chance: number
     create_chance: number
+    count_as_killed: boolean
   
     constructor(level: Level){
         super(level)
         this.is_spawning = true
+        this.count_as_killed = true
         this.name = 'enemy'
         this.can_check_player = true
         this.is_corpse = false
@@ -93,6 +95,7 @@ export abstract class Enemy extends Unit{
         else{
             this.state = this.dead_type ? this.dead_type : 'dying'
         }
+
         this.stateAct = this.DyingAct
         this.setTimerToGetState(this.dying_time)
     }
@@ -145,23 +148,28 @@ export abstract class Enemy extends Unit{
             return
         }
 
+        let damage_value = 1
+
         if(options?.damage_value){
-           this.life_status -= options.damage_value
+           damage_value = options.damage_value
         }
-        else{
-            this.life_status --
-        }
-
-        if(unit?.critical && Func.chance(unit.critical)){
-            this.life_status --
+       
+        if(unit && unit?.critical && Func.chance(unit.critical)){
+            damage_value *= 2
         }
 
+        if(Func.chance(this.fragility)){
+            damage_value *= 2
+        }
+
+        this.life_status -= damage_value
+        unit?.succesefulHit(this)
+        
         if(this.life_status <= 0){
-           
             if(options?.explode){
                 this.dead_type = 'explode'
                 this.is_corpse = true
-                this.level.addSoundObject(this.getExplodedSound())
+                this.level.addSound(this.getExplodedSound())
             }
             else if(options?.burn){
                 this.dead_type = 'burn_dying'
@@ -173,9 +181,8 @@ export abstract class Enemy extends Unit{
             unit?.succesefulKill()
             this.setDyingAct()
         }
-        else{
-            unit?.succesefulHit()
-        }
+        
+        
     }
 
     getWeaponHitedSound(){

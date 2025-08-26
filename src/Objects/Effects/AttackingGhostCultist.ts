@@ -38,7 +38,7 @@ export default class AttackingGhostCultist extends Effect{
 
     delete(){
         this.level.deleted.push(this.id)
-        this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem != this)
+        this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
     }
 
     explode(){
@@ -59,7 +59,7 @@ export default class AttackingGhostCultist extends Effect{
            
             if(ghost.target){
                 ghost.setPoint(this.x, this.y)
-                this.level.bindedEffects.push(ghost)
+                this.level.binded_effects.push(ghost)
             }
 
             this.delete()

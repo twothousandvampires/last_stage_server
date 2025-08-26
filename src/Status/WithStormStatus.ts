@@ -3,13 +3,9 @@ import LightningBoltEffect from "../Objects/Effects/LightningBoltEffect"
 import Status from "./Status"
 
 export default class WithStormStatus extends Status{
-    
-    last_checked: number
-    name: string
 
-    constructor(public time: number,public duration: number, public power: number){
-        super(time, duration)
-        this.last_checked = time
+    constructor(time: number){
+        super(time)
         this.name = 'with storm status'
     }
 
@@ -20,11 +16,7 @@ export default class WithStormStatus extends Status{
     update(status: any){
         this.power ++
     }
-
-    isExpired(tick_time: number){
-        return false
-    }
-
+    
     act(tick_time: number){
         if(tick_time > this.last_checked){
             this.last_checked += 5000 - (this.power * 200)

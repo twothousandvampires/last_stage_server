@@ -3,8 +3,8 @@ import Status from "./Status"
 
 export default class Curse extends Status{
  
-    constructor(public time: number,public duration: number){
-        super(time, duration)
+    constructor(public time: number){
+        super(time)
         this.name = 'curse'
         this.need_to_check_resist = true
     }

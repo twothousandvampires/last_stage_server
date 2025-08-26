@@ -17,7 +17,7 @@ export default class BoneArmour extends Effect{
         this.value = 0
         this.max_value = 10
         this.start = Date.now()
-        this.duration = 5000
+        this.duration = 10000
     }
 
     act(){
@@ -48,7 +48,7 @@ export default class BoneArmour extends Effect{
         this.level.deleted.push(this.id)
         this.producer.effect = undefined
 
-        this.level.bindedEffects = this.level.bindedEffects.filter(e => e != this)
+        this.level.binded_effects = this.level.binded_effects.filter(e => e != this)
     }
 
     update(adds_duration = 0){

@@ -24,11 +24,8 @@ export default class FrostSphere extends FlyerAbility{
     use(){
         if(this.owner.is_attacking) return
 
-        this.owner.pay_to_cost = this.cost
-
         let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
-        let angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
         
         if(rel_x < this.owner.x){
             this.owner.flipped = true
@@ -37,7 +34,10 @@ export default class FrostSphere extends FlyerAbility{
             this.owner.flipped = false    
         }
 
-        this.owner.attack_angle = angle
+        if(!this.owner.attack_angle){
+            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        }
+
         this.owner.is_attacking = true
         this.owner.state = 'cast'
 
@@ -64,7 +64,7 @@ export default class FrostSphere extends FlyerAbility{
 
     act(){
         if(this.action && !this.hit){
-            this.payCost()
+            this.addCourage()
             this.hit = true
             this.level.addSound('cold cast', this.x, this.y)
             let a = undefined
@@ -83,6 +83,7 @@ export default class FrostSphere extends FlyerAbility{
             proj.setPoint(this.x, this.y)
 
             this.level.projectiles.push(proj)
+            this.attack_angle = undefined
         }
     }
 }

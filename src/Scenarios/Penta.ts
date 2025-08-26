@@ -141,8 +141,9 @@ export default class Penta{
             elem.y = 60
             elem.light_r = 20
         })
-
-        level.setStatus(level.players[0], new CurseOfDamned(level.time, 2000))
+        let status = new CurseOfDamned(level.time)
+        status.setDuration(2000)
+        level.setStatus(level.players[0], status)
     }
 
     checkTime(level: Level){

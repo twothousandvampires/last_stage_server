@@ -1,9 +1,7 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
-import Curse from "../../../Status/Curse";
 import CurseOfDamned from "../../../Status/CurseOfDamned";
 import GhostGrip from "../../../Status/GhostGrip";
-import Armour from "../../Effects/Armour";
 import GhostGripArea from "../../Effects/GhostGripArea";
 import { SharpedBone } from "../../Projectiles/SharpedBone";
 import Bones from "./Bones";
@@ -39,60 +37,10 @@ export default class FlyingBones extends Enemy{
     }
 
      takeDamage(unit: any = undefined, options: any = {}){
-        if(this.is_dead) return
-        
-        if(options?.instant_death){
-            unit?.succesefulKill()
-            this.is_dead = true
-            this.setDyingAct()
-            return
-        }
+        super.takeDamage(unit, options)
 
-        if(this.checkArmour(unit)){
-            this.level.sounds.push({
-                name: 'metal hit',
-                x: this.x,
-                y: this.y
-            })
-            let e = new Armour(this.level)
-            e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
-            e.z = Func.random(2, 8)
-            this.level.effects.push(e)
-            return
-        }
-
-        if(options?.damage_value){
-            this.life_status -= options.damage_value
-        }
-        else{
-            this.life_status --
-        }
-
-        if(unit?.critical && Func.chance(unit.critical)){
-            this.life_status --
-        }
-
-        if(this.life_status <= 0){
-            if(unit?.blessed){
-                this.ressurect_chance = Math.round(this.ressurect_chance / 2)
-            }
-            if(options?.explode){
-                this.dead_type = 'explode'
-                this.is_corpse = true
-                this.level.addSoundObject(this.getExplodedSound())
-            }
-            else if(options?.burn){
-                this.dead_type = 'burn_dying'
-                this.is_corpse = true
-            }
-            
-            this.is_dead = true
-            this.create_grace_chance += unit?.additional_chance_grace_create ? unit?.additional_chance_grace_create : 0
-            unit?.succesefulKill()
-            this.setDyingAct()
-        }
-        else{
-            unit?.succesefulHit()
+        if(this.life_status <= 0 && unit?.blessed){
+            this.ressurect_chance = Math.round(this.ressurect_chance / 2)
         }
     }
 
@@ -194,13 +142,15 @@ export default class FlyingBones extends Enemy{
                 this.level.effects.push(e)
                 
                 ppl.forEach(elem => {
-                    let status = new GhostGrip(elem.time, 4000)
+                    let status = new GhostGrip(elem.time)
+                    status.setDuration(4000)
                     this.level.setStatus(elem, status)
                 })
                 
             }  
             else if(this.spell_name === 'curse'){
-                let status = new CurseOfDamned(this.target.time, 4000)
+                let status = new CurseOfDamned(this.target.time)
+                status.setDuration(4000)
                 this.level.setStatus(this.target, status)
             }        
         }

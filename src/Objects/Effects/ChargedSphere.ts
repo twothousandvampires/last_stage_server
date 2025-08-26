@@ -19,7 +19,7 @@ export default class ChargedSphere extends Effect{
     act(time: number){
         if(time - this.time >= 10000){
             this.level.deleted.push(this.id)
-            this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem != this)
+            this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
             return
         }
 
@@ -29,7 +29,7 @@ export default class ChargedSphere extends Effect{
                     elem.addResourse(2)
                 }
                 this.level.deleted.push(this.id)
-                this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem != this)
+                this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
                 elem.move_speed += 0.15
                 setTimeout(() => {
                     elem.move_speed -= 0.15

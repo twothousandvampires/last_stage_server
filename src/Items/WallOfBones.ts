@@ -16,14 +16,14 @@ import Item from "./Item";
 
         constructor(){
             super()
-            this.max_stacks = 10
+            this.max_stacks = 20
             this.stack_count = 0
             this.explode_chance = 40
             this.cd = false
             this.power = 0
         }
         equip(character: Character): void {
-            character.onKillTriggers.push(this)
+            character.on_kill_triggers.push(this)
         }
 
         canBeForged(character: Character): boolean {
@@ -76,7 +76,7 @@ import Item from "./Item";
                 effect.producer = this
                 this.effect = effect
 
-                character.level.bindedEffects.push(effect)
+                character.level.binded_effects.push(effect)
             }
         }
     }

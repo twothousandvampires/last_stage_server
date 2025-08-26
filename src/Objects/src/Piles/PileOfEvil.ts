@@ -7,7 +7,7 @@ export default class PileOfEvil extends Pile{
 
     constructor(level: Level){
         super(level)
-        this.frequency = 4000
+        this.frequency = 3000
         this.getState()
     }
 
@@ -26,7 +26,8 @@ export default class PileOfEvil extends Pile{
 
             this.level.enemies.forEach(elem => {
                 if(Func.elipseCollision(e, elem.getBoxElipse())){
-                    let status = new PileOfEvilStatus(this.level.time, 4000)
+                    let status = new PileOfEvilStatus(this.level.time)
+                    status.setDuration(4000)
                     this.level.setStatus(elem, status)
                 }
             })

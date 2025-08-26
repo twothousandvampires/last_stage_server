@@ -24,11 +24,11 @@ export default class Whirlwind extends SwordmanAbility{
     }
 
     afterUse(){
-        this.owner.useNotUtilityTriggers.forEach(elem => {
+        this.owner.use_not_utility_triggers.forEach(elem => {
                 elem.trigger(this.owner)
         })
         this.owner.resource -= this.cost
-        this.owner.second_ab.used = false
+        this.owner.second_ability.used = false
         this.owner.last_skill_used_time = this.owner.time
         
     }
@@ -101,12 +101,12 @@ export default class Whirlwind extends SwordmanAbility{
                 }
             })
 
-            if(this.third_ab.blood_harvest && kill_count > 0){
+            if(this.third_ability.blood_harvest && kill_count > 0){
                 let chance = 20 * kill_count
                 if(Func.chance(chance)){
                     let sphere = new BloodSphere(this.level, kill_count)
                     sphere.setPoint(this.x, this.y)
-                    this.level.bindedEffects.push(sphere)
+                    this.level.binded_effects.push(sphere)
                 }
             }
             
@@ -118,7 +118,7 @@ export default class Whirlwind extends SwordmanAbility{
                 })
             }
 
-            if(this.third_ab.fan_of_swords){
+            if(this.third_ability.fan_of_swords){
                 let count = this.getTargetsCount()
                 
                 let zones = 6.28 / count
@@ -130,11 +130,11 @@ export default class Whirlwind extends SwordmanAbility{
                     let angle = Math.random() * (max_a - min_a) + min_a
                     let proj = new ThrowedWeapon(this.level)
 
-                    if(this.first_ab instanceof WeaponThrow){
-                        if(this.first_ab.shattering){
+                    if(this.first_ability instanceof WeaponThrow){
+                        if(this.first_ability.shattering){
                             proj.shattered = true
                         }
-                        else if(this.first_ab.returning){
+                        else if(this.first_ability.returning){
                             proj.returned = true
                         }
                     }

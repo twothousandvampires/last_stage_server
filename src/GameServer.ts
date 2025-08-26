@@ -1,56 +1,58 @@
+import { Server, Socket } from 'socket.io'
 import Builder from './Classes/Builder'
 import Client from './Client'
 import Item from './Items/Item'
 import item from './Items/Item'
 import Level from './Level'
-
+import TemplateAbility from './Types/TemplateAbility'
+import Character from './Objects/src/Character'
 
 export default class GameServer{
 
-    socket: any
-    level: Level | undefined
-    clients: any
-    game_started: boolean
-    game_loop: any
+    public socket: Server
 
-    constructor(socket: any){
+    private level: Level | undefined = undefined
+    private clients: Map<string, Client> = new Map()
+    private game_started: boolean = false
+    
+    constructor(socket: Server){
         this.socket = socket
-        this.level = undefined
         this.initSocket()
-        this.clients = new Map()
-        this.game_started = false
     }
 
-    private updateLobby(){
-        let data = Array.from(this.clients.values())
+    public start(): void{
+        if(!this.level) return
+
+        this.level?.start()
+    }
+
+    private updateLobby(): void{
+        let data: Client[] = Array.from(this.clients.values())
         this.socket.emit('update_lobby_data', data, item.list)
     }
 
-    private createNewClient(socket: any): Client{
-        let client = new Client(socket.id)
+    private createNewClient(socket: Socket): Client{
+        let client: Client = new Client(socket.id)
         this.clients.set(socket.id, client)
         this.updateLobby()
 
         return client
     }
 
-    endOfLevel(){
+    public endOfLevel(): void{
         this.level = undefined
-        this.clients = new Map()
         this.game_started = false
-        clearInterval(this.game_loop)
+        this.clients = new Map()
         this.socket.emit('game_is_over')
     }
 
-    private initSocket(): void {
-    
-        this.socket.on('connection', (socket: any) => {
+    private initSocket(): void{
+        this.socket.on('connection', (socket: Socket) => {
 
             socket.emit('server_status', this.game_started)
 
             if(!this.game_started){
-                
-                let client = this.createNewClient(socket)
+                let client: Client = this.createNewClient(socket)
 
                 socket.on('change_class', (class_name: string) => {
                     client.template.setTemplate(class_name)
@@ -79,37 +81,45 @@ export default class GameServer{
                 })
 
                 socket.on('select_skill', (skill_name: string) => {
-                    let selected = client.template.abilities.find(elem => elem.name === skill_name)
-                    let type = selected?.type
+                    let selected: TemplateAbility | undefined = client.template.abilities.find(elem => elem.name === skill_name)
+                    if(!selected) return
+
+                    let type: number = selected.type
+                    if(!type) return
+
                     client.template.abilities.filter(elem => elem.type === type).forEach(elem => elem.selected = false)
-                    if (selected) {
+                    if(selected){
                         selected.selected = true;
                     }
                     this.updateLobby()                
                 })
 
-                socket.on('inputs', (inputs: any) => {               
-                    client.character?.setLastInputs(inputs)
+                socket.on('inputs', (inputs: object) => {   
+                    if(!client.character) return
+
+                    client.character.setLastInputs(inputs)
                 })
 
                 socket.on('player_ready', () => {
                     client.ready = !client.ready
 
-                    if(this.allPlayersReady()){
+                    if(this.allPlayersAreReady()){
                         setTimeout(() => {
-                            let all_still_ready = this.allPlayersReady()
+                            let all_still_ready: boolean = this.allPlayersAreReady()
                             if(all_still_ready){
-                                this.level = new Level(this.socket, this)
+                                this.level = new Level(this)
 
                                 this.clients.forEach((value, key, map) => {
-                                    let char = Builder.createCharacter(value, this.level)
-                                    value.character = char
-                                    this.level.assignPlayer(char)
+                                    if(this.level){
+                                        let char: Character = Builder.createCharacter(value, this.level)
+                                        value.character = char
+                                        this.level.assignPlayer(char)
+                                    }
                                 })
+                                
                                 this.game_started = true
-                                this.level.start()
                                 this.socket.emit('start', Array.from(this.clients.values()))
-                                this.start()
+                                this.level.start()
                             }
                         }, 3000)
                     }
@@ -118,27 +128,22 @@ export default class GameServer{
                 })
 
                 socket.on('disconnect', () => {
-                    console.log('player LEFT')
-
                     this.clients.delete(socket.id)
                     this.updateLobby()
 
                     if(this.clients.size === 0){
-                        this.level = undefined
-                        clearInterval(this.game_loop)
-                        console.log('level was DELETED')
-                        this.game_started = false
+                        if(this.level){
+                            this.level.endGame()
+                        }
                     }
                 })
 
-                socket.on('action', (id) => {
-                    let actor = this.level?.enemies.find(elem => {
-                        return elem.id === id
-                    })
+                socket.on('action', (id: number) => {
+                    if(!this.level) return
+
+                    let actor = this.level.enemies.find(elem => elem.id === id)
                     if(!actor){
-                        actor = this.level?.players.find(elem => {
-                            return elem.id === id
-                        })
+                        actor = this.level.players.find(elem => elem.id === id)
                     }
                     if(actor){
                         actor.action = true
@@ -146,43 +151,30 @@ export default class GameServer{
                 })
 
                 socket.on('set_target', (id) => {
-                    client.character?.setTarget(id)
+                    if(!client.character) return
+                    client.character.setTarget(id)
                 })
 
                 socket.on('select_upgrade', (upgrade_name) => {
-                    client.character?.upgrade(upgrade_name)
+                    if(!client.character) return
+
+                    client.character.upgrade(upgrade_name)
                 })
 
                 socket.on('hold_grace', () => {
-                    client.character?.holdGrace()
+                    if(!client.character) return
+                    client.character.holdGrace()
                 })
 
                 socket.on('exit_grace', () => {
-                    client.character?.exitGrace()
+                    if(!client.character) return
+                    client.character.exitGrace()
                 })
             }
         })
     }
 
-    allPlayersReady(){
+    allPlayersAreReady(): boolean{
         return Array.from((this.clients.values())).every(elem => elem.ready)
-    }
-
-    public start(): void{
-        this.game_loop = setInterval(()=> {
-            if(!this.level) return
-          
-            let s = Date.now()
-            this.level.tick()
-            this.socket.emit('tick_data', this.level)
-            if(this.level){
-                this.level.collectTheDead()
-                this.level.effects.length = 0
-                this.level.deleted.length = 0
-                this.level.sounds.length = 0
-            }
-           
-            // console.log(s- Date.now())
-        }, 30)
     }
 }

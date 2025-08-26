@@ -30,11 +30,12 @@ export default abstract class Unit extends GameObject {
     zaped: boolean
     phasing: boolean
     can_act: boolean
+    fragility: number
     
     constructor(level: Level){
         super(level)
         this.move_speed_penalty = 0
-      
+        this.fragility = 0
         this.flipped = false
         this.is_attacking = false
         this.is_moving = false
@@ -58,6 +59,7 @@ export default abstract class Unit extends GameObject {
     abstract getState(): void
     
     isStatusResist(){
+        console.log('unit')
         return false
     }
 

@@ -39,7 +39,9 @@ export default class StaticField extends FlyerAbility{
             this.owner.flipped = false    
         }
 
-        this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        if(!this.owner.attack_angle){
+            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        }
 
         this.owner.is_attacking = true
         this.owner.state = 'cast'
@@ -79,7 +81,8 @@ export default class StaticField extends FlyerAbility{
             e.collapse = this.utility.collapse
 
             e.setPoint(this.c_x, this.c_y)
-            this.level.bindedEffects.push(e)
+            this.level.binded_effects.push(e)
+            this.attack_angle = undefined
         }
     }
 }

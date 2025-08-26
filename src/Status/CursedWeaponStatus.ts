@@ -4,8 +4,8 @@ import Status from "./Status"
 
 export default class CursedWeaponStatus extends Status{
    
-    constructor(public time: number,public duration: number, public drinker: boolean = false){
-        super(time, duration)
+    constructor(public time: number, public drinker: boolean = false){
+        super(time)
     }
 
     apply(unit: any){
@@ -21,7 +21,7 @@ export default class CursedWeaponStatus extends Status{
             })
 
             if(this.drinker){
-                this.unit.onKillTriggers.push(this)
+                this.unit.on_kill_triggers.push(this)
             }
         }
     }
@@ -42,7 +42,7 @@ export default class CursedWeaponStatus extends Status{
                 this.unit.avoid_damaged_state_chance -= 100
             }
             if(this.drinker){
-                this.unit.onKillTriggers = this.unit.onKillTriggers.filter(elem => elem != this)
+                this.unit.on_kill_triggers = this.unit.on_kill_triggers.filter(elem => elem != this)
             }
         }
     }

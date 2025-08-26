@@ -15,18 +15,20 @@ export default class GraceShard extends Effect{
     act(time: number){
         if(time - this.time >= 10000){
             this.level.deleted.push(this.id)
-            this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem != this)
+            this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
             return
         }
 
         this.level.players.forEach(elem => {
             if(Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
                 elem.grace ++
-                let status = new Grace(elem.time, 8000)
+                let status = new Grace(elem.time)
+                status.setDuration(8000)
+
                 this.level.setStatus(elem, status, true)
 
                 this.level.deleted.push(this.id)
-                this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem != this)
+                this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
             }
         })
     }

@@ -17,7 +17,7 @@ export default class WeaponThrow extends SwordmanAbility{
         this.returning = false
         this.shattering = false
         this.name = 'weapon throw'
-        this.multiple = true
+        this.multiple = false
     }
 
     canUse(): boolean {
@@ -49,7 +49,9 @@ export default class WeaponThrow extends SwordmanAbility{
             this.owner.flipped = false    
         }
         
-        this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        if(!this.owner.attack_angle){
+            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        }
 
         this.owner.is_attacking = true
         this.owner.state = 'attack'
@@ -87,13 +89,13 @@ export default class WeaponThrow extends SwordmanAbility{
             let proj = new ThrowedWeapon(this.level)
             let second = this.getSecondResource()
 
-            let is_returning = !this.first_ab.shattering && this.first_ab.returning && Func.chance(40 + second * 5)
+            let is_returning = !this.first_ability.shattering && this.first_ability.returning && Func.chance(40 + second * 5)
 
             if(is_returning){
                 proj.returned = true
             }
             else{
-                let is_shatter = this.first_ab.shattering && !this.first_ab.returning && Func.chance(40 + second * 5)
+                let is_shatter = this.first_ability.shattering && !this.first_ability.returning && Func.chance(40 + second * 5)
                 if(is_shatter){
                     proj.shattered = true
                 }
@@ -105,7 +107,7 @@ export default class WeaponThrow extends SwordmanAbility{
 
             this.level.projectiles.push(proj)
         
-            if(this.first_ab.multiple){
+            if(this.first_ability.multiple){
                 let chance = Func.chance(50 + second * 5)
                 if(chance){
                     let add_proj = new ThrowedWeapon(this.level)
@@ -128,6 +130,7 @@ export default class WeaponThrow extends SwordmanAbility{
                     this.level.projectiles.push(add_proj2)
                 }
             }
+            this.attack_angle = undefined
         }
     }
 }

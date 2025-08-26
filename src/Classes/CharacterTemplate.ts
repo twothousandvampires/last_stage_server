@@ -1,16 +1,11 @@
-type ability = {
-    name: string,
-    selected: boolean,
-    type: number,
-    id: number,
-    desc: string
-}
+import TemplateAbility from "../Types/TemplateAbility"
+
 export default class characterTemplate{
 
     stats: any
     name: string
     stat_count: number
-    abilities: ability[]
+    abilities: TemplateAbility[] = []
     item: string | undefined
     stats_description: any
     item_description: any

@@ -58,7 +58,7 @@ export default class BigFrostNova extends Effect{
             }
 
             if(this.spires){
-                let count = 3 + this.owner.getTargetsCount()
+                let count = 3 + this.owner.getAdditionalRadius()
                 let zones = 6.28 / count
 
                 for(let i = 1; i <= count; i++){
@@ -77,7 +77,7 @@ export default class BigFrostNova extends Effect{
                 }
             }
            
-            this.level.bindedEffects = this.level.bindedEffects.filter(e => e != this)
+            this.level.binded_effects = this.level.binded_effects.filter(e => e != this)
             this.level.deleted.push(this.id)
             return
         }

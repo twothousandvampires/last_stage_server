@@ -7,8 +7,8 @@ export default class GhostGrip extends Status{
     effect: any
     name: string
 
-    constructor(public time: number,public duration: number){
-        super(time, duration)
+    constructor(public time: number){
+        super(time)
         this.name = 'ghost grip'
         this.need_to_check_resist = true
     }
@@ -22,7 +22,7 @@ export default class GhostGrip extends Status{
             this.effect = new GhostGripEffect(this.unit.level)
             this.effect.setOwner(this.unit)
 
-            this.unit.level.bindedEffects.push(this.effect)
+            this.unit.level.binded_effects.push(this.effect)
 
             this.unit.newStatus({
                 name: 'ghost grip',
@@ -37,7 +37,7 @@ export default class GhostGrip extends Status{
             this.unit.addMoveSpeedPenalty(50)
 
             this.unit.level.deleted.push(this.effect.id)
-            this.unit.level.bindedEffects = this.unit.level.bindedEffects.filter(e => e != this.effect)
+            this.unit.level.binded_effects = this.unit.level.binded_effects.filter(e => e != this.effect)
         }
     }
 

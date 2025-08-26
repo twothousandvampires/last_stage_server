@@ -46,7 +46,9 @@ export default class Jump extends SwordmanAbility{
             this.owner.flipped = false    
         }
 
-        this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        if(!this.owner.attack_angle){
+            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        }
 
         this.distance = Math.sqrt(((this.owner.x - rel_x) ** 2) + ((this.owner.y -  rel_y) ** 2))
 
@@ -123,7 +125,8 @@ export default class Jump extends SwordmanAbility{
                 }
 
                 owner.getState()
-
+                owner.attack_angle = undefined
+                owner.afterUseSecond()
                 return
             }
             

@@ -19,7 +19,7 @@ export default class ShieldBash extends CultistAbility{
     }
 
     canUse(): boolean {
-        return this.owner.getSecondResource() >= this.cost && this.owner.can_attack
+        return this.owner.resource >= this.cost && this.owner.can_attack && !this.used
     }
 
     use(){
@@ -27,13 +27,6 @@ export default class ShieldBash extends CultistAbility{
        
         let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
-
-        if(this.coordination){
-            this.owner.pay_to_cost = Math.round(this.cost /  2)
-        }
-        else{
-            this.owner.pay_to_cost = this.cost
-        }
         
         this.owner.c_x = rel_x
         this.owner.c_y = rel_y  
@@ -45,7 +38,9 @@ export default class ShieldBash extends CultistAbility{
             this.owner.flipped = false    
         } 
         
-        this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        if(!this.owner.attack_angle){
+            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        }
 
         this.owner.is_attacking = true
         this.owner.state = 'shield hit'
@@ -70,7 +65,6 @@ export default class ShieldBash extends CultistAbility{
                 this.owner.is_attacking = false
                 this.owner.hit_x = undefined
                 this.owner.hit_y = undefined
-                this.used = false
             },50)
         }
 
@@ -96,7 +90,7 @@ export default class ShieldBash extends CultistAbility{
             this.target = undefined
          
             filtered_to_damage.concat(filtered_to_damage_players).forEach(elem => {
-                if(this.second_ab.hate && Func.chance(40)){
+                if(this.second_ability.hate && Func.chance(40)){
 
                     elem.takeDamage(this, {
                         explode: true
@@ -125,12 +119,12 @@ export default class ShieldBash extends CultistAbility{
                 }   
             })
 
-            if(!this.second_ab.hate){
-                let stan_duration = this.second_ab.deafening_wave ? 3000 : 2000
+            if(!this.second_ability.hate){
+                let stan_duration = this.second_ability.deafening_wave ? 3000 : 2000
                 stan_duration += second_resource * 100
                 attack_elipse.r = 12
 
-                if(this.second_ab.deafening_wave){
+                if(this.second_ability.deafening_wave){
                     attack_elipse.r += 8
                 }
                 let filtered_to_stun = f.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
@@ -147,7 +141,12 @@ export default class ShieldBash extends CultistAbility{
                 y: this.y
             })
 
-            this.payCost()
+            this.attack_angle = undefined
+            this.afterUseSecond()
+
+            if(this.second_ability.used === true && this.second_ability.coordination && Func.chance(30)){
+                this.second_ability.used = false
+            }
         }
     }
 }

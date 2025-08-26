@@ -26,8 +26,6 @@ export default class LightningBolt extends FlyerAbility{
     use(){
         if(this.owner.is_attacking) return
 
-        this.owner.pay_to_cost = this.cost
-
         let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
         
@@ -40,8 +38,10 @@ export default class LightningBolt extends FlyerAbility{
         else{
             this.owner.flipped = false    
         }
-
-        this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        
+        if(!this.owner.attack_angle){
+            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        }
 
         this.owner.is_attacking = true
         this.owner.state = 'cast'
@@ -69,7 +69,7 @@ export default class LightningBolt extends FlyerAbility{
 
     async act(){
         if(this.action && !this.hit){
-            this.payCost()
+            this.addCourage()
             this.hit = true
           
             if(this.target){
@@ -96,7 +96,7 @@ export default class LightningBolt extends FlyerAbility{
                 r: 4 + Math.round(this.getAdditionalRadius())
             }
 
-            let high_voltage = this.first_ab.high_voltage
+            let high_voltage = this.first_ability.high_voltage
 
             let max_targets = high_voltage ? 3 : 1
             let time = Date.now()
@@ -105,12 +105,14 @@ export default class LightningBolt extends FlyerAbility{
                 let elem = targets[i]
                 if(elem != this && Func.elipseCollision(hiting_box, elem.getBoxElipse())){
                     if(!high_voltage && max_targets === 0){
-                        let status = new ShockStatus(time, 5000, 20)
+                        let status = new ShockStatus(time)
+                        status.setDuration(5000)
+                        status.setPower(20)
+
                         this.level.setStatus(elem, status)
                     }
                     else if(max_targets > 0){
                         max_targets--
-                        this.succesefulHit()
                         elem.takeDamage(this, {
                             burn: true
                         })
@@ -133,7 +135,7 @@ export default class LightningBolt extends FlyerAbility{
                 this.level.effects.push(r_effect)
             }, 400)
 
-            let storm = this.first_ab.storm
+            let storm = this.first_ability.storm
 
             if(storm){
                 for(let i = 0; i < 2; i++){
@@ -159,11 +161,13 @@ export default class LightningBolt extends FlyerAbility{
                         if(elem != this && Func.elipseCollision(hiting_box, elem.getBoxElipse())){
                             if(!high_voltage && max_targets === 0){
                                 let status = new ShockStatus(time, 5000, 20)
+                                status.setDuration(5000)
+                                status.setPower(20)
+                                
                                 this.level.setStatus(elem, status)
                             }
                             else if(max_targets > 0){
                                 max_targets--
-                                this.succesefulHit()
                                 elem.takeDamage(this, {
                                     burn: true
                                 })
@@ -185,6 +189,7 @@ export default class LightningBolt extends FlyerAbility{
                     }, 400)
                 }               
             }
+            this.attack_angle = undefined
         }
     }
 }

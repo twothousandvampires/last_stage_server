@@ -60,7 +60,7 @@ export default class StaticFiled extends Effect{
             })
 
             this.level.deleted.push(this.id)
-            this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem != this)
+            this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
 
             return
         }

@@ -21,7 +21,7 @@ import Item from "./Item";
         }
 
         equip(character: Character): void {
-             character.playerDeadTriggers.push(this)
+             character.player_dead_triggers.push(this)
         }
         
         trigger(character: Character){

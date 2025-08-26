@@ -6,8 +6,8 @@ export default class ShockStatus extends Status{
 
     last_checked: number
 
-    constructor(public time: number,public duration: number, public power: number){
-        super(time, duration)
+    constructor(public time: number){
+        super(time)
         this.last_checked = time
         this.need_to_check_resist = true
     }

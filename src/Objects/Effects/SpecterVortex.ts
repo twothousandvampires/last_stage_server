@@ -24,7 +24,7 @@ export default class SpecterVortex extends Effect{
     act(game_tick: number){
         if(!this.owner || game_tick - this.start >= 5000){
             this.level.deleted.push(this.id)
-            this.level.bindedEffects = this.level.bindedEffects.filter(elem => elem != this)
+            this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
 
             return
         }
@@ -34,7 +34,9 @@ export default class SpecterVortex extends Effect{
 
             this.level.players.forEach(elem => {
                 if(Func.elipseCollision(this.getBoxElipse(), elem.getBoxElipse())){
-                    let status = new Weakness(game_tick, 1000)
+                    let status = new Weakness(game_tick)
+                    status.setDuration(1000)
+
                     this.level.setStatus(elem, status, true)
                 }
             })

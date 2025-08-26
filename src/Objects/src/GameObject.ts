@@ -21,7 +21,6 @@ export default abstract class GameObject {
     }
 
     public isOutOfMap(x: number = this.x, y: number = this.y): boolean{
-        
         if(this.zone_id === 0){
             return x <= 10 || x >= 110 || y <= 20|| y > 120   
         }

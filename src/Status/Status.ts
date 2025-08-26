@@ -1,16 +1,16 @@
-import Character from "../Objects/src/Character"
 import Unit from "../Objects/src/Unit"
 
 export default abstract class Status{
 
-    unit: any
+    unit: Unit | undefined
     last_checked: number
-    need_to_check_resist: boolean
+    need_to_check_resist: boolean = false
     name: string | undefined
+    power: number | undefined
+    duration: any = false
 
-    constructor(public time: number, public duration: number){
-        this.last_checked = time
-        this.need_to_check_resist = false
+    constructor(public time: number){
+       this.last_checked = time
     }
 
     checkResist(player: Unit){
@@ -22,8 +22,23 @@ export default abstract class Status{
         }
     }
 
+    setTime(time: number){
+        this.time = time
+    }
+
     isExpired(tick_time: number){
+        if(!this.duration){
+            return false
+        }
         return tick_time - this.time >= this.duration
+    }
+
+    setDuration(duration: number){
+        this.duration = duration
+    }
+
+    setPower(power: number){
+        this.power = power
     }
 
     unitDead(){

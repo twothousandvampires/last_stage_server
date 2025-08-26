@@ -6,7 +6,7 @@ export default class PileOfDead extends Pile{
 
     constructor(level: Level){
         super(level)
-        this.frequency = 200
+        this.frequency = 1500
         this.life_status = 1
         this.getState()
     }

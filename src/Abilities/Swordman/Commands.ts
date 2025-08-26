@@ -77,7 +77,9 @@ export default class Commands extends SwordmanAbility{
                 }
 
                 players.forEach(elem => {
-                    let status = new CommandsStatus(elem.time, duration, move_buff, armour_buff) 
+                    let status = new CommandsStatus(elem.time, move_buff, armour_buff) 
+                    status.setDuration(duration)
+                    
                     owner.level.setStatus(elem, status)
                 })
         

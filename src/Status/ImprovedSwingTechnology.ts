@@ -7,8 +7,8 @@ export default class ImprovedSwingTechnology extends Status{
     max_stack: number
     stack_count: number
 
-    constructor(public time: number,public duration: number){
-        super(time, duration)
+    constructor(public time: number){
+        super(time)
         this.name = 'improved swing technology'
         this.max_stack = 5
         this.stack_count = 1
@@ -17,7 +17,6 @@ export default class ImprovedSwingTechnology extends Status{
     apply(unit: any){
         this.unit = unit
         if(this.unit instanceof Character){
-            this.stack_count = 1
             this.unit.move_speed += 0.1
             this.unit.attack_speed -= 100
         }

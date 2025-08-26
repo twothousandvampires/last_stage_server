@@ -33,8 +33,9 @@ export default class Impy extends Enemy{
 
             if(this.target?.z < 5 && Func.elipseCollision(e, this.target?.getBoxElipse())){
                 this.target?.takeDamage()
-                if(Math.random() < 0.10){
-                    let status = new Bleed(Date.now(), 4000)
+                if(Func.chance(10)){
+                    let status = new Bleed(this.level.time)
+                    status.setDuration(4000)
                     this.level.setStatus(this.target, status)
                 }
             }

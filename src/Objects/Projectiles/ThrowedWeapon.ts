@@ -50,7 +50,7 @@ export class ThrowedWeapon extends Projectiles{
             if((p != this.owner || (this.can_hit_player && p === this.owner)) && !this.hited.includes(p) && Func.elipseCollision(box, p.getBoxElipse())){
                 this.hited.push(p)
                 p.takeDamage(this.owner)
-                this.level.addSoundObject(p.getWeaponHitedSound())
+                this.level.addSound(p.getWeaponHitedSound())
 
                 if(!this.point_added){
                     this.owner?.addPoint()
@@ -68,7 +68,7 @@ export class ThrowedWeapon extends Projectiles{
             if(!this.hited.includes(e) && Func.elipseCollision(box, e.getBoxElipse())){
                 this.hited.push(e)
                 e.takeDamage(this.owner)
-                this.level.addSoundObject(e.getWeaponHitedSound())
+                this.level.addSound(e.getWeaponHitedSound())
     
                 if(!this.point_added){
                     this.owner?.addPoint()

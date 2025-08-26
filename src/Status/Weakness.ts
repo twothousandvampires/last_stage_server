@@ -5,8 +5,8 @@ export default class Weakness extends Status{
   
     name: string
 
-    constructor(public time: number,public duration: number){
-        super(time, duration)
+    constructor(public time: number){
+        super(time)
         this.name = 'weakness'
         this.need_to_check_resist = true
     }

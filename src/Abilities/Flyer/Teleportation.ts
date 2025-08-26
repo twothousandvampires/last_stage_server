@@ -110,8 +110,10 @@ export default class Teleportation extends FlyerAbility{
                     ability.teleport_x = undefined
                     ability.teleport_y = undefined
                     owner.getState()
+                    this.attack_angle = undefined
                 }
             }
+            
         }
     }
 }

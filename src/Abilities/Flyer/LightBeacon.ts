@@ -43,12 +43,14 @@ export default class LightBeacon extends FlyerAbility{
         let cast_speed = this.owner.getCastSpeed()
         this.owner.level.addSound('lightning cast', this.owner.x, this.owner.y)
         this.owner.action_time = cast_speed
+        this.owner.can_be_damaged = false
 
         this.owner.cancelAct = () => {
             this.owner.action = false
             this.owner.can_move_by_player = true
             this.owner.hit = false
             this.owner.is_attacking = false
+            this.owner.can_regen_resource = true
             this.owner.z = 0
             this.owner.light_r -= 5
             if(this.air_form){
@@ -69,16 +71,15 @@ export default class LightBeacon extends FlyerAbility{
         return () => {
             if(ability.state === 0){
                 if(owner.action){
-                    owner.can_be_damaged = false
                     owner.payCost()
                     owner.action = false
                     ability.state = 1
                     owner.state = 'light beacon'
                     owner.z += 2
                     owner.light_r += 5
-
+                    owner.can_regen_resource = false
                     let box = owner.getBoxElipse()
-                    box.r = 17
+                    box.r = 17 + owner.getAdditionalRadius()
 
                     if(this.lightning_waves){
                         let timer_freq = 600 - (owner.getAdditionalRadius() * 50)
@@ -99,8 +100,6 @@ export default class LightBeacon extends FlyerAbility{
                             }
                         })
                         }, timer_freq)
-
-                       
                     }
                     else{
                         let timer_freq = 150 - (owner.getAdditionalRadius() * 10)

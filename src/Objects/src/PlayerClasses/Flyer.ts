@@ -19,7 +19,6 @@ import Character from "../Character";
 
 export default class Flyer extends Character{
 
-    cast_speed: number
     next_life_regen_time: any
     next_mana_regen_time: any
     takeoff: boolean
@@ -58,11 +57,11 @@ export default class Flyer extends Character{
                     name: 'scorching',
                     type: '(flame wall)',
                     canUse: (character: Character) => {
-                        return character.second_ab instanceof FlameWall && !character.second_ab.scorching
+                        return character.second_ability instanceof FlameWall && !character.second_ability.scorching
                     },
                     teach: (character: Character) => {
-                        if(character && character.second_ab instanceof FlameWall){
-                            character.second_ab.scorching = true
+                        if(character && character.second_ability instanceof FlameWall){
+                            character.second_ability.scorching = true
                         }
                     },
                     cost: 1,
@@ -72,10 +71,10 @@ export default class Flyer extends Character{
                     name: 'frendly flame',
                     type: '(flame wall)',
                     canUse: (character: Character) => {
-                        return character.second_ab instanceof FlameWall && !character.second_ab.frendly_flame
+                        return character.second_ability instanceof FlameWall && !character.second_ability.frendly_flame
                     },
                     teach: (character: Character) => {
-                        character.second_ab.frendly_flame = true
+                        character.second_ability.frendly_flame = true
                     },
                     cost: 1,
                     desc: 'your flamewall does not damage to players'
@@ -95,11 +94,11 @@ export default class Flyer extends Character{
                     name: 'teeth',
                     type: 'new ability',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && !(character.first_ab instanceof Teeth)
+                        return character instanceof Flyer && !(character.first_ability instanceof Teeth)
                     },
                     teach: (character: Character) => {
                         if(character instanceof Flyer){
-                            character.first_ab = new Teeth(character)
+                            character.first_ability = new Teeth(character)
                             character.updateClientSkill()
                         }
                     },
@@ -110,11 +109,11 @@ export default class Flyer extends Character{
                     name: 'body melting',
                     type: 'fireball',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.first_ab instanceof Fireball) && !character.first_ab.body_melting
+                        return character instanceof Flyer && (character.first_ability instanceof Fireball) && !character.first_ability.body_melting
                     },
                     teach: (character: Character) => {
-                        if(character instanceof Flyer && character.first_ab instanceof Fireball){
-                            character.first_ab.body_melting = true
+                        if(character instanceof Flyer && character.first_ability instanceof Fireball){
+                            character.first_ability.body_melting = true
                         }
                     },
                     cost: 1,
@@ -124,11 +123,11 @@ export default class Flyer extends Character{
                     name: 'ignite',
                     type: 'fireball',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.first_ab instanceof Fireball) && !character.first_ab.ignite
+                        return character instanceof Flyer && (character.first_ability instanceof Fireball) && !character.first_ability.ignite
                     },
                     teach: (character: Character) => {
-                        if(character instanceof Flyer && character.first_ab instanceof Fireball){
-                            character.first_ab.ignite = true
+                        if(character instanceof Flyer && character.first_ability instanceof Fireball){
+                            character.first_ability.ignite = true
                         }
                     },
                     cost: 1,
@@ -138,11 +137,11 @@ export default class Flyer extends Character{
                     name: 'hand of frost',
                     type: 'frost sphere',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.first_ab instanceof FrostSphere) && !character.first_ab.frost_rich
+                        return character instanceof Flyer && (character.first_ability instanceof FrostSphere) && !character.first_ability.frost_rich
                     },
                     teach: (character: Character) => {
-                        if(character instanceof Flyer && character.first_ab instanceof FrostSphere){
-                            character.first_ab.frost_rich = true
+                        if(character instanceof Flyer && character.first_ability instanceof FrostSphere){
+                            character.first_ability.frost_rich = true
                         }
                     },
                     cost: 1,
@@ -152,11 +151,11 @@ export default class Flyer extends Character{
                     name: 'reign of frost',
                     type: 'frost sphere',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.first_ab instanceof FrostSphere) && !character.first_ab.reign_of_frost
+                        return character instanceof Flyer && (character.first_ability instanceof FrostSphere) && !character.first_ability.reign_of_frost
                     },
                     teach: (character: Character) => {
-                        if(character instanceof Flyer && character.first_ab instanceof FrostSphere){
-                            character.first_ab.reign_of_frost = true
+                        if(character instanceof Flyer && character.first_ability instanceof FrostSphere){
+                            character.first_ability.reign_of_frost = true
                         }
                     },
                     cost: 1,
@@ -166,11 +165,11 @@ export default class Flyer extends Character{
                     name: 'high voltage',
                     type: 'lightning bolt',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.first_ab instanceof LightningBolt) && !character.first_ab.high_voltage
+                        return character instanceof Flyer && (character.first_ability instanceof LightningBolt) && !character.first_ability.high_voltage
                     },
                     teach: (character: Character) => {
-                        if(character instanceof Flyer && character.first_ab instanceof LightningBolt){
-                            character.first_ab.high_voltage = true
+                        if(character instanceof Flyer && character.first_ability instanceof LightningBolt){
+                            character.first_ability.high_voltage = true
                         }
                     },
                     cost: 1,
@@ -180,12 +179,12 @@ export default class Flyer extends Character{
                     name: 'storm',
                     type: 'lightning bolt',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.first_ab instanceof LightningBolt) && !character.first_ab.storm
+                        return character instanceof Flyer && (character.first_ability instanceof LightningBolt) && !character.first_ability.storm
                     },
                     teach: (character: Character) => {
-                        if(character instanceof Flyer && character.first_ab instanceof LightningBolt){
-                            character.first_ab.storm = true
-                            character.first_ab.cost += 1
+                        if(character instanceof Flyer && character.first_ability instanceof LightningBolt){
+                            character.first_ability.storm = true
+                            character.first_ability.cost += 1
                         }
                     },
                     cost: 1,
@@ -195,11 +194,11 @@ export default class Flyer extends Character{
                     name: 'improved chain reaction',
                     type: 'forking lightning',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.second_ab instanceof ForkedLightning) && !character.second_ab.improved_chain_reaction
+                        return character instanceof Flyer && (character.second_ability instanceof ForkedLightning) && !character.second_ability.improved_chain_reaction
                     },
                     teach: (character: Character) => {
-                        if(character instanceof Flyer && character.second_ab instanceof ForkedLightning){
-                            character.second_ab.improved_chain_reaction = true
+                        if(character instanceof Flyer && character.second_ability instanceof ForkedLightning){
+                            character.second_ability.improved_chain_reaction = true
                         }
                     },
                     cost: 1,
@@ -209,11 +208,11 @@ export default class Flyer extends Character{
                     name: 'lightning eye',
                     type: 'forking lightning',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.second_ab instanceof ForkedLightning) && !character.second_ab.lightning_eye
+                        return character instanceof Flyer && (character.second_ability instanceof ForkedLightning) && !character.second_ability.lightning_eye
                     },
                     teach: (character: Character) => {
-                        if(character instanceof Flyer && character.second_ab instanceof ForkedLightning){
-                            character.second_ab.lightning_eye = true
+                        if(character instanceof Flyer && character.second_ability instanceof ForkedLightning){
+                            character.second_ability.lightning_eye = true
                         }
                     },
                     cost: 1,
@@ -223,11 +222,11 @@ export default class Flyer extends Character{
                     name: 'lightning waves',
                     type: 'light beacon',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.third_ab instanceof LightBeacon) && !character.third_ab.lightning_waves
+                        return character instanceof Flyer && (character.third_ability instanceof LightBeacon) && !character.third_ability.lightning_waves
                     },
                     teach: (character: Character) => {
-                        if(character instanceof Flyer && character.third_ab instanceof LightBeacon){
-                            character.third_ab.lightning_waves = true
+                        if(character instanceof Flyer && character.third_ability instanceof LightBeacon){
+                            character.third_ability.lightning_waves = true
                         }
                     },
                     cost: 1,
@@ -237,11 +236,11 @@ export default class Flyer extends Character{
                     name: 'air form',
                     type: 'light beacon',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.third_ab instanceof LightBeacon) && !character.third_ab.air_form
+                        return character instanceof Flyer && (character.third_ability instanceof LightBeacon) && !character.third_ability.air_form
                     },
                     teach: (character: Character) => {
-                        if(character instanceof Flyer && character.third_ab instanceof LightBeacon){
-                            character.third_ab.air_form = true
+                        if(character instanceof Flyer && character.third_ability instanceof LightBeacon){
+                            character.third_ability.air_form = true
                         }
                     },
                     cost: 1,
@@ -251,11 +250,11 @@ export default class Flyer extends Character{
                     name: 'ice genesis',
                     type: 'frostnova',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.third_ab instanceof Frostnova) && !character.third_ab.ice_genesis
+                        return character instanceof Flyer && (character.third_ability instanceof Frostnova) && !character.third_ability.ice_genesis
                     },
                     teach: (character: Character) => {
-                        if(character instanceof Flyer && character.third_ab instanceof Frostnova){
-                            character.third_ab.ice_genesis = true
+                        if(character instanceof Flyer && character.third_ability instanceof Frostnova){
+                            character.third_ability.ice_genesis = true
                         }
                     },
                     cost: 1,
@@ -265,11 +264,11 @@ export default class Flyer extends Character{
                     name: 'cold spires',
                     type: 'frostnova',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.third_ab instanceof Frostnova) && !character.third_ab.cold_spires
+                        return character instanceof Flyer && (character.third_ability instanceof Frostnova) && !character.third_ability.cold_spires
                     },
                     teach: (character: Character) => {
-                        if(character instanceof Flyer && character.third_ab instanceof Frostnova){
-                            character.third_ab.cold_spires = true
+                        if(character instanceof Flyer && character.third_ability instanceof Frostnova){
+                            character.third_ability.cold_spires = true
                         }
                     },
                     cost: 1,
@@ -361,11 +360,11 @@ export default class Flyer extends Character{
                     name: 'annihilator beam',
                     type: 'new ability',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && !(character.second_ab instanceof AnnihilatorBeam)
+                        return character instanceof Flyer && !(character.second_ability instanceof AnnihilatorBeam)
                     },
                     teach: (character: Character) => {
                         if(character instanceof Flyer){
-                            character.second_ab = new AnnihilatorBeam(character)
+                            character.second_ability = new AnnihilatorBeam(character)
                             character.updateClientSkill()
                         }
                     },
@@ -376,11 +375,11 @@ export default class Flyer extends Character{
                     name: 'light stream',
                     type: '(annihilator beam)',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && character.second_ab instanceof AnnihilatorBeam
+                        return character instanceof Flyer && character.second_ability instanceof AnnihilatorBeam
                     },
                     teach: (character: Character) => {
-                        if(character instanceof Flyer && character.second_ab instanceof AnnihilatorBeam){
-                            character.second_ab.cost -= 2
+                        if(character instanceof Flyer && character.second_ability instanceof AnnihilatorBeam){
+                            character.second_ability.cost -= 2
                         }
                     },
                     cost: 1,
@@ -390,11 +389,11 @@ export default class Flyer extends Character{
                     name: 'concentrating energy',
                     type: '(annihilator beam)',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && character.second_ab instanceof AnnihilatorBeam
+                        return character instanceof Flyer && character.second_ability instanceof AnnihilatorBeam
                     },
                     teach: (character: Character) => {
-                        if(character instanceof Flyer && !character.second_ab.concentrating_energy){
-                            character.second_ab.concentrating_energy = true
+                        if(character instanceof Flyer && !character.second_ability.concentrating_energy){
+                            character.second_ability.concentrating_energy = true
                         }
                     },
                     cost: 1,
@@ -449,7 +448,9 @@ export default class Flyer extends Character{
     }
     getMoveSpeed(): number{
         let total_inc = this.move_speed_penalty
+
         let speed = this.move_speed + (this.speed / 40)
+
         if(!total_inc) return speed
         if(total_inc > 100) total_inc = 100
         if(total_inc < -90) total_inc = -90
@@ -469,23 +470,23 @@ export default class Flyer extends Character{
         let main_name = abilities.find(elem => elem.type === 1 && elem.selected).name
 
         if(main_name === 'frost sphere'){
-            this.first_ab = new FrostSphere(this)
+            this.first_ability = new FrostSphere(this)
         }
         else if(main_name === 'fireball'){
-            this.first_ab = new Fireball(this)
+            this.first_ability = new Fireball(this)
         }
         else if(main_name === 'lightning bolt'){
-            this.first_ab = new LightningBolt(this)
+            this.first_ability = new LightningBolt(this)
         }
 
       
         let secondary_name = abilities.find(elem => elem.type === 2 && elem.selected).name
 
         if(secondary_name === 'forked lightning'){
-            this.second_ab = new ForkedLightning(this)
+            this.second_ability = new ForkedLightning(this)
         }
         else if(secondary_name === 'flamewall'){
-            this.second_ab = new FlameWall(this)
+            this.second_ability = new FlameWall(this)
         }
 
       
@@ -493,10 +494,10 @@ export default class Flyer extends Character{
         let finisher_name = abilities.find(elem => elem.type === 3 && elem.selected).name
 
         if(finisher_name === 'light beacon'){
-            this.third_ab = new LightBeacon(this)
+            this.third_ability = new LightBeacon(this)
         }
         else if(finisher_name === 'frost nova'){
-            this.third_ab = new Frostnova(this)
+            this.third_ability = new Frostnova(this)
         }
         
         let utility_name = abilities.find(elem => elem.type === 4 && elem.selected).name
@@ -601,6 +602,10 @@ export default class Flyer extends Character{
     subLife(unit: any = undefined, options = {}){
         this.life_status --
 
+        if(Func.chance(this.fragility)){
+            this.life_status --
+        }
+
         if(this.life_status <= 0){
             this.playerTakeLethalDamage()
 
@@ -619,7 +624,6 @@ export default class Flyer extends Character{
             } 
         }   
         else{
-
             if(!Func.chance(this.getSkipDamageStateChance())){
                 this.setState(this.setDamagedAct)
             }
@@ -643,7 +647,7 @@ export default class Flyer extends Character{
     }
 
     getManaRegenTimer(){
-        return 3000 - this.getSecondResource() * 100
+        return 5000 - this.getSecondResource() * 100
     }
 
     startGame(){
@@ -711,19 +715,30 @@ export default class Flyer extends Character{
     useUtility(){
         this.utility?.use()
     }
+
     payCost(){
         let chance = this.knowledge * 2
+
         if(chance > 70){
             chance = 70
         }
+
         if(!Func.chance(chance)){
             this.resource -= this.pay_to_cost
         }
         
         this.pay_to_cost = 0
+        if(this.second_ability){
+            this.second_ability.used = false
+        }
+    }
+
+    addCourage(){
+        if(!this.can_get_courage) return
+
         this.recent_cast.push(this.time)
 
-        if(this.can_be_enlighten && this.recent_cast.length >= 10){
+        if(this.can_be_enlighten && this.recent_cast.length >= 8){
             this.can_be_enlighten = false
 
             this.enlight()
@@ -768,9 +783,9 @@ export default class Flyer extends Character{
                 resource: this.resource,
                 max_resource: this.max_resource,
                 life_status: this.life_status,
-                first: this.first_ab?.canUse(),
-                secondary: this.second_ab?.canUse(),
-                finisher: this.third_ab?.canUse(),
+                first: this.first_ability?.canUse(),
+                secondary: this.second_ability?.canUse(),
+                finisher: this.third_ability?.canUse(),
                 utility: this.utility?.canUse(),
                 second: this.getSecondResource()
             }
@@ -784,25 +799,20 @@ export default class Flyer extends Character{
     useSecond(){
         if(!this.can_use_skills) return
         
-        if(this.third_ab?.canUse()){
-            this.useNotUtilityTriggers.forEach(elem => {
+        if(this.third_ability?.canUse()){
+            this.use_not_utility_triggers.forEach(elem => {
                 elem.trigger(this)
             })
-            this.third_ab?.use()
+            this.third_ability?.use()
             this.last_skill_used_time = this.time
+              
         }
-        else if(this.second_ab?.canUse()){
-            this.useNotUtilityTriggers.forEach(elem => {
+        else if(this.second_ability?.canUse()){
+            this.use_not_utility_triggers.forEach(elem => {
                 elem.trigger(this)
             })
-            this.second_ab.use()
+            this.second_ability.use()
             this.last_skill_used_time = this.time
-        }
-    }
-
-    succesefulHit(){
-        this.onHitTriggers.forEach(elem => {
-            elem.trigger(this)
-        })
+        }  
     }
 }

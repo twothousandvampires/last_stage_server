@@ -18,13 +18,11 @@ export default class FlameWall extends FlyerAbility{
     }
 
     canUse(){
-        return this.owner.resource >= this.cost
+        return this.owner.resource >= this.cost && !this.used
     }
 
     use(){
         if(this.owner.is_attacking) return
-
-        this.owner.pay_to_cost = this.cost
 
         let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
@@ -36,7 +34,9 @@ export default class FlameWall extends FlyerAbility{
             this.owner.flipped = false    
         }
 
-        this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        if(!this.owner.attack_angle){
+            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        }
 
         this.owner.is_attacking = true
         this.owner.state = 'cast'
@@ -64,7 +64,7 @@ export default class FlameWall extends FlyerAbility{
     act(){
         if(this.action && !this.hit){
             
-            this.payCost()
+            this.addCourage()
             this.hit = true
             this.action = false
             this.level.addSound('fire massive', this.x, this.y)
@@ -84,6 +84,9 @@ export default class FlameWall extends FlyerAbility{
                 flame.setPoint(this.x + n_x, this.y + n_y)
                 this.level.projectiles.push(flame)
             })
+
+            this.attack_angle = undefined
+            this.afterUseSecond()
         }
     }
 }

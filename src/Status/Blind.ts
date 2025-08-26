@@ -1,12 +1,10 @@
-import Func from "../Func"
-import Blood from "../Objects/Effects/Blood"
 import Character from "../Objects/src/Character"
 import Status from "./Status"
 
 export default class Blind extends Status{
 
-    constructor(public time: number,public duration: number){
-        super(time, duration)
+    constructor(public time: number){
+        super(time)
         this.need_to_check_resist = true
     }
 

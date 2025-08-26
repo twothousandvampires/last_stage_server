@@ -31,7 +31,9 @@ export class SpecterSoulSeeker extends Projectiles{
 
         this.level.players.forEach(elem => {
             if(Func.elipseCollision(this.getBoxElipse(), elem.getBoxElipse())){
-                let status = new Drained(elem.time, 6000)
+                let status = new Drained(elem.time)
+                status.setDuration(6000)
+
                 this.level.setStatus(elem, status)
                 if(this.owner){
                     this.owner.move_speed += 0.1

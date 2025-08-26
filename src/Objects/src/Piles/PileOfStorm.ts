@@ -26,7 +26,9 @@ export default class PileOfStorm extends Pile{
 
             this.level.players.forEach(elem => {
                 if(Func.elipseCollision(e, elem.getBoxElipse())){
-                    let status = new ShockStatus(elem.time, 4000, 25)
+                    let status = new ShockStatus(elem.time)
+                    status.setDuration(4000)
+                    status.setPower(25)
                     this.level.setStatus(elem, status)
                 }
             })

@@ -19,14 +19,12 @@ export default class GrimPile extends CultistAbility{
     }
 
     canUse(): boolean {
-        return this.owner.getSecondResource() >= this.cost && this.owner.can_cast
+        return this.owner.resource >= this.cost && this.owner.can_cast && !this.used
     }
 
 
     use(){
         if(this.owner.is_attacking) return
-        
-        this.owner.pay_to_cost = this.cost
 
         let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
@@ -41,7 +39,9 @@ export default class GrimPile extends CultistAbility{
             this.owner.flipped = false    
         } 
       
-        this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        if(!this.owner.attack_angle){
+            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        }
 
         this.owner.is_attacking = true
         this.owner.state = 'cast'
@@ -61,7 +61,6 @@ export default class GrimPile extends CultistAbility{
                 this.owner.is_attacking = false
                 this.owner.hit_x = undefined
                 this.owner.hit_y = undefined
-                this.used = false
             },50)
         }
 
@@ -80,7 +79,7 @@ export default class GrimPile extends CultistAbility{
                     y: this.y
             })
 
-            let distance = rel_distance > this.first_ab.distance ? this.first_ab.distance : rel_distance
+            let distance = rel_distance > this.first_ability.distance ? this.first_ability.distance : rel_distance
             
             let hit_x = this.x + (Math.sin(this.attack_angle) * distance)
             let hit_y = this.y + (Math.cos(this.attack_angle) * distance)
@@ -88,14 +87,14 @@ export default class GrimPile extends CultistAbility{
             let totem_power = this.getSecondResource()
 
             let pile = new GrimPileTotem(this.level, totem_power)
-            pile.increased_effect = this.second_ab.increased_effect
-            pile.resistance = this.second_ab.resistance
+            pile.increased_effect = this.second_ability.increased_effect
+            pile.resistance = this.second_ability.resistance
             
             pile.setPoint(hit_x, hit_y)
           
             this.level.enemies.push(pile)
-
-            this.payCost()
+            this.attack_angle = undefined
+            this.afterUseSecond()
         }
     }
 }

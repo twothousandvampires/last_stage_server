@@ -23,10 +23,10 @@ export default class Fireball extends FlyerAbility{
     use(){
         if(this.owner.is_attacking) return
 
-        this.owner.pay_to_cost = this.cost
+        // this.owner.pay_to_cost = this.cost
 
         let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
-        let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
+        let rel_y =  Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
         
         if(rel_x < this.owner.x){
             this.owner.flipped = true
@@ -34,8 +34,11 @@ export default class Fireball extends FlyerAbility{
         else{
             this.owner.flipped = false    
         }
+        
+        if(!this.owner.attack_angle){
+            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        }
 
-        this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
         let v =  this.owner.getMoveSpeedPenaltyValue()      
         this.owner.is_attacking = true
         this.owner.state = 'cast'
@@ -61,7 +64,8 @@ export default class Fireball extends FlyerAbility{
 
     act(){
         if(this.action && !this.hit){
-            this.payCost()
+            this.addCourage()
+            // this.payCost()
             this.hit = true
             this.level.addSound('fire cast', this.x, this.y)
 
@@ -72,13 +76,14 @@ export default class Fireball extends FlyerAbility{
                 a = Func.angle(this.x, this.y, target.x, target.y)
             }
 
-            let proj = new FireballProjectile(this.level, this.first_ab.body_melting)
-            proj.ignite = this.first_ab.ignite
+            let proj = new FireballProjectile(this.level, this.first_ability.body_melting)
+            proj.ignite = this.first_ability.ignite
             proj.setOwner(this)
             proj.setAngle(a ? a : this.attack_angle)
             proj.setPoint(this.x, this.y)
 
             this.level.projectiles.push(proj)
+            this.attack_angle = undefined
         }
     }
 }

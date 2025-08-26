@@ -26,11 +26,11 @@ export default class Quake extends SwordmanAbility{
     }
 
     afterUse(){
-        this.owner.useNotUtilityTriggers.forEach(elem => {
+        this.owner.use_not_utility_triggers.forEach(elem => {
                 elem.trigger(this.owner)
         })
         this.owner.resource -= this.cost
-        this.owner.second_ab.used = false
+        this.owner.second_ability.used = false
         this.owner.last_skill_used_time = this.owner.time
     }
 
@@ -127,7 +127,9 @@ export default class Quake extends SwordmanAbility{
                 effect2.setPoint(owner.x, owner.y)
 
                 owner.level.effects.push(effect2)
-                let status = new Weakness(owner.time, ability.consequences ? 6000 : 3000)
+                let status = new Weakness(owner.time)
+                status.setDuration(ability.consequences ? 6000 : 3000)
+                
                 owner.level.setStatus(owner, status)
 
                 return

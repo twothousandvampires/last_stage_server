@@ -54,20 +54,29 @@ export default class Pile extends Enemy{
             return
         }
 
-        this.life_status --
-
-        if(unit?.critical && Func.chance(unit.critical)){
-            this.life_status --
+        let damage_value = 1
+        
+        if(options?.damage_value){
+            damage_value = options.damage_value
         }
+        
+        if(unit && unit?.critical && Func.chance(unit.critical)){
+            damage_value *= 2
+        }
+
+        if(Func.chance(this.fragility)){
+            damage_value *= 2
+        }
+
+        this.life_status -= damage_value
+        
+        unit?.succesefulHit(this)
 
         if(this.life_status <= 0){
             this.is_dead = true
             this.create_grace_chance += unit?.additional_chance_grace_create ? unit?.additional_chance_grace_create : 0
             unit?.succesefulKill()
             this.setDyingAct()
-        }
-        else{
-            unit?.succesefulHit()
         }
     }
 

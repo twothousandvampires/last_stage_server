@@ -27,7 +27,7 @@ export default class SelfFlagellation extends CultistAbility{
 
         setTimeout(() => {
             this.cd = false
-        }, 6000 + this.owner.getSecondResource() * 300)
+        }, 10000 - this.owner.getSecondResource() * 300)
 
         this.owner.level.sounds.push({
             name:'injured human',
@@ -56,7 +56,7 @@ export default class SelfFlagellation extends CultistAbility{
             this.owner.move_speed += 0.2
             setTimeout(() => {
                 this.owner.move_speed -= 0.2
-            }, 1500)
+            }, 3000)
         }
     }
 }

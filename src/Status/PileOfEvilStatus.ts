@@ -4,8 +4,8 @@ export default class PileOfEvilStatus extends Status{
 
     name: string
 
-    constructor(public time: number,public duration: number){
-        super(time, duration)
+    constructor(public time: number){
+        super(time)
         this.name = 'pile of evil status'
     }
 
