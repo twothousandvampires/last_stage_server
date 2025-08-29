@@ -1,4 +1,7 @@
 import Func from "../../Func";
+import TextLanguage1 from "../../Objects/Effects/TextLanguage1";
+import TextLanguage2 from "../../Objects/Effects/TextLanguage2";
+import TextLanguage3 from "../../Objects/Effects/TextLanguage3";
 import Swordman from "../../Objects/src/PlayerClasses/Swordman";
 import ImprovedSwingTechnology from "../../Status/ImprovedSwingTechnology";
 import SwordmanAbility from "./SwordmanAbility";
@@ -15,12 +18,10 @@ export default class WeaponSwing extends SwordmanAbility{
     }
 
     canUse(): boolean {
-        return true
+        return !this.owner.is_attacking && this.owner.can_attack
     }
 
     use(){
-        if(this.owner.is_attacking) return
-       
         let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
 
@@ -48,14 +49,9 @@ export default class WeaponSwing extends SwordmanAbility{
         this.owner.cancelAct = () => {
             this.owner.action = false
             this.owner.addMoveSpeedPenalty(attack_move_speed_penalty)
-
-            setTimeout(()=>{
-                this.owner.hit = false
-                this.owner.is_attacking = false
-            },50)
+            this.owner.hit = false
+            this.owner.is_attacking = false 
         }
-
-        this.owner.setTimerToGetState(attack_speed)
     }
 
     act(){
@@ -115,6 +111,8 @@ export default class WeaponSwing extends SwordmanAbility{
                 }
             })
 
+            
+
             if(!point_added){
                 this.level.sounds.push({
                     name: 'sword swing',
@@ -136,6 +134,10 @@ export default class WeaponSwing extends SwordmanAbility{
             }
 
             this.attack_angle = undefined
+        }
+        else if(this.action_is_end){
+            this.action_is_end = false
+            this.getState()
         }
     }
 

@@ -3,6 +3,7 @@ import Level from "../../../Level";
 import CurseOfDamned from "../../../Status/CurseOfDamned";
 import GhostGrip from "../../../Status/GhostGrip";
 import GhostGripArea from "../../Effects/GhostGripArea";
+import SmallTextLanguage3 from "../../Effects/SmallTextLanguage3";
 import { SharpedBone } from "../../Projectiles/SharpedBone";
 import Bones from "./Bones";
 import { Enemy } from "./Enemy";
@@ -60,6 +61,16 @@ export default class FlyingBones extends Enemy{
                 this.setState(this.setResurectAct)
             }, 3000)
         }
+    }
+
+    public sayPhrase(): void{
+        if(!Func.chance(1)) return
+
+        let phrase = new SmallTextLanguage3(this.level)
+        phrase.z = 12
+        phrase.setPoint(this.x, this.y)
+
+        this.level.effects.push(phrase)
     }
 
     getWeaponHitedSound(){

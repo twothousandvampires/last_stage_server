@@ -19,7 +19,7 @@ import Flyer from "./Flyer";
 export default class Cultist extends Character{
     
     static MIN_ATTACK_SPEED = 200
-    static MIN_CAST_SPEED = 400
+    static MIN_CAST_SPEED = 150
     static MAX_ARMOUR = 95
 
     resource: number
@@ -42,6 +42,7 @@ export default class Cultist extends Character{
         this.attack_point_radius = 4
         this.attack_radius = 7
         this.attack_speed = 1800
+        this.might = 100
         this.cast_speed = 2000
         this.name = 'cultist'
         this.move_speed = 0.4
@@ -172,6 +173,8 @@ export default class Cultist extends Character{
         setTimeout(() => {
             this.can_be_damaged = true
         }, 3000)
+
+        this.level.addSound('enlight', this.x, this.y)
     }
 
     subLife(unit: any = undefined, options = {}){
@@ -288,11 +291,9 @@ export default class Cultist extends Character{
             return
         }
 
-        this.level.sounds.push({
-            name: 'sword hit',
-            x: this.x,
-            y: this.y
-        })
+        if(Func.chance(30)){
+            this.level.addSound('get hit', this.x, this.y)
+        }
         
         let e = new Blood(this.level)
         e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
@@ -758,6 +759,8 @@ export default class Cultist extends Character{
                     this.recent_hits.splice(i, 1);
                 }
             }
+
+            this.sayPhrase()
         }
 
         if(this.time >= this.next_life_regen_time){
@@ -828,7 +831,7 @@ export default class Cultist extends Character{
     }
 
     getAttackSpeed() {
-        let value = this.attack_speed - (this.might * 100)
+        let value = this.attack_speed - (this.might * 50)
         
         if(value < Cultist.MIN_ATTACK_SPEED){
             value = Cultist.MIN_ATTACK_SPEED
@@ -837,26 +840,8 @@ export default class Cultist extends Character{
         return value
     }
 
-    useSecond(){
-        if(!this.can_use_skills) return
-
-        if(this.third_ability?.canUse()){
-            this.third_ability?.use()
-            this.third_ability.afterUse()
-        
-        }
-        else if(this.second_ability?.canUse()){
-            this.use_not_utility_triggers.forEach(elem => {
-                elem.trigger(this)
-            })
-
-            this.second_ability.use()
-            this.last_skill_used_time = this.time
-        }
-    }
-
     getCastSpeed(){
-        let value = this.cast_speed - (this.speed * 100)
+        let value = this.cast_speed - (this.speed * 50)
 
         if(value < Cultist.MIN_CAST_SPEED){
             value = Cultist.MIN_CAST_SPEED

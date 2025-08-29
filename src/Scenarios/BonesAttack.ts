@@ -6,11 +6,13 @@ import Impy from "../Objects/src/Enemy/Impy";
 import Cultist from "../Objects/src/PlayerClasses/Cultist";
 import Flyer from "../Objects/src/PlayerClasses/Flyer";
 import Swordman from "../Objects/src/PlayerClasses/Swordman";
+import Scenario from "./Scenario";
 
-export default class BonesAttack{
+export default class BonesAttack extends Scenario{
     map: any
     targets: any
     constructor(){
+        super()
         this.targets = []
         this.map = [{
             time: 1200,
@@ -84,7 +86,6 @@ export default class BonesAttack{
 
     checkTime(level: Level){
         let time_elapsed = level.time - level.started
-        console.log(time_elapsed)
         let next_action = this.map[0]
 
         if(next_action && next_action.time <= time_elapsed){

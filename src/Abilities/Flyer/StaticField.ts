@@ -59,15 +59,10 @@ export default class StaticField extends FlyerAbility{
 
         this.owner.cancelAct = () => {
             this.owner.action = false
-            this.owner.addMoveSpeedPenalty(v)
-
-            setTimeout(()=>{
-                this.owner.hit = false
-                this.owner.is_attacking = false
-            },50)
+            this.owner.addMoveSpeedPenalty(v)    
+            this.owner.hit = false
+            this.owner.is_attacking = false   
         }
-        
-        this.owner.setTimerToGetState(cast_speed)
     }
 
     act(){
@@ -83,6 +78,10 @@ export default class StaticField extends FlyerAbility{
             e.setPoint(this.c_x, this.c_y)
             this.level.binded_effects.push(e)
             this.attack_angle = undefined
+        }
+         else if(this.action_is_end){
+            this.action_is_end = false
+            this.getState()
         }
     }
 }

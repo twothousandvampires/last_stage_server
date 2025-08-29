@@ -80,7 +80,7 @@ export default class Swordman extends Character{
     }
 
     enlight(){
-         let count = 10
+        let count = 10
         
         let zones = 6.28 / count
 
@@ -100,6 +100,8 @@ export default class Swordman extends Character{
         setTimeout(() => {
             this.attack_speed += 500
         },3000)
+
+        this.level.addSound('enlight', this.x, this.y)
     }
 
     getAttackMoveSpeedPenalty(){
@@ -143,21 +145,6 @@ export default class Swordman extends Character{
         else if(utility_name === 'commands'){
             this.utility = new Commands(this)
         }
-    }
-
-    madAct(){
-        if(this.can_use_skills && this.first_ability?.canUse()){
-            this.use_not_utility_triggers.forEach(elem => {
-                elem.trigger(this)
-            })
-            this.first_ability?.use()
-            this.last_skill_used_time = this.time
-        }
-        this.useSecond()
-    }
-
-    setMadAct(){
-        this.stateAct = this.madAct
     }
 
     takeDamage(unit:any = undefined, options: any = {}){
@@ -229,11 +216,9 @@ export default class Swordman extends Character{
             return
         }
 
-        this.level.sounds.push({
-            name: 'sword hit',
-            x: this.x,
-            y: this.y
-        })
+        if(Func.chance(30)){
+             this.level.addSound('get hit', this.x, this.y)
+        }
         
         let e = new Blood(this.level)
         e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
@@ -629,6 +614,8 @@ export default class Swordman extends Character{
                     this.recent_kills.splice(i, 1);
                 }
             }
+
+            this.sayPhrase()
         }
 
         if(this.time >= this.next_life_regen_time){
@@ -699,22 +686,9 @@ export default class Swordman extends Character{
         return this.attack_speed - (this.speed * 50)
     }
 
-    useSecond(){
-        if(!this.can_use_skills) return
-
-        if(this.third_ability?.canUse()){
-            this.third_ability?.use()
-            this.third_ability.afterUse()
-            
-        }
-        else if(this.second_ability?.canUse()){
-            this.use_not_utility_triggers.forEach(elem => {
-                elem.trigger(this)
-            })
-
-            this.second_ability.use()
-            this.last_skill_used_time = this.time
-        }
+    payCost(){
+        this.resource -= this.pay_to_cost
+        this.pay_to_cost = 0 
     }
 
     addResourse(count: number = 1, ignore_limit = false){

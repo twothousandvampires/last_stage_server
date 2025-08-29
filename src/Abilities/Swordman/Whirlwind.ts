@@ -20,16 +20,7 @@ export default class Whirlwind extends SwordmanAbility{
     }
 
     canUse(){
-        return this.owner.resource >= this.cost
-    }
-
-    afterUse(){
-        this.owner.use_not_utility_triggers.forEach(elem => {
-                elem.trigger(this.owner)
-        })
-        this.owner.resource -= this.cost
-        this.owner.last_skill_used_time = this.owner.time
-        
+        return this.owner.resource >= this.cost && !this.owner.is_attacking
     }
 
     use(echo = false){
@@ -38,6 +29,7 @@ export default class Whirlwind extends SwordmanAbility{
         let action_time = this.owner.attack_speed / 2
 
         if(!echo){
+            this.owner.pay_to_cost = this.cost
             this.owner.is_attacking = true
             this.owner.state = 'swing'
 
@@ -53,16 +45,7 @@ export default class Whirlwind extends SwordmanAbility{
         else{
             this.owner.hit = false
             this.owner.action = false
-        }
-       
-        if(Func.chance(this.owner.getSecondResource() * 10)){
-            setTimeout(() => {
-               this.use(true)
-            }, action_time)
-        }
-        else{
-            this.owner.setTimerToGetState(action_time)
-        }   
+        }  
     }
 
     act(){
@@ -146,6 +129,21 @@ export default class Whirlwind extends SwordmanAbility{
                     this.level.projectiles.push(proj)
                 }
             }
+
+            this.payCost()
+        }
+        else if(this.action_is_end){
+            this.action_is_end = false
+            let proc = this.getSecondResource() * 10
+            if(proc > 80){
+                proc = 80
+            }
+             if(Func.chance(proc)){
+                this.third_ability.use(true)
+             }
+             else{
+                this.getState()
+             }
         }
     }
 }

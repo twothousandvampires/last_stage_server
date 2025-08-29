@@ -12,12 +12,11 @@ export default class SoulShatter extends CultistAbility{
     }
 
     canUse(): boolean {
-        return true
-    }
+        return !this.owner.is_attacking && this.owner.can_attack
+    } 
 
     use(){
-        if(this.owner.is_attacking) return
-       
+
         let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
 
@@ -30,7 +29,6 @@ export default class SoulShatter extends CultistAbility{
         else{
             this.owner.flipped = false    
         } 
-
 
         if(!this.owner.attack_angle){
             this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
@@ -49,15 +47,12 @@ export default class SoulShatter extends CultistAbility{
             this.owner.action = false
             this.owner.addMoveSpeedPenalty(70)
 
-            setTimeout(()=>{
-                this.owner.hit = false
-                this.owner.is_attacking = false
-                this.owner.hit_x = undefined
-                this.owner.hit_y = undefined
-            },50)
+            this.owner.hit = false
+            this.owner.is_attacking = false
+            this.owner.hit_x = undefined
+            this.owner.hit_y = undefined
+        
         }
-
-        this.owner.setTimerToGetState(attack_speed)
     }
 
     act(){
@@ -124,6 +119,10 @@ export default class SoulShatter extends CultistAbility{
           
             this.target = undefined
             this.attack_angle = undefined
+        }
+        else if(this.action_is_end){
+            this.action_is_end = false
+            this.getState()
         }
     }
 }

@@ -13,6 +13,7 @@ export default class Impy extends Enemy{
         this.attack_radius = 5
         this.attack_speed = 1200
         this.spawn_time = 1000
+         this.say_z = 8
         this.getState()
     }
 

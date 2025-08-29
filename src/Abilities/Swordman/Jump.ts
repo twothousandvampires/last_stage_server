@@ -29,12 +29,10 @@ export default class Jump extends SwordmanAbility{
     }
 
     canUse(){
-        return !this.used && this.owner.resource >= this.cost
+        return !this.used && this.owner.resource >= this.cost && !this.owner.is_attacking
     }
     
-    use(){
-        if(this.owner.is_attacking) return
-        
+    use(){        
         this.used = true
 
         let rel_x =  this.owner.pressed.canvas_x + this.owner.x - 40

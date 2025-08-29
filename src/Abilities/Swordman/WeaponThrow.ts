@@ -21,12 +21,10 @@ export default class WeaponThrow extends SwordmanAbility{
     }
 
     canUse(): boolean {
-        return !this.cd
+        return !this.cd && !this.owner.is_attacking
     }
 
     use(){
-        if(this.cd) return 
-
         this.cd = true
 
         let cd_time = 4000
@@ -66,14 +64,9 @@ export default class WeaponThrow extends SwordmanAbility{
         this.owner.cancelAct = () => {
             this.owner.action = false
             this.owner.addMoveSpeedPenalty(attack_move_speed_penalty)
-
-            setTimeout(()=>{
-                this.owner.hit = false
-                this.owner.is_attacking = false
-            },50)
+            this.owner.hit = false
+            this.owner.is_attacking = false
         }
-
-        this.owner.setTimerToGetState(attack_speed)
     }
 
     act(){
@@ -131,6 +124,10 @@ export default class WeaponThrow extends SwordmanAbility{
                 }
             }
             this.attack_angle = undefined
+        }
+        else if(this.action_is_end){
+            this.action_is_end = false
+            this.getState()
         }
     }
 }

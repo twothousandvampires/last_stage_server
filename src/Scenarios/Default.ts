@@ -1,5 +1,6 @@
 import Func from "../Func";
 import Level from "../Level";
+import ClosedGate from "../Objects/Effects/ClosedGate";
 import Bones from "../Objects/src/Enemy/Bones";
 import { Flamy } from "../Objects/src/Enemy/Flamy";
 import FlyingBones from "../Objects/src/Enemy/FlyingBones";
@@ -21,15 +22,44 @@ export default class Default extends Scenario{
 
     last_checked: number
     time_between_wave_ms: number
+    waves_created: number = 0
 
     constructor(){
         super()
         this.last_checked = 0
-        this.time_between_wave_ms = 7500
+        this.time_between_wave_ms = 4000
+
     }
 
     start(level: Level){
         this.last_checked = level.time + this.time_between_wave_ms
+
+        let gate = new ClosedGate(level)
+        gate.setPoint(90, 20)
+        level.binded_effects.push(gate)
+        level.players.forEach(elem => {
+            elem.invisible = true
+            elem.can_move_by_player = false
+        })
+
+        setTimeout(() => {
+            level.addSound({
+                name: 'door open',
+                x: 90,
+                y: 20
+            })
+
+            let gate = level.binded_effects[0]
+            level.deleted.push(gate.id)
+            level.binded_effects = []
+
+            setTimeout(() => {
+                level.players.forEach(elem => {
+                    elem.invisible = false
+                    elem.can_move_by_player = true
+                })
+            },400)
+        }, 2000)
     }
 
     checkTime(level: Level){
@@ -40,6 +70,11 @@ export default class Default extends Scenario{
         if(level.time - this.last_checked >= this.time_between_wave_ms){
             this.last_checked = level.time
             this.createWave(level)
+            this.waves_created ++
+
+            if(this.time_between_wave_ms < 7500 && this.waves_created % 4 === 0){
+                this.time_between_wave_ms + 500
+            }
         }
     }
 

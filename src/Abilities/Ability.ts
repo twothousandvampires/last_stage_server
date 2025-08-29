@@ -4,7 +4,8 @@ export default abstract class Ability{
     
     name: string | undefined
     used: boolean = false
-    cd: number | undefined = undefined
+    cd: number = 0
+    cost: number = 0
 
     constructor(public owner: Player){
 
@@ -12,8 +13,4 @@ export default abstract class Ability{
     
     abstract use(): void 
     abstract canUse(): boolean
-    
-    afterUse(){
-        
-    }
 }

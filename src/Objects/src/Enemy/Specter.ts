@@ -2,6 +2,7 @@ import Func from "../../../Func";
 import Level from "../../../Level";
 import Poison from "../../../Status/Poison";
 import Armour from "../../Effects/Armour";
+import SmallTextLanguage3 from "../../Effects/SmallTextLanguage3";
 import SpecterVortex from "../../Effects/SpecterVortex";
 import { SpecterSoulSeeker } from "../../Projectiles/SpecterSoulSeeker";
 import { Enemy } from "./Enemy";
@@ -61,6 +62,16 @@ export default class Specter extends Enemy{
                 this.setState(this.setResurectAct)
             }, 3000)
         }
+    }
+
+    public sayPhrase(): void{
+        if(!Func.chance(1)) return
+
+        let phrase = new SmallTextLanguage3(this.level)
+        phrase.z = 12
+        phrase.setPoint(this.x, this.y)
+
+        this.level.effects.push(phrase)
     }
 
     getWeaponHitedSound(){

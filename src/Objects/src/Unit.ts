@@ -88,7 +88,7 @@ export default abstract class Unit extends GameObject {
             return check
        }
 
-        return !Func.chance(unit.pierce)
+        return Func.chance(unit.pierce)
     }
 
     setZap(duration: number = 100){
@@ -98,18 +98,9 @@ export default abstract class Unit extends GameObject {
         this.setTimerToGetState(duration)
     }
 
-    setTimerToGetState(ms: number, callback: any = undefined){
+    setTimerToGetState(ms: number){
         this.getStateTimer = setTimeout(() => {
-            if(callback){
-                if(this.cancelAct){
-                    this.cancelAct()
-                    this.cancelAct = undefined
-                }
-                callback()
-            }
-            else{
-                this.getState()
-            } 
+            this.getState()
         }, ms)
     }
 
@@ -139,8 +130,13 @@ export default abstract class Unit extends GameObject {
         
     }
 
+    public sayPhrase(): void{
+        
+    }
+
     setState(newState: Function) {
         this.is_moving = false
+        
         if(this.cancelAct){
             this.cancelAct()
             this.cancelAct = undefined

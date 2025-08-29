@@ -21,7 +21,6 @@ export default class Commands extends SwordmanAbility{
     }
 
     use(): void {
-        if(this.cd) return 
         this.cd = true
 
         setTimeout(() => {

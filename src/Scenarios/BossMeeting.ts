@@ -1,5 +1,8 @@
 import Func from "../Func";
 import Level from "../Level";
+import SmallTextLanguage1 from "../Objects/Effects/SmallTextLanguage1";
+import SmallTextLanguage3 from "../Objects/Effects/SmallTextLanguage3";
+import TextLanguage3 from "../Objects/Effects/TextLanguage3";
 import { MagicStar } from "../Objects/Projectiles/MagicStar";
 import Boss from "../Objects/src/Bosses/Boss";
 import Bones from "../Objects/src/Enemy/Bones";
@@ -111,9 +114,40 @@ export default class BossMeeting extends Scenario{
             }
         },
         {
-            time: 6200,
+            time: 7600,
             action: (level: Level) => {
+                let t = new TextLanguage3(level)
+
+                let boss = level.enemies.find(elem => elem instanceof Boss)
+                t.z = 22
+                t.setPoint(boss?.x, boss?.y)
+                level.effects.push(t)
                 
+            }
+        },
+
+         {
+            time: 8800,
+            action: (level: Level) => {
+                let t = new SmallTextLanguage1(level)
+
+                let p = level.players[0]
+                t.z = 12
+                t.setPoint(p?.x, p?.y)
+                level.effects.push(t)
+                
+            }
+        },
+
+         {
+            time: 10000,
+            action: (level: Level) => {
+                let t = new SmallTextLanguage3(level)
+
+                   let boss = level.enemies.find(elem => elem instanceof Boss)
+                t.z = 22
+                t.setPoint(boss?.x, boss?.y)
+                level.effects.push(t)
                 
             }
         },
@@ -200,7 +234,7 @@ export default class BossMeeting extends Scenario{
         let p = level.players[0]
         p.x = 60
         p.y = 60
-        p.light_r = 30
+        p.light_r = 24
 
         let wizard = new Flyer(level)
         wizard.x = 52

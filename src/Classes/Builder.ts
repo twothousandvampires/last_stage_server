@@ -43,10 +43,12 @@ export default class Builder{
         character.id = client.id
         character.applyStats(template.stats)
         character.createAbilities(template.abilities)
+
         if(template.item){
             character.createItem(template.item)
         }
-        character.setPoint(88, 22)
+
+        character.setPoint(0, 0)
         return character
     }
 

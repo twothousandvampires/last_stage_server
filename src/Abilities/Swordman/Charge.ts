@@ -33,14 +33,12 @@ export default class Charge extends SwordmanAbility{
     }
 
     canUse(){
-        return !this.used && this.owner.resource >= this.cost
+        return !this.used && this.owner.resource >= this.cost && !this.owner.is_attacking
     }
 
     use(){
-        if(this.owner.is_attacking) return
-
         this.owner.is_attacking = true
-
+      
         this.start_x = this.owner.x
         this.start_y = this.owner.y
 

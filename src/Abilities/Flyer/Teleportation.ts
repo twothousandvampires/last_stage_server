@@ -7,26 +7,21 @@ export default class Teleportation extends FlyerAbility{
     state: number
     teleport_x: number | undefined
     teleport_y: number | undefined
-    cd: boolean
-    protected: boolean
-    increased_gate: boolean
+    protected: boolean = false
+    increased_gate: boolean = false
 
     constructor(owner: Flyer){
         super(owner)
-       
+        this.cd = 12000
         this.state = 0
-        this.cd = false
         this.name = 'teleportaion'
-        this.protected = false
-        this.increased_gate = false
     }
 
     canUse(){
-        return !this.cd
+        return !this.used
     }
 
     use(){
-        if(this.cd) return
         if(!this.owner.pressed.over_x  || !this.owner.pressed.over_y) return
 
         this.teleport_x = Math.round(this.owner.pressed.over_x + this.owner.x - 40)
@@ -38,10 +33,11 @@ export default class Teleportation extends FlyerAbility{
             return
         }
 
-        this.cd = true
+        this.used = true
+
         setTimeout(() => {
-            this.cd = false
-        }, 20000 - this.owner.getSecondResource() * 1000)
+            this.used = false
+        }, this.cd - this.owner.getSecondResource() * 1000)
 
         this.owner.can_move_by_player = false
         this.owner.state = 'teleport start'
@@ -87,10 +83,11 @@ export default class Teleportation extends FlyerAbility{
                     let box = owner.getBoxElipse()
 
                     if(ability.increased_gate){
-                        box.r += 3
+                        box.r += 8
                     }
                     
                     owner.can_be_damaged = true
+
                     owner.level.enemies.forEach((e) => {
                         if(!e.is_dead && Func.elipseCollision(box, e.getBoxElipse())){
                             e.takeDamage(owner, {
@@ -109,8 +106,9 @@ export default class Teleportation extends FlyerAbility{
                     ability.state = 0
                     ability.teleport_x = undefined
                     ability.teleport_y = undefined
-                    owner.getState()
+                
                     this.attack_angle = undefined
+                    owner.getState()
                 }
             }
             

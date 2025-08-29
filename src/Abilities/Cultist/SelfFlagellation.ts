@@ -29,12 +29,6 @@ export default class SelfFlagellation extends CultistAbility{
             this.cd = false
         }, 10000 - this.owner.getSecondResource() * 300)
 
-        this.owner.level.sounds.push({
-            name:'injured human',
-            x: this.owner.x,
-            y: this.owner.y
-        })
-
         let e = new Blood(this.owner.level)
         e.setPoint(Func.random(this.owner.x - 2, this.owner.x + 2), this.owner.y)
         e.z = Func.random(2, 8)

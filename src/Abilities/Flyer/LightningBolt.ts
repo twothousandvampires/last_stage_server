@@ -20,12 +20,10 @@ export default class LightningBolt extends FlyerAbility{
     }
 
     canUse(){
-        return this.owner.resource >= this.cost
+        return this.owner.resource >= this.cost && !this.owner.is_attacking
     }
 
     use(){
-        if(this.owner.is_attacking) return
-
         let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
         
@@ -57,14 +55,9 @@ export default class LightningBolt extends FlyerAbility{
         this.owner.cancelAct = () => {
             this.owner.action = false
             this.owner.addMoveSpeedPenalty(move_speed_reduce)
-
-            setTimeout(()=>{
-                this.owner.hit = false
-                this.owner.is_attacking = false
-            },50)
+            this.owner.hit = false
+            this.owner.is_attacking = false
         }
-        
-        this.owner.setTimerToGetState(cast_speed)
     }
 
     async act(){
@@ -190,6 +183,10 @@ export default class LightningBolt extends FlyerAbility{
                 }               
             }
             this.attack_angle = undefined
+        }
+         else if(this.action_is_end){
+            this.action_is_end = false
+            this.getState()
         }
     }
 }

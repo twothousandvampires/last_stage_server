@@ -292,11 +292,11 @@ export default class Flyer extends Character{
                     name: 'collapse',
                     type: 'static field',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.utility instanceof StaticField) && !character.utility.hand_cuffing
+                        return character instanceof Flyer && (character.utility instanceof StaticField) && !character.utility.collapse
                     },
                     teach: (character: Character) => {
                         if(character instanceof Flyer && character.utility instanceof StaticField){
-                            character.utility.hand_cuffing = true
+                            character.utility.collapse = true
                         }
                     },
                     cost: 1,
@@ -438,7 +438,6 @@ export default class Flyer extends Character{
         this.upgrades = filtered
     }
 
-
     castSound(){
         this.level.sounds.push({
             name: 'cast',
@@ -446,10 +445,11 @@ export default class Flyer extends Character{
             y: this.y
         })
     }
+
     getMoveSpeed(): number{
         let total_inc = this.move_speed_penalty
 
-        let speed = this.move_speed + (this.speed / 40)
+        let speed = this.move_speed * (1 + this.speed / 40)
 
         if(!total_inc) return speed
         if(total_inc > 100) total_inc = 100
@@ -608,6 +608,10 @@ export default class Flyer extends Character{
             return
         }
 
+        if(Func.chance(30)){
+            this.level.addSound('get hit', this.x, this.y)
+        }
+
         let e = new Blood(this.level)
         e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
         e.z = Func.random(2, 8)
@@ -688,6 +692,8 @@ export default class Flyer extends Character{
                     this.recent_cast.splice(i, 1);
                 }
             }
+
+            this.sayPhrase()
         }
 
         if(this.time >= this.next_life_regen_time){
@@ -787,6 +793,8 @@ export default class Flyer extends Character{
         this.level.players.forEach((elem) => {
             elem.addResourse(5, true)
         })
+
+        this.level.addSound('enlight', this.x, this.y)
     }
 
     getSecondResource(){
@@ -795,25 +803,5 @@ export default class Flyer extends Character{
 
     getCastSpeed() {
         return this.cast_speed - this.getSecondResource() * 50
-    }
-
-    useSecond(){
-        if(!this.can_use_skills) return
-        
-        if(this.third_ability?.canUse()){
-            this.use_not_utility_triggers.forEach(elem => {
-                elem.trigger(this)
-            })
-            this.third_ability?.use()
-            this.last_skill_used_time = this.time
-              
-        }
-        else if(this.second_ability?.canUse()){
-            this.use_not_utility_triggers.forEach(elem => {
-                elem.trigger(this)
-            })
-            this.second_ability.use()
-            this.last_skill_used_time = this.time
-        }  
     }
 }

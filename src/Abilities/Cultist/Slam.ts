@@ -16,12 +16,10 @@ export default class Slam extends CultistAbility{
     }
 
     canUse(): boolean {
-        return this.owner.can_attack 
+        return this.owner.can_attack && !this.owner.is_attacking
     }
 
     use(){
-        if(this.owner.is_attacking) return
-       
         let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
 
@@ -53,15 +51,12 @@ export default class Slam extends CultistAbility{
             this.owner.action = false
             this.owner.addMoveSpeedPenalty(move_speed_reduce)
 
-            setTimeout(()=>{
-                this.owner.hit = false
-                this.owner.is_attacking = false
-                this.owner.hit_x = undefined
-                this.owner.hit_y = undefined
-            },50)
+            this.owner.hit = false
+            this.owner.is_attacking = false
+            this.owner.hit_x = undefined
+            this.owner.hit_y = undefined
+            console.log('here2')
         }
-
-        this.owner.setTimerToGetState(attack_speed)
     }
 
     act(){
@@ -96,7 +91,7 @@ export default class Slam extends CultistAbility{
                 r.r += 2
             }
 
-            this.level.sounds.push({
+            this.level.addSound({
                 name:'blow',
                 x: this.x,
                 y: this.y
@@ -116,6 +111,10 @@ export default class Slam extends CultistAbility{
             }
 
             this.attack_angle = undefined
+        }
+        else if(this.action_is_end){
+            this.action_is_end = false
+            this.getState()
         }
     }
 }

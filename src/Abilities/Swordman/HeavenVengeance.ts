@@ -15,7 +15,7 @@ export default class HeavenVengeance extends SwordmanAbility{
     }
 
     canUse(): boolean {
-        return !this.used && this.owner.can_attack
+        return !this.used && this.owner.can_attack && !this.owner.is_attacking
     }
 
     trigger(){
@@ -29,9 +29,7 @@ export default class HeavenVengeance extends SwordmanAbility{
         }, this.cd)
     }
 
-    use(){
-        if(this.owner.is_attacking) return
-       
+    use(){   
         let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
 
@@ -59,14 +57,9 @@ export default class HeavenVengeance extends SwordmanAbility{
         this.owner.cancelAct = () => {
             this.owner.action = false
             this.owner.addMoveSpeedPenalty(attack_move_speed_penalty)
-
-            setTimeout(()=>{
-                this.owner.hit = false
-                this.owner.is_attacking = false
-            },50)
+            this.owner.hit = false
+            this.owner.is_attacking = false
         }
-
-        this.owner.setTimerToGetState(attack_speed)
     }
 
     act(){
@@ -171,6 +164,10 @@ export default class HeavenVengeance extends SwordmanAbility{
             }
             
             this.attack_angle = undefined
+        }
+        else if(this.action_is_end){
+            this.action_is_end = false
+            this.getState()
         }
     }
 }

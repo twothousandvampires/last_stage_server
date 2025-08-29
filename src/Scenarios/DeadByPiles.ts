@@ -1,11 +1,13 @@
 import Level from "../Level";
 import FlyingBones from "../Objects/src/Enemy/FlyingBones";
 import PileOfDead from "../Objects/src/Piles/PileOfDead";
+import Scenario from "./Scenario";
 
-export default class DeadByPiles{
+export default class DeadByPiles extends Scenario{
     map: any
 
     constructor(){
+        super()
         this.map = [
             {
                 time: 1200,

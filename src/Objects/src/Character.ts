@@ -13,6 +13,7 @@ import Sound from "../../Types/Sound"
 import Upgrade from "../../Types/Upgrade"
 import Effect from "../Effects/Effects"
 import Grace from "../Effects/Grace"
+import SmallTextLanguage1 from "../Effects/SmallTextLanguage1"
 import Unit from "./Unit"
 
 export default abstract class Character extends Unit{
@@ -32,6 +33,7 @@ export default abstract class Character extends Unit{
     item: item | undefined
     time: number | undefined
     last_skill_used_time: number | undefined
+    chance_to_say_phrase: number = 1
 
     knowledge: number = 0
     agility: number = 0
@@ -76,13 +78,13 @@ export default abstract class Character extends Unit{
     status_resistance: number = 5
     can_attack: boolean = true
     can_cast: boolean = true
-    invisible: boolean = false
     lust_for_life: boolean = false
     can_be_enlighten: boolean = true
     cast_speed: number = 2000
     mad_target: any
     after_grace_statuses: Status[] = []
     chance_second_skill_not_to_be_used: number = 0
+    action_is_end: boolean = false
   
     constructor(level: Level){
         super(level)
@@ -97,10 +99,18 @@ export default abstract class Character extends Unit{
     abstract takeDamage(unut: Unit, options: object): void
     abstract getSkipDamageStateChance(): number
     abstract useUtility(): void
-    abstract useSecond(): void
     abstract regen(): void
     abstract getSecondResource(): number
-    
+   
+    protected useNotUtility(): void{
+        this.use_not_utility_triggers.forEach(elem => {
+            elem.trigger(this)
+        })
+
+        this.last_skill_used_time = this.time
+        this.sayPhrase()
+    }
+
     toJSON(){
         return {
             resource: this.resource,
@@ -122,7 +132,8 @@ export default abstract class Character extends Unit{
             action: this.action,
             action_time: this.action_time,
             light_r: this.light_r,
-            ward: this.ward
+            ward: this.ward,
+            invisible: this.invisible
         }
     }
 
@@ -150,6 +161,16 @@ export default abstract class Character extends Unit{
 
     public statusWasApplied(): void{
         
+    }
+
+    public sayPhrase(): void{
+        if(!Func.chance(this.chance_to_say_phrase)) return
+
+        let phrase = new SmallTextLanguage1(this.level)
+        phrase.z = 12
+        phrase.setPoint(this.x, this.y)
+
+        this.level.effects.push(phrase)
     }
 
     protected getMoveSpeedReduceWhenUseSkill(): number{
@@ -599,8 +620,9 @@ export default abstract class Character extends Unit{
         this.when_hited_triggers.forEach(elem => {
             elem.trigger(this)
         })
-    }
 
+        this.sayPhrase()
+    }
     private playerTakeLethalDamage(): void{
         this.player_take_lethal_damage_triggers.forEach(elem => {
             elem.trigger(this)
@@ -969,15 +991,29 @@ export default abstract class Character extends Unit{
         return this.pressed['w'] || this.pressed['s'] || this.pressed['d'] || this.pressed['a']
     }
 
+    useSecond(){
+        if(!this.can_use_skills) return
+
+        let was_used = false
+        if(this.third_ability?.canUse()){
+            this.third_ability?.use()
+            was_used = true
+        }
+        else if(this.second_ability?.canUse()){
+            this.second_ability.use()
+            was_used = true
+        }
+
+        if(was_used){
+            this.useNotUtility()  
+        }
+    }
+
     private idleAct(): void{
         if(this.pressed.l_click){
             if(this.can_use_skills && this.first_ability?.canUse()){
-                this.use_not_utility_triggers.forEach(elem => {
-                    elem.trigger(this)
-                })
-
                 this.first_ability?.use()
-                this.last_skill_used_time = this.time
+                this.useNotUtility()
             }
         }
         else if(this.pressed.r_click){

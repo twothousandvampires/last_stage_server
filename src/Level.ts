@@ -15,6 +15,12 @@ import Status from "./Status/Status"
 import GameServer from "./GameServer"
 import Sound from "./Types/Sound"
 import { Enemy } from "./Objects/src/Enemy/Enemy"
+import BossMeeting from "./Scenarios/BossMeeting"
+import ClosedGate from "./Objects/Effects/ClosedGate"
+import BonesAttack from "./Scenarios/BonesAttack"
+import CircleOfGhostWarriors from "./Scenarios/CircleOfGhostWarriors"
+import DeadByPiles from "./Scenarios/DeadByPiles"
+import Penta from "./Scenarios/Penta"
 
 export default class Level{
     static enemy_list = [
@@ -115,6 +121,7 @@ export default class Level{
 
     public assignPlayer(player: Character): void{
         player.startGame()
+        player.setPoint(88 + this.players.length * 4, 22)
         this.players.push(player)
     }
 
