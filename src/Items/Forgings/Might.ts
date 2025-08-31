@@ -12,14 +12,20 @@ export default class Might extends Forging{
         this.stat = 'might'
     }
 
-    forge(player: Character){
-        if(player.might < this.max_value){
+    forge(){
+        if(this.canBeForged()){
             this.value += 1
-            player.might += 1
+            this.item.player.might += 1
         }
     }
 
     getValue(){
         return this.value
+    }
+
+    canBeForged(): boolean {
+        if(!this.item || !this.item.player) return false
+
+        return this.item.player.might < this.max_value
     }
 }

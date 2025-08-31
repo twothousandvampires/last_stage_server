@@ -12,14 +12,20 @@ export default class Will extends Forging{
         this.stat = 'will'
     }
 
-    forge(player: Character){
-        if(player.will < this.max_value){
+    forge(){
+        if(this.canBeForged()){
             this.value += 1
-            player.will += 1
+            this.item.player.will += 1
         }
     }
 
     getValue(){
         return this.value
+    }
+
+    canBeForged(): boolean {
+        if(!this.item || !this.item.player) return false
+
+        return this.item.player.will < this.max_value
     }
 }

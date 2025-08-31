@@ -12,14 +12,20 @@ export default class Pierce extends Forging{
         this.stat = 'pierce'
     }
 
-    forge(player: Character){
-        if(player.pierce < this.max_value){
+    forge(){
+        if(this.canBeForged()){
             this.value ++
-            player.pierce += 1
+            this.item.player.pierce += 1
         }
     }
 
     getValue(){
         return this.value
+    }
+
+    canBeForged(): boolean {
+        if(!this.item || !this.item.player) return false
+
+        return this.item.player.pierce < this.max_value
     }
 }

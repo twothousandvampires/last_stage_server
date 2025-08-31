@@ -11,8 +11,12 @@ export default class Chance extends Forging {
     }
 
     forge(){
-        if(this.item.chance && this.item.chance < this.max_value){
+        if(this.canBeForged()){
             this.item.chance += 2
         }
+    }
+
+    canBeForged(): boolean {
+        return this.item.chance != undefined && (this.item.chance < this.max_value)
     }
 }

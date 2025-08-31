@@ -12,14 +12,20 @@ export default class Knowledge extends Forging{
         this.stat = 'knowledge'
     }
 
-    forge(player: Character){
-        if(player.knowledge < this.max_value){
+    forge(){
+        if(this.canBeForged()){
             this.value += 1
-            player.knowledge += 1
+            this.item.player.knowledge += 1
         }
     }
 
     getValue(){
         return this.value
+    }
+
+    canBeForged(): boolean {
+        if(!this.item || !this.item.player) return false
+
+        return this.item.player.knowledge < this.max_value
     }
 }

@@ -11,8 +11,12 @@ export default class Distance extends Forging {
     }
 
     forge(){
-        if(this.item.distance && this.item.distance < this.max_value){
+        if(this.canBeForged()){
             this.item.distance += 2
         }
+    }
+
+    canBeForged(): boolean {
+        return this.item.distance != undefined && this.item.distance < this.max_value
     }
 }

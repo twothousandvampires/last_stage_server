@@ -12,14 +12,20 @@ export default class MaxResource extends Forging{
         this.stat = 'maximum resourses'
     }
 
-    forge(player: Character){
-        if(player.max_resource < this.max_value){
+    forge(){
+        if(this.canBeForged()){
             this.value ++
-            player.max_resource += 1
+            this.item.player.max_resource += 1
         }
     }
 
     getValue(){
         return this.value
+    }
+
+    canBeForged(): boolean {
+        if(!this.item || !this.item.player) return false
+
+        return this.item.player.max_resource < this.max_value
     }
 }

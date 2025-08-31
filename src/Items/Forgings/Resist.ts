@@ -12,14 +12,20 @@ export default class Resist extends Forging{
         this.stat = 'resist'
     }
 
-    forge(player: Character){
-        if(player.status_resistance < this.max_value){
+    forge(){
+        if(this.canBeForged()){
             this.value += 2
-            player.status_resistance += 2
+            this.item.player.status_resistance += 2
         }
     }
 
     getValue(){
         return this.value
+    }
+
+     canBeForged(): boolean {
+        if(!this.item || !this.item.player) return false
+
+        return this.item.player.status_resistance < this.max_value
     }
 }

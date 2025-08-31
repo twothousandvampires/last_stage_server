@@ -1,5 +1,6 @@
 import Character from "../Objects/src/Character";
 import Immortality from "../Status/Immortality";
+import Recharge from "./Forgings/Recharge";
 import Item from "./Item";
 
     export default class RedPotion extends Item{
@@ -10,14 +11,9 @@ import Item from "./Item";
             this.used = false
             this.name = 'red potion'
             this.type = 3
-        }
-
-        canBeForged(character: Character): boolean {
-            return this.used
-        }
-
-        forge(character: Character): void {
-            this.used = false
+            this.forge = [
+                new Recharge(this)
+            ]
         }
 
         equip(character: Character): void {

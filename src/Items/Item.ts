@@ -10,6 +10,7 @@ export default abstract class Item {
     public player: Character | undefined
     public max_forgings: number = 4
     public type: number = 1
+    public used: boolean = false
 
     static list = [
         {

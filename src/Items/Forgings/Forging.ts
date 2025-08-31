@@ -16,11 +16,16 @@ export default abstract class Forging{
        return {
            name: this.stat,
            max: this.max_value,
-           value: this.getValue()
+           value: this.getValue(),
+           can: this.canBeForged()
        }
     }
 
     getValue(){
         return this.item[this.stat]
+    }
+
+    canBeForged(){
+        return false
     }
 }

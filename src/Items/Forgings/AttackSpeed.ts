@@ -13,13 +13,20 @@ export default class AttackSpeed extends Forging{
     }
 
     forge(player: Character){
-        if(player.attack_speed > this.max_value){
+        if(this.canBeForged()){
             this.value += 20
-            player.attack_speed -= 20
+            this.item.player.attack_speed -= 20
         }
     }
 
     getValue(){
         return this.value
+    }
+
+
+    canBeForged(): boolean {
+        if(!this.item || !this.item.player) return false
+
+        return this.item.player.attack_speed > this.max_value
     }
 }

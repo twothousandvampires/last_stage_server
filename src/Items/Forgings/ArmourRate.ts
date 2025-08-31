@@ -12,14 +12,20 @@ export default class ArmourRate extends Forging{
         this.stat = 'armour rate'
     }
 
-    forge(player: Character){
-        if(player.armour_rate < this.max_value){
+    forge(){
+        if(this.canBeForged()){
             this.value ++
-            player.armour_rate += 1
+            this.item.player.armour_rate += 1
         }
     }
 
     getValue(){
         return this.value
+    }
+
+    canBeForged(): boolean {
+        if(!this.item || !this.item.player) return false
+
+        return this.item.player.armour_rate < this.max_value
     }
 }

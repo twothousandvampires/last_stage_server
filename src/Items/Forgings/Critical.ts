@@ -12,14 +12,20 @@ export default class Critical extends Forging{
         this.stat = 'critical'
     }
 
-    forge(player: Character){
-        if(player.critical < this.max_value){
+    forge(){
+        if(this.canBeForged()){
             this.value ++
-            player.critical += 1
+            this.item.player.critical += 1
         }
     }
 
     getValue(){
         return this.value
+    }
+
+    canBeForged(): boolean {
+        if(!this.item || !this.item.player) return false
+
+        return this.item.player.critical < this.max_value
     }
 }

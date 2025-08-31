@@ -1,8 +1,7 @@
-import Character from "../../Objects/src/Character";
 import Item from "../Item";
 import Forging from "./Forging";
 
-export default class Agility extends Forging{
+export default class Agility extends Forging {
 
     value: number = 0
 
@@ -12,14 +11,20 @@ export default class Agility extends Forging{
         this.stat = 'agility'
     }
 
-    forge(player: Character){
-        if(player.agility < this.max_value){
+    forge(){
+        if(this.canBeForged()){
             this.value += 1
-            player.agility += 1
+            this.item.player.agility += 1
         }
     }
 
     getValue(){
         return this.value
+    }
+
+    canBeForged(): boolean {
+        if(!this.item || !this.item.player) return false
+
+        return this.item.player.agility < this.max_value
     }
 }

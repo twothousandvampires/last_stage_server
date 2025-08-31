@@ -12,14 +12,20 @@ export default class Regen extends Forging{
         this.stat = 'regeneration'
     }
 
-    forge(player: Character){
-        if(player.base_regen_time > this.max_value){
+    forge(){
+        if(this.canBeForged()){
             this.value += 200
-            player.base_regen_time -= 200
+            this.item.player.base_regen_time -= 200
         }
     }
 
     getValue(){
         return this.value
+    }
+
+    canBeForged(): boolean {
+        if(!this.item || !this.item.player) return false
+
+        return this.item.player.base_regen_time > this.max_value
     }
 }

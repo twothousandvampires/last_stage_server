@@ -15,11 +15,13 @@ export default class NovaThenHit extends Forging{
     }
 
     forge(player: Character){
-        if(!player.on_hit_triggers.some(elem => elem instanceof NovaThenHit)){
-            player.on_hit_triggers.push(this)
-        }
+        if(this.canBeForged()){
+            if(!player.on_hit_triggers.some(elem => elem instanceof NovaThenHit)){
+                player.on_hit_triggers.push(this)
+            }
         
-        this.value += 15
+            this.value += 15
+        }
     }
 
     getValue(){
@@ -31,5 +33,11 @@ export default class NovaThenHit extends Forging{
         e.setPoint(target.x, target.y)
         
         player.level.effects.push(e)
+    }
+
+    canBeForged(): boolean {
+        if(!this.item || !this.item.player) return false
+
+        return this.value < this.max_value
     }
 }

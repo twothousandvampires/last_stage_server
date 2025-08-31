@@ -13,13 +13,19 @@ export default class Durability extends Forging{
     }
 
     forge(player: Character){
-        if(player.durability < this.max_value){
+        if(this.canBeForged()){
             this.value += 1
-            player.durability += 1
+            this.item.player.durability += 1
         }
     }
 
     getValue(){
         return this.value
+    }
+
+    canBeForged(): boolean {
+        if(!this.item || !this.item.player) return false
+
+        return this.item.player.durability < this.max_value
     }
 }

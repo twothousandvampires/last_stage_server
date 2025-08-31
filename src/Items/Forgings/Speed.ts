@@ -12,14 +12,20 @@ export default class Speed extends Forging{
         this.stat = 'speed'
     }
 
-    forge(player: Character){
-        if(player.speed < this.max_value){
+    forge(){
+        if(this.canBeForged()){
             this.value += 1
-            player.speed += 1
+            this.item.player.speed += 1
         }
     }
 
     getValue(){
         return this.value
+    }
+
+     canBeForged(): boolean {
+        if(!this.item || !this.item.player) return false
+
+        return this.item.player.speed < this.max_value
     }
 }
