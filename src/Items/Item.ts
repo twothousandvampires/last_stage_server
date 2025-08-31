@@ -11,6 +11,7 @@ export default abstract class Item {
     public max_forgings: number = 4
     public type: number = 1
     public used: boolean = false
+    public duration: number = 0r
 
     static list = [
         {
