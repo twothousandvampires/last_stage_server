@@ -54,8 +54,6 @@ export default class Slam extends CultistAbility{
             this.owner.hit = false
             this.owner.is_attacking = false
             this.owner.hit_x = undefined
-            this.owner.hit_y = undefined
-            console.log('here2')
         }
     }
 

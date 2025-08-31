@@ -14,6 +14,8 @@ export default class GlassSword extends Item{
         this.chance = 25
         this.distance = 15
         this.power = 0
+        this.name = 'glass sword'
+        this.type = 1
     }
 
     canBeForged(character: Character): boolean {

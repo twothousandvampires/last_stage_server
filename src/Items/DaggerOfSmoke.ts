@@ -12,6 +12,8 @@ export default class DaggerOfSmoke extends Item{
         super()
         this.chance = 40
         this.power = 0
+        this.name = 'dagger of smoke'
+        this.type = 1
     }
 
     canBeForged(character: Character): boolean {

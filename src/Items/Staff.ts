@@ -9,6 +9,8 @@ export default class Staff extends Item{
         super()
 
         this.power = 0
+        this.name = 'staff'
+        this.type = 1
     }
 
     canBeForged(character: Character): boolean {

@@ -12,6 +12,8 @@ export default class Cloak extends Item{
         super()
         this.chance = 40
         this.power = 0
+        this.name = 'cloak'
+        this.type = 2
     }
 
     canBeForged(character: Character): boolean {

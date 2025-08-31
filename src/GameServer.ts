@@ -28,8 +28,25 @@ export default class GameServer{
 
     private updateLobby(): void{
         let data: Client[] = Array.from(this.clients.values())
-        this.socket.emit('update_lobby_data', data, item.list)
+        let p_items: string[] = []
+
+        data.forEach(elem => {
+            p_items.push(...elem.template.item.map((i => i.name)))
+        })
+
+        let list = item.list
+        let available = []
+
+        list.forEach(elem => {
+            if(!p_items.includes(elem.name)){
+                available.push(elem)
+            }
+        })
+
+        this.socket.emit('update_lobby_data', data, available)
     }
+
+
 
     private createNewClient(socket: Socket): Client{
         let client: Client = new Client(socket.id)
@@ -69,15 +86,34 @@ export default class GameServer{
                     this.updateLobby()                
                 })
 
+                socket.on('forge_item', (data) => {
+                    if(!client.character) return
+
+                    client.character.forgeItem(data)
+            
+                })
+
                 socket.on('pick_item', (item_name: string) => {
-                    client.template.item = item_name
-                    client.template.item_description = Item.list.find(elem => elem.name === item_name)?.description
+                    let item = Builder.createItem(item_name)
+
+                    if(client.template.item.length >= client.template.max_items){
+                        client.template.item.pop()
+                    }
+        
+                    client.template.item.push(item)
+                     
                     this.updateLobby()                
                 })
 
                 socket.on('unpick_item', (item_name: string) => {
-                    client.template.item = undefined
+                    client.template.item = client.template.item.filter(elem => elem.name != item_name)
                     this.updateLobby()                
+                })
+
+                socket.on('unlock_forging', (item_name: string) => {
+                    if(!client.character) return
+                    console.log('socket')
+                    client.character.unlockForging(item_name) 
                 })
 
                 socket.on('select_skill', (skill_name: string) => {
@@ -157,8 +193,6 @@ export default class GameServer{
                     if(actor){
                           actor.action_is_end = true
                     }
-                  
-                    console.log('action end')
                 })
 
                 socket.on('set_target', (id) => {

@@ -9,6 +9,8 @@ import Item from "./Item";
             super()
             this.value = 5
             this.power = 0
+            this.name = 'soul accumulator'
+            this.type = 3
         }
 
         canBeForged(character: Character): boolean {

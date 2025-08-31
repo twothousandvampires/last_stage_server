@@ -243,7 +243,7 @@ export default class Level{
         diff = Math.abs(diff)
         let chance = 20 + diff
 
-        if(Func.chance(chance)){
+        if(true){
             this.grace_trashold += this.grace_trashold
             let portal: Grace = new Grace(this)
             while(portal.isOutOfMap()){

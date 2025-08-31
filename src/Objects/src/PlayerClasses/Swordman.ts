@@ -592,7 +592,7 @@ export default class Swordman extends Character{
 
     startGame(){
         let time = Date.now()
-        this.item?.equip(this)
+        this.equipItems()
         this.next_life_regen_time = time + this.getRegenTimer()
         this.check_recent_hits_timer = time + 1000 
     }

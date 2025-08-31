@@ -1,10 +1,24 @@
 import Client from "../Client"
 import ChargedBow from "../Items/ChargedBow"
 import Cloak from "../Items/Cloak"
-import Clock from "../Items/Clock"
 import DaggerOfSmoke from "../Items/DaggerOfSmoke"
 import DoomMantia from "../Items/DoomMantia"
 import FlameRing from "../Items/FlameRing"
+import Agility from "../Items/Forgings/Agility"
+import ArmourRate from "../Items/Forgings/ArmourRate"
+import AttackSpeed from "../Items/Forgings/AttackSpeed"
+import CastSpeed from "../Items/Forgings/CastSpeed"
+import Critical from "../Items/Forgings/Critical"
+import Durability from "../Items/Forgings/Durability"
+import Knowledge from "../Items/Forgings/Knowledge"
+import MaxResource from "../Items/Forgings/MaxResource"
+import Might from "../Items/Forgings/Might"
+import NovaThenHit from "../Items/Forgings/NovaThenHit"
+import Pierce from "../Items/Forgings/Pierce"
+import Regen from "../Items/Forgings/Regen"
+import Resist from "../Items/Forgings/Resist"
+import Speed from "../Items/Forgings/Speed"
+import Will from "../Items/Forgings/Will"
 import GlacialChain from "../Items/GlacialChain"
 import GlassSword from "../Items/GlassSword"
 import Item from "../Items/Item"
@@ -44,8 +58,10 @@ export default class Builder{
         character.applyStats(template.stats)
         character.createAbilities(template.abilities)
 
-        if(template.item){
-            character.createItem(template.item)
+        if(template.item.length){
+            template.item.forEach(elem => {
+                character.item.push(elem)
+            })
         }
 
         character.setPoint(0, 0)
@@ -97,6 +113,43 @@ export default class Builder{
         }
         else if(item_name === 'white shield'){
             return new WhiteShield()
+        }
+    }
+
+    static createForging(name: string, item: Item){
+        switch (name){
+            case 'critical':
+                return new Critical(item)
+            case 'pierce':
+                return new Pierce(item)
+            case 'attack speed':
+                return new AttackSpeed(item)
+            case 'armour rate':
+                return new ArmourRate(item)
+            case 'nova when hit':
+                return new NovaThenHit(item)
+            case 'resist':
+                return new Resist(item)
+            case 'will':
+                return new Will(item)
+            case 'knowledge':
+                return new Knowledge(item)
+            case 'speed':
+                return new Speed(item)
+            case 'agility':
+                return new Agility(item)
+            case 'might':
+                return new Might(item)
+            case 'durability':
+                return new Durability(item)
+            case 'max resources':
+                return new MaxResource(item)
+            case 'regen time':
+                return new Regen(item)
+            case 'cast speed':
+                return new CastSpeed(item)
+            default:    
+                return new NovaThenHit(item)
         }
     }
 }

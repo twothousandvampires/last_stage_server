@@ -1,27 +1,32 @@
 import Func from "../Func";
 import Character from "../Objects/src/Character";
+import ArmourRate from "./Forgings/ArmourRate";
+import Chance from "./Forgings/Chance";
+import Distance from "./Forgings/Distance";
 import Item from "./Item";
 
-export default class DoomMantia extends Item{
-    chance: number
-    distance: number
-    power: number
-
+export default class DoomMantia extends Item {
+   
     constructor(){
         super()
         this.chance = 30
         this.distance = 20
-        this.power = 0
+        this.name = 'doom mantia'
+        this.type = 2
+        this.forge = [
+            new Distance (this),
+            new Chance(this)
+        ]
     }
 
-    canBeForged(character: Character): boolean {
-        return this.power < 3
-    }
+    // canBeForged(character: Character): boolean {
+    //     return t
+    // }
 
-    forge(character: Character): void {
-        this.power ++
-        this.chance += 5
-    }
+    // forge(character: Character): void {
+    //     this.power ++
+    //     this.chance += 5
+    // }
 
     equip(character: Character): void {
         character.player_take_lethal_damage_triggers.push(this)

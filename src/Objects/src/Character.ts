@@ -1,6 +1,7 @@
 import Ability from "../../Abilities/Ability"
 import Builder from "../../Classes/Builder"
 import Func from "../../Func"
+import Forging from "../../Items/Forgings/Forging"
 import item from "../../Items/Item"
 import Level from "../../Level"
 import BlessedArmour from "../../Status/BlessedArmour"
@@ -30,7 +31,7 @@ export default abstract class Character extends Unit{
     second_ability: Ability | undefined
     third_ability: Ability | undefined
     utility: Ability | undefined
-    item: item | undefined
+    item: item[] = []
     time: number | undefined
     last_skill_used_time: number | undefined
     chance_to_say_phrase: number = 1
@@ -111,6 +112,18 @@ export default abstract class Character extends Unit{
         this.sayPhrase()
     }
 
+    closeForgings(){
+        this.level.socket.to(this.id).emit('close_forgings')
+    }
+
+    showForgings(){
+        let to_forge = this.item.filter(elem => elem.forge.length)
+
+        this.level.socket.to(this.id).emit('show_forgings', {
+            items: to_forge
+        })
+    }
+
     toJSON(){
         return {
             resource: this.resource,
@@ -135,6 +148,12 @@ export default abstract class Character extends Unit{
             ward: this.ward,
             invisible: this.invisible
         }
+    }
+
+    protected equipItems(){
+        this.item.forEach(elem => {
+            elem.setPlayer(this)
+        })
     }
 
     protected succesefulBlock(): void{
@@ -298,19 +317,19 @@ export default abstract class Character extends Unit{
                     cost: 1,
                     desc: 'give a life'
                 },
-                {
-                    name: 'forge',
-                    canUse: (character: Character) => {
-                        if(!character.item) return false
+                // {
+                //     name: 'forge',
+                //     canUse: (character: Character) => {
+                //         if(!character.item) return false
 
-                        return character.item.canBeForged(character)
-                    },
-                    teach: (character: Character) => {
-                        character.item?.forge(character)
-                    },
-                    cost: 1,
-                    desc: 'forge your equip'
-                },
+                //         return character.item.canBeForged(character)
+                //     },
+                //     teach: (character: Character) => {
+                //         character.item?.forge(character)
+                //     },
+                //     cost: 1,
+                //     desc: 'forge your equip'
+                // },
                 {
                     name: 'chosen one',
                     canUse: (character: Character) => {
@@ -512,6 +531,30 @@ export default abstract class Character extends Unit{
             }
         ]
         this.level.socket.to(this.id).emit('update_skill', data)
+    }
+
+    public forgeItem(data: any): void{
+        let item = this.item.find(elem => elem.name === data.item_name)
+
+        if(!item) return
+
+        let forging: Forging = item.forge[data.forge]
+
+        if(!forging) return
+
+        forging.forge(this)
+
+        this.closeForgings()
+    }
+
+    public unlockForging(item_name: string): void{
+        let item = this.item.find(elem => elem.name === item_name)
+
+        if(!item) return
+        
+        console.log('char')
+        item.unlockForging()
+        this.closeForgings()
     }
 
     public holdGrace(): void{

@@ -12,6 +12,8 @@ export default class ChargedBow extends Item{
         super()
         this.power = 1
         this.cd = false
+        this.name = 'charged bow'
+        this.type = 1
     }
 
     canBeForged(character: Character): boolean {

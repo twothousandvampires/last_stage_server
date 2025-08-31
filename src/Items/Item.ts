@@ -1,6 +1,16 @@
+import Builder from "../Classes/Builder";
 import Character from "../Objects/src/Character";
+import Forging from "./Forgings/Forging";
 
-export default abstract class Item{
+export default abstract class Item {
+
+    public forge: Forging[] = []
+    public distance: number = 0
+    public chance: number = 0
+    public player: Character | undefined
+    public max_forgings: number = 4
+    public type: number = 1
+
     static list = [
         {
             name: "skull of first warrior",
@@ -63,10 +73,91 @@ export default abstract class Item{
         },
     ]
 
+    static forging_list_all = [
+        'critical',
+        'pierce',
+    ]
+
+    static forging_list_type_1 = [
+        'attack speed',
+        'might',
+        'durability',
+        'cast speed'
+    ]
+
+    static forging_list_type_2 = [
+        'armour rate',
+        'speed',
+        'agility',
+        'regen time'
+    ]
+    
+    static forging_list_type_3 = [
+        'resist',
+        'will',
+        'knowledge',
+        'max resources'
+    ]
+
+
+    name: string = ''
+
+    constructor(){
+
+    }
+
+    getSpecialForgings(): string[] | []{
+        return []
+    }
+
     abstract equip(character: Character): void
-    abstract forge(character: Character): void
+
+    // abstract forge(character: Character): void
 
     canBeForged(character: Character){
         return true
+    }
+
+    setPlayer(player: Character){
+        this.player = player
+        this.equip(this.player)
+    }
+
+    unlockForging(){
+        if(this.forge.length >= this.max_forgings) return
+
+        let forging: Forging = this.getRandomForging()
+
+        forging.forge(this.player)
+
+        this.forge.push(forging)
+    }
+
+    getRandomForging(){
+        let all = [...Item.forging_list_all]
+        
+        if(this.type === 1){
+            all = all.concat(...Item.forging_list_type_1)
+        }
+        else if(this.type === 2){
+            all = all.concat(...Item.forging_list_type_2)
+        }
+        else if(this.type === 3){
+             all = all.concat(...Item.forging_list_type_3)
+        }
+
+        all =  all.concat(...this.getSpecialForgings())
+
+        let random: string = all[Math.floor(Math.random() * all.length)]
+
+        let forging = Builder.createForging(random, this)
+
+        while(this.forge.some(elem => elem instanceof forging.constructor)){
+            random = all[Math.floor(Math.random() * all.length)]
+
+            forging = Builder.createForging(random, this)
+        }
+
+        return forging
     }
 }

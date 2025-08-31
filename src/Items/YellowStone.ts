@@ -7,6 +7,8 @@ export default class YellowStone extends Item{
     constructor(){
         super()
         this.power = 1
+        this.name = 'yellow stone'
+        this.type = 3
     }
 
     canBeForged(character: Character): boolean {

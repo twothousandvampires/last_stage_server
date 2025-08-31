@@ -8,6 +8,8 @@ import Item from "./Item";
         constructor(){
             super()
             this.used = false
+            this.name = 'red potion'
+            this.type = 3
         }
 
         canBeForged(character: Character): boolean {

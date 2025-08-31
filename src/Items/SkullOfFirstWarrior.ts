@@ -15,6 +15,8 @@ export default class SkullOfFirstWarrior extends Item{
         this.threshold = 8
         this.add_might = 8
         this.power = 0
+        this.name = 'skull of first warrior"'
+        this.type = 3
     }
 
     canBeForged(character: Character): boolean {

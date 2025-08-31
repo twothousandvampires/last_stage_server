@@ -8,6 +8,8 @@ export default class WhiteShield extends Item{
     constructor(){
         super()
         this.power = 1
+        this.name = 'white shield'
+        this.type = 2
     }
 
     canBeForged(character: Character): boolean {

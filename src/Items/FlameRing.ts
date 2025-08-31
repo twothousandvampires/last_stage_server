@@ -13,6 +13,8 @@ export default class FlameRing extends Item{
         this.chance = 40
         this.distance = 15
         this.power = 0
+        this.name = 'flame ring'
+        this.type = 3
     }
 
     canBeForged(character: Character): boolean {

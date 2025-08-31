@@ -12,6 +12,8 @@ export default class SparklingHelmet extends Item{
     constructor(){
         super()
         this.power = 1
+        this.name = 'sparkling helmet'
+        this.type = 2
     }
     
     equip(character: Character): void {
@@ -20,14 +22,5 @@ export default class SparklingHelmet extends Item{
         status.setPower(this.power)
         
         character.level.setStatus(character, status)
-    }
-
-    canBeForged(character: Character): boolean {
-        return this.power < 4
-    }
-                
-    forge(character: Character): void {
-        this.power ++
-        this.status?.setPower(this.power)  
     }
 }

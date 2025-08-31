@@ -3,6 +3,7 @@ import Level from "../../Level";
 import TimeStoped from "../../Status/TimeStoped";
 import Character from "../src/Character";
 import Effect from "./Effects";
+import Forger from "./Forger";
 import Star from "./Star";
 import Teacher from "./Teacher";
 
@@ -23,7 +24,7 @@ export default class Grace extends Effect{
     }
 
     act(time: number){
-        if(time - this.time >= 30000){
+        if(time - this.time >= 300000){
             this.closeGate()
             return
         }
@@ -122,6 +123,10 @@ export default class Grace extends Effect{
         let teacher = new Teacher(this.level)
         this.level.binded_effects.push(teacher)
 
+
+        let forger = new Forger(this.level)
+        this.level.binded_effects.push(forger)
+
         let stars_count = 60
         let centr_x = 180
         let centr_y = 60
@@ -141,9 +146,11 @@ export default class Grace extends Effect{
 
     deleteEffects(){
         let to_delete = this.level.binded_effects.filter(elem => elem.zone_id === 1)
+
         to_delete.forEach(elem => {
             this.level.deleted.push(elem.id)
         })
+        
         this.level.binded_effects = this.level.binded_effects.filter(elem => elem.zone_id != 1)
 
         this.level.deleted.push(this.id)
