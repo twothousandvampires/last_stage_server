@@ -13,6 +13,7 @@ export default abstract class Item {
     public used: boolean = false
     public duration: number = 0
     public count: number = 0
+    public description: string = ''
 
     static list = [
         {
@@ -21,54 +22,54 @@ export default abstract class Item {
         },
         {
             name: "glacial chain",
-            description: 'after using your not utility skill you have 25% chance to spell frost nova'
+            description: 'after using your non-utility skill you have a 25% chance to spell Frost Wave'
         },
         {
             name: "red potion",
-            description: 'when you reach 1 life restores your life to full and get immortality for short periodR, uses only one time'
+            description: 'when you reach 1 life, your life is restored to full and you gain immortality for a short period'
         },
         {
             name: "soul accumulator",
-            description: 'when you teammate dies you get 5 to all stats'
+            description: 'when your teammate dies, you gain 5 to all stats'
         },
         {
             name: "doom mantia",
-            description: 'if you take lethal damage, there is a chance to redirect your death to nearest creature'
+            description: 'when you take lethal damage, there is a chance to redirect your death to a nearby unit'
         },
         {
             name: "wall of bones",
-            description: 'when you kill enemy you increase u armour by 1 for 10 seconds'
+            description: 'when you kill an enemy, your armor is increased by 1 for 10 seconds'
         },
         {
             name: "flame ring",
-            description: 'when you recive damage nearest enemy take damage'
+            description: 'when you take damage, the nearest enemy takes damage'
         },{
             name: "sparkling helmet",
             description: 'if you do not use any skills for 5 seconds it creates a shock ring'
         },
         {
             name: "glass sword",
-            description: 'always deal double damage, always get double damage'
+            description: 'always deal double damage, always take double damage'
         },
         {
             name: "cloak",
-            description: 'gives a chance to get phasing when get hit'
+            description: 'gives a chance to gain phasing when taking damage'
         },
         {
             name: "staff",
-            description: 'gives a chance for second skill not to be used after use'
+            description: 'gives a chance for the second skill not to be used after use'
         },
         {
             name: "charged bow",
-            description: 'after hit enemy there is a chance to create up to 3(depends on forge level) lightnings with 2000 ms cd'
+            description: 'after hit enemy there is a chance to create lightnings with 2000 ms cd'
         },
         {
             name: "dagger of smoke",
-            description: 'when you are healed there is a chance to create blood shards the amount of which is based on the number of enemies in a small radius'
+            description: 'when you heal, there is a chance to create blood shards'
         },
         {
             name: "yellow stone",
-            description: 'increases chance to resist status, when you resist gain a ward'
+            description: 'increases a chance to resist status, when you resist gain a ward'
         },
         {
             name: "white shield",
@@ -80,7 +81,7 @@ export default abstract class Item {
         },
         {
             name: "whispering shield",
-            description: 'increase a chance to block and..., whispers strange things sometimes'
+            description: 'increases a chance to block and... whispers strange things sometimes'
         },
     ]
 
@@ -136,8 +137,8 @@ export default abstract class Item {
         this.equip(this.player)
     }
 
-    unlockForging(){
-        if(this.forge.length >= this.max_forgings) return
+    public unlockForging(): boolean{
+        if(this.forge.length >= this.max_forgings) return false
 
         let forging: Forging = this.getRandomForging()
 
@@ -146,6 +147,8 @@ export default abstract class Item {
         this.player.gold += forging.gold_cost
 
         this.forge.push(forging)
+
+        return true
     }
 
     getRandomForging(){

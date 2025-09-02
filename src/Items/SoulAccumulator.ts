@@ -1,5 +1,4 @@
 import Character from "../Objects/src/Character";
-import Count from "./Forgings/Count";
 import Item from "./Item";
 
     export default class SoulAccumulator extends Item{
@@ -9,9 +8,11 @@ import Item from "./Item";
             this.count = 5
             this.name = 'soul accumulator'
             this.type = 3
-            this.forge = [
-                new Count(this)
-            ]
+            this.description = 'when your teammate dies, you gain 5 to all stats'
+        }
+
+        getSpecialForgings(): string[] {
+            return ['count']
         }
 
         equip(character: Character): void {

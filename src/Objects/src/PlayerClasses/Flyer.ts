@@ -534,7 +534,7 @@ export default class Flyer extends Character{
     }
 
     defendAct(){
-        if(!this.pressed[' ']){
+        if(!this.pressed[32]){
             this.getState()
             this.can_regen_resource = true
         }

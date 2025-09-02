@@ -1,8 +1,6 @@
 import Func from "../Func";
 import { SmokeDaggerShard } from "../Objects/Projectiles/SmokeDaggerShard";
 import Character from "../Objects/src/Character";
-import Chance from "./Forgings/Chance";
-import Count from "./Forgings/Count";
 import Item from "./Item";
 
 export default class DaggerOfSmoke extends Item{
@@ -13,16 +11,17 @@ export default class DaggerOfSmoke extends Item{
         this.name = 'dagger of smoke'
         this.type = 1
         this.count = 3
-        this.forge = [
-            new Chance(this),
-            new Count(this)
-        ]
+        this.description = 'when you heal, there is a chance to create blood shards'
     }
 
     equip(character: Character): void {
         character.on_heal_triggers.push(this)
     }
     
+    getSpecialForgings(): string[] {
+        return ['chance', 'count']
+    }
+
     trigger(character: Character){
         if(Func.chance(this.chance)){
             let box = character.getBoxElipse()

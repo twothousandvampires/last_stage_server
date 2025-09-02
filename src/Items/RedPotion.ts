@@ -1,6 +1,5 @@
 import Character from "../Objects/src/Character";
 import Immortality from "../Status/Immortality";
-import Duration from "./Forgings/Duration";
 import Recharge from "./Forgings/Recharge";
 import Item from "./Item";
 
@@ -15,12 +14,16 @@ import Item from "./Item";
             this.type = 3
             this.forge = [
                 new Recharge(this),
-                new Duration(this)
             ]
+            this.description = 'when you reach 1 life, your life is restored to full and you gain immortality for a short period'
         }
 
         equip(character: Character): void {
             character.reach_near_dead_triggers.push(this)
+        }
+
+        getSpecialForgings(): string[] {
+            return ['duration']
         }
 
         trigger(character: Character){

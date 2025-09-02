@@ -58,6 +58,7 @@ export default abstract class Character extends Unit{
     on_heal_triggers: any[] = []
     on_status_resist_triggers: any[] = []
     when_block_triggers: any[] = []
+    when_say_phrase_triggers: any[] = []
 
     avoid_damaged_state_chance: number = 0
     can_be_lethaled: boolean = true
@@ -88,6 +89,7 @@ export default abstract class Character extends Unit{
     chance_second_skill_not_to_be_used: number = 0
     gold_find: number = 0
     action_is_end: boolean = false
+    voice_radius: number = 20
     public gold: number = 0
     public block_chance: number = 0
   
@@ -195,6 +197,10 @@ export default abstract class Character extends Unit{
         let phrase = new SmallTextLanguage1(this.level)
         phrase.z = 12
         phrase.setPoint(this.x, this.y)
+
+        this.when_say_phrase_triggers.forEach(elem => {
+            elem.trigger(this)
+        })
 
         this.level.effects.push(phrase)
     }
@@ -456,6 +462,17 @@ export default abstract class Character extends Unit{
                     cost: 1,
                     desc: 'gives a buff after living grace which increases all stats by 10'
                 },
+                {
+                    name: 'talkativeness',
+                    canUse: (character: Character) => {
+                        return character.chance_to_say_phrase < 3
+                    },
+                    teach: (character: Character) => {
+                        return character.chance_to_say_phrase ++
+                    },
+                    cost: 3,
+                    desc: 'increases a chance to say something'
+                },
         ]
     }
 
@@ -555,6 +572,8 @@ export default abstract class Character extends Unit{
 
         forging.forge(this)
 
+        this.level.addSound('gold spending', this.x, this.y)
+
         this.closeForgings()
     }
 
@@ -562,12 +581,16 @@ export default abstract class Character extends Unit{
         let item = this.item.find(elem => elem.name === item_name)
 
         if(!item) return
-        
-        if(this.gold < 10) return
 
-        this.gold -= 10
+        let cost = (item.forge.length * 5) + 5
+
+        if(this.gold < cost) return
+
+        if(item.unlockForging()){
+            this.gold -= cost
+            this.level.addSound('gold spending', this.x, this.y)
+        }
         
-        item.unlockForging()
         this.closeForgings()
     }
 
@@ -949,16 +972,16 @@ export default abstract class Character extends Unit{
         let next_step_x = 0
         let next_step_y = 0
 
-        if(this.pressed['w']){
+        if(this.pressed[87]){
             next_step_y = -1
         }
-        if(this.pressed['s']){
+        if(this.pressed[83]){
             next_step_y = 1
         }
-        if(this.pressed['d']){
+        if(this.pressed[68]){
             next_step_x = 1
         }
-        if(this.pressed['a']){
+        if(this.pressed[65]){
             next_step_x = -1
             }
 
@@ -1046,7 +1069,7 @@ export default abstract class Character extends Unit{
     }
 
     private moveIsPressed(): boolean{
-        return this.pressed['w'] || this.pressed['s'] || this.pressed['d'] || this.pressed['a']
+        return this.pressed[87] || this.pressed[83] || this.pressed[65] || this.pressed[68]
     }
 
     useSecond(){
@@ -1077,10 +1100,10 @@ export default abstract class Character extends Unit{
         else if(this.pressed.r_click){
             this.useSecond()
         }
-        else if(this.pressed[' ']){
+        else if(this.pressed[32]){
             this.setState(this.setDefend)
         }
-        else if(this.pressed['e'] && this.can_use_skills){
+        else if(this.pressed[69] && this.can_use_skills){
             this.useUtility()
         }
     }
@@ -1097,7 +1120,7 @@ export default abstract class Character extends Unit{
     }
 
     public defendAct(): void{
-        if(!this.pressed[' ']){
+        if(!this.pressed[32]){
             this.getState()
         }
     }

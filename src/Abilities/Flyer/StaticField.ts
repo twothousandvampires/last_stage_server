@@ -23,7 +23,7 @@ export default class StaticField extends FlyerAbility{
 
     use(){
         if(this.cd) return
-
+        this.player.sad = true
         this.cd = true
 
         let rel_x = Math.round(this.owner.pressed.over_x + this.owner.x - 40)

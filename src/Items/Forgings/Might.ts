@@ -11,7 +11,7 @@ export default class Might extends Forging{
         this.max_value = 20
         this.name = 'might'
         this.stat = 'increases your might'
-        this.gold_cost = 3
+        this.gold_cost = 5
     }
 
     forge(){

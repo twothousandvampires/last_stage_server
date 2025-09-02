@@ -1,8 +1,5 @@
 import Func from "../Func";
 import Character from "../Objects/src/Character";
-import Chance from "./Forgings/Chance";
-import Count from "./Forgings/Count";
-import Distance from "./Forgings/Distance";
 import Item from "./Item";
 
 export default class FlameRing extends Item{
@@ -13,11 +10,11 @@ export default class FlameRing extends Item{
         this.distance = 15
         this.name = 'flame ring'
         this.type = 3
-        this.forge = [
-            new Chance(this),
-            new Distance(this),
-            new Count(this),
-        ]
+        this.description = 'when you take damage, the nearest enemy takes damage'
+    }
+
+    getSpecialForgings(): string[] {
+        return ['chance', 'distance', 'count']
     }
 
     equip(character: Character): void {

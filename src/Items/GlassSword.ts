@@ -9,6 +9,7 @@ export default class GlassSword extends Item{
         super()
         this.name = 'glass sword'
         this.type = 1
+        this.description = 'always deal double damage, always take double damage'
     }
 
     equip(character: Character): void {

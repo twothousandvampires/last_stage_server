@@ -16,14 +16,16 @@ export default class CursedWeapon extends SwordmanAbility{
     }
 
     canUse(): boolean {
-        return !this.cd
+        return !this.used
     }
 
     use(): void {
-        this.cd = true
+        if(this.used) return
+
+        this.used = true
 
         setTimeout(() => {
-            this.cd = false
+            this.used = false
             this.cast = false
         }, 20000)
 

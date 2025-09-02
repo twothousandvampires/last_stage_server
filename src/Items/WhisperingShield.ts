@@ -1,9 +1,6 @@
 import Func from "../Func";
 import StrangeLanguage from "../Objects/Effects/StrangeLanguage";
-import TextLanguage1 from "../Objects/Effects/TextLanguage1";
 import Character from "../Objects/src/Character";
-import BlockChance from "./Forgings/BlockChance";
-import Chance from "./Forgings/Chance";
 import Item from "./Item";
 
 export default class WhisperingShield extends Item {
@@ -13,10 +10,11 @@ export default class WhisperingShield extends Item {
         this.chance = 5
         this.name = 'whispering shield'
         this.type = 2
-        this.forge = [
-            new Chance(this),
-            new BlockChance(this)
-        ]
+        this.description = 'increases a chance to block and... whispers strange things sometimes'
+    }
+
+    getSpecialForgings(): string[] {
+        return ['chance']
     }
 
     equip(character: Character): void {

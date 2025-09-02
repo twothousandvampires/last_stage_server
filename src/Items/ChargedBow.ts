@@ -1,8 +1,6 @@
 import Func from "../Func";
 import { Lightning } from "../Objects/Projectiles/Lightning";
 import Character from "../Objects/src/Character";
-import Chance from "./Forgings/Chance";
-import Count from "./Forgings/Count";
 import Item from "./Item";
 
 export default class ChargedBow extends Item {
@@ -16,14 +14,15 @@ export default class ChargedBow extends Item {
         this.type = 1
         this.chance = 20
         this.count = 1
-        this.forge = [
-            new Chance(this),
-            new Count(this)
-        ]
+        this.description = 'after hit enemy there is a chance to create lightnings with 2000 ms cd'
     }
 
     equip(character: Character): void {
         character.on_hit_triggers.push(this)
+    }
+
+    getSpecialForgings(): string[] {
+        return ['chance', 'count']
     }
 
     trigger(character: Character, target: any){

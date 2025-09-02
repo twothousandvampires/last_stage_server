@@ -22,6 +22,8 @@ export default class Teleportation extends FlyerAbility{
     }
 
     use(){
+        if(this.used) return
+        
         if(!this.owner.pressed.over_x  || !this.owner.pressed.over_y) return
 
         this.teleport_x = Math.round(this.owner.pressed.over_x + this.owner.x - 40)

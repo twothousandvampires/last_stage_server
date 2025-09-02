@@ -11,7 +11,7 @@ export default class Regen extends Forging{
         this.max_value = 4000
         this.name = 'regeneration'
         this.stat = 'increase yours life regeneration speed'
-        this.gold_cost = 4
+        this.gold_cost = 8
     }
 
     forge(){

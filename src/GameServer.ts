@@ -139,7 +139,7 @@ export default class GameServer{
                     client.character.setLastInputs(inputs)
                 })
 
-                socket.on('buy', (inputs: object) => {   
+                socket.on('buy', () => {   
                     if(!client.character) return
 
                     client.character.buyNewItem()

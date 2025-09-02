@@ -23,6 +23,7 @@ import Item from "./Item";
             this.power = 0
             this.name = 'wall of bones'
             this.type = 2
+            this.description = 'when you kill an enemy, your armor is increased by 1 for 10 seconds'
         }
         equip(character: Character): void {
             character.on_kill_triggers.push(this)

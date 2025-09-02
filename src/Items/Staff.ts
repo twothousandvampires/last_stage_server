@@ -7,6 +7,7 @@ export default class Staff extends Item{
         super()
         this.name = 'staff'
         this.type = 1
+        this.description = 'gives a chance for the second skill not to be used after use'
     }
 
     equip(character: Character): void {

@@ -7,7 +7,7 @@ export default class Duration extends Forging {
         super(item)
         this.name = 'duration'
         this.stat = 'increases duration of item effects'
-        this.gold_cost = 5
+        this.gold_cost = 8
     }
 
     forge(){
