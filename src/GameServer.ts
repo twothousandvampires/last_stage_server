@@ -9,7 +9,7 @@ import Character from './Objects/src/Character'
 
 export default class GameServer{
 
-    static MAX_PLAYERS: number = 2
+    static MAX_PLAYERS: number = 6
 
     public socket: Server
 
