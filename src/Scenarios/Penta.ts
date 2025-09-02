@@ -5,11 +5,13 @@ import { FlameWallObject } from "../Objects/Projectiles/FlameWallObject";
 import Solid from "../Objects/src/Enemy/Solid";
 
 import CurseOfDamned from "../Status/CurseOfDamned";
+import Scenario from "./Scenario";
 
-export default class Penta{
+export default class Penta extends Scenario{
     map: any
     targets: any
     constructor(){
+        super()
         this.targets = []
         this.map = [{
             time: 2400,
@@ -51,7 +53,7 @@ export default class Penta{
 
       
         let a = 3.14 - 0.31
-        console.log(draw_start_x, draw_start_y)
+
         // line 1
         for(let i = 0; i < 10; i++){
             await Func.sleep(dd)
@@ -68,7 +70,6 @@ export default class Penta{
         }
 
         a = a + 3.14 - 0.63
-        console.log(draw_start_x, draw_start_y)
 
         for(let i = 0; i < 10; i++){
              await Func.sleep(dd)
@@ -85,7 +86,6 @@ export default class Penta{
         }
 
         a = a - 3.14 - 0.63
-        console.log(draw_start_x, draw_start_y)
 
         for(let i = 0; i < 10; i++){
              await Func.sleep(dd)
@@ -101,7 +101,6 @@ export default class Penta{
             }
         }
 
-        console.log(draw_start_x, draw_start_y)
         a = a + 3.14 - 0.63
         for(let i = 0; i < 10; i++){
              await Func.sleep(dd)

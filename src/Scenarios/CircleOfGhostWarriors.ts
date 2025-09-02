@@ -2,11 +2,13 @@ import Level from "../Level";
 import LightningBoltEffect from "../Objects/Effects/LightningBoltEffect";
 import ToothExplode from "../Objects/Effects/ToothExplode";
 import Specter from "../Objects/src/Enemy/Specter";
+import Scenario from "./Scenario";
 
-export default class CircleOfGhostWarriors{
+export default class CircleOfGhostWarriors extends Scenario{
     map: any
     targets: any
     constructor(){
+        super()
         this.targets = []
         this.map = [
             {
@@ -183,7 +185,6 @@ export default class CircleOfGhostWarriors{
 
     checkTime(level: Level){
         let time_elapsed = level.time - level.started
-        console.log(time_elapsed)
         let next_action = this.map[0]
 
         if(next_action && next_action.time <= time_elapsed){

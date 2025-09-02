@@ -1,0 +1,33 @@
+import Item from "../Item";
+import Forging from "./Forging";
+
+export default class GoldFind extends Forging {
+
+    value: number = 0
+
+    constructor(item: Item){
+        super(item)
+        this.max_value = 100
+        this.name = 'gold find'
+        this.stat = 'increase a chance to get additional gold'
+        this.gold_cost = 5
+    }
+
+    forge(){
+        if(this.canBeForged() && this.costEnough()){
+            this.value += 5
+            this.item.player.gold_find += 5
+            this.payCost()
+        }
+    }
+
+    getValue(){
+        return this.value
+    }
+
+    canBeForged(): boolean {
+        if(!this.item || !this.item.player) return false
+
+        return this.item.player.gold_find < this.max_value
+    }
+}

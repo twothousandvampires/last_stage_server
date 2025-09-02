@@ -25,12 +25,10 @@ export default class LightBeacon extends FlyerAbility{
     }
 
     canUse(){
-        return this.owner.resource >= this.cost
+        return this.owner.resource >= this.cost && !this.owner.is_attacking
     }
 
-    use(){
-        if(this.owner.is_attacking) return
-        
+    use(){    
         this.owner.can_move_by_player = false
 
         this.state = 0

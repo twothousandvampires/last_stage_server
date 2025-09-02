@@ -184,7 +184,6 @@ export default class Boss extends Enemy{
             this.can_cast_madness = false
 
             if(Func.chance(50)){
-
                 let count = 3
                 
                 let zones = 6.28 / count
@@ -222,7 +221,7 @@ export default class Boss extends Enemy{
 
                 }   
             }
-            else{
+            else if(Func.chance(30)){
                 let posible = this.level.players.filter(elem => !elem.is_dead)
 
                 let target = posible[Math.floor(Math.random() * posible.length)]
@@ -238,10 +237,9 @@ export default class Boss extends Enemy{
             setTimeout(() => {
                 this.can_cast_fear = true
                 this.can_cast_madness = true
-            }, 5000);
+            }, 10000);
         }
 
-        console.log(this.x, this.y)
         this.moveAct() 
     }
 }

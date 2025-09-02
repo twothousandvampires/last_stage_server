@@ -20,12 +20,10 @@ export default class ShieldBash extends CultistAbility{
     }
 
     canUse(): boolean {
-        return this.owner.resource >= this.cost && this.owner.can_attack && !this.used
+        return this.owner.resource >= this.cost && this.owner.can_attack && !this.used && !this.owner.is_attacking
     }
 
     use(){
-        if(this.owner.is_attacking) return
-       
         let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
         
@@ -61,15 +59,12 @@ export default class ShieldBash extends CultistAbility{
             this.owner.action = false
             this.owner.addMoveSpeedPenalty(move_speed_reduce)
 
-            setTimeout(()=>{
-                this.owner.hit = false
-                this.owner.is_attacking = false
-                this.owner.hit_x = undefined
-                this.owner.hit_y = undefined
-            },50)
+            this.owner.hit = false
+            this.owner.is_attacking = false
+            this.owner.hit_x = undefined
+            this.owner.hit_y = undefined
+         
         }
-
-        this.owner.setTimerToGetState(attack_speed)
     }
 
     act(){
@@ -148,6 +143,10 @@ export default class ShieldBash extends CultistAbility{
             if(this.second_ability.used === true && this.second_ability.coordination && Func.chance(30)){
                 this.second_ability.used = false
             }
+        }
+        else if(this.action_is_end){
+            this.action_is_end = false
+            this.getState()
         }
     }
 }

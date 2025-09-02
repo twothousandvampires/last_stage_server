@@ -19,18 +19,10 @@ export default class BurningCircle extends CultistAbility{
     }
 
     canUse(): boolean {
-        return this.owner.resource >= this.cost && !this.used
-    }
-
-    afterUse(){
-        this.owner.use_not_utility_triggers.forEach(elem => {
-            elem.trigger(this.owner)
-        })
+        return this.owner.resource >= this.cost && !this.used && !this.owner.is_attacking
     }
 
     use(){
-        if(this.owner.is_attacking) return
-
         this.owner.is_attacking = true
         this.owner.state = 'cast'
      
@@ -43,14 +35,10 @@ export default class BurningCircle extends CultistAbility{
         this.owner.cancelAct = () => {
             this.owner.action = false
     
-            setTimeout(()=>{
-                this.owner.addMoveSpeedPenalty(70)
-                this.owner.hit = false
-                this.owner.is_attacking = false
-            },50)
+            this.owner.addMoveSpeedPenalty(70)
+            this.owner.hit = false
+            this.owner.is_attacking = false
         }
-
-        this.owner.setTimerToGetState(cact_speed)
     }
 
     act(){
@@ -84,6 +72,10 @@ export default class BurningCircle extends CultistAbility{
             this.level.setStatus(this, status)
 
             this.afterUseSecond()
+        }
+        else if(this.action_is_end){
+            this.action_is_end = false
+            this.getState()
         }
     }
 }

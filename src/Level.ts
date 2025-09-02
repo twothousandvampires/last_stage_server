@@ -104,7 +104,9 @@ export default class Level{
         let are_all_dead: boolean = this.players.every(elem => elem.is_dead)
         if(are_all_dead){
             setTimeout(() => {
-                this.endGame()
+                if(this.players.length){
+                    this.endGame()
+                }   
             }, 3000)
         }
     }
@@ -115,6 +117,7 @@ export default class Level{
 
     public assignPlayer(player: Character): void{
         player.startGame()
+        player.setPoint(88 + this.players.length * 4, 22)
         this.players.push(player)
     }
 
@@ -228,6 +231,7 @@ export default class Level{
         if(diff > 0) return
 
         let exist: boolean = this.binded_effects.some(elem => elem instanceof Grace)
+
         if(exist){
             this.grace_trashold ++
             return
@@ -236,7 +240,7 @@ export default class Level{
         diff = Math.abs(diff)
         let chance = 20 + diff
 
-        if(Func.chance(chance)){
+        if(chance){
             this.grace_trashold += this.grace_trashold
             let portal: Grace = new Grace(this)
             while(portal.isOutOfMap()){

@@ -13,15 +13,14 @@ export default class AnnihilatorBeam extends FlyerAbility{
         this.cost = 5
         this.name = 'annihilator beam'
         this.concentrating_energy = false
+        this.cd = 3000
     }
 
     canUse(){
-        return this.owner.resource >= this.cost && !this.used
+        return this.owner.resource >= this.cost && !this.used && !this.owner.is_attacking
     }
 
     use(){
-        if(this.owner.is_attacking) return
-
         let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
         
@@ -49,14 +48,9 @@ export default class AnnihilatorBeam extends FlyerAbility{
         this.owner.cancelAct = () => {
             this.owner.action = false
             this.owner.addMoveSpeedPenalty(v)
-
-            setTimeout(()=>{
-                this.owner.hit = false
-                this.owner.is_attacking = false
-            },50)
+            this.owner.hit = false
+            this.owner.is_attacking = false
         }
-        
-        this.owner.setTimerToGetState(cast_speed)
     }
 
     act(){
@@ -156,6 +150,10 @@ export default class AnnihilatorBeam extends FlyerAbility{
             //         this.level.effects.push(point)
             //     }
             // }
+        }
+         else if(this.action_is_end){
+            this.action_is_end = false
+            this.getState()
         }
     }
 }

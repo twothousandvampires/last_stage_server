@@ -17,6 +17,8 @@ export class Flamy extends Enemy{
         this.retreat_distance = 10
         this.retreat_angle = undefined
         this.spawn_time = 1400
+        this.player_check_radius = 25
+        this.say_z =8
         this.getState()
     }
 

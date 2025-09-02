@@ -1,12 +1,13 @@
 import Character from "../Objects/src/Character";
+import Duration from "./Forgings/Duration";
 import Item from "./Item";
 
 export default class SkullOfFirstWarrior extends Item{
+
     kill_count: number
     countable: boolean
     threshold: number
     add_might: number
-    power: number
 
     constructor(){
         super()
@@ -14,17 +15,11 @@ export default class SkullOfFirstWarrior extends Item{
         this.countable = true
         this.threshold = 8
         this.add_might = 8
-        this.power = 0
-    }
-
-    canBeForged(character: Character): boolean {
-        return this.power < 3
-    }
-    
-    forge(character: Character): void {
-        this.power ++
-        this.threshold -= 1
-        this.add_might += 1
+        this.name = 'skull of first warrior"'
+        this.type = 3
+        this.forge = [
+            new Duration(this)
+        ]
     }
     
     equip(character: Character): void {
@@ -43,14 +38,14 @@ export default class SkullOfFirstWarrior extends Item{
 
             character.newStatus({
                 name: 'skull of first warrior',
-                duration: 6000,
+                duration: + this.duration,
                 desc: 'might increased'
             })
 
             setTimeout(() => {
                 character.might -= this.add_might
                 this.countable = true
-            }, 6000)
+            }, 6000 + this.duration)
         }
     }
 }

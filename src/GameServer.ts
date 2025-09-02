@@ -9,11 +9,14 @@ import Character from './Objects/src/Character'
 
 export default class GameServer{
 
+    static MAX_PLAYERS: number = 2
+
     public socket: Server
 
     private level: Level | undefined = undefined
     private clients: Map<string, Client> = new Map()
     private game_started: boolean = false
+    new_game_timeout: any
     
     constructor(socket: Server){
         this.socket = socket
@@ -23,13 +26,30 @@ export default class GameServer{
     public start(): void{
         if(!this.level) return
 
-        this.level?.start()
+        this.level.start()
     }
 
     private updateLobby(): void{
         let data: Client[] = Array.from(this.clients.values())
-        this.socket.emit('update_lobby_data', data, item.list)
+        let p_items: string[] = []
+
+        data.forEach(elem => {
+            p_items.push(...elem.template.item.map((i => i.name)))
+        })
+
+        let list = item.list
+        let available = []
+
+        list.forEach(elem => {
+            if(!p_items.includes(elem.name)){
+                available.push(elem)
+            }
+        })
+
+        this.socket.emit('update_lobby_data', data, available)
     }
+
+
 
     private createNewClient(socket: Socket): Client{
         let client: Client = new Client(socket.id)
@@ -49,9 +69,9 @@ export default class GameServer{
     private initSocket(): void{
         this.socket.on('connection', (socket: Socket) => {
 
-            socket.emit('server_status', this.game_started)
+            socket.emit('server_status', this.game_started || (this.clients.size >= GameServer.MAX_PLAYERS))
 
-            if(!this.game_started){
+            if(!this.game_started && this.clients.size < GameServer.MAX_PLAYERS){
                 let client: Client = this.createNewClient(socket)
 
                 socket.on('change_class', (class_name: string) => {
@@ -69,15 +89,34 @@ export default class GameServer{
                     this.updateLobby()                
                 })
 
+                socket.on('forge_item', (data) => {
+                    if(!client.character) return
+
+                    client.character.forgeItem(data)
+            
+                })
+
                 socket.on('pick_item', (item_name: string) => {
-                    client.template.item = item_name
-                    client.template.item_description = Item.list.find(elem => elem.name === item_name)?.description
+                    let item = Builder.createItem(item_name)
+
+                    if(client.template.item.length >= client.template.max_items){
+                        client.template.item.pop()
+                    }
+        
+                    client.template.item.push(item)
+                     
                     this.updateLobby()                
                 })
 
                 socket.on('unpick_item', (item_name: string) => {
-                    client.template.item = undefined
+                    client.template.item = client.template.item.filter(elem => elem.name != item_name)
                     this.updateLobby()                
+                })
+
+                socket.on('unlock_forging', (item_name: string) => {
+                    if(!client.character) return
+                    console.log('socket')
+                    client.character.unlockForging(item_name) 
                 })
 
                 socket.on('select_skill', (skill_name: string) => {
@@ -100,11 +139,20 @@ export default class GameServer{
                     client.character.setLastInputs(inputs)
                 })
 
+                socket.on('buy', (inputs: object) => {   
+                    if(!client.character) return
+
+                    client.character.buyNewItem()
+                })
+
                 socket.on('player_ready', () => {
+
                     client.ready = !client.ready
 
                     if(this.allPlayersAreReady()){
-                        setTimeout(() => {
+                        clearTimeout(this.new_game_timeout)
+                        
+                        this.new_game_timeout = setTimeout(() => {
                             let all_still_ready: boolean = this.allPlayersAreReady()
                             if(all_still_ready){
                                 this.level = new Level(this)
@@ -147,6 +195,15 @@ export default class GameServer{
                     }
                     if(actor){
                         actor.action = true
+                    }
+                })
+
+                socket.on('action_end', (id: number) => {
+                    if(!this.level) return
+
+                    let actor = this.level.players.find(elem => elem.id === id)
+                    if(actor){
+                          actor.action_is_end = true
                     }
                 })
 

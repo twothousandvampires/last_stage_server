@@ -1,0 +1,25 @@
+import Character from "../../Objects/src/Character";
+import Item from "../Item";
+import Forging from "./Forging";
+
+export default class Chance extends Forging {
+
+    constructor(item: Item){
+        super(item)
+        this.max_value = 90
+        this.name = 'chance'
+        this.stat = 'increases chance to item proc'
+        this.gold_cost = 1
+    }
+
+    forge(){
+        if(this.canBeForged() && this.costEnough()){
+            this.item.chance += 2
+            this.payCost()
+        }
+    }
+
+    canBeForged(): boolean {
+        return this.item.chance != undefined && (this.item.chance < this.max_value)
+    }
+}

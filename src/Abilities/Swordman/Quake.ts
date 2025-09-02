@@ -22,26 +22,16 @@ export default class Quake extends SwordmanAbility{
     }
 
     canUse(){
-        return this.owner.resource >= this.cost
-    }
-
-    afterUse(){
-        this.owner.use_not_utility_triggers.forEach(elem => {
-                elem.trigger(this.owner)
-        })
-        this.owner.resource -= this.cost
-        this.owner.last_skill_used_time = this.owner.time
+        return this.owner.resource >= this.cost && !this.owner.is_attacking
     }
 
     use(){
-        if(this.owner.is_attacking) return
-
         this.owner.is_attacking = true
         this.owner.state = 'jump'
         this.owner.can_move_by_player = false
 
         this.owner.stateAct = this.getAct()  
-
+        this.owner.pay_to_cost = this.cost
         this.owner.avoid_damaged_state_chance += 100
      
 
@@ -66,15 +56,15 @@ export default class Quake extends SwordmanAbility{
                 let second = owner.getSecondResource()
                 let enemies = owner.level.enemies
                 let players = owner.level.players
-
+              
                 if(ability.selfcare){
                     players = players.filter(elem => elem != owner)
                 }
-
+              
                 let targets = enemies.concat(players)
 
                 let hited: any = []
-                let add =  ability.consequences ? 4 : 0
+                let add =  ability.consequences ? 7 : 0
                 
                 add += second
 
@@ -86,16 +76,13 @@ export default class Quake extends SwordmanAbility{
 
                 let third_wave = owner.getBoxElipse()
                 third_wave.r = 11 + add
-                
-                let to_damage_count = owner.getTargetsCount() * 2
-
+            
                 targets.forEach((elem) => {
-                    if(to_damage_count > 0 && Func.elipseCollision(first_wave, elem.getBoxElipse())){
+                    if(Func.elipseCollision(first_wave, elem.getBoxElipse())){
                         hited.push(elem)
                         elem.takeDamage(owner, {
                             explode: true
                         })
-                        to_damage_count --
                     }
                 })
 
@@ -121,7 +108,7 @@ export default class Quake extends SwordmanAbility{
                 owner.level.effects.push(effect)
 
                 owner.getState()
-
+                owner.payCost()
                 let effect2 = new RocksFromCeil(this.level)
                 effect2.setPoint(owner.x, owner.y)
 

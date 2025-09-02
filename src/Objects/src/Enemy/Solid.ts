@@ -25,6 +25,7 @@ export default class Solid extends Enemy{
         this.create_grace_chance = 50
         this.create_chance = 80
         this.create_chance = 80
+        this.say_z = 18
     }
 
     setDeadState(){

@@ -56,7 +56,9 @@ export default class Madness extends Status {
             else{
                 this.unit.attack_angle = angle
                 this.unit.useSecond()
-                this.unit.first_ability.use()
+                if(this.unit.first_ability){
+                    this.unit.first_ability.use()
+                }
             }
         }
     }

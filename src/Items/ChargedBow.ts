@@ -1,25 +1,25 @@
 import Func from "../Func";
 import { Lightning } from "../Objects/Projectiles/Lightning";
 import Character from "../Objects/src/Character";
+import Chance from "./Forgings/Chance";
+import Count from "./Forgings/Count";
 import Item from "./Item";
 
-export default class ChargedBow extends Item{
+export default class ChargedBow extends Item {
     
-    power: number
     cd: boolean
 
     constructor(){
         super()
-        this.power = 1
         this.cd = false
-    }
-
-    canBeForged(character: Character): boolean {
-        return this.power < 4
-    }
-    
-    forge(character: Character): void {
-        this.power ++
+        this.name = 'charged bow'
+        this.type = 1
+        this.chance = 20
+        this.count = 1
+        this.forge = [
+            new Chance(this),
+            new Count(this)
+        ]
     }
 
     equip(character: Character): void {
@@ -27,13 +27,13 @@ export default class ChargedBow extends Item{
     }
 
     trigger(character: Character, target: any){
-        if(target && Func.chance(20) && !this.cd){
+        if(target && Func.chance(this.chance) && !this.cd){
             this.cd = true
             setTimeout(() => {
                 this.cd = false
             }, 2000)
 
-            let count =  this.power
+            let count =  this.count
             
             let zones = 6.28 / count
     

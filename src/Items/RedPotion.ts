@@ -1,5 +1,7 @@
 import Character from "../Objects/src/Character";
 import Immortality from "../Status/Immortality";
+import Duration from "./Forgings/Duration";
+import Recharge from "./Forgings/Recharge";
 import Item from "./Item";
 
     export default class RedPotion extends Item{
@@ -8,14 +10,13 @@ import Item from "./Item";
         constructor(){
             super()
             this.used = false
-        }
-
-        canBeForged(character: Character): boolean {
-            return this.used
-        }
-
-        forge(character: Character): void {
-            this.used = false
+            this.name = 'red potion'
+            this.duration = 1500
+            this.type = 3
+            this.forge = [
+                new Recharge(this),
+                new Duration(this)
+            ]
         }
 
         equip(character: Character): void {
@@ -25,7 +26,8 @@ import Item from "./Item";
         trigger(character: Character){
             if(this.used) return 
             let status = new Immortality(character.time)
-            status.setDuration(1000)
+            status.setDuration(this.duration)
+
             character.level.setStatus(character, status, true)
             
             character.addLife(3)

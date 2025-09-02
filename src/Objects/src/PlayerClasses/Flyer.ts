@@ -45,6 +45,7 @@ export default class Flyer extends Character{
         this.charged_shield = false
         this.mental_shield = false
         this.recent_cast = []
+        this.block_chance = 100
     }
 
     getAdditionalRadius(){
@@ -64,7 +65,7 @@ export default class Flyer extends Character{
                             character.second_ability.scorching = true
                         }
                     },
-                    cost: 1,
+                    cost: 3,
                     desc: 'your flamewall burn faster'
                 },
                 {
@@ -87,7 +88,7 @@ export default class Flyer extends Character{
                     teach: (character: Character) => {
                         character.takeoff = true
                     },
-                    cost: 1,
+                    cost: 2,
                     desc: 'gives your phasing while you are defended'
                 },
                  {
@@ -102,7 +103,7 @@ export default class Flyer extends Character{
                             character.updateClientSkill()
                         }
                     },
-                    cost: 1,
+                    cost: 5,
                     desc: 'fires a sereral of teeth'
                 },
                 {
@@ -116,7 +117,7 @@ export default class Flyer extends Character{
                             character.first_ability.body_melting = true
                         }
                     },
-                    cost: 1,
+                    cost: 2,
                     desc: 'gives your fireball a chance to pierce the enemy'
                 },
                 {
@@ -130,7 +131,7 @@ export default class Flyer extends Character{
                             character.first_ability.ignite = true
                         }
                     },
-                    cost: 1,
+                    cost: 3,
                     desc: 'your fireball ignites the floor after explosion'
                 },
                 {
@@ -172,7 +173,7 @@ export default class Flyer extends Character{
                             character.first_ability.high_voltage = true
                         }
                     },
-                    cost: 1,
+                    cost: 2,
                     desc: 'now your lightning bolt does not apply shock and hit up to 3 targets by default also number of hitting enemies is increased by might'
                 },
                 {
@@ -187,7 +188,7 @@ export default class Flyer extends Character{
                             character.first_ability.cost += 1
                         }
                     },
-                    cost: 1,
+                    cost: 2,
                     desc: 'now your lightning bolt also hit 2 additional times in close area but mana cost is increased'
                 },
                 {
@@ -201,7 +202,7 @@ export default class Flyer extends Character{
                             character.second_ability.improved_chain_reaction = true
                         }
                     },
-                    cost: 1,
+                    cost: 2,
                     desc: 'increases the chain chance'
                 },
                 {
@@ -229,7 +230,7 @@ export default class Flyer extends Character{
                             character.third_ability.lightning_waves = true
                         }
                     },
-                    cost: 1,
+                    cost: 4,
                     desc: 'now you crates wavas of electricity instead lightnings'
                 },
                 {
@@ -243,7 +244,7 @@ export default class Flyer extends Character{
                             character.third_ability.air_form = true
                         }
                     },
-                    cost: 1,
+                    cost: 2,
                     desc: 'after cast you cant take damage for 3 seconds'
                 },
                 {
@@ -257,7 +258,7 @@ export default class Flyer extends Character{
                             character.third_ability.ice_genesis = true
                         }
                     },
-                    cost: 1,
+                    cost: 5,
                     desc: 'if you kill the enemy there is a chance to create frost sphere'
                 },
                 {
@@ -271,7 +272,7 @@ export default class Flyer extends Character{
                             character.third_ability.cold_spires = true
                         }
                     },
-                    cost: 1,
+                    cost: 5,
                     desc: 'after cast you create a cold spires which freeze enemies and explodes'
                 },
                 {
@@ -292,11 +293,11 @@ export default class Flyer extends Character{
                     name: 'collapse',
                     type: 'static field',
                     canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.utility instanceof StaticField) && !character.utility.hand_cuffing
+                        return character instanceof Flyer && (character.utility instanceof StaticField) && !character.utility.collapse
                     },
                     teach: (character: Character) => {
                         if(character instanceof Flyer && character.utility instanceof StaticField){
-                            character.utility.hand_cuffing = true
+                            character.utility.collapse = true
                         }
                     },
                     cost: 1,
@@ -340,7 +341,7 @@ export default class Flyer extends Character{
                             character.allow_mana_regen_while_def = true
                         }
                     },
-                    cost: 1,
+                    cost: 5,
                     desc: 'you can regen mana while you are defended'
                 },
                 {
@@ -368,7 +369,7 @@ export default class Flyer extends Character{
                             character.updateClientSkill()
                         }
                     },
-                    cost: 1,
+                    cost: 3,
                     desc: 'creates a beam of energy which burn enemies'
                 },
                 {
@@ -438,7 +439,6 @@ export default class Flyer extends Character{
         this.upgrades = filtered
     }
 
-
     castSound(){
         this.level.sounds.push({
             name: 'cast',
@@ -446,10 +446,11 @@ export default class Flyer extends Character{
             y: this.y
         })
     }
+
     getMoveSpeed(): number{
         let total_inc = this.move_speed_penalty
 
-        let speed = this.move_speed + (this.speed / 40)
+        let speed = this.move_speed * (1 + this.speed / 40)
 
         if(!total_inc) return speed
         if(total_inc > 100) total_inc = 100
@@ -571,7 +572,7 @@ export default class Flyer extends Character{
 
         this.playerWasHited()
 
-        if(this.state === 'defend' && this.resource > 0){
+        if(this.state === 'defend' && this.resource > 0 && Func.chance(this.block_chance)){
 
             if(this.charged_shield && Func.chance(75)){
                 let target = this.level.enemies[Math.floor(Math.random() * this.level.enemies.length)]
@@ -606,6 +607,10 @@ export default class Flyer extends Character{
             this.level.effects.push(e)
 
             return
+        }
+
+        if(Func.chance(30)){
+            this.level.addSound('get hit', this.x, this.y)
         }
 
         let e = new Blood(this.level)
@@ -670,7 +675,7 @@ export default class Flyer extends Character{
 
     startGame(){
         let time = Date.now()
-        this.item?.equip(this)
+        this.equipItems()
         this.next_life_regen_time = time + this.getRegenTimer()
         this.next_mana_regen_time = time + this.getManaRegenTimer()
         this.check_recent_hits_timer = time + 1000
@@ -688,6 +693,8 @@ export default class Flyer extends Character{
                     this.recent_cast.splice(i, 1);
                 }
             }
+
+            this.sayPhrase()
         }
 
         if(this.time >= this.next_life_regen_time){
@@ -787,6 +794,8 @@ export default class Flyer extends Character{
         this.level.players.forEach((elem) => {
             elem.addResourse(5, true)
         })
+
+        this.level.addSound('enlight', this.x, this.y)
     }
 
     getSecondResource(){
@@ -795,25 +804,5 @@ export default class Flyer extends Character{
 
     getCastSpeed() {
         return this.cast_speed - this.getSecondResource() * 50
-    }
-
-    useSecond(){
-        if(!this.can_use_skills) return
-        
-        if(this.third_ability?.canUse()){
-            this.use_not_utility_triggers.forEach(elem => {
-                elem.trigger(this)
-            })
-            this.third_ability?.use()
-            this.last_skill_used_time = this.time
-              
-        }
-        else if(this.second_ability?.canUse()){
-            this.use_not_utility_triggers.forEach(elem => {
-                elem.trigger(this)
-            })
-            this.second_ability.use()
-            this.last_skill_used_time = this.time
-        }  
     }
 }

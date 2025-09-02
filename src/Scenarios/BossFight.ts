@@ -164,7 +164,7 @@ export default class BossFight extends Scenario {
         })
 
         level.need_to_check_grace = true
-        level.boss_kills_trashold += 150
+        level.boss_kills_trashold += 300
         level.setScript(new Default())
     }
 

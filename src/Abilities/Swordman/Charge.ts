@@ -33,14 +33,12 @@ export default class Charge extends SwordmanAbility{
     }
 
     canUse(){
-        return !this.used && this.owner.resource >= this.cost
+        return !this.used && this.owner.resource >= this.cost && !this.owner.is_attacking
     }
 
     use(){
-        if(this.owner.is_attacking) return
-
         this.owner.is_attacking = true
-
+      
         this.start_x = this.owner.x
         this.start_y = this.owner.y
 
@@ -102,8 +100,8 @@ export default class Charge extends SwordmanAbility{
                 ability.start = true
                 let speed = owner.getMoveSpeed()
     
-                let next_step_x = Math.sin(owner.attack_angle) * speed
-                let next_step_y = Math.cos(owner.attack_angle) * speed
+                let next_step_x = Math.sin(owner.attack_angle) * speed * 2
+                let next_step_y = Math.cos(owner.attack_angle) * speed * 2
     
                 if(!owner.isOutOfMap(owner.x + next_step_x, owner.y + next_step_y)){
                     owner.addToPoint(next_step_x, next_step_y)

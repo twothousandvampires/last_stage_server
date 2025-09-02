@@ -1,14 +1,15 @@
+import Item from "../Items/Item"
 import TemplateAbility from "../Types/TemplateAbility"
 
 export default class characterTemplate{
 
     stats: any
-    name: string
-    stat_count: number
+    public name: string = ''
+    stat_count: number = 5
     abilities: TemplateAbility[] = []
-    item: string | undefined
+    item: Item[] = []
+    max_items: number = 2
     stats_description: any
-    item_description: any
 
     constructor(){
         this.setTemplate()
@@ -17,7 +18,6 @@ export default class characterTemplate{
     setTemplate(class_name: string = 'swordman'): void{
         if(class_name === 'swordman'){
             this.name = 'swordman'
-            this.stat_count = 5
             this.stats = {
                 might: 1,
                 speed: 0,

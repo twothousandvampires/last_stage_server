@@ -21,6 +21,8 @@ import Item from "./Item";
             this.explode_chance = 40
             this.cd = false
             this.power = 0
+            this.name = 'wall of bones'
+            this.type = 2
         }
         equip(character: Character): void {
             character.on_kill_triggers.push(this)

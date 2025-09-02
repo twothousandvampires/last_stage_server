@@ -20,7 +20,6 @@ export default class CursedWeapon extends SwordmanAbility{
     }
 
     use(): void {
-        if(this.cd) return 
         this.cd = true
 
         setTimeout(() => {

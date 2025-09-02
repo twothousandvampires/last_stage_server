@@ -1,26 +1,25 @@
 import Func from "../Func";
 import FrostNova from "../Objects/Effects/FrostNova";
 import Character from "../Objects/src/Character";
+import Chance from "./Forgings/Chance";
 import Item from "./Item";
 
 export default class GlacialChain extends Item{
-    chance: number
-    forge_power: number
 
     constructor(){
         super()
         this.chance = 20
-        this.forge_power = 0
+        this.name = 'glacial chain'
+        this.type = 1
+        this.forge = [
+            new Chance(this)
+        ]
     }
 
-    canBeForged(character: Character): boolean {
-        return this.forge_power < 3
+    getSpecialForgings() {
+        return ['nova when hit']
     }
 
-    forge(character: Character): void {
-        this.forge_power ++
-    }
-    
     equip(character: Character): void {
         character.use_not_utility_triggers.push(this)
     }

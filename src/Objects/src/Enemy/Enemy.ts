@@ -1,6 +1,7 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
 import Armour from "../../Effects/Armour";
+import SmallTextLanguage2 from "../../Effects/SmallTextLanguage2";
 import Character from "../Character";
 import Unit from "../Unit";
 
@@ -21,6 +22,8 @@ export abstract class Enemy extends Unit{
     create_intervention_chance: number
     create_chance: number
     count_as_killed: boolean
+    say_z: number = 12
+    gold_revard: number = 1
   
     constructor(level: Level){
         super(level)
@@ -149,7 +152,7 @@ export abstract class Enemy extends Unit{
 
         if(this.checkArmour(unit)){
 
-            this.level.sounds.push({
+            this.level.addSound({
                 name: 'metal hit',
                 x: this.x,
                 y: this.y
@@ -189,14 +192,15 @@ export abstract class Enemy extends Unit{
                 this.dead_type = 'burn_dying'
                 this.is_corpse = true
             }
-            
+           
             this.is_dead = true
             this.create_grace_chance += unit?.additional_chance_grace_create ? unit?.additional_chance_grace_create : 0
             unit?.succesefulKill()
+            //todo
+            unit?.addGold(this.gold_revard)
+
             this.setDyingAct()
         }
-        
-        
     }
 
     getWeaponHitedSound(){
@@ -216,6 +220,7 @@ export abstract class Enemy extends Unit{
             this.setState(this.setSpawsState)
         }
         else{
+            this.sayPhrase()
             this.setState(this.setIdleAct)
         }
     }
@@ -229,6 +234,16 @@ export abstract class Enemy extends Unit{
         }
 
         this.setTimerToGetState(this.spawn_time)
+    }
+
+    public sayPhrase(): void{
+        if(!Func.chance(1)) return
+
+        let phrase = new SmallTextLanguage2(this.level)
+        phrase.z = this.say_z
+        phrase.setPoint(this.x, this.y)
+
+        this.level.effects.push(phrase)
     }
 
     setAttackState(){

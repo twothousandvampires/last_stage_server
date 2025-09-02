@@ -17,7 +17,7 @@ export default class UnleashPain extends CultistAbility{
     }
 
     canUse(): boolean {
-        return this.owner.resource >= this.cost && this.owner.can_attack
+        return this.owner.resource >= this.cost && this.owner.can_attack && !this.owner.is_attacking
     }
 
     afterUse(){
@@ -27,8 +27,6 @@ export default class UnleashPain extends CultistAbility{
     }
 
     use(){
-        if(this.owner.is_attacking) return
-        
         this.owner.pay_to_cost = this.cost
 
         this.owner.is_attacking = true
@@ -44,21 +42,17 @@ export default class UnleashPain extends CultistAbility{
         this.owner.cancelAct = () => {
             this.owner.action = false
     
-            setTimeout(()=>{
-                this.owner.hit = false
-                this.owner.is_attacking = false
-                this.owner.addMoveSpeedPenalty(move_speed_reduce)
-            },50)
+            this.owner.hit = false
+            this.owner.is_attacking = false
+            this.owner.addMoveSpeedPenalty(move_speed_reduce)
         }
-
-        this.owner.setTimerToGetState(attack_speed)
     }
 
     act(){
         if(this.action && !this.hit){
             this.hit = true
             
-             this.level.sounds.push({
+             this.level.addSound({
                     name:'cast',
                     x: this.x,
                     y: this.y
@@ -90,6 +84,10 @@ export default class UnleashPain extends CultistAbility{
             })
 
             this.payCost()
+        }
+        else if(this.action_is_end){
+            this.action_is_end = false
+            this.getState()
         }
     }
 }

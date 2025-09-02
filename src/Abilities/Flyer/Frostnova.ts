@@ -17,12 +17,10 @@ export default class Frostnova extends FlyerAbility{
     }
 
     canUse(){
-        return this.owner.resource >= this.cost
+        return this.owner.resource >= this.cost && !this.owner.is_attacking
     }
 
-    use(){
-        if(this.owner.is_attacking) return
-        
+    use(){        
         this.owner.pay_to_cost = this.cost
 
         this.owner.is_attacking = true
@@ -42,8 +40,6 @@ export default class Frostnova extends FlyerAbility{
             this.owner.hit = false
             this.owner.is_attacking = false
         }
-        
-        this.owner.setTimerToGetState(cast_speed)
     }
 
     act(){
@@ -66,5 +62,9 @@ export default class Frostnova extends FlyerAbility{
 
             this.level.binded_effects.push(e)
         } 
+         else if(this.action_is_end){
+            this.action_is_end = false
+            this.getState()
+        }
     }
 }

@@ -1,0 +1,34 @@
+import Character from "../../Objects/src/Character";
+import Item from "../Item";
+import Forging from "./Forging";
+
+export default class Durability extends Forging{
+
+    value: number = 0
+
+    constructor(item: Item){
+        super(item)
+        this.max_value = 20
+        this.name = 'durability'
+        this.stat = 'increases your durability'
+        this.gold_cost = 3
+    }
+
+    forge(player: Character){
+        if(this.canBeForged() && this.costEnough()){
+            this.value += 1
+            this.item.player.durability += 1
+             this.payCost()
+        }
+    }
+
+    getValue(){
+        return this.value
+    }
+
+    canBeForged(): boolean {
+        if(!this.item || !this.item.player) return false
+
+        return this.item.player.durability < this.max_value
+    }
+}

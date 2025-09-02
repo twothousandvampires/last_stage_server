@@ -6,28 +6,19 @@ import Item from "./Item";
 export default class SparklingHelmet extends Item{
 
     unit: any
-    power: number
     status: Status | undefined
 
     constructor(){
         super()
-        this.power = 1
+        this.name = 'sparkling helmet'
+        this.type = 2
     }
     
     equip(character: Character): void {
         let status = new SparklingHelmetStatus(character.level.time)
         this.status = status
-        status.setPower(this.power)
+        status.setPower(1)
         
         character.level.setStatus(character, status)
-    }
-
-    canBeForged(character: Character): boolean {
-        return this.power < 4
-    }
-                
-    forge(character: Character): void {
-        this.power ++
-        this.status?.setPower(this.power)  
     }
 }

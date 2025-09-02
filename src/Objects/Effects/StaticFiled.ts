@@ -29,10 +29,10 @@ export default class StaticFiled extends Effect{
                 if(this.affected.has(elem.id)){
                     elem.move_speed = this.affected.get(elem.id)
                     if(this.hand_cuffing){
-                        elem.attack_speed -= 1000   
+                        elem.attack_speed -= 2000   
                     }
-                    if(this.collapse && Func.chance(5)){
-                        elem.takeDamage(undefined, {
+                    if(this.collapse && Func.chance(15)){
+                        elem.takeDamage(this.owner, {
                             instant_death: true
                         })
                     }
@@ -43,10 +43,10 @@ export default class StaticFiled extends Effect{
                 if(this.affected.has(elem.id)){
                     elem.move_speed = this.affected.get(elem.id)
                     if(this.hand_cuffing){
-                        elem.attack_speed -= 1000   
+                        elem.attack_speed -= 2000   
                     }
                     if(this.collapse && Func.chance(5)){
-                        elem.takeDamage(undefined, {
+                        elem.takeDamage(this.owner, {
                             instant_death: true
                         })
                     }
@@ -74,7 +74,7 @@ export default class StaticFiled extends Effect{
 
                     elem.move_speed = 0
                     if(this.hand_cuffing){
-                        elem.attack_speed += 1000   
+                        elem.attack_speed += 2000   
                     }
                 }
             })
@@ -84,7 +84,7 @@ export default class StaticFiled extends Effect{
                     this.affected.set(elem.id, elem.move_speed)
                     elem.move_speed = 0
                     if(this.hand_cuffing){
-                        elem.attack_speed += 1000   
+                        elem.attack_speed += 2000   
                     }
                 }
             })
