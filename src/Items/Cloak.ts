@@ -1,8 +1,6 @@
 import Func from "../Func";
 import Character from "../Objects/src/Character";
 import Phase from "../Status/Phase";
-import Chance from "./Forgings/Chance";
-import Duration from "./Forgings/Duration";
 import Item from "./Item";
 
 export default class Cloak extends Item{
@@ -12,16 +10,17 @@ export default class Cloak extends Item{
         this.chance = 40
         this.name = 'cloak'
         this.type = 2
-        this.forge = [
-            new Chance(this),
-            new Duration(this)
-        ]
+        this.description = 'gives a chance to gain phasing when taking damage'
     }
 
     equip(character: Character): void {
         character.when_hited_triggers.push(this)
     }
     
+    getSpecialForgings(): string[] {
+        return ['chance', 'duration']
+    }
+
     trigger(character: Character){
         if(Func.chance(this.chance)){
             let status = new Phase(character.time)

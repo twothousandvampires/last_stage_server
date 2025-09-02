@@ -1,8 +1,7 @@
 import Character from "../Objects/src/Character";
-import Duration from "./Forgings/Duration";
 import Item from "./Item";
 
-export default class SkullOfFirstWarrior extends Item{
+export default class SkullOfFirstWarrior extends Item {
 
     kill_count: number
     countable: boolean
@@ -15,11 +14,13 @@ export default class SkullOfFirstWarrior extends Item{
         this.countable = true
         this.threshold = 8
         this.add_might = 8
-        this.name = 'skull of first warrior"'
+        this.name = 'skull of first warrior'
         this.type = 3
-        this.forge = [
-            new Duration(this)
-        ]
+        this.description = 'increases your might by 10 for 10 seconds after 10 kills'
+    }
+
+    getSpecialForgings(): string[] {
+        return ['duration']
     }
     
     equip(character: Character): void {

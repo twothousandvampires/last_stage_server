@@ -11,7 +11,7 @@ export default class Pierce extends Forging{
         this.max_value = 100
         this.name = 'pierce'
         this.stat = 'provides you a chance to ignore enemy armour'
-        this.gold_cost = 3
+        this.gold_cost = 6
     }
 
     forge(){

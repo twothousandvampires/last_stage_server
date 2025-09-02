@@ -15,6 +15,7 @@ import Blood from "../../Effects/Blood";
 import ToothExplode from "../../Effects/ToothExplode";
 import Character from "../Character";
 import HeavenVengeance from "../../../Abilities/Swordman/HeavenVengeance";
+import EmergencyOrdersTrigger from "../../../Triggers/EmergencyOrdersTrigger";
 
 export default class Swordman extends Character{
     
@@ -564,6 +565,17 @@ export default class Swordman extends Character{
                 },
                 cost: 1,
                 desc: 'gives a chance when hit to clear skill cd'
+            },
+            {
+                name: 'emergency orders',
+                canUse: (character: Character) => {
+                    return !character.when_say_phrase_triggers.some(elem => elem instanceof EmergencyOrdersTrigger)
+                },
+                teach: (character: Character) => {
+                    return character.when_say_phrase_triggers.push(new EmergencyOrdersTrigger())
+                },
+                cost: 3,
+                desc: 'when you speak can apply command ability buff'
             },
         ]
     }

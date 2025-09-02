@@ -8,7 +8,7 @@ export default class Distance extends Forging {
         this.max_value = 100
         this.name = 'distance'
         this.stat = 'increases distance for seaching targets'
-        this.gold_cost = 1
+        this.gold_cost = 3
     }
 
     forge(){

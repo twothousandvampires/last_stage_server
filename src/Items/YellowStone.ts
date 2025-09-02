@@ -1,5 +1,4 @@
 import Character from "../Objects/src/Character";
-import Count from "./Forgings/Count";
 import Item from "./Item";
 
 export default class YellowStone extends Item{
@@ -8,14 +7,16 @@ export default class YellowStone extends Item{
         this.count = 1
         this.name = 'yellow stone'
         this.type = 3
-        this.forge = [
-            new Count(this),
-        ]
+        this.description = 'increases a chance to resist status, when you resist gain a ward'
+    }
+
+    getSpecialForgings(): string[] {
+        return ['count']
     }
 
     equip(character: Character): void {
         character.on_status_resist_triggers.push(this)
-        character.status_resistance += 10
+        character.status_resistance += 5
     }
 
     trigger(character: Character){

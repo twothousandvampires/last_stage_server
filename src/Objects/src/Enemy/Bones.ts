@@ -19,6 +19,7 @@ export default class Bones extends Enemy{
         this.life_status = 2
         this.spawn_time = 1600
         this.ressurect_chance = 40
+        this.gold_revard = 2
         this.getState()
     }
 

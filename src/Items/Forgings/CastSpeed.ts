@@ -11,7 +11,7 @@ export default class CastSpeed extends Forging{
         this.max_value = 200
         this.name = 'cast speed'
         this.stat = 'increases your cast speed'
-        this.gold_cost = 3
+        this.gold_cost = 7
     }
 
     forge(player: Character){

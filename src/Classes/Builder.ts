@@ -10,8 +10,12 @@ import ArmourRate from "../Items/Forgings/ArmourRate"
 import AttackSpeed from "../Items/Forgings/AttackSpeed"
 import BlockChance from "../Items/Forgings/BlockChance"
 import CastSpeed from "../Items/Forgings/CastSpeed"
+import Chance from "../Items/Forgings/Chance"
+import Count from "../Items/Forgings/Count"
 import Critical from "../Items/Forgings/Critical"
+import Distance from "../Items/Forgings/Distance"
 import Durability from "../Items/Forgings/Durability"
+import Duration from "../Items/Forgings/Duration"
 import GoldFind from "../Items/Forgings/GoldFind"
 import Knowledge from "../Items/Forgings/Knowledge"
 import MaxResource from "../Items/Forgings/MaxResource"
@@ -162,6 +166,14 @@ export default class Builder{
                 return new BlockChance(item)
             case 'gold find':
                 return new GoldFind(item)
+            case 'chance':
+                return new Chance(item)
+            case 'distance':
+                return new Distance(item)
+            case 'count':
+                return new Count(item)
+            case 'duration':
+                return new Duration(item)
             default:    
                 return new NovaThenHit(item)
         }

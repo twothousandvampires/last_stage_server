@@ -11,7 +11,7 @@ export default class MaxResource extends Forging{
         this.max_value = 15
         this.name = 'resourses'
         this.stat = 'increases your value of maximum resourses'
-        this.gold_cost = 10
+        this.gold_cost = 12
     }
 
     forge(){

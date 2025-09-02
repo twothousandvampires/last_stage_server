@@ -11,7 +11,7 @@ export default class Critical extends Forging{
         this.max_value = 100
         this.name = 'critical'
         this.stat = 'increases your chance to deal double damage'
-        this.gold_cost = 3
+        this.gold_cost = 5
     }
 
     forge(){

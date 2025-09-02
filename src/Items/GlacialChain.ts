@@ -1,7 +1,6 @@
 import Func from "../Func";
 import FrostNova from "../Objects/Effects/FrostNova";
 import Character from "../Objects/src/Character";
-import Chance from "./Forgings/Chance";
 import Item from "./Item";
 
 export default class GlacialChain extends Item{
@@ -11,13 +10,11 @@ export default class GlacialChain extends Item{
         this.chance = 20
         this.name = 'glacial chain'
         this.type = 1
-        this.forge = [
-            new Chance(this)
-        ]
+        this.description = 'after using your non-utility skill you have a 25% chance to spell Frost Wave'
     }
 
     getSpecialForgings() {
-        return ['nova when hit']
+        return ['nova when hit', 'chance']
     }
 
     equip(character: Character): void {

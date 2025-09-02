@@ -1,6 +1,5 @@
 import Func from "../Func";
 import Character from "../Objects/src/Character";
-import Chance from "./Forgings/Chance";
 import Item from "./Item";
 
 export default class WhiteShield extends Item{
@@ -10,9 +9,10 @@ export default class WhiteShield extends Item{
         this.chance = 40
         this.name = 'white shield'
         this.type = 2
-        this.forge = [
-            new Chance(this),
-        ]
+        this.description = 'you have a chance to get ward when block'
+    }
+    getSpecialForgings(): string[] {
+        return ['chance']
     }
 
     equip(character: Character): void {

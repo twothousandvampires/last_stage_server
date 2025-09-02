@@ -11,7 +11,7 @@ export default class Will extends Forging{
         this.max_value = 20
         this.name = 'will'
         this.stat = 'increases your will'
-        this.gold_cost = 3
+        this.gold_cost = 5
     }
 
     forge(){

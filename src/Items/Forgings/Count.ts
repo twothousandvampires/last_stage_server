@@ -8,7 +8,7 @@ export default class Count extends Forging {
         this.max_value = 10
         this.name = 'count'
         this.stat = 'increases count of projectiles etc'
-        this.gold_cost = 3
+        this.gold_cost = 10
     }
 
     forge(){

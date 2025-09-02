@@ -1,8 +1,5 @@
 import Func from "../Func";
 import Character from "../Objects/src/Character";
-import ArmourRate from "./Forgings/ArmourRate";
-import Chance from "./Forgings/Chance";
-import Distance from "./Forgings/Distance";
 import Item from "./Item";
 
 export default class DoomMantia extends Item {
@@ -13,14 +10,15 @@ export default class DoomMantia extends Item {
         this.distance = 20
         this.name = 'doom mantia'
         this.type = 2
-        this.forge = [
-            new Distance (this),
-            new Chance(this)
-        ]
+        this.description = 'when you take lethal damage, there is a chance to redirect your death to a nearby unit'
     }
 
     equip(character: Character): void {
         character.player_take_lethal_damage_triggers.push(this)
+    }
+
+    getSpecialForgings(): string[] {
+        return ['chance', 'distance']
     }
     
     trigger(character: Character){

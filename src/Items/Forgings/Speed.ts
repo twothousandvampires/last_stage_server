@@ -11,7 +11,7 @@ export default class Speed extends Forging{
         this.max_value = 20
         
         this.stat = 'increases your speed'
-        this.gold_cost = 3
+        this.gold_cost = 5
     }
 
     forge(){

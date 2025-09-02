@@ -1,5 +1,4 @@
 import Character from "../Objects/src/Character";
-import GoldFind from "./Forgings/GoldFind";
 import Item from "./Item";
 
 export default class EmeraldKnife extends Item{
@@ -7,11 +6,9 @@ export default class EmeraldKnife extends Item{
         super()
         this.name = 'emerald knife'
         this.type = 1
-        this.forge = [
-            new GoldFind(this)
-        ]
+        this.description = 'increase a chance to get additional gold'
     }
-
+    
     equip(character: Character): void {
         character.gold_find += 25
     }

@@ -65,6 +65,7 @@ export default class Level{
     public time_between_wave_ms: number = 7500
     public time: number = Date.now()
     public started: number
+    public ambient_time: number = 0
 
     private need_to_check_grace: boolean = true
     private game_loop: NodeJS.Timeout | undefined = undefined
@@ -195,6 +196,11 @@ export default class Level{
     public tick(): void{
         this.time = Date.now()
         this.script.checkTime(this)
+
+        if(Func.chance(10) && this.time > this.ambient_time + 1500){
+            this.ambient_time = this.time
+            this.addSound('ambient', Func.random(20, 120), Func.random(10, 110))
+        }
 
         this.players.forEach(player => {
             player.act(this.time)

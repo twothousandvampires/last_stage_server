@@ -34,6 +34,7 @@ export default class FlyingBones extends Enemy{
         this.create_chance = 80
         this.ressurect_chance = 30
         this.want_to_cast = true
+        this.gold_revard = 3
         this.getState()
     }
 

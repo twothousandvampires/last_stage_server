@@ -9,7 +9,7 @@ export default class Chance extends Forging {
         this.max_value = 90
         this.name = 'chance'
         this.stat = 'increases chance to item proc'
-        this.gold_cost = 1
+        this.gold_cost = 5
     }
 
     forge(){
