@@ -23,10 +23,10 @@ export default abstract class GameObject {
 
     public isOutOfMap(x: number = this.x, y: number = this.y): boolean{
         if(this.zone_id === 0){
-            return x <= 10 || x >= 110 || y <= 20|| y > 120   
+            return x <= 10 || x >= 110 || y <= 20 || y >= 120   
         }
         else if(this.zone_id === 1){
-            return x <= 165 || x >= 195 || y <= 40 || y > 70
+            return x <= 165 || x >= 195 || y <= 40 || y >= 70
         }
 
         return false
