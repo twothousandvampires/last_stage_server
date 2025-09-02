@@ -16,6 +16,9 @@ export default class GameServer{
     private level: Level | undefined = undefined
     private clients: Map<string, Client> = new Map()
     private game_started: boolean = false
+    private realise: string = '1.0.0'
+    private realise_name: string | undefined = undefined
+
     new_game_timeout: any
     
     constructor(socket: Server){
@@ -69,7 +72,11 @@ export default class GameServer{
     private initSocket(): void{
         this.socket.on('connection', (socket: Socket) => {
 
-            socket.emit('server_status', this.game_started || (this.clients.size >= GameServer.MAX_PLAYERS))
+            socket.emit('server_status', {
+                status: this.game_started || (this.clients.size >= GameServer.MAX_PLAYERS),
+                realise: this.realise,
+                realise_name: this.realise_name
+            })
 
             if(!this.game_started && this.clients.size < GameServer.MAX_PLAYERS){
                 let client: Client = this.createNewClient(socket)
