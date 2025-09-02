@@ -29,7 +29,7 @@ export default class Teleportation extends FlyerAbility{
         this.teleport_x = Math.round(this.owner.pressed.over_x + this.owner.x - 40)
         this.teleport_y = Math.round(this.owner.pressed.over_y + this.owner.y - 40)
 
-        if(this.owner.isOutOfMap(this.teleport_x, this.teleport_x)){
+        if(this.owner.isOutOfMap(this.teleport_x, this.teleport_y)){
             this.teleport_x = undefined
             this.teleport_y = undefined
             return
