@@ -9,13 +9,16 @@ export default class Will extends Forging{
     constructor(item: Item){
         super(item)
         this.max_value = 20
-        this.stat = 'will'
+        this.name = 'will'
+        this.stat = 'increases your will'
+        this.gold_cost = 3
     }
 
     forge(){
-        if(this.canBeForged()){
+        if(this.canBeForged() && this.costEnough()){
             this.value += 1
             this.item.player.will += 1
+             this.payCost()
         }
     }
 

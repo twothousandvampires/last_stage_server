@@ -11,7 +11,8 @@ export default abstract class Item {
     public max_forgings: number = 4
     public type: number = 1
     public used: boolean = false
-    public duration: number = 0r
+    public duration: number = 0
+    public count: number = 0
 
     static list = [
         {
@@ -73,6 +74,14 @@ export default abstract class Item {
             name: "white shield",
             description: 'you have a chance to get ward when block'
         },
+        {
+            name: "emerald knife",
+            description: 'increase a chance to get additional gold'
+        },
+        {
+            name: "whispering shield",
+            description: 'increase a chance to block and..., whispers strange things sometimes'
+        },
     ]
 
     static forging_list_all = [
@@ -91,14 +100,16 @@ export default abstract class Item {
         'armour rate',
         'speed',
         'agility',
-        'regen time'
+        'regen time',
+        'block chance'
     ]
     
     static forging_list_type_3 = [
         'resist',
         'will',
         'knowledge',
-        'max resources'
+        'max resources',
+        'gold find'
     ]
 
 
@@ -131,6 +142,8 @@ export default abstract class Item {
         let forging: Forging = this.getRandomForging()
 
         forging.forge(this.player)
+
+        this.player.gold += forging.gold_cost
 
         this.forge.push(forging)
     }

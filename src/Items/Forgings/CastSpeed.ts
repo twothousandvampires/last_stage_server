@@ -9,13 +9,16 @@ export default class CastSpeed extends Forging{
     constructor(item: Item){
         super(item)
         this.max_value = 200
-        this.stat = 'cast speed'
+        this.name = 'cast speed'
+        this.stat = 'increases your cast speed'
+        this.gold_cost = 3
     }
 
     forge(player: Character){
-        if(this.canBeForged()){
+        if(this.canBeForged() && this.costEnough()){
             this.value += 20
             this.item.player.cast_speed -= 20
+             this.payCost()
         }
     }
 

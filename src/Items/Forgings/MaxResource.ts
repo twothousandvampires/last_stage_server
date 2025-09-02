@@ -9,13 +9,16 @@ export default class MaxResource extends Forging{
     constructor(item: Item){
         super(item)
         this.max_value = 15
-        this.stat = 'maximum resourses'
+        this.name = 'resourses'
+        this.stat = 'increases your value of maximum resourses'
+        this.gold_cost = 10
     }
 
     forge(){
-        if(this.canBeForged()){
+        if(this.canBeForged() && this.costEnough()){
             this.value ++
             this.item.player.max_resource += 1
+             this.payCost()
         }
     }
 

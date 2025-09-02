@@ -60,6 +60,7 @@ export default class Cultist extends Character{
         this.pain_extract = false
 
         this.recent_hits = []
+        this.block_chance = 65
     }
 
     getSkipDamageStateChance(){
@@ -247,7 +248,7 @@ export default class Cultist extends Character{
 
         this.playerWasHited()
         
-        let b_chance = 65 + this.durability
+        let b_chance = this.block_chance + this.durability
 
         if(b_chance > 90){
             b_chance = 90
@@ -335,7 +336,7 @@ export default class Cultist extends Character{
                         character.first_ability.cost ++
                     }
                 },
-                cost: 1,
+                cost: 5,
                 desc: 'you will create additional rune for each resourse but now it has coldown for each rune created by this way'
             },
             {
@@ -350,7 +351,7 @@ export default class Cultist extends Character{
                         character.first_ability.cost ++
                     }
                 },
-                cost: 1,
+                cost: 2,
                 desc: 'increases radius of explosion'
             },
             {
@@ -364,7 +365,7 @@ export default class Cultist extends Character{
                         character.first_ability.fast_detonation = true
                     }
                 },
-                cost: 1,
+                cost: 3,
                 desc: 'increases detonation rate'
             },
             {
@@ -391,7 +392,7 @@ export default class Cultist extends Character{
                     character.first_ability = new SoulShatter(this)
                     character.updateClientSkill()
                 },
-                cost: 1,
+                cost: 4,
                 desc: 'hit the single enemy if they died, create a soul projectiles count them based of your resourses'
             },
             {
@@ -419,7 +420,7 @@ export default class Cultist extends Character{
                         character.first_ability.soul_extraction = true
                     }
                 },
-                cost: 1,
+                cost: 2,
                 desc: 'increases the chance to get grace from killing enemies'
             },
             {
@@ -436,7 +437,7 @@ export default class Cultist extends Character{
                         character.second_ability.deafening_wave = true
                     }
                 },
-                cost: 1,
+                cost: 2,
                 desc: 'increases duration and radius of stuning'
             },
             {
@@ -452,7 +453,7 @@ export default class Cultist extends Character{
                         character.second_ability.hate = true
                     }
                 },
-                cost: 1,
+                cost: 2,
                 desc: 'now your shield bash does not stun instead it has a chance to shatter enemy and to realise they bones that also can damage enemy'
             },
             {
@@ -467,7 +468,7 @@ export default class Cultist extends Character{
                         character.second_ability.coordination = true
                     }
                 },
-                cost: 1,
+                cost: 3,
                 desc: 'now your shield bash has a chance to reduce attack speed by 50% and now it has chance not to be used after using'
             },
             {
@@ -527,7 +528,7 @@ export default class Cultist extends Character{
                         character.third_ability.restless_warriors = true
                     }
                 },
-                cost: 1,
+                cost: 3,
                 desc: 'your ghost warriors from unleash pain ability deal 2 hits'
             },
             {
@@ -542,7 +543,7 @@ export default class Cultist extends Character{
                         character.third_ability.ring_of_pain = true
                     }
                 },
-                cost: 1,
+                cost: 3,
                 desc: 'increases radius'
             },
             {
@@ -628,7 +629,7 @@ export default class Cultist extends Character{
                 teach: (character: Character) => {
                     character.service = true
                 },
-                cost: 1,
+                cost: 2,
                 desc: 'you have a chance to get resourse when you regen life'
             },
             {
@@ -639,7 +640,7 @@ export default class Cultist extends Character{
                 teach: (character: Character) => {
                     character.conduct_of_pain = true
                 },
-                cost: 1,
+                cost: 2,
                 desc: 'you have a chance to get resourse when you block hit'
             },
             {
@@ -650,7 +651,7 @@ export default class Cultist extends Character{
                 teach: (character: Character) => {
                     character.pain_extract = true
                 },
-                cost: 1,
+                cost: 3,
                 desc: 'you have a chance to get resourse when you kill enemies'
             },
             {
@@ -665,7 +666,7 @@ export default class Cultist extends Character{
                        character.updateClientSkill()
                     }  
                 },
-                cost: 1,
+                cost: 5,
                 desc: 'creates a circle of fire by damaging youself in which enemies take damage, the frequency of receiving damage depends on courage'
             },
             {
@@ -679,7 +680,7 @@ export default class Cultist extends Character{
                        character.second_ability.consuming = true
                     }  
                 },
-                cost: 1,
+                cost: 2,
                 desc: 'increases radius'
             },
             {

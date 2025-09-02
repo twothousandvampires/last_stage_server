@@ -9,13 +9,16 @@ export default class Speed extends Forging{
     constructor(item: Item){
         super(item)
         this.max_value = 20
-        this.stat = 'speed'
+        
+        this.stat = 'increases your speed'
+        this.gold_cost = 3
     }
 
     forge(){
-        if(this.canBeForged()){
+        if(this.canBeForged() && this.costEnough()){
             this.value += 1
             this.item.player.speed += 1
+             this.payCost()
         }
     }
 

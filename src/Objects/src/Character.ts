@@ -2,6 +2,7 @@ import Ability from "../../Abilities/Ability"
 import Builder from "../../Classes/Builder"
 import Func from "../../Func"
 import Forging from "../../Items/Forgings/Forging"
+import Item from "../../Items/Item"
 import item from "../../Items/Item"
 import Level from "../../Level"
 import BlessedArmour from "../../Status/BlessedArmour"
@@ -44,7 +45,7 @@ export default abstract class Character extends Unit{
     might: number = 0
 
     base_regen_time: number = 10000
-    grace: number = 100
+    grace: number = 1
     can_get_courage: boolean = true
 
     on_kill_triggers: any[] = []
@@ -85,7 +86,10 @@ export default abstract class Character extends Unit{
     mad_target: any
     after_grace_statuses: Status[] = []
     chance_second_skill_not_to_be_used: number = 0
+    gold_find: number = 0
     action_is_end: boolean = false
+    public gold: number = 0
+    public block_chance: number = 0
   
     constructor(level: Level){
         super(level)
@@ -117,10 +121,9 @@ export default abstract class Character extends Unit{
     }
 
     showForgings(){
-        let to_forge = this.item.filter(elem => elem.forge.length)
-
         this.level.socket.to(this.id).emit('show_forgings', {
-            items: to_forge
+            items: this.item,
+            gold: this.gold
         })
     }
 
@@ -169,10 +172,6 @@ export default abstract class Character extends Unit{
         return 20000
     }
 
-    public createItem(item_name: string): void{
-        this.item = Builder.createItem(item_name)
-    }
-    
     protected payCost(): void{
         this.resource -= this.pay_to_cost
         this.pay_to_cost = 0
@@ -180,6 +179,14 @@ export default abstract class Character extends Unit{
 
     public statusWasApplied(): void{
         
+    }
+
+    public addGold(value: number): void{
+        this.gold += value
+
+        if(Func.chance(this.gold_find)){
+             this.gold ++
+        }
     }
 
     public sayPhrase(): void{
@@ -317,19 +324,6 @@ export default abstract class Character extends Unit{
                     cost: 1,
                     desc: 'give a life'
                 },
-                // {
-                //     name: 'forge',
-                //     canUse: (character: Character) => {
-                //         if(!character.item) return false
-
-                //         return character.item.canBeForged(character)
-                //     },
-                //     teach: (character: Character) => {
-                //         character.item?.forge(character)
-                //     },
-                //     cost: 1,
-                //     desc: 'forge your equip'
-                // },
                 {
                     name: 'chosen one',
                     canUse: (character: Character) => {
@@ -349,7 +343,7 @@ export default abstract class Character extends Unit{
                     teach: (character: Character) => {
                         character.blessed = true
                     },
-                    cost: 1,
+                    cost: 2,
                     desc: 'bones killed by your have reduced chance to ressurect'
                 },
                  {
@@ -360,7 +354,7 @@ export default abstract class Character extends Unit{
                     teach: (character: Character) => {
                         character.pierce += 15
                     },
-                    cost: 1,
+                    cost: 2,
                     desc: 'give a chance to ignore armour'
                 },
                 {
@@ -371,7 +365,7 @@ export default abstract class Character extends Unit{
                     teach: (character: Character) => {
                         character.critical += 15
                     },
-                    cost: 1,
+                    cost: 2,
                     desc: 'give a chance to deal double damage'
                 },
                 {
@@ -382,7 +376,7 @@ export default abstract class Character extends Unit{
                     teach: (character: Character) => {
                         character.armour_rate += 3
                     },
-                    cost: 1,
+                    cost: 3,
                     desc: 'adds armour rate'
                 },
                 {
@@ -398,7 +392,7 @@ export default abstract class Character extends Unit{
                             character.grace = Math.floor(character.grace / 2)
                         }
                     },
-                    cost: 1,
+                    cost: 0,
                     desc: 'lose or get grace'
                 },
                 {
@@ -409,7 +403,7 @@ export default abstract class Character extends Unit{
                     teach: (character: Character) => {
                         character.status_resistance += 10
                     },
-                    cost: 1,
+                    cost: 2,
                     desc: 'increases chance to resist status'
                 },
                 {
@@ -420,7 +414,7 @@ export default abstract class Character extends Unit{
                     teach: (character: Character) => {
                         character.lust_for_life = true
                     },
-                    cost: 1,
+                    cost: 4,
                     desc: 'you have a chance based of your courage to regen more than life status limit("good")'
                 },
                 {
@@ -431,7 +425,7 @@ export default abstract class Character extends Unit{
                     teach: (character: Character) => {
                         character.light_r += 2
                     },
-                    cost: 2,
+                    cost: 1,
                     desc: 'increases your vision'
                 },
                 {
@@ -504,11 +498,28 @@ export default abstract class Character extends Unit{
     }
 
     public exitGrace(): void{
+        this.can_generate_upgrades = true
         let portal: Effect | undefined = this.level.binded_effects.find(elem => elem.name === 'grace')
 
         if(portal instanceof Grace){
             portal.playerLeave(this)
         }
+    }
+
+    public buyNewItem(){
+        if(this.gold < 30) return
+
+        this.gold -= 30
+
+        let item_name = Item.list[Math.floor(Math.random() * Item.list.length)].name
+
+        let item = Builder.createItem(item_name)
+
+        item.setPlayer(this)
+
+        this.item.push(item)
+
+        this.closeForgings()
     }
 
     protected updateClientSkill(): void{
@@ -552,14 +563,18 @@ export default abstract class Character extends Unit{
 
         if(!item) return
         
-        console.log('char')
+        if(this.gold < 10) return
+
+        this.gold -= 10
+        
         item.unlockForging()
         this.closeForgings()
     }
 
     public holdGrace(): void{
+        this.can_generate_upgrades = false
         this.grace += 3
-        this.exitGrace()
+        this.closeUpgrades()
     }
 
     public closeUpgrades(): void{

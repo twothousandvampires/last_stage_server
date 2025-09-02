@@ -72,7 +72,7 @@ export default class FlameWall extends FlyerAbility{
                 let n_y = Math.cos(a) * l * 18
 
                 let flame = new FlameWallObject(this.level, this.scorching ? 500 : 1000, 9000)
-                flame.frendly_flame = this.frendly_flame
+                flame.frendly_flame = this.second_ability.frendly_flame
                 
                 flame.setOwner(this)
                 flame.setPoint(this.x + n_x, this.y + n_y)

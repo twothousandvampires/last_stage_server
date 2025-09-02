@@ -9,11 +9,14 @@ import Character from './Objects/src/Character'
 
 export default class GameServer{
 
+    static MAX_PLAYERS: number = 2
+
     public socket: Server
 
     private level: Level | undefined = undefined
     private clients: Map<string, Client> = new Map()
     private game_started: boolean = false
+    new_game_timeout: any
     
     constructor(socket: Server){
         this.socket = socket
@@ -66,9 +69,9 @@ export default class GameServer{
     private initSocket(): void{
         this.socket.on('connection', (socket: Socket) => {
 
-            socket.emit('server_status', this.game_started)
+            socket.emit('server_status', this.game_started || (this.clients.size >= GameServer.MAX_PLAYERS))
 
-            if(!this.game_started){
+            if(!this.game_started && this.clients.size < GameServer.MAX_PLAYERS){
                 let client: Client = this.createNewClient(socket)
 
                 socket.on('change_class', (class_name: string) => {
@@ -136,11 +139,20 @@ export default class GameServer{
                     client.character.setLastInputs(inputs)
                 })
 
+                socket.on('buy', (inputs: object) => {   
+                    if(!client.character) return
+
+                    client.character.buyNewItem()
+                })
+
                 socket.on('player_ready', () => {
+
                     client.ready = !client.ready
 
                     if(this.allPlayersAreReady()){
-                        setTimeout(() => {
+                        clearTimeout(this.new_game_timeout)
+                        
+                        this.new_game_timeout = setTimeout(() => {
                             let all_still_ready: boolean = this.allPlayersAreReady()
                             if(all_still_ready){
                                 this.level = new Level(this)

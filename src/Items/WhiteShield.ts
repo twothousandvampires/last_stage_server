@@ -1,31 +1,26 @@
 import Func from "../Func";
 import Character from "../Objects/src/Character";
+import Chance from "./Forgings/Chance";
 import Item from "./Item";
 
 export default class WhiteShield extends Item{
-    power: number
 
     constructor(){
         super()
-        this.power = 1
+        this.chance = 40
         this.name = 'white shield'
         this.type = 2
+        this.forge = [
+            new Chance(this),
+        ]
     }
 
-    canBeForged(character: Character): boolean {
-        return this.power < 4
-    }
-    
-    forge(character: Character): void {
-        this.power ++
-    }
-    
     equip(character: Character): void {
         character.when_block_triggers.push(this)
     }
 
     trigger(character: Character){
-        if(Func.chance(this.power * 10)){
+        if(Func.chance(this.chance)){
             character.ward ++
         }
     }

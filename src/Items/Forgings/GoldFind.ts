@@ -1,24 +1,23 @@
-import Character from "../../Objects/src/Character";
 import Item from "../Item";
 import Forging from "./Forging";
 
-export default class Critical extends Forging{
+export default class GoldFind extends Forging {
 
     value: number = 0
 
     constructor(item: Item){
         super(item)
         this.max_value = 100
-        this.name = 'critical'
-        this.stat = 'increases your chance to deal double damage'
-        this.gold_cost = 3
+        this.name = 'gold find'
+        this.stat = 'increase a chance to get additional gold'
+        this.gold_cost = 5
     }
 
     forge(){
         if(this.canBeForged() && this.costEnough()){
-            this.value ++
-            this.item.player.critical += 1
-             this.payCost()
+            this.value += 5
+            this.item.player.gold_find += 5
+            this.payCost()
         }
     }
 
@@ -29,6 +28,6 @@ export default class Critical extends Forging{
     canBeForged(): boolean {
         if(!this.item || !this.item.player) return false
 
-        return this.item.player.critical < this.max_value
+        return this.item.player.gold_find < this.max_value
     }
 }

@@ -45,6 +45,7 @@ export default class Flyer extends Character{
         this.charged_shield = false
         this.mental_shield = false
         this.recent_cast = []
+        this.block_chance = 100
     }
 
     getAdditionalRadius(){
@@ -64,7 +65,7 @@ export default class Flyer extends Character{
                             character.second_ability.scorching = true
                         }
                     },
-                    cost: 1,
+                    cost: 3,
                     desc: 'your flamewall burn faster'
                 },
                 {
@@ -87,7 +88,7 @@ export default class Flyer extends Character{
                     teach: (character: Character) => {
                         character.takeoff = true
                     },
-                    cost: 1,
+                    cost: 2,
                     desc: 'gives your phasing while you are defended'
                 },
                  {
@@ -102,7 +103,7 @@ export default class Flyer extends Character{
                             character.updateClientSkill()
                         }
                     },
-                    cost: 1,
+                    cost: 5,
                     desc: 'fires a sereral of teeth'
                 },
                 {
@@ -116,7 +117,7 @@ export default class Flyer extends Character{
                             character.first_ability.body_melting = true
                         }
                     },
-                    cost: 1,
+                    cost: 2,
                     desc: 'gives your fireball a chance to pierce the enemy'
                 },
                 {
@@ -130,7 +131,7 @@ export default class Flyer extends Character{
                             character.first_ability.ignite = true
                         }
                     },
-                    cost: 1,
+                    cost: 3,
                     desc: 'your fireball ignites the floor after explosion'
                 },
                 {
@@ -172,7 +173,7 @@ export default class Flyer extends Character{
                             character.first_ability.high_voltage = true
                         }
                     },
-                    cost: 1,
+                    cost: 2,
                     desc: 'now your lightning bolt does not apply shock and hit up to 3 targets by default also number of hitting enemies is increased by might'
                 },
                 {
@@ -187,7 +188,7 @@ export default class Flyer extends Character{
                             character.first_ability.cost += 1
                         }
                     },
-                    cost: 1,
+                    cost: 2,
                     desc: 'now your lightning bolt also hit 2 additional times in close area but mana cost is increased'
                 },
                 {
@@ -201,7 +202,7 @@ export default class Flyer extends Character{
                             character.second_ability.improved_chain_reaction = true
                         }
                     },
-                    cost: 1,
+                    cost: 2,
                     desc: 'increases the chain chance'
                 },
                 {
@@ -229,7 +230,7 @@ export default class Flyer extends Character{
                             character.third_ability.lightning_waves = true
                         }
                     },
-                    cost: 1,
+                    cost: 4,
                     desc: 'now you crates wavas of electricity instead lightnings'
                 },
                 {
@@ -243,7 +244,7 @@ export default class Flyer extends Character{
                             character.third_ability.air_form = true
                         }
                     },
-                    cost: 1,
+                    cost: 2,
                     desc: 'after cast you cant take damage for 3 seconds'
                 },
                 {
@@ -257,7 +258,7 @@ export default class Flyer extends Character{
                             character.third_ability.ice_genesis = true
                         }
                     },
-                    cost: 1,
+                    cost: 5,
                     desc: 'if you kill the enemy there is a chance to create frost sphere'
                 },
                 {
@@ -271,7 +272,7 @@ export default class Flyer extends Character{
                             character.third_ability.cold_spires = true
                         }
                     },
-                    cost: 1,
+                    cost: 5,
                     desc: 'after cast you create a cold spires which freeze enemies and explodes'
                 },
                 {
@@ -340,7 +341,7 @@ export default class Flyer extends Character{
                             character.allow_mana_regen_while_def = true
                         }
                     },
-                    cost: 1,
+                    cost: 5,
                     desc: 'you can regen mana while you are defended'
                 },
                 {
@@ -368,7 +369,7 @@ export default class Flyer extends Character{
                             character.updateClientSkill()
                         }
                     },
-                    cost: 1,
+                    cost: 3,
                     desc: 'creates a beam of energy which burn enemies'
                 },
                 {
@@ -571,7 +572,7 @@ export default class Flyer extends Character{
 
         this.playerWasHited()
 
-        if(this.state === 'defend' && this.resource > 0){
+        if(this.state === 'defend' && this.resource > 0 && Func.chance(this.block_chance)){
 
             if(this.charged_shield && Func.chance(75)){
                 let target = this.level.enemies[Math.floor(Math.random() * this.level.enemies.length)]

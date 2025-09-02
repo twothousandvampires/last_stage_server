@@ -5,19 +5,38 @@ export default abstract class Forging{
 
     stat: string | undefined
     max_value: number = 0
-
+    gold_cost: number = 1
+    name: string = ''
+    value: number = 0
+    
     constructor(protected item: Item){
 
     }
 
     abstract forge(player: Character | undefined): void
 
+    costEnough(){
+        if(!this.item) return false
+        if(!this.item.player) return false
+
+        return this.item.player.gold >= this.gold_cost
+    }
+
+    payCost(){
+        if(!this.item) return
+        if(!this.item.player) return
+
+        this.item.player.gold -= this.gold_cost
+    }
+
     toJSON(){
        return {
-           name: this.stat,
+           stat: this.stat,
            max: this.max_value,
            value: this.getValue(),
-           can: this.canBeForged()
+           can: this.canBeForged() && this.costEnough(),
+           cost: this.gold_cost,
+           name: this.name
        }
     }
 

@@ -3,13 +3,16 @@ import ChargedBow from "../Items/ChargedBow"
 import Cloak from "../Items/Cloak"
 import DaggerOfSmoke from "../Items/DaggerOfSmoke"
 import DoomMantia from "../Items/DoomMantia"
+import EmeraldKnife from "../Items/EmeraldKnife"
 import FlameRing from "../Items/FlameRing"
 import Agility from "../Items/Forgings/Agility"
 import ArmourRate from "../Items/Forgings/ArmourRate"
 import AttackSpeed from "../Items/Forgings/AttackSpeed"
+import BlockChance from "../Items/Forgings/BlockChance"
 import CastSpeed from "../Items/Forgings/CastSpeed"
 import Critical from "../Items/Forgings/Critical"
 import Durability from "../Items/Forgings/Durability"
+import GoldFind from "../Items/Forgings/GoldFind"
 import Knowledge from "../Items/Forgings/Knowledge"
 import MaxResource from "../Items/Forgings/MaxResource"
 import Might from "../Items/Forgings/Might"
@@ -28,6 +31,7 @@ import SoulAccumulator from "../Items/SoulAccumulator"
 import SparklingHelmet from "../Items/SparklingHelmet"
 import Staff from "../Items/Staff"
 import WallOfBones from "../Items/WallOfBones"
+import WhisperingShield from "../Items/WhisperingShield"
 import WhiteShield from "../Items/WhiteShield"
 import YellowStone from "../Items/YellowStone"
 import Level from "../Level"
@@ -114,6 +118,12 @@ export default class Builder{
         else if(item_name === 'white shield'){
             return new WhiteShield()
         }
+        else if(item_name === 'emerald knife'){
+            return new EmeraldKnife()
+        }
+        else if(item_name === 'whispering shield'){
+            return new WhisperingShield()
+        }
     }
 
     static createForging(name: string, item: Item){
@@ -148,6 +158,10 @@ export default class Builder{
                 return new Regen(item)
             case 'cast speed':
                 return new CastSpeed(item)
+            case 'block chance':
+                return new BlockChance(item)
+            case 'gold find':
+                return new GoldFind(item)
             default:    
                 return new NovaThenHit(item)
         }

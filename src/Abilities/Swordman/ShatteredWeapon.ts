@@ -11,6 +11,7 @@ export default class ShatteredWeapon extends SwordmanAbility{
         this.used = false
         this.name = 'shattered weapon'
         this.cost = 4
+        this.cd = 5000
     }
 
     canUse(): boolean {

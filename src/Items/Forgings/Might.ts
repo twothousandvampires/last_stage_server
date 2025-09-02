@@ -9,13 +9,16 @@ export default class Might extends Forging{
     constructor(item: Item){
         super(item)
         this.max_value = 20
-        this.stat = 'might'
+        this.name = 'might'
+        this.stat = 'increases your might'
+        this.gold_cost = 3
     }
 
     forge(){
-        if(this.canBeForged()){
+        if(this.canBeForged() && this.costEnough()){
             this.value += 1
             this.item.player.might += 1
+            this.payCost()
         }
     }
 

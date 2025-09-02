@@ -1,28 +1,22 @@
 import Func from "../Func";
 import { SmokeDaggerShard } from "../Objects/Projectiles/SmokeDaggerShard";
 import Character from "../Objects/src/Character";
+import Chance from "./Forgings/Chance";
+import Count from "./Forgings/Count";
 import Item from "./Item";
 
 export default class DaggerOfSmoke extends Item{
     
-    chance: number
-    power: number
-
     constructor(){
         super()
         this.chance = 40
-        this.power = 0
         this.name = 'dagger of smoke'
         this.type = 1
-    }
-
-    canBeForged(character: Character): boolean {
-        return this.power < 3
-    }
-    
-    forge(character: Character): void {
-        this.power ++
-        this.chance += 5
+        this.count = 3
+        this.forge = [
+            new Chance(this),
+            new Count(this)
+        ]
     }
 
     equip(character: Character): void {
@@ -34,7 +28,7 @@ export default class DaggerOfSmoke extends Item{
             let box = character.getBoxElipse()
             box.r = 9
 
-            let count = character.level.enemies.filter(elem => Func.elipseCollision(box, elem.getBoxElipse())).length
+            let count = this.count
             
             let zones = 6.28 / count
     

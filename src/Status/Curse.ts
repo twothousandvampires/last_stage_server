@@ -5,7 +5,7 @@ export default class Curse extends Status{
  
     constructor(public time: number){
         super(time)
-        this.name = 'curse'
+        this.name = 'imbecility'
         this.need_to_check_resist = true
     }
 
@@ -17,7 +17,7 @@ export default class Curse extends Status{
             this.unit.statusWasApplied()
 
             this.unit.newStatus({
-                name: 'curse',
+                name: 'imbecility',
                 duration: this.duration,
                 desc: 'cannot use abilities'
             })

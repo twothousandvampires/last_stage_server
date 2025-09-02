@@ -23,6 +23,7 @@ export abstract class Enemy extends Unit{
     create_chance: number
     count_as_killed: boolean
     say_z: number = 12
+    gold_revard: number = 1
   
     constructor(level: Level){
         super(level)
@@ -195,6 +196,9 @@ export abstract class Enemy extends Unit{
             this.is_dead = true
             this.create_grace_chance += unit?.additional_chance_grace_create ? unit?.additional_chance_grace_create : 0
             unit?.succesefulKill()
+            //todo
+            unit?.addGold(this.gold_revard)
+
             this.setDyingAct()
         }
     }

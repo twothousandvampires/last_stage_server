@@ -11,13 +11,16 @@ export default class NovaThenHit extends Forging{
     constructor(item: Item){
         super(item)
         this.max_value = 80
+        this.name = 'frost nova'
         this.stat = 'chance to cast frost nova when hit'
+        this.gold_cost = 20
     }
 
     forge(player: Character){
-        if(this.canBeForged()){
+        if(this.canBeForged() && this.costEnough()){
             if(!player.on_hit_triggers.some(elem => elem instanceof NovaThenHit)){
                 player.on_hit_triggers.push(this)
+                 this.payCost()
             }
         
             this.value += 15

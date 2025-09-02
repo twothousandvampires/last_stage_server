@@ -9,13 +9,16 @@ export default class Pierce extends Forging{
     constructor(item: Item){
         super(item)
         this.max_value = 100
-        this.stat = 'pierce'
+        this.name = 'pierce'
+        this.stat = 'provides you a chance to ignore enemy armour'
+        this.gold_cost = 3
     }
 
     forge(){
-        if(this.canBeForged()){
+        if(this.canBeForged() && this.costEnough()){
             this.value ++
             this.item.player.pierce += 1
+             this.payCost()
         }
     }
 

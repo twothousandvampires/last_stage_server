@@ -191,7 +191,7 @@ export default class characterTemplate{
         }
         else if(class_name === 'cultist'){
             this.name = 'cultist'
-            this.stat_count = 522
+            this.stat_count = 5
             this.stats = {
                 might: 0,
                 speed: 0,

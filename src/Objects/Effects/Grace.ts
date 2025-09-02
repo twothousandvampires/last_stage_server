@@ -4,6 +4,7 @@ import TimeStoped from "../../Status/TimeStoped";
 import Character from "../src/Character";
 import Effect from "./Effects";
 import Forger from "./Forger";
+import Gate from "./Gate";
 import Star from "./Star";
 import Teacher from "./Teacher";
 
@@ -24,7 +25,7 @@ export default class Grace extends Effect{
     }
 
     act(time: number){
-        if(time - this.time >= 300000){
+        if(time - this.time >= 60000){
             this.closeGate()
             return
         }
@@ -46,7 +47,7 @@ export default class Grace extends Effect{
                     })
 
                     let status = new TimeStoped(elem.time)
-                    status.setDuration(30000)
+                    status.setDuration(60000)
 
                     this.level.setStatus(elem, status)
 
@@ -126,6 +127,10 @@ export default class Grace extends Effect{
 
         let forger = new Forger(this.level)
         this.level.binded_effects.push(forger)
+
+        
+        let exit = new Gate(this.level)
+        this.level.binded_effects.push(exit)
 
         let stars_count = 60
         let centr_x = 180

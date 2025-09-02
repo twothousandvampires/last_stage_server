@@ -15,12 +15,6 @@ import Status from "./Status/Status"
 import GameServer from "./GameServer"
 import Sound from "./Types/Sound"
 import { Enemy } from "./Objects/src/Enemy/Enemy"
-import BossMeeting from "./Scenarios/BossMeeting"
-import ClosedGate from "./Objects/Effects/ClosedGate"
-import BonesAttack from "./Scenarios/BonesAttack"
-import CircleOfGhostWarriors from "./Scenarios/CircleOfGhostWarriors"
-import DeadByPiles from "./Scenarios/DeadByPiles"
-import Penta from "./Scenarios/Penta"
 
 export default class Level{
     static enemy_list = [
@@ -110,7 +104,9 @@ export default class Level{
         let are_all_dead: boolean = this.players.every(elem => elem.is_dead)
         if(are_all_dead){
             setTimeout(() => {
-                this.endGame()
+                if(this.players.length){
+                    this.endGame()
+                }   
             }, 3000)
         }
     }
@@ -235,6 +231,7 @@ export default class Level{
         if(diff > 0) return
 
         let exist: boolean = this.binded_effects.some(elem => elem instanceof Grace)
+
         if(exist){
             this.grace_trashold ++
             return
@@ -243,7 +240,7 @@ export default class Level{
         diff = Math.abs(diff)
         let chance = 20 + diff
 
-        if(true){
+        if(chance){
             this.grace_trashold += this.grace_trashold
             let portal: Grace = new Grace(this)
             while(portal.isOutOfMap()){

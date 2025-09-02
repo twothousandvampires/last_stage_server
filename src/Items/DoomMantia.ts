@@ -19,15 +19,6 @@ export default class DoomMantia extends Item {
         ]
     }
 
-    // canBeForged(character: Character): boolean {
-    //     return t
-    // }
-
-    // forge(character: Character): void {
-    //     this.power ++
-    //     this.chance += 5
-    // }
-
     equip(character: Character): void {
         character.player_take_lethal_damage_triggers.push(this)
     }

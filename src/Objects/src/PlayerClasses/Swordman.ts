@@ -15,7 +15,6 @@ import Blood from "../../Effects/Blood";
 import ToothExplode from "../../Effects/ToothExplode";
 import Character from "../Character";
 import HeavenVengeance from "../../../Abilities/Swordman/HeavenVengeance";
-import Star from "../../Effects/Star";
 
 export default class Swordman extends Character{
     
@@ -46,6 +45,7 @@ export default class Swordman extends Character{
         this.life_status = 3
         this.base_regen_time = 10000
         this.recent_kills = []
+        this.block_chance = 50
     }
 
     getTargetsCount(){
@@ -179,7 +179,7 @@ export default class Swordman extends Character{
 
         this.playerWasHited()
 
-        let b_chance = 50 + this.agility * 3
+        let b_chance = this.block_chance + this.agility * 3
 
         if(b_chance > 90){
             b_chance = 90
@@ -253,7 +253,7 @@ export default class Swordman extends Character{
                         character.first_ability.echo_swing = true
                     }
                 },
-                cost: 1,
+                cost: 3,
                 desc: 'gives your weapon swing chance to land an additional swing after a short time'
             },
             {
@@ -281,7 +281,7 @@ export default class Swordman extends Character{
                         character.first_ability.light_grip = true
                     }
                 },
-                cost: 3,
+                cost: 2,
                 desc: 'gives your weapon throw ability a chance to reduce cd time between uses by 50%'
             },
             {
@@ -295,7 +295,7 @@ export default class Swordman extends Character{
                         character.first_ability.multiple = true
                     }
                 },
-                cost: 1,
+                cost: 5,
                 desc: 'can create additional copies your throwed weapon'
             },
             {
@@ -365,7 +365,7 @@ export default class Swordman extends Character{
                         character.second_ability.destroyer = true
                     }
                 },
-                cost: 3,
+                cost: 2,
                 desc: 'gives a chance to deal damage by charge ability'
             },
             {
@@ -479,7 +479,7 @@ export default class Swordman extends Character{
                         character.updateClientSkill()
                     }
                 },
-                cost: 1,
+                cost: 3,
                 desc: 'fires a magic fragments of your weapon when it hits walls or enemies it will returns and increases your armour rate'
             },
             {
@@ -492,7 +492,7 @@ export default class Swordman extends Character{
                         character.attack_radius ++
                     }
                 },
-                cost: 1,
+                cost: 2,
                 desc: 'increases attack range'
             },
             {
@@ -505,7 +505,7 @@ export default class Swordman extends Character{
                         character.attack_speed -= 80
                     }
                 },
-                cost: 1,
+                cost: 2,
                 desc: 'increases attack speed'
             },
             {
@@ -518,7 +518,7 @@ export default class Swordman extends Character{
                         character.max_resource ++
                     }
                 },
-                cost: 2,
+                cost: 4,
                 desc: 'increases maximum of resource'
             },
             {
@@ -533,7 +533,7 @@ export default class Swordman extends Character{
                         character.updateClientSkill()
                     }
                 },
-                cost: 2,
+                cost: 3,
                 desc: 'increases maximum of resource'
             },
             {
@@ -547,7 +547,7 @@ export default class Swordman extends Character{
                         character.first_ability.eye = true
                     }
                 },
-                cost: 2,
+                cost: 3,
                 desc: 'increases radius of serching targets by your courage'
             },
             {
@@ -562,7 +562,7 @@ export default class Swordman extends Character{
                         character.when_hited_triggers.push(character.first_ability)
                     }
                 },
-                cost: 2,
+                cost: 1,
                 desc: 'gives a chance when hit to clear skill cd'
             },
         ]

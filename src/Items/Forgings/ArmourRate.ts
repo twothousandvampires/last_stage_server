@@ -9,13 +9,16 @@ export default class ArmourRate extends Forging{
     constructor(item: Item){
         super(item)
         this.max_value = 90
-        this.stat = 'armour rate'
+        this.name = 'armour'
+        this.stat = 'increases your armour rate'
+        this.gold_cost = 2
     }
 
     forge(){
-        if(this.canBeForged()){
+        if(this.canBeForged() && this.costEnough()){
             this.value ++
             this.item.player.armour_rate += 1
+            this.payCost()
         }
     }
 

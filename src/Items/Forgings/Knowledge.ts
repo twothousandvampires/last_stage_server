@@ -9,13 +9,16 @@ export default class Knowledge extends Forging{
     constructor(item: Item){
         super(item)
         this.max_value = 20
-        this.stat = 'knowledge'
+        this.name = 'knowledge'
+        this.stat = 'increases your knowledge'
+        this.gold_cost = 3
     }
 
     forge(){
-        if(this.canBeForged()){
+        if(this.canBeForged() && this.costEnough()){
             this.value += 1
             this.item.player.knowledge += 1
+             this.payCost()
         }
     }
 

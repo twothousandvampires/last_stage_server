@@ -1,25 +1,17 @@
 import Character from "../Objects/src/Character";
+import Count from "./Forgings/Count";
 import Item from "./Item";
 
     export default class SoulAccumulator extends Item{
-        value: number
-        power: number
-
+  
         constructor(){
             super()
-            this.value = 5
-            this.power = 0
+            this.count = 5
             this.name = 'soul accumulator'
             this.type = 3
-        }
-
-        canBeForged(character: Character): boolean {
-            return this.power < 3
-        }
-            
-        forge(character: Character): void {
-            this.power ++
-            this.value += 1        
+            this.forge = [
+                new Count(this)
+            ]
         }
 
         equip(character: Character): void {
@@ -29,11 +21,11 @@ import Item from "./Item";
         trigger(character: Character){
             if(!character.life_status) return
 
-            character.might += this.value
-            character.agility += this.value
-            character.knowledge += this.value
-            character.speed += this.value
-            character.will += this.value
-            character.durability += this.value
+            character.might += this.count
+            character.agility += this.count
+            character.knowledge += this.count
+            character.speed += this.count
+            character.will += this.count
+            character.durability += this.count
         }
     }

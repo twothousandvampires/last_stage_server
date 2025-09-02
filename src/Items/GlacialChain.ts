@@ -5,13 +5,10 @@ import Chance from "./Forgings/Chance";
 import Item from "./Item";
 
 export default class GlacialChain extends Item{
-    chance: number
-    forge_power: number
 
     constructor(){
         super()
         this.chance = 20
-        this.forge_power = 0
         this.name = 'glacial chain'
         this.type = 1
         this.forge = [
