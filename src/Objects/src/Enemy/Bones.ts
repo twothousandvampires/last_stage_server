@@ -8,6 +8,7 @@ import Skull from "./Skull";
 export default class Bones extends Enemy{
 
     ressurect_chance: number
+    weapon_angle: number
 
     constructor(level: Level){
         super(level)
@@ -20,6 +21,7 @@ export default class Bones extends Enemy{
         this.spawn_time = 1600
         this.ressurect_chance = 40
         this.gold_revard = 2
+        this.weapon_angle = 1
         this.getState()
     }
 
@@ -97,11 +99,11 @@ export default class Bones extends Enemy{
             let e = this.getBoxElipse()
             e.r = this.attack_radius
 
-            if(this.target?.z < 5 && Func.elipseCollision(e, this.target?.getBoxElipse())){
+            if(this.target?.z < 5 && Func.elipseCollision(e, this.target?.getBoxElipse()) && Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle)){
                 this.target?.takeDamage()
-                if(Func.chance(50)){
+                if(Func.chance(25)){
                     let status = new Poison(Date.now())
-                    status.setDuration(10000)
+                    status.setDuration(6000)
                     this.level.setStatus(this.target, status)
                 }
             }
@@ -114,10 +116,13 @@ export default class Bones extends Enemy{
         this.stateAct = this.attackAct
         this.action_time = this.attack_speed
 
+        this.attack_angle = Func.angle(this.x, this.y, this.target?.x, this.target.y)
+
         this.cancelAct = () => {
             this.action = false
             this.hit = false
             this.is_attacking = false
+            this.attack_angle = undefined
         }
 
         this.setTimerToGetState(this.attack_speed)

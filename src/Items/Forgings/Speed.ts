@@ -9,7 +9,7 @@ export default class Speed extends Forging{
     constructor(item: Item){
         super(item)
         this.max_value = 20
-        
+        this.name = 'speed'
         this.stat = 'increases your speed'
         this.gold_cost = 5
     }

@@ -123,7 +123,7 @@ export default class Specter extends Enemy{
             let e = this.getBoxElipse()
             e.r = this.attack_radius
 
-            if(this.target?.z < 5 && Func.checkAngle(this, this.target, this.attack_angle, 2.4) && Func.elipseCollision(e, this.target?.getBoxElipse())){
+            if(this.target?.z < 5 && Func.checkAngle(this, this.target, this.attack_angle, 1.6) && Func.elipseCollision(e, this.target?.getBoxElipse())){
                 this.target?.takeDamage()
             }
         }
@@ -134,11 +134,14 @@ export default class Specter extends Enemy{
         this.is_attacking = true
         this.stateAct = this.attackAct
         this.action_time = this.attack_speed
+
         this.attack_angle = Func.angle(this.x, this.y, this.target?.x, this.target?.y)
+
         this.cancelAct = () => {
             this.action = false
             this.hit = false
             this.is_attacking = false
+            this.attack_angle = undefined
         }
 
         this.setTimerToGetState(this.attack_speed)

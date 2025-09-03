@@ -502,6 +502,8 @@ export default abstract class Character extends Unit{
         this.grace -= upgrade.cost
         this.spend_grace = true
 
+        this.level.addSound('upgrade', this.x, this.y)
+        
         this.removeUpgrades()
         this.closeUpgrades()
     }
@@ -534,6 +536,8 @@ export default abstract class Character extends Unit{
 
         item.setPlayer(this)
 
+        this.level.addSound('gold spending', this.x, this.y)
+        
         this.item.push(item)
 
         this.closeForgings()
