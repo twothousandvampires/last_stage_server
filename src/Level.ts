@@ -15,6 +15,7 @@ import Status from "./Status/Status"
 import GameServer from "./GameServer"
 import Sound from "./Types/Sound"
 import { Enemy } from "./Objects/src/Enemy/Enemy"
+import Learning from "./Scenarios/Learning"
 
 export default class Level{
     static enemy_list = [
@@ -133,7 +134,12 @@ export default class Level{
     //     this.effects.length = 0
     // }
 
-    public start(): void{
+    public start(forced_scenario_name: string | undefined): void{
+
+        if(forced_scenario_name && forced_scenario_name === 'learning'){
+            this.script = new Learning()
+        }
+
         this.script.start(this)
         this.started = Date.now()
 

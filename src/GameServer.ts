@@ -18,6 +18,7 @@ export default class GameServer{
     private game_started: boolean = false
     private realise: string = '1.0.0'
     private realise_name: string | undefined = undefined
+    private start_scenario_name: string | undefined = undefined
 
     new_game_timeout: any
     
@@ -29,7 +30,7 @@ export default class GameServer{
     public start(): void{
         if(!this.level) return
 
-        this.level.start()
+        this.level.start(this.start_scenario_name)
     }
 
     private updateLobby(): void{
@@ -65,6 +66,7 @@ export default class GameServer{
     public endOfLevel(): void{
         this.level = undefined
         this.game_started = false
+        this.start_scenario_name = undefined
         this.clients = new Map()
         this.socket.emit('game_is_over')
     }
@@ -84,6 +86,10 @@ export default class GameServer{
                 socket.on('change_class', (class_name: string) => {
                     client.template.setTemplate(class_name)
                     this.updateLobby()                
+                })
+
+                socket.on('set_start_scenario', (start_scenario_name) => {
+                    this.start_scenario_name = start_scenario_name
                 })
 
                 socket.on('increase_stat', (stat: string) => {
@@ -183,7 +189,7 @@ export default class GameServer{
                                 
                                 this.game_started = true
                                 this.socket.emit('start', Array.from(this.clients.values()))
-                                this.level.start()
+                                this.level.start(this.start_scenario_name)
                             }
                         }, 3000)
                     }
