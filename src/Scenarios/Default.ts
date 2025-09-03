@@ -27,8 +27,7 @@ export default class Default extends Scenario{
     constructor(){
         super()
         this.last_checked = 0
-        this.time_between_wave_ms = 4000
-
+        this.time_between_wave_ms = 5000
     }
 
     start(level: Level){
@@ -72,7 +71,7 @@ export default class Default extends Scenario{
             this.createWave(level)
             this.waves_created ++
 
-            if(this.time_between_wave_ms < 7500 && this.waves_created % 4 === 0){
+            if(this.time_between_wave_ms < 8000 && this.waves_created % 4 === 0){
                 this.time_between_wave_ms + 500
             }
         }
@@ -82,7 +81,8 @@ export default class Default extends Scenario{
         let player_in_zone = level.players.some(elem =>  elem.zone_id === 0)
         if(!player_in_zone) return
 
-        let add_count = Math.floor(level.kill_count / 25)
+        let add_count = Math.floor(level.kill_count / 35)
+
         let count = Func.random(1 + Math.floor(add_count / 2), 3 + add_count)
 
         for(let i = 0; i < count; i++){
