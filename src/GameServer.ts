@@ -152,6 +152,15 @@ export default class GameServer{
                     client.character.buyNewItem()
                 })
 
+                socket.on('donate', () => {   
+                    if(!client.character) return
+
+                    client.character.gold -= 20
+                    client.character.grace ++
+                   
+                    client.character.closeForgings()
+                })
+
                 socket.on('player_ready', () => {
 
                     client.ready = !client.ready

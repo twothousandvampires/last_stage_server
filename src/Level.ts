@@ -120,6 +120,7 @@ export default class Level{
         player.startGame()
         player.setPoint(88 + this.players.length * 4, 22)
         this.players.push(player)
+        player.closeUpgrades()
     }
 
     // stop(): void{

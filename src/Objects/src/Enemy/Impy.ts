@@ -5,15 +5,18 @@ import { Enemy } from "./Enemy";
 
 export default class Impy extends Enemy{
 
+    weapon_angle: number
+
     constructor(level: Level){
         super(level)
         this.name = 'impy'
         this.box_r = 2
-        this.move_speed = 0.35
+        this.move_speed = 0.30
         this.attack_radius = 5
-        this.attack_speed = 1200
+        this.attack_speed = 1400
         this.spawn_time = 1000
-         this.say_z = 8
+        this.say_z = 8
+        this.weapon_angle = 0.8
         this.getState()
     }
 
@@ -32,9 +35,9 @@ export default class Impy extends Enemy{
             let e = this.getBoxElipse()
             e.r = this.attack_radius
 
-            if(this.target?.z < 5 && Func.elipseCollision(e, this.target?.getBoxElipse())){
+            if(this.target?.z < 5 && Func.elipseCollision(e, this.target?.getBoxElipse()) && Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle)){
                 this.target?.takeDamage()
-                if(Func.chance(10)){
+                if(Func.chance(5)){
                     let status = new Bleed(this.level.time)
                     status.setDuration(4000)
                     this.level.setStatus(this.target, status)
@@ -49,10 +52,13 @@ export default class Impy extends Enemy{
         this.stateAct = this.attackAct
         this.action_time = this.attack_speed
 
+        this.attack_angle = Func.angle(this.x, this.y, this.target?.x, this.target.y)
+
         this.cancelAct = () => {
             this.action = false
             this.hit = false
             this.is_attacking = false
+            this.attack_angle = undefined
         }
 
         this.setTimerToGetState(this.attack_speed)
