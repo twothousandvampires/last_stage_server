@@ -128,7 +128,6 @@ export default class GameServer{
 
                 socket.on('unlock_forging', (item_name: string) => {
                     if(!client.character) return
-                    console.log('socket')
                     client.character.unlockForging(item_name) 
                 })
 

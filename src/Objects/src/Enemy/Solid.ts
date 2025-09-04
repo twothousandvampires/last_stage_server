@@ -13,7 +13,7 @@ export default class Solid extends Enemy{
         this.name = 'solid'
         this.box_r = 4
         this.move_speed = 0.15
-        this.attack_radius = 7
+        this.attack_radius = 6.5
         this.attack_speed = 1800
         this.explode = false
         this.spawn_time = 1200
@@ -68,7 +68,7 @@ export default class Solid extends Enemy{
             let e = this.getBoxElipse()
             e.x = this.hit_x
             e.y = this.hit_y
-            e.r = 4
+            e.r = 3.5
 
             let effect = new GroundHit(this.level)
             effect.setPoint(e.x, e.y)

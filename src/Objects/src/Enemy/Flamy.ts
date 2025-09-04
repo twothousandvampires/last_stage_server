@@ -11,14 +11,14 @@ export class Flamy extends Enemy{
         super(level)
         this.name = 'flamy'
         this.box_r = 2
-        this.move_speed = 0.4
+        this.move_speed = 0.3
         this.attack_radius = 5
         this.attack_speed = 3000
-        this.retreat_distance = 10
+        this.retreat_distance = 8
         this.retreat_angle = undefined
         this.spawn_time = 1400
         this.player_check_radius = 25
-        this.say_z =8
+        this.say_z = 8
         this.getState()
     }
 

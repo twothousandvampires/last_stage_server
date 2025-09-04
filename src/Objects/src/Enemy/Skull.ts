@@ -18,7 +18,6 @@ export default class Skull extends Enemy{
         this.create_energy_chance = 0
         this.gold_revard = 0
         this.create_chance = 0
-        this.count_as_killed = false
         this.getState()
     }
 

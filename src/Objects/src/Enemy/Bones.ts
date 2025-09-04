@@ -15,13 +15,13 @@ export default class Bones extends Enemy{
         this.name = 'bones'
         this.box_r = 2.2
         this.move_speed = 0.15
-        this.attack_radius = 6
+        this.attack_radius = 5
         this.attack_speed = 1600
         this.life_status = 2
         this.spawn_time = 1600
         this.ressurect_chance = 40
         this.gold_revard = 2
-        this.weapon_angle = 1
+        this.weapon_angle = 0.8
         this.getState()
     }
 

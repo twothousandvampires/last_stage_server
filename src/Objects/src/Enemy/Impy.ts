@@ -11,12 +11,12 @@ export default class Impy extends Enemy{
         super(level)
         this.name = 'impy'
         this.box_r = 2
-        this.move_speed = 0.30
-        this.attack_radius = 5
-        this.attack_speed = 1400
+        this.move_speed = 0.26
+        this.attack_radius = 4.5
+        this.attack_speed = 1450
         this.spawn_time = 1000
         this.say_z = 8
-        this.weapon_angle = 0.8
+        this.weapon_angle = 0.7
         this.getState()
     }
 
