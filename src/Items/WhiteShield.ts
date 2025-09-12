@@ -20,6 +20,8 @@ export default class WhiteShield extends Item{
     }
 
     trigger(character: Character){
+        if(this.disabled) return
+        
         if(Func.chance(this.chance)){
             character.ward ++
         }

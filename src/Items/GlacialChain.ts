@@ -22,6 +22,8 @@ export default class GlacialChain extends Item{
     }
 
     trigger(character: Character){
+        if(this.disabled) return
+        
         if(Func.chance(this.chance + (this.forge_power * 5))){
             let effect = new FrostNova(character.level)
             effect.setPoint(character.x, character.y)

@@ -92,6 +92,7 @@ export default abstract class Character extends Unit{
     voice_radius: number = 20
     public gold: number = 0
     public block_chance: number = 0
+    cd_reduction: number = 0
   
     constructor(level: Level){
         super(level)
@@ -155,6 +156,19 @@ export default abstract class Character extends Unit{
         }
     }
 
+    setFreeze(duration: number){
+        if(this.is_dead) return
+
+        if(this.isStatusResist()){
+            this.statusWasResisted(undefined)
+            return
+        }
+        
+        this.setState(this.setFreezeState)
+
+        this.setTimerToGetState(duration)
+    }
+    
     protected equipItems(){
         this.item.forEach(elem => {
             elem.setPlayer(this)
@@ -205,7 +219,7 @@ export default abstract class Character extends Unit{
         this.level.effects.push(phrase)
     }
 
-    protected getMoveSpeedReduceWhenUseSkill(): number{
+    public getMoveSpeedReduceWhenUseSkill(): number{
         return 70
     }
     
@@ -473,18 +487,18 @@ export default abstract class Character extends Unit{
                     cost: 3,
                     desc: 'increases a chance to say something'
                 },
+                {
+                    name: 'swiftness',
+                    canUse: (character: Character) => {
+                        return character.cd_reduction < 90
+                    },
+                    teach: (character: Character) => {
+                        return character.cd_reduction += 2
+                    },
+                    cost: 2,
+                    desc: 'reduces cooldowns'
+                },
         ]
-    }
-
-    protected afterUseSecond(): void{
-        if(this.second_ability && !Func.chance(this.chance_second_skill_not_to_be_used)){
-            this.second_ability.used = true
-            setTimeout(() => {
-                if(this.second_ability){
-                    this.second_ability.used = false
-                }
-            }, this.second_ability.cd)
-        }
     }
 
     public takePureDamage(): void{
@@ -657,7 +671,7 @@ export default abstract class Character extends Unit{
         }
     }
 
-    public statusWasResisted(status: Status){
+    public statusWasResisted(status: Status | undefined){
         this.on_status_resist_triggers.forEach(elem => {
             elem.trigger(this, status)
         })
@@ -688,9 +702,10 @@ export default abstract class Character extends Unit{
             } 
         }   
         else{
-            if(!Func.chance(this.getSkipDamageStateChance())){
+            if(!this.freezed && !Func.chance(this.getSkipDamageStateChance())){
                 this.setState(this.setDamagedAct)
             }
+
             if(this.life_status === 2){
                 this.addMoveSpeedPenalty(-10)
             }
@@ -701,14 +716,15 @@ export default abstract class Character extends Unit{
         }
     }
     
-    protected playerWasHited(): void{
+    protected playerWasHited(unit: Unit | undefined): void{
         this.when_hited_triggers.forEach(elem => {
-            elem.trigger(this)
+            elem.trigger(this, unit)
         })
 
         this.sayPhrase()
     }
-    private playerTakeLethalDamage(): void{
+
+    public playerTakeLethalDamage(): void{
         this.player_take_lethal_damage_triggers.forEach(elem => {
             elem.trigger(this)
         })
@@ -1104,9 +1120,6 @@ export default abstract class Character extends Unit{
         else if(this.pressed.r_click){
             this.useSecond()
         }
-        else if(this.pressed[32]){
-            this.setState(this.setDefend)
-        }
         else if(this.pressed[69] && this.can_use_skills){
             this.useUtility()
         }
@@ -1133,6 +1146,10 @@ export default abstract class Character extends Unit{
         this.time = time
         if(!this.can_act || !this.stateAct) return
         
+        else if(this.pressed[32]){
+            this.setState(this.setDefend)
+        }
+       
         this.stateAct()
         this.moveAct()
         this.regen()

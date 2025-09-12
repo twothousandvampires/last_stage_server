@@ -4,7 +4,7 @@ import Swordman from "../../Objects/src/PlayerClasses/Swordman";
 import SwordmanAbility from "./SwordmanAbility";
 
 export default class WeaponThrow extends SwordmanAbility{
-    cd: boolean
+   
     light_grip: boolean
     returning: boolean
     shattering: boolean
@@ -12,7 +12,7 @@ export default class WeaponThrow extends SwordmanAbility{
 
     constructor(owner: Swordman){
         super(owner)
-        this.cd = false
+        this.cd = 4000
         this.light_grip = false
         this.returning = false
         this.shattering = false
@@ -21,21 +21,18 @@ export default class WeaponThrow extends SwordmanAbility{
     }
 
     canUse(): boolean {
-        return !this.cd && !this.owner.is_attacking
+        return !this.used && !this.owner.is_attacking
     }
 
     use(){
-        this.cd = true
+        if(this.used || this.owner.is_attacking) this.returning
 
-        let cd_time = 4000
-
+        let cd_time = this.getCd()
+        this.used = true
+        
         if(this.light_grip && Func.chance(50)){
             cd_time = Math.round(cd_time / 2)
         }
-
-        setTimeout(()=>{
-            this.cd = false
-        }, cd_time)
 
         let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
@@ -64,6 +61,9 @@ export default class WeaponThrow extends SwordmanAbility{
         this.owner.cancelAct = () => {
             this.owner.action = false
             this.owner.addMoveSpeedPenalty(attack_move_speed_penalty)
+            setTimeout(()=>{
+                this.used = false
+            }, cd_time)
             this.owner.hit = false
             this.owner.is_attacking = false
         }

@@ -24,6 +24,7 @@ export abstract class Enemy extends Unit{
     count_as_killed: boolean
     say_z: number = 12
     gold_revard: number = 1
+    can_be_burned: boolean = true
   
     constructor(level: Level){
         super(level)
@@ -188,7 +189,7 @@ export abstract class Enemy extends Unit{
                 this.is_corpse = true
                 this.level.addSound(this.getExplodedSound())
             }
-            else if(options?.burn){
+            else if(options?.burn && this.can_be_burned){
                 this.dead_type = 'burn_dying'
                 this.is_corpse = true
             }
@@ -197,8 +198,10 @@ export abstract class Enemy extends Unit{
             this.create_grace_chance += unit?.additional_chance_grace_create ? unit?.additional_chance_grace_create : 0
             unit?.succesefulKill()
             //todo
-            unit?.addGold(this.gold_revard)
-
+            if(unit instanceof Character){
+                unit?.addGold(this.gold_revard)
+            }
+            
             this.setDyingAct()
         }
     }

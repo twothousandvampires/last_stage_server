@@ -23,6 +23,7 @@ export default class BurningCircle extends CultistAbility{
     }
 
     use(){
+        this.used = true
         this.owner.is_attacking = true
         this.owner.state = 'cast'
      
@@ -34,7 +35,7 @@ export default class BurningCircle extends CultistAbility{
 
         this.owner.cancelAct = () => {
             this.owner.action = false
-    
+            this.afterUse()
             this.owner.addMoveSpeedPenalty(70)
             this.owner.hit = false
             this.owner.is_attacking = false
@@ -70,8 +71,6 @@ export default class BurningCircle extends CultistAbility{
             status.devouring = this.second_ability.devouring
 
             this.level.setStatus(this, status)
-
-            this.afterUseSecond()
         }
         else if(this.action_is_end){
             this.action_is_end = false

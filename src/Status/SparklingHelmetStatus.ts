@@ -6,6 +6,7 @@ export default class SparklingHelmetStatus extends Status{
 
     time_beetween_proc: number = 5000
     last_trigger_time: number
+    public disabled: boolean = false
 
     constructor(time: number){
         super(time)
@@ -48,6 +49,8 @@ export default class SparklingHelmetStatus extends Status{
     }
 
     trigger(){
+        if(this.disabled) return
+
         let e = new BigShockNova(this.unit.level)
 
         e.setOwner(this.unit)

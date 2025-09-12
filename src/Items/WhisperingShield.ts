@@ -23,6 +23,8 @@ export default class WhisperingShield extends Item {
     }
     
     trigger(character: Character){
+        if(this.disabled) return
+        
         if(Func.chance(this.chance)){
              let phrase = new StrangeLanguage(character.level)
              phrase.z = 10

@@ -27,6 +27,8 @@ import Item from "./Item";
         }
 
         trigger(character: Character){
+            if(this.disabled) return
+            
             if(this.used) return 
             let status = new Immortality(character.time)
             status.setDuration(this.duration)

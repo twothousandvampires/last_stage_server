@@ -21,6 +21,12 @@ export default class Teleportation extends FlyerAbility{
         return !this.used
     }
 
+    afterUse(){
+        setTimeout(() => {
+            this.used = false
+        }, this.getCd() - this.owner.getSecondResource() * 1000)
+    }
+
     use(){
         if(this.used) return
         
@@ -36,10 +42,6 @@ export default class Teleportation extends FlyerAbility{
         }
 
         this.used = true
-
-        setTimeout(() => {
-            this.used = false
-        }, this.cd - this.owner.getSecondResource() * 1000)
 
         this.owner.can_move_by_player = false
         this.owner.state = 'teleport start'
@@ -57,6 +59,7 @@ export default class Teleportation extends FlyerAbility{
             this.owner.can_move_by_player = true
             this.teleport_x = undefined
             this.teleport_y = undefined
+            this.afterUse()
             this.state = 0
             this.owner.can_be_damaged = true
         }

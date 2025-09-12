@@ -39,7 +39,8 @@ import Item from "./Item";
       
         trigger(character: Character){
             if(this.cd) return
-
+            if(this.disabled) return  
+              
             if(this.effect){
                 if(this.effect.isMax()){
                     this.effect.clear()

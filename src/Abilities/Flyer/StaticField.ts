@@ -5,26 +5,25 @@ import FlyerAbility from "./FlyerAbility";
 
 export default class StaticField extends FlyerAbility{
 
-    cd: boolean
     hand_cuffing: boolean
     collapse: boolean
 
     constructor(owner: Flyer){
         super(owner)
-        this.cd = false
+        this.cd = 10000
         this.name = 'static field'
         this.hand_cuffing = false
         this.collapse = false
     }
 
     canUse(){
-        return !this.cd
+        return !this.used
     }
 
     use(){
-        if(this.cd) return
+        if(this.used) return
         
-        this.cd = true
+        this.used = true
 
         let rel_x = Math.round(this.owner.pressed.over_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.over_y + this.owner.y - 40)
@@ -53,13 +52,10 @@ export default class StaticField extends FlyerAbility{
 
         this.owner.action_time = cast_speed
 
-        setTimeout(() => {
-            this.cd = false
-        }, 4000)
-
         this.owner.cancelAct = () => {
             this.owner.action = false
-            this.owner.addMoveSpeedPenalty(v)    
+            this.owner.addMoveSpeedPenalty(v)
+            this.afterUse()    
             this.owner.hit = false
             this.owner.is_attacking = false   
         }

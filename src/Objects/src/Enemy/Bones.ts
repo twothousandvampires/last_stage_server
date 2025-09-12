@@ -72,6 +72,7 @@ export default class Bones extends Enemy{
             this.getState()
         }, 1500)
     }
+    
     moveAct(){
         this.state = 'move'
 
@@ -100,7 +101,7 @@ export default class Bones extends Enemy{
             e.r = this.attack_radius
 
             if(this.target?.z < 5 && Func.elipseCollision(e, this.target?.getBoxElipse()) && Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle)){
-                this.target?.takeDamage()
+                this.target?.takeDamage(this)
                 if(Func.chance(25)){
                     let status = new Poison(Date.now())
                     status.setDuration(6000)

@@ -10,6 +10,7 @@ export default class FlameRing extends Item{
         this.distance = 15
         this.name = 'flame ring'
         this.type = 3
+        this.count = 1
         this.description = 'when you take damage, the nearest enemy takes damage'
     }
 
@@ -22,6 +23,8 @@ export default class FlameRing extends Item{
     }
     
     trigger(character: Character){
+        if(this.disabled) return
+        
         if(Func.chance(this.chance)){
             let targets = character.level.enemies.concat(character.level.players.filter(elem => elem != character))
             targets = targets.filter(elem => Func.distance(elem, character) <= this.distance)

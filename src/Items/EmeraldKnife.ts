@@ -12,4 +12,18 @@ export default class EmeraldKnife extends Item{
     equip(character: Character): void {
         character.gold_find += 25
     }
+
+    disable(): void {
+        this.disabled = true
+        if(this.player){
+             this.player.gold_find -= 25
+        }
+    }
+
+    enable(): void {
+        this.disabled = false
+        if(this.player){
+             this.player.gold_find += 25
+        }
+    }
 }

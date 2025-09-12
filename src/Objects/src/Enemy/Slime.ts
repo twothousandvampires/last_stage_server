@@ -1,57 +1,57 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
-import GroundHit from "../../Effects/GroundHit";
+import Corrosion from "../../../Status/Corrosion";
+import PuddleOfPoison from "../../Effects/PuddleOfPoison";
 import { Enemy } from "./Enemy";
 
-export default class Solid extends Enemy{
-    explode: boolean
-    hit_x: number
-    hit_y: number
+export default class Slime extends Enemy{
+
+    weapon_angle: number
     
+
     constructor(level: Level){
         super(level)
-        this.name = 'solid'
-        this.box_r = 4
-        this.move_speed = 0.15
-        this.attack_radius = 6.5
+        this.name = 'slime'
+        this.box_r = 3
+        this.move_speed = 0.2
+        this.attack_radius = 6
         this.attack_speed = 1800
-        this.explode = false
-        this.spawn_time = 1200
+        this.spawn_time = 1400
+        this.say_z = 8
+        this.weapon_angle = 0.8
         this.getState()
-        this.life_status = 4
-        this.hit_x = 0
-        this.hit_y = 0
-        this.armour_rate = 10
-        this.create_grace_chance = 50
-        this.create_chance = 80
-        this.create_chance = 80
-        this.say_z = 18
-        this.gold_revard = 4
     }
 
     setDeadState(){
+        this.is_corpse = true
         this.state = 'dead'
         this.stateAct = this.deadAct
+
     }
 
-    deadAct(){
-        if(!this.explode && this.action){
-            this.explode = true
-            this.action = false
-            this.state = 'dead_explode'
-            let targets = this.level.enemies.concat(this.level.players)
-            
-            targets.forEach((e) => {
-                if(e != this && Func.distance(this, e) <= 12){
-                    e.takeDamage(this, {
-                        burn: true
-                    })
-                }
+    setDyingAct(){
+        if(this.freezed){
+            this.state = 'freeze_dying'
+            this.is_corpse = true
+            this.level.sounds.push({
+                name: 'shatter',
+                x: this.x,
+                y: this.y
             })
-            setTimeout(()=> {
-                this.is_corpse = true
-            }, 800)
         }
+        else{
+            this.state = this.dead_type ? this.dead_type : 'dying'
+        }
+
+        if(!this.freezed && this.dead_type != 'burn_dying'){
+            let e = new PuddleOfPoison(this.level)
+            e.setPoint(this.x, this.y)
+
+            this.level.binded_effects.push(e)
+        }
+
+        this.stateAct = this.DyingAct
+        this.setTimerToGetState(this.dying_time)
     }
 
     moveAct(){
@@ -67,21 +67,16 @@ export default class Solid extends Enemy{
             this.hit = true
     
             let e = this.getBoxElipse()
-            e.x = this.hit_x
-            e.y = this.hit_y
-            e.r = 3.5
+            e.r = this.attack_radius
 
-            let effect = new GroundHit(this.level)
-            effect.setPoint(e.x, e.y)
-          
-            this.level.effects.push(effect)
-
-            this.level.addSound('ground hit', e.x, e.y)
-            this.level.players.forEach(p => {
-                if(p?.z < 5 && Func.elipseCollision(e, p?.getBoxElipse())){
-                    p.takeDamage()
+            if(this.target?.z < 5 && Func.elipseCollision(e, this.target?.getBoxElipse()) && Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle)){
+                this.target?.takeDamage(this)
+                if(Func.chance(50)){
+                    let status = new Corrosion(this.level.time)
+                    status.setDuration(6000)
+                    this.level.setStatus(this.target, status)
                 }
-            })
+            }
         }
     }
 
@@ -91,14 +86,13 @@ export default class Solid extends Enemy{
         this.stateAct = this.attackAct
         this.action_time = this.attack_speed
 
-        this.hit_x = this.target.x
-        this.hit_y = this.target.y
-        this.level.addSound('demon roar', this.x, this.y)
-        
+        this.attack_angle = Func.angle(this.x, this.y, this.target?.x, this.target.y)
+
         this.cancelAct = () => {
             this.action = false
             this.hit = false
             this.is_attacking = false
+            this.attack_angle = undefined
         }
 
         this.setTimerToGetState(this.attack_speed)
@@ -109,7 +103,7 @@ export default class Solid extends Enemy{
            if(!this.target){
                 this.can_check_player = false
             
-                let p = this.level.players.filter(elem => Func.distance(this, elem) <= this.player_check_radius && !elem.is_dead)
+                let p = this.level.players.filter(elem => Func.distance(this, elem) <= this.player_check_radius && !elem.is_dead && elem.z < 5)
 
                 p.sort((a, b) => {
                     return Func.distance(a, this) - Func.distance(b, this)

@@ -29,7 +29,8 @@ export default class SkullOfFirstWarrior extends Item {
 
     trigger(character: Character){
         if(!this.countable) return
-       
+        if(this.disabled) return
+        
         this.kill_count++
         if(this.kill_count >= this.threshold){
             character.might += this.add_might

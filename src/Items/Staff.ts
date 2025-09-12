@@ -7,10 +7,24 @@ export default class Staff extends Item{
         super()
         this.name = 'staff'
         this.type = 1
-        this.description = 'gives a chance for the second skill not to be used after use'
+        this.description = 'reduces cooldowns'
     }
 
     equip(character: Character): void {
-        character.chance_second_skill_not_to_be_used += 12
+        character.cd_reduction += 12
+    }
+
+    disable(): void {
+        this.disabled = true
+        if(this.player){
+             this.player.cd_reduction -= 12
+        }
+    }
+
+    enable(): void {
+        this.disabled = false
+        if(this.player){
+             this.player.cd_reduction += 12
+        }
     }
 }

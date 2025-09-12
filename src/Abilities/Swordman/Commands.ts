@@ -4,29 +4,26 @@ import CommandsStatus from "../../Status/CommandsStatus";
 import SwordmanAbility from "./SwordmanAbility";
 
 export default class Commands extends SwordmanAbility{
-    cd: boolean
+
     cast: boolean
     fast_commands: boolean
 
     constructor(owner: Swordman){
         super(owner)
-        this.cd = false
+        this.cd = 20000
         this.cast = false
         this.fast_commands = false
         this.name = 'commands'
     }
 
     canUse(): boolean {
-        return !this.cd
+        return !this.used
     }
 
     use(): void {
-        this.cd = true
+        if(this.used) return
 
-        setTimeout(() => {
-            this.cd = false
-            this.cast = false
-        }, 20000)
+        this.used = true
 
         this.owner.state = 'cast'
         this.owner.can_move_by_player = false
@@ -37,6 +34,7 @@ export default class Commands extends SwordmanAbility{
             this.owner.action = false
             this.owner.can_move_by_player = true
             this.owner.action_time = undefined
+            this.afterUse()
             this.cast = false
         }
 

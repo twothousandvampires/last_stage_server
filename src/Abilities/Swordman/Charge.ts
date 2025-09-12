@@ -3,7 +3,7 @@ import Swordman from "../../Objects/src/PlayerClasses/Swordman";
 import SwordmanAbility from "./SwordmanAbility";
 
 export default class Charge extends SwordmanAbility{
-    used: boolean
+   
     cost: number
     distance: number
     point_added: boolean
@@ -18,7 +18,6 @@ export default class Charge extends SwordmanAbility{
 
     constructor(owner: Swordman){
         super(owner)
-        this.used = false
         this.cost = 4
         this.distance = 2000
         this.point_added = false
@@ -37,10 +36,14 @@ export default class Charge extends SwordmanAbility{
     }
 
     use(){
+        if(this.used || this.owner.is_attacking) return
+        
         this.owner.is_attacking = true
       
         this.start_x = this.owner.x
         this.start_y = this.owner.y
+
+        this.used = true
 
         let rel_x =  this.owner.pressed.canvas_x + this.owner.x - 40
         let rel_y =  this.owner.pressed.canvas_y + this.owner.y - 40
@@ -68,6 +71,7 @@ export default class Charge extends SwordmanAbility{
             clearTimeout(this.end_timeout)
             this.owner.is_attacking = false
             this.owner.can_move_by_player = true
+            this.afterUse()
             this.owner.action = false
             this.point_added = false
             this.start_x = undefined
@@ -94,7 +98,6 @@ export default class Charge extends SwordmanAbility{
                 }
                 owner.getState()
                 owner.attack_angle = undefined
-                owner.afterUseSecond()
             }
             else if(owner.action || ability.start){
                 ability.start = true

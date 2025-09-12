@@ -1,7 +1,6 @@
 import { Server, Socket } from 'socket.io'
 import Builder from './Classes/Builder'
 import Client from './Client'
-import Item from './Items/Item'
 import item from './Items/Item'
 import Level from './Level'
 import TemplateAbility from './Types/TemplateAbility'

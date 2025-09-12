@@ -6,30 +6,26 @@ import CultistAbility from "./CultistAbility";
 
 export default class GhostForm extends CultistAbility{
 
-    cd: boolean
     lead: boolean
     afterlife_cold: boolean
 
     constructor(owner: Cultist){
         super(owner)
-        this.cd = false
+    
         this.lead = false
         this.afterlife_cold = false
         this.name = 'ghost form'
+        this.cd = 15000
     }
 
     canUse(): boolean {
-        return !this.cd
+        return !this.used
     }
 
     use(): void {
-        if(this.cd) return 
+        if(this.used) return 
 
-        this.cd = true
-
-        setTimeout(() => {
-            this.cd = false
-        }, 20000)
+        this.used = true
 
         this.owner.action_time = 500
         this.owner.can_be_damaged = false
@@ -70,6 +66,7 @@ export default class GhostForm extends CultistAbility{
         }, 500)
 
         this.owner.cancelAct = () => {
+            this.afterUse()
             this.owner.can_be_damaged = true
             this.owner.phasing = false
             this.owner.can_attack = true

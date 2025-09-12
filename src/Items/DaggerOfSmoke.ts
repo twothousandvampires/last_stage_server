@@ -23,6 +23,8 @@ export default class DaggerOfSmoke extends Item{
     }
 
     trigger(character: Character){
+        if(this.disabled) return
+        
         if(Func.chance(this.chance)){
             let box = character.getBoxElipse()
             box.r = 9
