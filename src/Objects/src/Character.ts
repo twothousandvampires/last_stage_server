@@ -1128,6 +1128,9 @@ export default abstract class Character extends Unit{
     }
 
     public setDefend(): void{
+        if(this.freezed) return
+        if(this.zaped) return
+        
         this.state = 'defend'
         this.stateAct = this.defendAct
         let reduce = 80
