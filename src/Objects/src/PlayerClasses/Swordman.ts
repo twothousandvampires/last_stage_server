@@ -4,7 +4,6 @@ import CursedWeapon from "../../../Abilities/Swordman/CursedWeapon";
 import Jump from "../../../Abilities/Swordman/Jump";
 import Quake from "../../../Abilities/Swordman/Quake";
 import ShatteredWeapon from "../../../Abilities/Swordman/ShatteredWeapon";
-import Vengeance from "../../../Abilities/Swordman/HeavenVengeance";
 import WeaponSwing from "../../../Abilities/Swordman/WeaponSwing";
 import WeaponThrow from "../../../Abilities/Swordman/WeaponThrow";
 import Whirlwind from "../../../Abilities/Swordman/Whirlwind";
@@ -56,7 +55,7 @@ export default class Swordman extends Character{
     addCourage(){
         if(!this.can_get_courage) return
 
-        if(Func.chance(this.knowledge * 3)){
+        if(Func.chance(this.knowledge * 3, this.is_lucky)){
             this.recent_kills.push(this.time)
         }
         this.recent_kills.push(this.time)
@@ -186,7 +185,7 @@ export default class Swordman extends Character{
             b_chance = 90
         }
 
-        if(this.state === 'defend' && Func.chance(b_chance)){
+        if(this.state === 'defend' && Func.chance(b_chance, this.is_lucky)){
             this.level.sounds.push({
                 name: 'metal hit',
                 x: this.x,
@@ -204,7 +203,7 @@ export default class Swordman extends Character{
             arm = 90
         }
 
-        if(Func.chance(arm)){
+        if(Func.chance(arm, this.is_lucky)){
             this.level.sounds.push({
                 name: 'metal hit',
                 x: this.x,
@@ -226,7 +225,7 @@ export default class Swordman extends Character{
         e.z = Func.random(2, 8)
         this.level.effects.push(e)
 
-        if(!Func.chance(this.might * 7)){
+        if(!Func.chance(this.might * 7, this.is_lucky)){
             this.recent_kills = this.recent_kills.filter((elem, index) => index >= 5)
         }
        
@@ -640,7 +639,7 @@ export default class Swordman extends Character{
     addLife(count = 1, ignore_poison = false, ignore_limit = false){
         if(!this.can_regen_life && !ignore_poison) return
 
-        if(Func.chance(this.durability)){
+        if(Func.chance(this.durability, this.is_lucky)){
             count ++
         }
         
@@ -648,7 +647,7 @@ export default class Swordman extends Character{
             let previous = this.life_status
 
             if(previous >= 3){
-                if(ignore_limit || (this.lust_for_life && Func.chance(this.getSecondResource() * 4))){
+                if(ignore_limit || (this.lust_for_life && Func.chance(this.getSecondResource() * 4, this.is_lucky))){
 
                 }
                 else{
@@ -682,7 +681,7 @@ export default class Swordman extends Character{
     }
 
     public isStatusResist(): boolean{
-        let result = Func.chance(this.status_resistance + this.knowledge * 3)
+        let result = Func.chance(this.status_resistance + this.knowledge * 3, this.is_lucky)
         return result
     }
 
@@ -716,7 +715,7 @@ export default class Swordman extends Character{
           return
        }
        
-       if(Func.chance(this.knowledge * 6)){
+       if(Func.chance(this.knowledge * 6, this.is_lucky)){
           count++
        }
 

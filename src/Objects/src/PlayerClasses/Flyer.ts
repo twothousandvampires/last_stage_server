@@ -572,7 +572,7 @@ export default class Flyer extends Character{
 
         this.playerWasHited(unit)
 
-        if(this.state === 'defend' && this.resource > 0 && Func.chance(this.block_chance)){
+        if(this.state === 'defend' && this.resource > 0 && Func.chance(this.block_chance, this.is_lucky)){
 
             if(this.charged_shield && Func.chance(75)){
                 let target = this.level.enemies[Math.floor(Math.random() * this.level.enemies.length)]
@@ -599,7 +599,7 @@ export default class Flyer extends Character{
 
         arm = arm > 95 ? 95 : arm
 
-        if(Func.chance(arm)){
+        if(Func.chance(arm, this.is_lucky)){
             let e = new Armour(this.level)
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)
@@ -718,7 +718,7 @@ export default class Flyer extends Character{
             this.resource += count
         }
         
-        if(this.resource < this.max_resource && Func.chance(this.will * 5)){
+        if(this.resource < this.max_resource && Func.chance(this.will * 5, this.is_lucky)){
             this.resource ++
         }
     }
@@ -771,7 +771,7 @@ export default class Flyer extends Character{
             }, this.getEnlightenTimer())
         }
 
-        if(Func.chance(this.speed * 2.5)){
+        if(Func.chance(this.speed * 2.5, this.is_lucky)){
             this.recent_cast.push(this.time)
         }
     }

@@ -23,7 +23,6 @@ export default class RingOfTransmutation extends Item{
     }
     
     trigger(character: Character, unit: Unit | undefined){
-        console.log(unit)
         if(this.disabled) return
         if(!unit) return
         

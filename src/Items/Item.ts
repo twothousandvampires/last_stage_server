@@ -92,6 +92,10 @@ export default abstract class Item {
             name: "Ring of transmutation",
             description: 'when hitted by enemy there is a chance turn them into gold'
         },
+        {
+            name: "sword handle",
+            description: 'you are lucky'
+        },
     ]
 
     static forging_list_all = [
@@ -159,9 +163,8 @@ export default abstract class Item {
 
         let forging: Forging = this.getRandomForging()
 
-        forging.forge(this.player)
-
         this.player.gold += forging.gold_cost
+        forging.forge(this.player)
 
         this.forge.push(forging)
 

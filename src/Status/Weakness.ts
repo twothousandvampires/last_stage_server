@@ -20,7 +20,7 @@ export default class Weakness extends Status{
             this.unit.newStatus({
                 name: 'weakness',
                 duration: this.duration,
-                desc: 'weakness'
+                desc: 'cannot get resources'
             })
         }
     }
@@ -37,7 +37,7 @@ export default class Weakness extends Status{
         this.unit.newStatus({
             name: 'weakness',
             duration: status.duration,
-            desc: 'weakness'
+            desc: 'cannot get resources'
         })
     }
 }

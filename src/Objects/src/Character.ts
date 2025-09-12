@@ -48,6 +48,8 @@ export default abstract class Character extends Unit{
     grace: number = 1
     can_get_courage: boolean = true
 
+    is_lucky: boolean = false
+
     on_kill_triggers: any[] = []
     on_hit_triggers: any[] = []
     use_not_utility_triggers: any[] = []
@@ -180,7 +182,7 @@ export default abstract class Character extends Unit{
     }
 
     public isStatusResist(): boolean{
-        let result = Func.chance(this.status_resistance)
+        let result = Func.chance(this.status_resistance, this.is_lucky)
         return result
     }
 
@@ -200,7 +202,7 @@ export default abstract class Character extends Unit{
     public addGold(value: number): void{
         this.gold += value
 
-        if(Func.chance(this.gold_find)){
+        if(Func.chance(this.gold_find, this.is_lucky)){
              this.gold ++
         }
     }
@@ -405,7 +407,7 @@ export default abstract class Character extends Unit{
                         return character.grace > 1
                     },
                     teach: (character: Character) => {
-                        if(Func.chance(50)){
+                        if(Func.chance(50, character.is_lucky)){
                             character.grace *= 2
                         }
                         else{
@@ -637,7 +639,7 @@ export default abstract class Character extends Unit{
             let previous = this.life_status
 
             if(previous >= 3){
-                if(ignore_limit || (this.lust_for_life && Func.chance(this.getSecondResource() * 4))){
+                if(ignore_limit || (this.lust_for_life && Func.chance(this.getSecondResource() * 4, this.is_lucky))){
 
                 }
                 else{
@@ -702,7 +704,7 @@ export default abstract class Character extends Unit{
             } 
         }   
         else{
-            if(!this.freezed && !Func.chance(this.getSkipDamageStateChance())){
+            if(!this.freezed && !Func.chance(this.getSkipDamageStateChance(), this.is_lucky)){
                 this.setState(this.setDamagedAct)
             }
 

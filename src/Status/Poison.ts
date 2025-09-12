@@ -20,7 +20,7 @@ export default class Poison extends Status{
             this.unit.newStatus({
                 name: 'poison',
                 duration: this.duration,
-                desc: 'poison'
+                desc: 'cannot regenerate life'
             })
         }
     }
@@ -37,7 +37,7 @@ export default class Poison extends Status{
          this.unit.newStatus({
             name: 'poison',
             duration: this.duration,
-            desc: 'poison'
+            desc: 'cannot regenerate life'
         })
     }
 }

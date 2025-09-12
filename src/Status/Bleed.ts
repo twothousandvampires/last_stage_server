@@ -19,7 +19,7 @@ export default class Bleed extends Status{
             this.unit.newStatus({
                 name: 'bleed',
                 duration: this.duration,
-                desc: 'you are bleeded'
+                desc: 'get damage while moving'
             })
         }
     }

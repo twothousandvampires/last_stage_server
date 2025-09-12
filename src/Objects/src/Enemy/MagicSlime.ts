@@ -10,7 +10,8 @@ export default class MagicSlime extends Enemy{
     weapon_angle: number
     retreat_angle: number | undefined = undefined
     retreat_distance: number = 8
-attack_cd: number = 4000
+    attack_cd: number = 4000
+
     constructor(level: Level){
         
         super(level)
@@ -24,6 +25,7 @@ attack_cd: number = 4000
         this.weapon_angle = 0.8
         this.life_status = 2
         this.create_chance = 25
+        this.player_check_radius = 25
         this.getState()
     }
 
@@ -164,6 +166,7 @@ attack_cd: number = 4000
         if(Func.distance(this, this.target) <= this.retreat_distance && Math.random() > 0.5){
             this.setState(this.setRetreatState)
         }
+
         else if(!this.is_attacking){
             this.setState(this.setAttackState)
         }
