@@ -21,7 +21,7 @@ export default class Despair extends Status{
             this.unit.newStatus({
                 name: 'despair',
                 duration: this.duration,
-                desc: 'lose resourse when get damage'
+                desc: 'lose resourse over time and when get damage'
             })
         }
     }
@@ -32,17 +32,27 @@ export default class Despair extends Status{
         }
     }
 
+    act(tick: number){
+        if(this.tick - this.last_checked >= 2000){
+            this.last_checked = this.tick
+            
+            if(this.unit.resource > 0){
+                this.unit.resource -= 1
+            }
+        }
+    }
+
      update(status: any){
         this.time = Date.now()
 
          this.unit.newStatus({
             name: 'despair',
             duration: this.duration,
-            desc: 'lose resourse when get damage'
+            desc: 'lose resourse over time and when get damage'
         })
     }
 
     trigger(){
-        this.unit.resource -= 2
+        this.unit.resource = 0
     }
 }

@@ -33,6 +33,7 @@ export default abstract class Unit extends GameObject {
     can_act: boolean
     fragility: number
     ward: number = 0
+    cast_speed: number = 2000
     
     constructor(level: Level){
         super(level)

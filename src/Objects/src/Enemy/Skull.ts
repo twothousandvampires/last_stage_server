@@ -62,7 +62,7 @@ export default class Skull extends Enemy{
             e.r = this.attack_radius
 
             if(this.target?.z < 5 && Func.elipseCollision(e, this.target?.getBoxElipse())){
-                this.target?.takeDamage()
+                this.target?.takeDamage(this)
             }
         }
     }

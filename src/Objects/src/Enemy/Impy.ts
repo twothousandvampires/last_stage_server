@@ -36,7 +36,7 @@ export default class Impy extends Enemy{
             e.r = this.attack_radius
 
             if(this.target?.z < 5 && Func.elipseCollision(e, this.target?.getBoxElipse()) && Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle)){
-                this.target?.takeDamage()
+                this.target?.takeDamage(this)
                 if(Func.chance(5)){
                     let status = new Bleed(this.level.time)
                     status.setDuration(4000)

@@ -3,6 +3,7 @@ import Swordman from "../../Objects/src/PlayerClasses/Swordman";
 import SwordmanAbility from "./SwordmanAbility";
 
 export default class Jump extends SwordmanAbility{
+
     tick: number
     total_jump_time: number //ms
     direction: boolean
@@ -10,7 +11,6 @@ export default class Jump extends SwordmanAbility{
     cost: number
     distance: number | undefined
     move_per_tick: number | undefined
-    used: boolean
     heavy_landing: boolean
     stomp: boolean
 
@@ -22,7 +22,6 @@ export default class Jump extends SwordmanAbility{
         this.impact = false
         this.cost = 4
         this.cd = 8000
-        this.used = false
         this.heavy_landing = false
         this.stomp = false
         this.name = 'jump'
@@ -33,6 +32,8 @@ export default class Jump extends SwordmanAbility{
     }
     
     use(){        
+        if(this.used) return
+
         this.used = true
 
         let rel_x =  this.owner.pressed.canvas_x + this.owner.x - 40
@@ -71,9 +72,9 @@ export default class Jump extends SwordmanAbility{
         this.owner.stateAct = this.getAct()  
         
         this.owner.cancelAct = () => {
-            this.used = false
             this.owner.z = 0
             this.owner.is_attacking = false
+            this.afterUse()
             this.direction = false
             this.impact = false
             this.owner.can_move_by_player = true
@@ -125,7 +126,6 @@ export default class Jump extends SwordmanAbility{
 
                 owner.getState()
                 owner.attack_angle = undefined
-                owner.afterUseSecond()
                 return
             }
             

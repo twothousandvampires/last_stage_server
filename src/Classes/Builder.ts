@@ -16,6 +16,7 @@ import Critical from "../Items/Forgings/Critical"
 import Distance from "../Items/Forgings/Distance"
 import Durability from "../Items/Forgings/Durability"
 import Duration from "../Items/Forgings/Duration"
+import Frequency from "../Items/Forgings/Frequency"
 import GoldFind from "../Items/Forgings/GoldFind"
 import Knowledge from "../Items/Forgings/Knowledge"
 import MaxResource from "../Items/Forgings/MaxResource"
@@ -30,10 +31,12 @@ import GlacialChain from "../Items/GlacialChain"
 import GlassSword from "../Items/GlassSword"
 import Item from "../Items/Item"
 import RedPotion from "../Items/RedPotion"
+import RingOfTransmutation from "../Items/RingOfTransmutation"
 import SkullOfFirstWarrior from "../Items/SkullOfFirstWarrior"
 import SoulAccumulator from "../Items/SoulAccumulator"
 import SparklingHelmet from "../Items/SparklingHelmet"
 import Staff from "../Items/Staff"
+import TwilightGloves from "../Items/TwilightGloves"
 import WallOfBones from "../Items/WallOfBones"
 import WhisperingShield from "../Items/WhisperingShield"
 import WhiteShield from "../Items/WhiteShield"
@@ -128,6 +131,13 @@ export default class Builder{
         else if(item_name === 'whispering shield'){
             return new WhisperingShield()
         }
+        else if(item_name === 'twilight gloves'){
+            return new TwilightGloves()
+        }
+        else if(item_name === 'Ring of transmutation'){
+            return new RingOfTransmutation()
+        }
+        
     }
 
     static createForging(name: string, item: Item){
@@ -174,6 +184,9 @@ export default class Builder{
                 return new Count(item)
             case 'duration':
                 return new Duration(item)
+            case 'frequency':
+                return new Frequency(item)
+
             default:    
                 return new NovaThenHit(item)
         }

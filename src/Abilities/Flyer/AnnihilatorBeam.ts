@@ -21,6 +21,10 @@ export default class AnnihilatorBeam extends FlyerAbility{
     }
 
     use(){
+        if(this.used) return
+
+        this.used = true
+
         let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
         
@@ -37,7 +41,7 @@ export default class AnnihilatorBeam extends FlyerAbility{
 
         this.owner.is_attacking = true
         this.owner.state = 'cast'
-         let v =  this.owner.getMoveSpeedPenaltyValue()  
+        let v =  this.owner.getMoveSpeedPenaltyValue()  
         this.owner.addMoveSpeedPenalty(-v)
 
         this.owner.stateAct = this.act
@@ -48,6 +52,7 @@ export default class AnnihilatorBeam extends FlyerAbility{
         this.owner.cancelAct = () => {
             this.owner.action = false
             this.owner.addMoveSpeedPenalty(v)
+            this.afterUse()
             this.owner.hit = false
             this.owner.is_attacking = false
         }
@@ -108,50 +113,8 @@ export default class AnnihilatorBeam extends FlyerAbility{
             }
             this.addCourage()
             this.attack_angle = undefined
-            this.afterUseSecond()
-            // if(true){
-            //     let angle = point.isOutOfMap(point.x - n_x, point.y) ? 0 : 90
-
-            //     let normalAngle = angle + Math.PI / 2
-
-            //     let incidenceAngle = this.attack_angle - normalAngle
-            
-            //     let reflectedAngle = normalAngle - incidenceAngle;
-
-            //     this.attack_angle = (reflectedAngle + 2 * Math.PI) % (2 * Math.PI);
-
-            //     point.setPoint(point.x - n_x, point.y - n_y)
-
-            //     while(!point.isOutOfMap()){
-
-            //         point = new ToothExplode(this.level)
-
-            //         n_x =  Math.sin(this.attack_angle) * (precision * distance)
-            //         n_y =  Math.cos(this.attack_angle) * (precision * distance)
-
-            //         point.setPoint(
-            //             this.x + n_x,
-            //             this.y + n_y
-            //         )
-
-            //         distance += precision
-
-            //         let hit = point.getBoxElipse()
-            //         hit.r = precision
-
-            //         enemies.forEach(elem => {
-            //             if(Func.elipseCollision(hit, elem.getBoxElipse())){
-            //                 elem.takeDamage(this, {
-            //                     burn: true
-            //                 })
-            //             }
-            //         })
-
-            //         this.level.effects.push(point)
-            //     }
-            // }
         }
-         else if(this.action_is_end){
+        else if(this.action_is_end){
             this.action_is_end = false
             this.getState()
         }

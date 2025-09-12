@@ -10,6 +10,7 @@ import SoulShatter from "../../../Abilities/Cultist/SoulShatter";
 import UnleashPain from "../../../Abilities/Cultist/UnleashPain";
 import Func from "../../../Func";
 import Level from "../../../Level";
+import Immortality from "../../../Status/Immortality";
 import Armour from "../../Effects/Armour";
 import Blood from "../../Effects/Blood";
 import ToothExplode from "../../Effects/ToothExplode";
@@ -171,10 +172,10 @@ export default class Cultist extends Character{
         this.can_be_damaged = false
         this.armour_rate += 1
 
-        setTimeout(() => {
-            this.can_be_damaged = true
-        }, 3000)
-
+        let s = new Immortality(this.level.time)
+        s.setDuration(3000)
+        this.level.setStatus(this, s)
+       
         this.level.addSound('enlight', this.x, this.y)
     }
 
@@ -246,7 +247,7 @@ export default class Cultist extends Character{
             return
         }
 
-        this.playerWasHited()
+        this.playerWasHited(unit)
         
         let b_chance = this.block_chance + this.durability
 

@@ -10,7 +10,6 @@ export default class Slam extends CultistAbility{
     constructor(owner: Cultist){
         super(owner)
         this.name = 'slam'
-        this.cost = 0
         this.slaming = false
         this.soul_extraction = false
     }

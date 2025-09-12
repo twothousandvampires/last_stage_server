@@ -5,13 +5,13 @@ import SwordmanAbility from "./SwordmanAbility";
 
 export default class HeavenVengeance extends SwordmanAbility{
   
-    private cd: number = 3000
     public eye: boolean = false
     public grace: boolean = false
 
     constructor(owner: Swordman){
         super(owner)
         this.name = 'heaven vengeance'
+        this.cd = 3300
     }
 
     canUse(): boolean {
@@ -22,14 +22,9 @@ export default class HeavenVengeance extends SwordmanAbility{
         this.used = false
     }
 
-    setUsed(){
+    use(){
         this.used = true
-        setTimeout(() => {
-            this.used = false
-        }, this.cd)
-    }
 
-    use(){   
         let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
 
@@ -57,6 +52,7 @@ export default class HeavenVengeance extends SwordmanAbility{
         this.owner.cancelAct = () => {
             this.owner.action = false
             this.owner.addMoveSpeedPenalty(attack_move_speed_penalty)
+            this.afterUse()
             this.owner.hit = false
             this.owner.is_attacking = false
         }
@@ -64,8 +60,6 @@ export default class HeavenVengeance extends SwordmanAbility{
 
     act(){
         if(this.action && !this.hit){
-            this.first_ability.setUsed()
-    
             this.hit = true
         
             let enemies = this.level.enemies

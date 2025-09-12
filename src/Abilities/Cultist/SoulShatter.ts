@@ -8,7 +8,6 @@ export default class SoulShatter extends CultistAbility{
     constructor(owner: Cultist){
         super(owner)
         this.name = 'soul shatter'
-        this.cost = 0
     }
 
     canUse(): boolean {

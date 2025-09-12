@@ -4,11 +4,9 @@ import Swordman from "../../Objects/src/PlayerClasses/Swordman";
 import SwordmanAbility from "./SwordmanAbility";
 
 export default class ShatteredWeapon extends SwordmanAbility{
-    used: boolean
 
     constructor(owner: Swordman){
         super(owner)
-        this.used = false
         this.name = 'shattered weapon'
         this.cost = 4
         this.cd = 5000
@@ -19,7 +17,10 @@ export default class ShatteredWeapon extends SwordmanAbility{
     }
 
     use(){
+        if(this.used || this.owner.is_attacking) return
+
         this.owner.is_attacking = true
+        this.used = true
 
         let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
@@ -49,6 +50,7 @@ export default class ShatteredWeapon extends SwordmanAbility{
             this.owner.action = false
             this.owner.addMoveSpeedPenalty(attack_move_speed_penalty)
             this.owner.hit = false
+            this.afterUse()
             this.owner.is_attacking = false        
         }
     }
@@ -86,7 +88,6 @@ export default class ShatteredWeapon extends SwordmanAbility{
                 this.level.projectiles.push(proj)
             }
             this.attack_angle = undefined
-            this.afterUseSecond()
         }
         else if(this.action_is_end){
             this.action_is_end = false

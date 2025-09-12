@@ -4,8 +4,11 @@ import ClosedGate from "../Objects/Effects/ClosedGate";
 import Bones from "../Objects/src/Enemy/Bones";
 import { Flamy } from "../Objects/src/Enemy/Flamy";
 import FlyingBones from "../Objects/src/Enemy/FlyingBones";
+import Ghost from "../Objects/src/Enemy/Ghost";
 import Gifter from "../Objects/src/Enemy/Gifter";
 import Impy from "../Objects/src/Enemy/Impy";
+import MagicSlime from "../Objects/src/Enemy/MagicSlime";
+import Slime from "../Objects/src/Enemy/Slime";
 import Solid from "../Objects/src/Enemy/Solid";
 import Specter from "../Objects/src/Enemy/Specter";
 import PileOfDead from "../Objects/src/Piles/PileOfDead";
@@ -126,6 +129,15 @@ export default class Default extends Scenario{
             }
             else if(enemy_name === 'gifter'){
                 enemy = new Gifter(level)
+            }
+            else if(enemy_name === 'ghost'){
+                enemy = new Ghost(level)
+            }
+            else if(enemy_name === 'slime'){
+                enemy = new Slime(level)
+            }
+             else if(enemy_name === 'magic slime'){
+                enemy = new MagicSlime(level)
             }
             else if(enemy_name === 'pile'){
                 let variants = ['evil', 'frost', 'blind', 'shock', 'summon', 'dead']

@@ -3,16 +3,17 @@ import CursedWeaponStatus from "../../Status/CursedWeaponStatus";
 import SwordmanAbility from "./SwordmanAbility";
 
 export default class CursedWeapon extends SwordmanAbility{
-    cd: boolean
+
     cast: boolean
     drinker: boolean
 
     constructor(owner: Swordman){
         super(owner)
-        this.cd = false
+
         this.cast = false
         this.drinker = false
         this.name = 'cursed weapon'
+        this.cd = 12000
     }
 
     canUse(): boolean {
@@ -24,11 +25,6 @@ export default class CursedWeapon extends SwordmanAbility{
 
         this.used = true
 
-        setTimeout(() => {
-            this.used = false
-            this.cast = false
-        }, 20000)
-
         this.owner.state = 'cast'
         this.owner.can_move_by_player = false
 
@@ -38,6 +34,7 @@ export default class CursedWeapon extends SwordmanAbility{
             this.owner.action = false
             this.owner.can_move_by_player = true
             this.owner.action_time = undefined
+            this.afterUse()
             this.cast = false
         }
 

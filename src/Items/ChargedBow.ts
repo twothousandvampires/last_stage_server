@@ -26,6 +26,8 @@ export default class ChargedBow extends Item {
     }
 
     trigger(character: Character, target: any){
+        if(this.disabled) return
+
         if(target && Func.chance(this.chance) && !this.cd){
             this.cd = true
             setTimeout(() => {

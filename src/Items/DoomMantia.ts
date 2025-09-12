@@ -22,6 +22,8 @@ export default class DoomMantia extends Item {
     }
     
     trigger(character: Character){
+        if(this.disabled) return
+        
         if(Func.chance(this.chance)){
             let targets = character.level.enemies.concat(character.level.players.filter(elem => elem != character))
             targets = targets.filter(elem => Func.distance(elem, character) <= this.distance)

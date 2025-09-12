@@ -20,6 +20,7 @@ import Item from "./Item";
         }
         
         trigger(character: Character){
+            if(this.disabled) return
             if(!character.life_status) return
 
             character.might += this.count

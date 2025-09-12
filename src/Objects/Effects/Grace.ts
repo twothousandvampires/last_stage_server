@@ -18,7 +18,7 @@ export default class Grace extends Effect{
         super(level)
         this.name = 'grace'
         this.time = Date.now()
-        this.box_r = 2
+        this.box_r = 4
         this.gatedPlayers = []
         this.leaved = []
         this.not_deserving = []

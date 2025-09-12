@@ -20,12 +20,6 @@ export default class UnleashPain extends CultistAbility{
         return this.owner.resource >= this.cost && this.owner.can_attack && !this.owner.is_attacking
     }
 
-    afterUse(){
-        this.owner.use_not_utility_triggers.forEach(elem => {
-            elem.trigger(this.owner)
-        })
-    }
-
     use(){
         this.owner.pay_to_cost = this.cost
 

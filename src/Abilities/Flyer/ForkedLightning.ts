@@ -23,6 +23,10 @@ export default class ForkedLightning extends FlyerAbility{
     }
 
     use(){
+        if(this.used) return
+
+        this.used = true
+
         let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
        
@@ -51,7 +55,8 @@ export default class ForkedLightning extends FlyerAbility{
 
         this.owner.cancelAct = () => {
             this.owner.action = false
-            this.owner.addMoveSpeedPenalty(move_speed_reduce)        
+            this.owner.addMoveSpeedPenalty(move_speed_reduce)
+            this.afterUse()        
             this.owner.hit = false
             this.owner.is_attacking = false    
         }
@@ -83,7 +88,6 @@ export default class ForkedLightning extends FlyerAbility{
 
             this.level.projectiles.push(proj)
             this.attack_angle = undefined
-            this.afterUseSecond()
         }
          else if(this.action_is_end){
             this.action_is_end = false

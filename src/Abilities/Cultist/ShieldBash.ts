@@ -24,6 +24,8 @@ export default class ShieldBash extends CultistAbility{
     }
 
     use(){
+        this.used = true
+        
         let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
         
@@ -58,7 +60,7 @@ export default class ShieldBash extends CultistAbility{
         this.owner.cancelAct = () => {
             this.owner.action = false
             this.owner.addMoveSpeedPenalty(move_speed_reduce)
-
+            this.afterUse()
             this.owner.hit = false
             this.owner.is_attacking = false
             this.owner.hit_x = undefined
@@ -138,8 +140,7 @@ export default class ShieldBash extends CultistAbility{
             })
 
             this.attack_angle = undefined
-            this.afterUseSecond()
-
+            
             if(this.second_ability.used === true && this.second_ability.coordination && Func.chance(30)){
                 this.second_ability.used = false
             }

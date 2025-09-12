@@ -22,13 +22,6 @@ export default class PileOfThornCast extends CultistAbility{
         return this.owner.resource >= this.cost && this.owner.can_cast && !this.owner.is_attacking
     }
 
-    afterUse(){
-        this.owner.use_not_utility_triggers.forEach(elem => {
-                elem.trigger(this.owner)
-        })
-        this.owner.last_skill_used_time = this.owner.time
-    }
-
     use(){
         let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)

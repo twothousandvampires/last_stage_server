@@ -24,6 +24,8 @@ export default class GrimPile extends CultistAbility{
     }
 
     use(){
+        this.used = true
+        
         let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
 
@@ -53,7 +55,7 @@ export default class GrimPile extends CultistAbility{
         this.owner.cancelAct = () => {
             this.owner.action = false
             this.owner.addMoveSpeedPenalty(70)
-
+            this.afterUse()
             this.owner.hit = false
             this.owner.is_attacking = false
             this.owner.hit_x = undefined
@@ -88,7 +90,6 @@ export default class GrimPile extends CultistAbility{
           
             this.level.enemies.push(pile)
             this.attack_angle = undefined
-            this.afterUseSecond()
         }
         else if(this.action_is_end){
             this.action_is_end = false

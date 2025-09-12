@@ -20,6 +20,8 @@ export default class YellowStone extends Item{
     }
 
     trigger(character: Character){
+        if(this.disabled) return
+        
         character.ward += this.count
     }
 }

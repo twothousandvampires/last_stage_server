@@ -178,7 +178,7 @@ export default class Swordman extends Character{
             return
         }
 
-        this.playerWasHited()
+        this.playerWasHited(unit)
 
         let b_chance = this.block_chance + this.agility * 3
 
@@ -705,6 +705,7 @@ export default class Swordman extends Character{
 
     addResourse(count: number = 1, ignore_limit = false){
         if(!this.can_regen_resource) return
+        
         this.addPoint(count, ignore_limit)
     }
 

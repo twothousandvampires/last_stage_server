@@ -6,7 +6,7 @@ import Item from "./Item";
 export default class SparklingHelmet extends Item{
 
     unit: any
-    status: Status | undefined
+    status: SparklingHelmetStatus | undefined
 
     constructor(){
         super()
@@ -21,5 +21,19 @@ export default class SparklingHelmet extends Item{
         status.setPower(1)
         
         character.level.setStatus(character, status)
+    }
+
+    disable(): void {
+        this.disabled = true
+        if(this.status){
+             this.status.disabled = true
+        }
+    }
+
+    enable(): void {
+        this.disabled = false
+        if(this.status){
+             this.status.disabled = false
+        }
     }
 }

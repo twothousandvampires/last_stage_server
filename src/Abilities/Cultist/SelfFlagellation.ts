@@ -4,30 +4,32 @@ import Cultist from "../../Objects/src/PlayerClasses/Cultist";
 import CultistAbility from "./CultistAbility";
 
 export default class SelfFlagellation extends CultistAbility{
-
-    cd: boolean
+    
     pack: boolean
     lesson: boolean
 
     constructor(owner: Cultist){
         super(owner)
-        this.cd = false
+        this.cd = 6000
         this.pack = false
         this.lesson = false
         this.name = 'self-flagellation'
     }
 
     canUse(): boolean {
-        return !this.cd
+        return !this.used
+    }
+
+    afterUse(): void {
+        setTimeout(() => {
+            this.used = false
+        }, this.getCd() - this.owner.getSecondResource() * 300)
     }
 
     use(): void {
-        if(this.cd) return 
-        this.cd = true
+        if(this.used) return 
 
-        setTimeout(() => {
-            this.cd = false
-        }, 10000 - this.owner.getSecondResource() * 300)
+        this.used = true
 
         let e = new Blood(this.owner.level)
         e.setPoint(Func.random(this.owner.x - 2, this.owner.x + 2), this.owner.y)
@@ -41,6 +43,8 @@ export default class SelfFlagellation extends CultistAbility{
         this.owner.avoid_damaged_state_chance += 100
         this.owner.takeDamage()
         this.owner.avoid_damaged_state_chance -= 100
+
+        this.afterUse()
 
         if(this.pack){
             this.owner.can_be_lethaled = true

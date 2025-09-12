@@ -10,7 +10,6 @@ export default class Rune extends CultistAbility{
     fast_detonation: boolean
     explosive: boolean
     second_detanation: boolean
-    cd: boolean
 
     constructor(owner: Cultist){
         super(owner)
@@ -20,11 +19,11 @@ export default class Rune extends CultistAbility{
         this.fast_detonation = false
         this.explosive = false
         this.second_detanation = false
-        this.cd = false
+        this.cd = 0
     }
 
     canUse(): boolean {
-        return !this.cd && this.owner.can_cast && !this.owner.is_attacking
+        return !this.used && this.owner.can_cast && !this.owner.is_attacking
     }
 
     use(){
@@ -56,7 +55,6 @@ export default class Rune extends CultistAbility{
         this.owner.cancelAct = () => {
             this.owner.action = false
             this.owner.addMoveSpeedPenalty(70)
-
             this.owner.hit = false
             this.owner.is_attacking = false
             this.owner.hit_x = undefined
@@ -124,10 +122,13 @@ export default class Rune extends CultistAbility{
                 }
 
                 if(count){
-                    this.first_ability.cd = true
+                    this.first_ability.used = true
+                    this.first_ability.cd = 1500 * count
                     setTimeout(() => {
-                        this.first_ability.cd = false
-                    }, count * 2000)
+                        this.first_ability.cd = 0
+                        this.first_ability.used = false
+
+                    }, this.first_ability.getCd())
                 }
             }
 

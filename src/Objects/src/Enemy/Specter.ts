@@ -124,7 +124,7 @@ export default class Specter extends Enemy{
             e.r = this.attack_radius
 
             if(this.target?.z < 5 && Func.checkAngle(this, this.target, this.attack_angle, 1.6) && Func.elipseCollision(e, this.target?.getBoxElipse())){
-                this.target?.takeDamage()
+                this.target?.takeDamage(this)
             }
         }
     }

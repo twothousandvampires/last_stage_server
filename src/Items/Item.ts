@@ -14,6 +14,7 @@ export default abstract class Item {
     public duration: number = 0
     public count: number = 0
     public description: string = ''
+    public disabled: boolean = false
 
     static list = [
         {
@@ -57,7 +58,7 @@ export default abstract class Item {
         },
         {
             name: "staff",
-            description: 'gives a chance for the second skill not to be used after use'
+            description: 'reduces cooldowns'
         },
         {
             name: "charged bow",
@@ -82,6 +83,14 @@ export default abstract class Item {
         {
             name: "whispering shield",
             description: 'increases a chance to block and... whispers strange things sometimes'
+        },
+        {
+            name: "twilight gloves",
+            description: 'periodically create clots of energy on enemies'
+        },
+        {
+            name: "Ring of transmutation",
+            description: 'when hitted by enemy there is a chance turn them into gold'
         },
     ]
 
@@ -135,6 +144,14 @@ export default abstract class Item {
     setPlayer(player: Character){
         this.player = player
         this.equip(this.player)
+    }
+
+    disable(){
+        this.disabled = true
+    }
+
+    enable(){
+        this.disabled = false
     }
 
     public unlockForging(): boolean{

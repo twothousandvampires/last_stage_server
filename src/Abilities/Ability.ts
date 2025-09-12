@@ -13,4 +13,19 @@ export default abstract class Ability{
     
     abstract use(): void 
     abstract canUse(): boolean
+
+    getCd(){
+        let red = this.owner.cd_reduction
+        if(red > 90){
+            red = 90
+        }
+
+        return this.cd * (1 - red / 100)
+    }
+
+    afterUse(){
+        setTimeout(() => {
+            this.used = false
+        }, this.getCd())
+    }
 }

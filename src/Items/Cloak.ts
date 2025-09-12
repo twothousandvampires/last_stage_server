@@ -22,6 +22,8 @@ export default class Cloak extends Item{
     }
 
     trigger(character: Character){
+        if(this.disabled) return
+        
         if(Func.chance(this.chance)){
             let status = new Phase(character.time)
 

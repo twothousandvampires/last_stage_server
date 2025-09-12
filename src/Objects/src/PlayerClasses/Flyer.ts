@@ -570,7 +570,7 @@ export default class Flyer extends Character{
             return
         }
 
-        this.playerWasHited()
+        this.playerWasHited(unit)
 
         if(this.state === 'defend' && this.resource > 0 && Func.chance(this.block_chance)){
 
