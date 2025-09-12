@@ -147,7 +147,7 @@ export default class Cultist extends Character{
             this.resource += count
         }
 
-        if(Func.chance(this.durability * 3)){
+        if(Func.chance(this.durability * 3, this.is_lucky)){
             if(this.resource < this.max_resource){
                 this.resource ++
             }
@@ -255,14 +255,14 @@ export default class Cultist extends Character{
             b_chance = 90
         }
 
-        if(this.state === 'defend' && Func.chance(b_chance)){
+        if(this.state === 'defend' && Func.chance(b_chance, this.is_lucky)){
             this.level.sounds.push({
                 name: 'metal hit',
                 x: this.x,
                 y: this.y
             })
 
-            if(this.conduct_of_pain && Func.chance(50)){
+            if(this.conduct_of_pain && Func.chance(50, this.is_lucky)){
                 this.addResourse()
             }
 
@@ -280,7 +280,7 @@ export default class Cultist extends Character{
             arm = Cultist.MAX_ARMOUR
         }
 
-        if(Func.chance(arm)){
+        if(Func.chance(arm, this.is_lucky)){
             this.level.sounds.push({
                 name: 'metal hit',
                 x: this.x,
@@ -308,7 +308,7 @@ export default class Cultist extends Character{
             will_avoid = 50
         }
 
-        if(Func.chance(will_avoid)){
+        if(Func.chance(will_avoid, this.is_lucky)){
             return
         }
 
@@ -771,7 +771,7 @@ export default class Cultist extends Character{
             this.addLife()
 
             if(this.service){
-                if(Func.chance(this.getSecondResource() * 10)){
+                if(Func.chance(this.getSecondResource() * 10, this.is_lucky)){
                     this.addResourse()
                 }
             }
@@ -783,7 +783,7 @@ export default class Cultist extends Character{
             elem.trigger(this)
         })
 
-        if(this.pain_extract && Func.chance(5)){
+        if(this.pain_extract && Func.chance(5, this.is_lucky)){
             this.addResourse()
         }
     }
@@ -795,7 +795,7 @@ export default class Cultist extends Character{
             let previous = this.life_status
 
             if(previous >= 3){
-                if(ignore_limit || (this.lust_for_life && Func.chance(this.getSecondResource() * 4))){
+                if(ignore_limit || (this.lust_for_life && Func.chance(this.getSecondResource() * 4, this.is_lucky))){
 
                 }
                 else{
@@ -861,6 +861,6 @@ export default class Cultist extends Character{
     }
 
     isStatusResist(){
-        return Func.chance(this.status_resistance + (this.will * 3))
+        return Func.chance(this.status_resistance + (this.will * 3), this.is_lucky)
     }
 }

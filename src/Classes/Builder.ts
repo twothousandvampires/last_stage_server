@@ -36,6 +36,7 @@ import SkullOfFirstWarrior from "../Items/SkullOfFirstWarrior"
 import SoulAccumulator from "../Items/SoulAccumulator"
 import SparklingHelmet from "../Items/SparklingHelmet"
 import Staff from "../Items/Staff"
+import SwordHandle from "../Items/SwordHandle"
 import TwilightGloves from "../Items/TwilightGloves"
 import WallOfBones from "../Items/WallOfBones"
 import WhisperingShield from "../Items/WhisperingShield"
@@ -137,7 +138,9 @@ export default class Builder{
         else if(item_name === 'Ring of transmutation'){
             return new RingOfTransmutation()
         }
-        
+        else if(item_name === 'sword handle'){
+            return new SwordHandle()
+        }
     }
 
     static createForging(name: string, item: Item){

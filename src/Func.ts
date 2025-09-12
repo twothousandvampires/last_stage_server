@@ -94,11 +94,20 @@ export default class Func{
             && y < rect.y + rect.height)
     }
 
-    public static random(min: number = 1, max: number = 100): number{
+    public static random(min: number = 0, max: number = 100): number{
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
-    public static chance(chance: number){
-        return chance >= Func.random()
+    public static chance(chance: number, luck: boolean = false){
+        if(luck){
+            let f = Func.random()
+            if(chance >= f) return true
+
+            let s = Func.random()
+            return chance >= s
+        }
+        else{
+            return chance >= Func.random()
+        }
     }
 }

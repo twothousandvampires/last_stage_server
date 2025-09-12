@@ -13,7 +13,7 @@ export default class BlessedArmourStatus extends Status{
         this.unit.newStatus({
             name: 'blessed armour',
             duration: this.duration,
-            desc: 'lose resourse when get damage'
+            desc: 'armour are increased'
         })
     }
 
@@ -27,7 +27,7 @@ export default class BlessedArmourStatus extends Status{
         this.unit.newStatus({
             name: 'blessed armour',
             duration: this.duration,
-            desc: 'lose resourse when get damage'
+            desc: 'armour are increased'
         })
     }
 }
