@@ -135,7 +135,7 @@ export default class Builder{
         else if(item_name === 'twilight gloves'){
             return new TwilightGloves()
         }
-        else if(item_name === 'Ring of transmutation'){
+        else if(item_name === 'ring of transmutation'){
             return new RingOfTransmutation()
         }
         else if(item_name === 'sword handle'){

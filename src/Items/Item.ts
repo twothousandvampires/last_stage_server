@@ -89,7 +89,7 @@ export default abstract class Item {
             description: 'periodically create clots of energy on enemies'
         },
         {
-            name: "Ring of transmutation",
+            name: "ring of transmutation",
             description: 'when hitted by enemy there is a chance turn them into gold'
         },
         {
