@@ -1128,9 +1128,6 @@ export default abstract class Character extends Unit{
     }
 
     public setDefend(): void{
-        if(this.freezed) return
-        if(this.zaped) return
-        
         this.state = 'defend'
         this.stateAct = this.defendAct
         let reduce = 80
@@ -1147,11 +1144,38 @@ export default abstract class Character extends Unit{
         }
     }
 
+    setZapedAct(){     
+        this.state = 'zaped'     
+        this.zaped = true
+        this.stateAct = this.zapedAct
+        this.can_move_by_player = false
+
+        this.cancelAct = () => {
+            this.zaped = false
+            this.can_move_by_player = true
+        }
+    }
+
+    setFreezeState(){
+        this.freezed = true
+        this.state = 'freezed'
+        this.can_move_by_player = false     
+
+        this.stateAct = this.freezedAct
+
+        this.cancelAct = () => {
+            if(!this.is_dead){
+                this.freezed = false
+                this.can_move_by_player = true
+            }
+        }
+    }
+
     public act(time: number): void {
         this.time = time
         if(!this.can_act || !this.stateAct) return
         
-        else if(this.pressed[32]){
+        if(this.can_move_by_player && this.pressed[32]){
             this.setState(this.setDefend)
         }
        

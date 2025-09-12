@@ -512,6 +512,9 @@ export default class Flyer extends Character{
     }
 
     setDefend(){
+        if(this.freezed) return
+        if(this.zaped) return
+
         this.state = 'defend'
         this.stateAct = this.defendAct
 

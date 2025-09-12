@@ -24,7 +24,7 @@ export default class WeaponSwing extends SwordmanAbility{
     use(){
         let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
-
+        
         if(rel_x < this.owner.x){
             this.owner.flipped = true
         }
