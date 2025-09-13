@@ -1,13 +1,13 @@
 import Character from "../Objects/src/Character"
 import Status from "./Status"
 
-export default class Corrosion extends Status{
+export default class Crushed extends Status{
    
     name: string
     
     constructor(public time: number){
         super(time)
-        this.name = 'corrosion'
+        this.name = 'crushed'
         this.need_to_check_resist = true
     }
 
@@ -16,19 +16,21 @@ export default class Corrosion extends Status{
         if(this.unit instanceof Character){
             this.unit.statusWasApplied()
 
-            this.unit.item.forEach(elem => elem.disable())
-        
+            this.unit.block_chance -= 30
+            this.unit.armour_rate -= 30
+
             this.unit.newStatus({
-                name: 'corrosion',
+                name: 'crushed',
                 duration: this.duration,
-                desc: 'items are disabled'
+                desc: 'armour and block chance are reduced'
             })
         }
     }
 
     clear(){
         if(this.unit instanceof Character){
-            this.unit.item.forEach(elem => elem.enable())
+            this.unit.block_chance += 30
+            this.unit.armour_rate += 30
         }
     }
 
@@ -36,9 +38,9 @@ export default class Corrosion extends Status{
         this.time = Date.now()
 
         this.unit.newStatus({
-            name: 'corrosion',
+            name: 'crushed',
             duration: this.duration,
-            desc: 'items are disabled'
+            desc: 'armour and block chance are reduced'
         })
     }
 }

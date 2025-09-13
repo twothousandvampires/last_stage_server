@@ -69,14 +69,14 @@ export default class Cultist extends Character{
     }
 
     getMoveSpeed(): number{
-        let total_inc = this.move_speed_penalty
-        let speed = this.move_speed + (this.agility / 35)
+        let total_inc = this.move_speed_penalty + this.agility
+    
+        if(total_inc === 0) return this.move_speed
 
-        if(!total_inc) return speed
-        if(total_inc > 100) total_inc = 100
-        if(total_inc < -90) total_inc = -90
+        if(total_inc > 200) total_inc = 200
+        if(total_inc < -95) total_inc = -95
        
-        return speed * (1 + total_inc / 100)
+        return this.move_speed * (1 + total_inc / 100)
     }
 
     createAbilities(abilities: any){
@@ -280,7 +280,7 @@ export default class Cultist extends Character{
             arm = Cultist.MAX_ARMOUR
         }
 
-        if(Func.chance(arm, this.is_lucky)){
+        if(!this.no_armour && Func.chance(arm, this.is_lucky)){
             this.level.sounds.push({
                 name: 'metal hit',
                 x: this.x,

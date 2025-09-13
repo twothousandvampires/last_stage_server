@@ -96,11 +96,17 @@ export default abstract class Item {
             name: "sword handle",
             description: 'you are lucky'
         },
+        {
+            name: "ice belt",
+            description: 'increases maximum of resources'
+        },
     ]
 
     static forging_list_all = [
         'critical',
         'pierce',
+        'sacredness',
+        'toughness'
     ]
 
     static forging_list_type_1 = [
@@ -123,7 +129,8 @@ export default abstract class Item {
         'will',
         'knowledge',
         'max resources',
-        'gold find'
+        'gold find',
+        'cooldown reduction'
     ]
 
 

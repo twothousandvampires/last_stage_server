@@ -3,23 +3,21 @@ import Func from "../../Func";
 import Level from "../../Level";
 import Projectiles from "./Projectiles";
 
-export class SoulShatterProj extends Projectiles{
+export class Spark extends Projectiles{
 
     w: number
     start_x: number | undefined
     start_y: number | undefined
     start: any
-    duration: number
     change_angle: any
+    hitted: any[] = []
 
-    constructor(level: Level){
+    constructor(level: Level, private pierce_count: number = 1, private ttl: number = 3000){
         super(level)
         this.box_r = 0.4
-        this.name = 'specter soul seeker'
-        this.move_speed = 0.4
+        this.name = 'spark'
+        this.move_speed = 0.8
         this.w = 3
-        this.duration = 10000
-
     }
 
     setStart(time: number){
@@ -36,13 +34,13 @@ export class SoulShatterProj extends Projectiles{
 
     act(tick: number): void { 
       
-        if(tick - this.start >= this.duration){
+        if(tick - this.start >= this.ttl){
             this.delete()
             return
         }
 
-        if(tick - this.change_angle >= 500){
-            this.change_angle += 500
+        if(tick - this.change_angle >= 200){
+            this.change_angle += 200
             if(Math.random() > 0.5){
                 this.angle += 0.5
             }
@@ -52,13 +50,28 @@ export class SoulShatterProj extends Projectiles{
         }
 
         this.level.players.forEach(elem => {
-            
+            if(elem != this.owner && !this.hitted.includes(elem.id) && !elem.is_dead && Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
+                elem.takeDamage(this.owner)
+                this.pierce_count --
+                if(this.pierce_count === 0){
+                    this.delete()
+                }
+                else{
+                    this.hitted.push(elem.id)
+                }
+            }
         })
 
         this.level.enemies.forEach(elem => {
-            if(!elem.is_dead && Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
-                elem.takeDamage(this.owner)
-                this.delete()
+            if(!this.hitted.includes(elem.id) && !elem.is_dead && Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
+                elem.takeDamage()
+                this.pierce_count --
+                if(this.pierce_count === 0){
+                    this.delete()
+                }
+                else{
+                    this.hitted.push(elem.id)
+                }
             }
         })
 
@@ -92,6 +105,8 @@ export class SoulShatterProj extends Projectiles{
     }
 
     reflect(angle: number){
+        this.hitted = []
+
         let normalAngle = angle + Math.PI / 2
 
         let incidenceAngle = this.angle - normalAngle

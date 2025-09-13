@@ -1,3 +1,4 @@
+import Func from "../../Func";
 import FrostNova from "../../Objects/Effects/FrostNova";
 import Character from "../../Objects/src/Character";
 import Unit from "../../Objects/src/Unit";
@@ -7,6 +8,8 @@ import Forging from "./Forging";
 export default class NovaThenHit extends Forging{
 
     value: number = 0
+    freq: number = 2000
+    last_trigger_time: number = 0
 
     constructor(item: Item){
         super(item)
@@ -20,9 +23,9 @@ export default class NovaThenHit extends Forging{
         if(this.canBeForged() && this.costEnough()){
             if(!player.on_hit_triggers.some(elem => elem instanceof NovaThenHit)){
                 player.on_hit_triggers.push(this)
-                 this.payCost()
             }
-        
+
+            this.payCost()
             this.value += 15
         }
     }
@@ -32,10 +35,24 @@ export default class NovaThenHit extends Forging{
     }
 
     trigger(player: Character, target: Unit){
-        let e = new FrostNova(player.level)
-        e.setPoint(target.x, target.y)
-        
-        player.level.effects.push(e)
+        if(player.level.time - this.last_trigger_time >= this.freq){
+            this.last_trigger_time = player.level.time
+
+            let e = new FrostNova(player.level)
+            e.setPoint(target.x, target.y)
+
+            let targets = player.level.enemies.concat(player.level.players.filter(elem => elem != player))
+            let box = target.getBoxElipse()
+            box.r = 12
+            for(let i = 0; i < targets.length; i++){
+                let target = targets[i]
+                if(Func.elipseCollision(box, target.getBoxElipse())){
+                    target.setFreeze(2000)
+                }
+            }
+
+            player.level.effects.push(e)
+        }
     }
 
     canBeForged(): boolean {

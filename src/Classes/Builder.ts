@@ -11,6 +11,7 @@ import AttackSpeed from "../Items/Forgings/AttackSpeed"
 import BlockChance from "../Items/Forgings/BlockChance"
 import CastSpeed from "../Items/Forgings/CastSpeed"
 import Chance from "../Items/Forgings/Chance"
+import CooldownReduction from "../Items/Forgings/CooldownReduction"
 import Count from "../Items/Forgings/Count"
 import Critical from "../Items/Forgings/Critical"
 import Distance from "../Items/Forgings/Distance"
@@ -25,10 +26,13 @@ import NovaThenHit from "../Items/Forgings/NovaThenHit"
 import Pierce from "../Items/Forgings/Pierce"
 import Regen from "../Items/Forgings/Regen"
 import Resist from "../Items/Forgings/Resist"
+import Sacredness from "../Items/Forgings/Sacredness"
 import Speed from "../Items/Forgings/Speed"
+import Toughness from "../Items/Forgings/Toughness"
 import Will from "../Items/Forgings/Will"
 import GlacialChain from "../Items/GlacialChain"
 import GlassSword from "../Items/GlassSword"
+import IceBelt from "../Items/IceBelt"
 import Item from "../Items/Item"
 import RedPotion from "../Items/RedPotion"
 import RingOfTransmutation from "../Items/RingOfTransmutation"
@@ -141,6 +145,9 @@ export default class Builder{
         else if(item_name === 'sword handle'){
             return new SwordHandle()
         }
+        else if(item_name === 'ice belt'){
+            return new IceBelt()
+        }
     }
 
     static createForging(name: string, item: Item){
@@ -189,7 +196,12 @@ export default class Builder{
                 return new Duration(item)
             case 'frequency':
                 return new Frequency(item)
-
+            case 'cooldown reduction':
+                return new CooldownReduction(item)
+            case 'sacredness':
+                return new Sacredness(item)
+            case 'toughness':
+                return new Toughness(item)
             default:    
                 return new NovaThenHit(item)
         }

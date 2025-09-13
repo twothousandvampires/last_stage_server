@@ -17,14 +17,14 @@ export default class ImprovedSwingTechnology extends Status{
     apply(unit: any){
         this.unit = unit
         if(this.unit instanceof Character){
-            this.unit.move_speed += 0.1
+            this.unit.move_speed_penalty += 5
             this.unit.attack_speed -= 100
         }
     }
 
     clear(){
         if(this.unit instanceof Character){
-            this.unit.move_speed -= 0.1 * this.stack_count
+            this.unit.move_speed_penalty -= 5 * this.stack_count
             this.unit.attack_speed += 100 * this.stack_count
         }
     }
@@ -33,7 +33,7 @@ export default class ImprovedSwingTechnology extends Status{
         this.time = Date.now()
         if(this.stack_count < this.max_stack){
             this.stack_count ++
-            this.unit.move_speed += 0.1
+            this.unit.move_speed_penalty += 5
             this.unit.attack_speed -= 100
         }
     }

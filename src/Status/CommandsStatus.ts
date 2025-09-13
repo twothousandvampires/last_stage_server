@@ -11,7 +11,7 @@ export default class CommandsStatus extends Status{
         this.unit = unit
 
         if(this.unit instanceof Character){
-            this.unit.move_speed += this.add_ms
+            this.unit.move_speed_penalty += this.add_ms
             this.unit.armour_rate += this.add_armour
 
             this.unit.newStatus({
@@ -24,7 +24,7 @@ export default class CommandsStatus extends Status{
 
     clear(){
         if(this.unit instanceof Character){
-            this.unit.move_speed -= this.add_ms
+            this.unit.move_speed_penalty -= this.add_ms
             this.unit.armour_rate -= this.add_armour
         }
     }

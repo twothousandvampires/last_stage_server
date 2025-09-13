@@ -16,7 +16,7 @@ export default class AfterlifeCold extends Status{
             this.last_checked += 300
             this.unit.level.enemies.forEach(elem => {
                 if(Func.elipseCollision(elem.getBoxElipse(), this.unit.getBoxElipse())){
-                    elem.setFreeze(2000)
+                    elem.setFreeze(5000)
                 }
             })
         }

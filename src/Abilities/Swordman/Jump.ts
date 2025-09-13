@@ -70,10 +70,12 @@ export default class Jump extends SwordmanAbility{
         }, this.total_jump_time)
 
         this.owner.stateAct = this.getAct()  
-        
+        this.owner.avoid_damaged_state_chance += 100
+
         this.owner.cancelAct = () => {
             this.owner.z = 0
             this.owner.is_attacking = false
+            this.owner.avoid_damaged_state_chance -= 100
             this.afterUse()
             this.direction = false
             this.impact = false

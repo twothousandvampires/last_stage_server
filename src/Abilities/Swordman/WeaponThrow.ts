@@ -25,7 +25,7 @@ export default class WeaponThrow extends SwordmanAbility{
     }
 
     use(){
-        if(this.used || this.owner.is_attacking) this.returning
+        if(this.used || this.owner.is_attacking) return
 
         let cd_time = this.getCd()
         this.used = true

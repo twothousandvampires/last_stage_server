@@ -1,5 +1,6 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
+import Crushed from "../../../Status/Crashed";
 import GroundHit from "../../Effects/GroundHit";
 import { Enemy } from "./Enemy";
 
@@ -69,7 +70,7 @@ export default class Solid extends Enemy{
             let e = this.getBoxElipse()
             e.x = this.hit_x
             e.y = this.hit_y
-            e.r = 3.5
+            e.r = 3
 
             let effect = new GroundHit(this.level)
             effect.setPoint(e.x, e.y)
@@ -80,6 +81,12 @@ export default class Solid extends Enemy{
             this.level.players.forEach(p => {
                 if(p?.z < 5 && Func.elipseCollision(e, p?.getBoxElipse())){
                     p.takeDamage()
+                    if(Func.chance(50)){
+                        let s = new Crushed(this.level.time)
+                        s.setDuration(6000)
+
+                        this.level.setStatus(p, s, true)
+                    }
                 }
             })
         }

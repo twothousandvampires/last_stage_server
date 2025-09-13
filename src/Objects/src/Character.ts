@@ -68,7 +68,6 @@ export default abstract class Character extends Unit{
     spend_grace: boolean = false
     target: string | undefined
     a: number = 0.2
-    can_be_damaged: boolean = true
     can_regen_life: boolean = true
     can_use_skills: boolean = true
     upgrades: any[] = []
@@ -88,14 +87,15 @@ export default abstract class Character extends Unit{
     cast_speed: number = 2000
     mad_target: any
     after_grace_statuses: Status[] = []
-    chance_second_skill_not_to_be_used: number = 0
     gold_find: number = 0
     action_is_end: boolean = false
     voice_radius: number = 20
     public gold: number = 0
     public block_chance: number = 0
     cd_reduction: number = 0
-  
+    can_block: boolean = true
+    no_armour: boolean = false
+
     constructor(level: Level){
         super(level)
         this.box_r = 2.5
@@ -160,6 +160,7 @@ export default abstract class Character extends Unit{
 
     setFreeze(duration: number){
         if(this.is_dead) return
+        if(!this.can_be_damaged) return
 
         if(this.isStatusResist()){
             this.statusWasResisted(undefined)
@@ -1145,6 +1146,8 @@ export default abstract class Character extends Unit{
     }
 
     setZapedAct(){     
+        
+
         this.state = 'zaped'     
         this.zaped = true
         this.stateAct = this.zapedAct
@@ -1154,6 +1157,10 @@ export default abstract class Character extends Unit{
             this.zaped = false
             this.can_move_by_player = true
         }
+    }
+
+    getCdRedaction(){
+        return this.cd_reduction
     }
 
     setFreezeState(){
@@ -1175,7 +1182,7 @@ export default abstract class Character extends Unit{
         this.time = time
         if(!this.can_act || !this.stateAct) return
         
-        if(this.can_move_by_player && this.pressed[32]){
+        if(this.can_block && this.can_move_by_player && this.pressed[32]){
             this.setState(this.setDefend)
         }
        
