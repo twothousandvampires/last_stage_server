@@ -15,7 +15,8 @@ export default abstract class Ability{
     abstract canUse(): boolean
 
     getCd(){
-        let red = this.owner.cd_reduction
+        let red = this.owner.getCdRedaction()
+        
         if(red > 90){
             red = 90
         }

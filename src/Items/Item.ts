@@ -96,6 +96,10 @@ export default abstract class Item {
             name: "sword handle",
             description: 'you are lucky'
         },
+        {
+            name: "ice belt",
+            description: 'increases maximum of resources'
+        },
     ]
 
     static forging_list_all = [

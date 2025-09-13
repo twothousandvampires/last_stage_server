@@ -24,7 +24,7 @@ export default class GlacialChain extends Item{
     trigger(character: Character){
         if(this.disabled) return
         
-        if(Func.chance(this.chance + (this.forge_power * 5))){
+        if(Func.chance(this.chance)){
             let effect = new FrostNova(character.level)
             effect.setPoint(character.x, character.y)
     
@@ -32,7 +32,7 @@ export default class GlacialChain extends Item{
 
             let targets = character.level.enemies.concat(character.level.players.filter(elem => elem != character))
             let box = character.getBoxElipse()
-            box.r = 12 + (this.forge_power * 2)
+            box.r = 12
             for(let i = 0; i < targets.length; i++){
                 let target = targets[i]
                 if(Func.elipseCollision(box, target.getBoxElipse())){

@@ -1,5 +1,6 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
+import Crushed from "../../../Status/Crashed";
 import GroundHit from "../../Effects/GroundHit";
 import { Enemy } from "./Enemy";
 
@@ -80,6 +81,12 @@ export default class Solid extends Enemy{
             this.level.players.forEach(p => {
                 if(p?.z < 5 && Func.elipseCollision(e, p?.getBoxElipse())){
                     p.takeDamage()
+                    if(Func.chance(50)){
+                        let s = new Crushed(this.level.time)
+                        s.setDuration(6000)
+
+                        this.level.setStatus(p, s, true)
+                    }
                 }
             })
         }

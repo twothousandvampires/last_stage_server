@@ -7,6 +7,7 @@ import Pile from "../Piles/Pile";
 export default class Gifter extends Pile{
 
     start_time: any
+    last_grace_spawn_time: number = 0
 
     constructor(level: Level){
         super(level)
@@ -15,7 +16,7 @@ export default class Gifter extends Pile{
         this.move_speed = 0
         this.attack_radius = 0
         this.attack_speed = 1600
-        this.life_status = 10
+        this.life_status = 100
         this.spawn_time = 1600
         this.armour_rate = 0
         this.create_chance = 0
@@ -66,20 +67,11 @@ export default class Gifter extends Pile{
         }
 
         this.life_status -= damage_value
-        
-        unit?.succesefulHit(this)
-        
-        if(this.life_status <= 0){
-            this.is_dead = true
-            unit?.succesefulKill()
-            this.setDyingAct()
-        }
-    }
 
-    setDyingAct(){
-        for(let i = 0; i < 10; i++){
-           
-            let add = Math.round(i / 3)
+        if(this.level.time - this.last_grace_spawn_time >= 1000){
+            this.last_grace_spawn_time = this.level.time
+            
+            let add = Func.random(3, 7)
             let distance_x = Func.random(1, 3) + add
             let distance_y = Func.random(1, 3) + add
             let angle = Math.random() * 6.28
@@ -91,7 +83,33 @@ export default class Gifter extends Pile{
             grace.setPoint(x, y)
 
             this.level.binded_effects.push(grace)
-        } 
+        }
+        
+        unit?.succesefulHit(this)
+        
+        if(this.life_status <= 0){
+            this.is_dead = true
+            unit?.succesefulKill()
+            this.setDyingAct()
+        }
+    }
+
+    setDyingAct(){
+        // for(let i = 0; i < 10; i++){
+           
+        //     let add = Math.round(i / 3)
+        //     let distance_x = Func.random(1, 3) + add
+        //     let distance_y = Func.random(1, 3) + add
+        //     let angle = Math.random() * 6.28
+
+        //     let x = this.x + (Math.sin(angle) * distance_x)
+        //     let y = this.y + (Math.cos(angle) * distance_y)
+
+        //     let grace = new GraceShard(this.level)
+        //     grace.setPoint(x, y)
+
+        //     this.level.binded_effects.push(grace)
+        // } 
 
         this.is_corpse = true
         this.state = 'dead'

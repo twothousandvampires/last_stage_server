@@ -29,6 +29,7 @@ import Speed from "../Items/Forgings/Speed"
 import Will from "../Items/Forgings/Will"
 import GlacialChain from "../Items/GlacialChain"
 import GlassSword from "../Items/GlassSword"
+import IceBelt from "../Items/IceBelt"
 import Item from "../Items/Item"
 import RedPotion from "../Items/RedPotion"
 import RingOfTransmutation from "../Items/RingOfTransmutation"
@@ -140,6 +141,9 @@ export default class Builder{
         }
         else if(item_name === 'sword handle'){
             return new SwordHandle()
+        }
+        else if(item_name === 'ice belt'){
+            return new IceBelt()
         }
     }
 

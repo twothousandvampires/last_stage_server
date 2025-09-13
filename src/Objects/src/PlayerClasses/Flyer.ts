@@ -6,6 +6,7 @@ import Frostnova from "../../../Abilities/Flyer/Frostnova";
 import FrostSphere from "../../../Abilities/Flyer/FrostSphere";
 import LightBeacon from "../../../Abilities/Flyer/LightBeacon";
 import LightningBolt from "../../../Abilities/Flyer/LightningBolt";
+import Sparks from "../../../Abilities/Flyer/Sparks";
 import StaticField from "../../../Abilities/Flyer/StaticField";
 import Teeth from "../../../Abilities/Flyer/Teeth";
 import Teleportation from "../../../Abilities/Flyer/Teleportation";
@@ -374,7 +375,7 @@ export default class Flyer extends Character{
                 },
                 {
                     name: 'light stream',
-                    type: '(annihilator beam)',
+                    type: 'annihilator beam',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && character.second_ability instanceof AnnihilatorBeam
                     },
@@ -388,7 +389,7 @@ export default class Flyer extends Character{
                 },
                 {
                     name: 'concentrating energy',
-                    type: '(annihilator beam)',
+                    type: 'annihilator beam',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && character.second_ability instanceof AnnihilatorBeam
                     },
@@ -412,6 +413,34 @@ export default class Flyer extends Character{
                     },
                     cost: 1,
                     desc: 'courage increase your armour rate'
+                },
+                {
+                    name: 'penetrating lightning',
+                    type: 'sparks',
+                    canUse: (character: Character) => {
+                        return character.third_ability instanceof Sparks && character.third_ability.pierce < 3
+                    },
+                    teach: (character: Character) => {
+                        if(character.third_ability instanceof Sparks){
+                            character.third_ability.pierce ++
+                        }
+                    },
+                    cost: 3,
+                    desc: 'increases the number of enemies your sparks can pass through'
+                },
+                {
+                    name: 'strong sparks',
+                    type: 'sparks',
+                    canUse: (character: Character) => {
+                        return character.third_ability instanceof Sparks && character.third_ability.ttl < 10000
+                    },
+                    teach: (character: Character) => {
+                        if(character.third_ability instanceof Sparks){
+                            character.third_ability.ttl += 2000
+                        }
+                    },
+                    cost: 3,
+                    desc: 'increases the duration'
                 },
         ]
     }
@@ -500,6 +529,9 @@ export default class Flyer extends Character{
         else if(finisher_name === 'frost nova'){
             this.third_ability = new Frostnova(this)
         }
+        else if(finisher_name === 'sparks'){
+            this.third_ability = new Sparks(this)
+        }
         
         let utility_name = abilities.find(elem => elem.type === 4 && elem.selected).name
 
@@ -511,10 +543,11 @@ export default class Flyer extends Character{
         }
     }
 
-    setDefend(){
-        if(this.freezed) return
-        if(this.zaped) return
+    getCdRedaction(){
+        return this.cd_reduction + this.might
+    }
 
+    setDefend(){
         this.state = 'defend'
         this.stateAct = this.defendAct
 
@@ -602,7 +635,7 @@ export default class Flyer extends Character{
 
         arm = arm > 95 ? 95 : arm
 
-        if(Func.chance(arm, this.is_lucky)){
+        if(!this.no_armour && Func.chance(arm, this.is_lucky)){
             let e = new Armour(this.level)
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)

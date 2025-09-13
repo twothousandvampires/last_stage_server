@@ -15,6 +15,7 @@ import ToothExplode from "../../Effects/ToothExplode";
 import Character from "../Character";
 import HeavenVengeance from "../../../Abilities/Swordman/HeavenVengeance";
 import EmergencyOrdersTrigger from "../../../Triggers/EmergencyOrdersTrigger";
+import SpectralSwords from "../../../Abilities/Swordman/SpectralSwords";
 
 export default class Swordman extends Character{
     
@@ -136,6 +137,9 @@ export default class Swordman extends Character{
         else if(finisher_name === 'quake'){
             this.third_ability = new Quake(this)
         }
+        else if(finisher_name === 'spectral swords'){
+            this.third_ability = new SpectralSwords(this)
+        }
 
         let utility_name = abilities.find(elem => elem.type === 4 && elem.selected).name
 
@@ -203,7 +207,7 @@ export default class Swordman extends Character{
             arm = 90
         }
 
-        if(Func.chance(arm, this.is_lucky)){
+        if(!this.no_armour && Func.chance(arm, this.is_lucky)){
             this.level.sounds.push({
                 name: 'metal hit',
                 x: this.x,
@@ -681,7 +685,7 @@ export default class Swordman extends Character{
     }
 
     public isStatusResist(): boolean{
-        let result = Func.chance(this.status_resistance + this.knowledge * 3, this.is_lucky)
+        let result = Func.chance(this.status_resistance + (this.knowledge * 3), this.is_lucky)
         return result
     }
 

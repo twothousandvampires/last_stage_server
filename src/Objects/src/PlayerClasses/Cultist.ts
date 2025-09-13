@@ -280,7 +280,7 @@ export default class Cultist extends Character{
             arm = Cultist.MAX_ARMOUR
         }
 
-        if(Func.chance(arm, this.is_lucky)){
+        if(!this.no_armour && Func.chance(arm, this.is_lucky)){
             this.level.sounds.push({
                 name: 'metal hit',
                 x: this.x,

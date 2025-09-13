@@ -84,6 +84,13 @@ export default class characterTemplate{
                     desc: 'You jump and create 3 waves upon landing. The first one explodes enemies, the second one stuns them, and the third one slows them down. The radius depends on the might. After using it, you become weaker for 5 seconds.'
                 },
                 {
+                    id: 9,
+                    name: 'spectral swords',
+                    type: 3,
+                    selected: false,
+                    desc: 'You jump and create 3 waves upon landing. The first one explodes enemies, the second one stuns them, and the third one slows them down. The radius depends on the might. After using it, you become weaker for 5 seconds.'
+                },
+                {
                     id: 7,
                     name: 'cursed weapon',
                     type: 4,
@@ -111,7 +118,8 @@ export default class characterTemplate{
                 durability: 0,
             }
             this.stats_description = {
-                might: `- affects the your abilities(increases AOE, number of projectiles etc.)`,
+                might: `- affects the your abilities(increases AOE, number of projectiles etc.)
+                        - reduces cooldowns`,
                 speed: `- increases your move speed
                         - gives a chance to get additional courage`,
                 knowledge: `- gives a chance not to pay mana when cast
@@ -169,6 +177,13 @@ export default class characterTemplate{
                 {
                     id: 6,
                     name: 'frost nova',
+                    type: 3,
+                    selected: false,
+                    desc: 'Create a circle of frost. Enemies in close range will be shatered other will be frozen.'
+                },
+                {
+                    id: 9,
+                    name: 'sparks',
                     type: 3,
                     selected: false,
                     desc: 'Create a circle of frost. Enemies in close range will be shatered other will be frozen.'

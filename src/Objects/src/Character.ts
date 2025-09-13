@@ -95,7 +95,9 @@ export default abstract class Character extends Unit{
     public gold: number = 0
     public block_chance: number = 0
     cd_reduction: number = 0
-  
+    can_block: boolean = true
+    no_armour: boolean = false
+
     constructor(level: Level){
         super(level)
         this.box_r = 2.5
@@ -1156,6 +1158,10 @@ export default abstract class Character extends Unit{
         }
     }
 
+    getCdRedaction(){
+        return this.cd_reduction
+    }
+
     setFreezeState(){
         this.freezed = true
         this.state = 'freezed'
@@ -1175,7 +1181,7 @@ export default abstract class Character extends Unit{
         this.time = time
         if(!this.can_act || !this.stateAct) return
         
-        if(this.can_move_by_player && this.pressed[32]){
+        if(this.can_block && this.can_move_by_player && this.pressed[32]){
             this.setState(this.setDefend)
         }
        
