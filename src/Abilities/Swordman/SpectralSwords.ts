@@ -63,7 +63,7 @@ export default class SpectralSwords extends SwordmanAbility{
                 let n_x = Math.sin(angle) * l * 5
                 let n_y = Math.cos(angle) * l * 5
 
-                let summon = new SpectralSword(this.level, 15000 + this.getSecondResource() * 1000, this.attack_speed)
+                let summon = new SpectralSword(this.level, 15000 + this.getSecondResource() * 1000, this.getAttackSpeed())
                 summon.setPoint(this.x + n_x, this.y + n_y)
                 
                 this.level.enemies.push(summon)

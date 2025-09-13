@@ -68,7 +68,6 @@ export default abstract class Character extends Unit{
     spend_grace: boolean = false
     target: string | undefined
     a: number = 0.2
-    can_be_damaged: boolean = true
     can_regen_life: boolean = true
     can_use_skills: boolean = true
     upgrades: any[] = []
@@ -88,7 +87,6 @@ export default abstract class Character extends Unit{
     cast_speed: number = 2000
     mad_target: any
     after_grace_statuses: Status[] = []
-    chance_second_skill_not_to_be_used: number = 0
     gold_find: number = 0
     action_is_end: boolean = false
     voice_radius: number = 20
@@ -162,6 +160,7 @@ export default abstract class Character extends Unit{
 
     setFreeze(duration: number){
         if(this.is_dead) return
+        if(!this.can_be_damaged) return
 
         if(this.isStatusResist()){
             this.statusWasResisted(undefined)
@@ -1147,6 +1146,8 @@ export default abstract class Character extends Unit{
     }
 
     setZapedAct(){     
+        
+
         this.state = 'zaped'     
         this.zaped = true
         this.stateAct = this.zapedAct

@@ -34,6 +34,7 @@ export default abstract class Unit extends GameObject {
     fragility: number
     ward: number = 0
     cast_speed: number = 2000
+    can_be_damaged: boolean = true
     
     constructor(level: Level){
         super(level)
@@ -94,6 +95,7 @@ export default abstract class Unit extends GameObject {
 
     setZap(duration: number = 100){
         if(this.is_dead) return
+        if(!this.can_be_damaged) return
 
         this.setState(this.setZapedAct)
         this.setTimerToGetState(duration)
@@ -113,8 +115,9 @@ export default abstract class Unit extends GameObject {
         let total_inc = this.move_speed_penalty
         
         if(!total_inc) return this.move_speed
-        if(total_inc > 100) total_inc = 100
-        if(total_inc < -90) total_inc = -90
+
+        if(total_inc > 200) total_inc = 200
+        if(total_inc < -95) total_inc = -95
        
         return this.move_speed * (1 + total_inc / 100)
     }

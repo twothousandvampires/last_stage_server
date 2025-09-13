@@ -12,7 +12,7 @@ export default class GrimPileStatus extends Status{
         super(time)
         this.name = 'grim pile status'
         this.add_armour = 10
-        this.add_speed = 0.1
+        this.add_speed = 10
         this.add_resistance = 0
     }
 
@@ -20,7 +20,7 @@ export default class GrimPileStatus extends Status{
         this.unit = unit
         if(this.unit instanceof Character){
             this.unit.armour_rate += this.add_armour
-            this.unit.move_speed += this.add_speed
+            this.unit.move_speed_penalty += this.add_speed
             this.unit.status_resistance += this.add_resistance
         }
     }
@@ -28,7 +28,7 @@ export default class GrimPileStatus extends Status{
     clear(){
         if(this.unit instanceof Character){
             this.unit.armour_rate -= this.add_armour
-            this.unit.move_speed -= this.add_speed
+            this.unit.move_speed_penalty -= this.add_speed
             this.unit.status_resistance -= this.add_resistance
         }
     }

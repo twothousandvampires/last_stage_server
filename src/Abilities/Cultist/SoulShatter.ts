@@ -105,6 +105,7 @@ export default class SoulShatter extends CultistAbility{
                             proj.setStart(this.time)
                             proj.setAngle(angle)
                             proj.setPoint(t.x, t.y)
+                            proj.setOwner(this)
                 
                             this.level.projectiles.push(proj)
                         }

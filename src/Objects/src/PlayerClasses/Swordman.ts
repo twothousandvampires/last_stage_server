@@ -19,6 +19,9 @@ import SpectralSwords from "../../../Abilities/Swordman/SpectralSwords";
 
 export default class Swordman extends Character{
     
+    static MIN_ATTACK_SPEED = 150
+    static MAX_ARMOUR = 90
+
     weapon_angle: number
     chance_to_get_additional_point: number
     chance_to_hit_additional_target: number
@@ -698,7 +701,13 @@ export default class Swordman extends Character{
     }
 
     getAttackSpeed() {
-        return this.attack_speed - (this.speed * 50)
+        let value = this.attack_speed - (this.speed * 50)
+        
+        if(value < Swordman.MIN_ATTACK_SPEED){
+            value = Swordman.MIN_ATTACK_SPEED
+        }
+
+        return value
     }
 
     payCost(){

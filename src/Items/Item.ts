@@ -105,6 +105,8 @@ export default abstract class Item {
     static forging_list_all = [
         'critical',
         'pierce',
+        'sacredness',
+        'toughness'
     ]
 
     static forging_list_type_1 = [
@@ -127,7 +129,8 @@ export default abstract class Item {
         'will',
         'knowledge',
         'max resources',
-        'gold find'
+        'gold find',
+        'cooldown reduction'
     ]
 
 

@@ -30,19 +30,6 @@ export default class Gifter extends Pile{
 
     idleAct(tick: number){
         if(tick - this.start_time >= 20000){
-            let hit = this.getBoxElipse()
-            hit.r = 10
-
-            this.level.players.forEach(elem => {
-                if(Func.elipseCollision(elem.getBoxElipse(), hit)){
-                    elem.takeDamage()
-                }
-            })
-
-            let e = new RuneExplode(this.level)
-            e.setPoint(this.x, this.y)
-            this.level.effects.push(e)
-
             this.is_dead = true
             this.is_corpse = true
             this.state = 'dead'
@@ -69,20 +56,36 @@ export default class Gifter extends Pile{
         this.life_status -= damage_value
 
         if(this.level.time - this.last_grace_spawn_time >= 1000){
-            this.last_grace_spawn_time = this.level.time
+            if(Func.chance(10)){
+                let hit = this.getBoxElipse()
+                hit.r = 10
+
+                this.level.players.forEach(elem => {
+                    if(Func.elipseCollision(elem.getBoxElipse(), hit)){
+                        elem.takeDamage()
+                    }
+                })
+
+                let e = new RuneExplode(this.level)
+                e.setPoint(this.x, this.y)
+                this.level.effects.push(e)
+            }
+            else{
+                this.last_grace_spawn_time = this.level.time
             
-            let add = Func.random(3, 7)
-            let distance_x = Func.random(1, 3) + add
-            let distance_y = Func.random(1, 3) + add
-            let angle = Math.random() * 6.28
+                let add = Func.random(3, 7)
+                let distance_x = Func.random(1, 3) + add
+                let distance_y = Func.random(1, 3) + add
+                let angle = Math.random() * 6.28
 
-            let x = this.x + (Math.sin(angle) * distance_x)
-            let y = this.y + (Math.cos(angle) * distance_y)
+                let x = this.x + (Math.sin(angle) * distance_x)
+                let y = this.y + (Math.cos(angle) * distance_y)
 
-            let grace = new GraceShard(this.level)
-            grace.setPoint(x, y)
+                let grace = new GraceShard(this.level)
+                grace.setPoint(x, y)
 
-            this.level.binded_effects.push(grace)
+                this.level.binded_effects.push(grace)
+            }
         }
         
         unit?.succesefulHit(this)
@@ -95,22 +98,6 @@ export default class Gifter extends Pile{
     }
 
     setDyingAct(){
-        // for(let i = 0; i < 10; i++){
-           
-        //     let add = Math.round(i / 3)
-        //     let distance_x = Func.random(1, 3) + add
-        //     let distance_y = Func.random(1, 3) + add
-        //     let angle = Math.random() * 6.28
-
-        //     let x = this.x + (Math.sin(angle) * distance_x)
-        //     let y = this.y + (Math.cos(angle) * distance_y)
-
-        //     let grace = new GraceShard(this.level)
-        //     grace.setPoint(x, y)
-
-        //     this.level.binded_effects.push(grace)
-        // } 
-
         this.is_corpse = true
         this.state = 'dead'
     }

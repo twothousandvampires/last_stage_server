@@ -63,13 +63,13 @@ export default class Commands extends SwordmanAbility{
 
                 let second = this.getSecondResource()
                 let players = this.level.players.filter(elem => Func.elipseCollision(elem.getBoxElipse(), skill_elip))
-                let move_buff = (5 + second) / 100
+                let move_buff = 5 + second
                 let armour_buff = 5 + second
                 let duration = 12000
                 
                 if(ability.fast_commands){
-                    move_buff = Math.round(move_buff * 1.5)
-                    armour_buff = Math.round(armour_buff * 1.5)
+                    move_buff = Math.round(move_buff * 2)
+                    armour_buff = Math.round(armour_buff * 2)
                     duration = 6000
                 }
 

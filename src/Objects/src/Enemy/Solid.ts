@@ -70,7 +70,7 @@ export default class Solid extends Enemy{
             let e = this.getBoxElipse()
             e.x = this.hit_x
             e.y = this.hit_y
-            e.r = 3.5
+            e.r = 3
 
             let effect = new GroundHit(this.level)
             effect.setPoint(e.x, e.y)

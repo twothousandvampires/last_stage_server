@@ -57,7 +57,7 @@ export class SoulShatterProj extends Projectiles{
 
         this.level.enemies.forEach(elem => {
             if(!elem.is_dead && Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
-                elem.takeDamage()
+                elem.takeDamage(this.owner)
                 this.delete()
             }
         })

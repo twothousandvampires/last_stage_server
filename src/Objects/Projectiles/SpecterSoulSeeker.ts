@@ -36,7 +36,7 @@ export class SpecterSoulSeeker extends Projectiles{
 
                 this.level.setStatus(elem, status)
                 if(this.owner){
-                    this.owner.move_speed += 0.1
+                    this.owner.move_speed_penalty += 10
                 
                     if(this.owner.attack_speed > 800){
                         this.owner.attack_speed -= 100

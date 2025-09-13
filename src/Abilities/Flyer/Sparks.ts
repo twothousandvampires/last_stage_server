@@ -54,6 +54,7 @@ export default class Sparks extends FlyerAbility{
                 let angle = Math.random() * (max_a - min_a) + min_a
 
                 let proj = new Spark(this.level, this.pierce, this.ttl)
+                
                 proj.setStart(this.time)
                 proj.setAngle(angle)
                 proj.setPoint(this.x, this.y)

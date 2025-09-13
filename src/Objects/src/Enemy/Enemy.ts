@@ -147,6 +147,12 @@ export abstract class Enemy extends Unit{
         if(options?.instant_death){
             unit?.succesefulKill()
             this.is_dead = true
+            this.create_grace_chance += unit?.additional_chance_grace_create ? unit?.additional_chance_grace_create : 0
+            unit?.succesefulKill()
+            //todo
+            if(unit instanceof Character){
+                unit?.addGold(this.gold_revard)
+            }
             this.setDyingAct()
             return
         }

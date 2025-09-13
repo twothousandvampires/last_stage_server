@@ -30,7 +30,7 @@ export default class Default extends Scenario{
     constructor(){
         super()
         this.last_checked = 0
-        this.time_between_wave_ms = 4000
+        this.time_between_wave_ms = 5500
     }
 
     start(level: Level){
@@ -74,7 +74,7 @@ export default class Default extends Scenario{
             this.createWave(level)
             this.waves_created ++
 
-            if(this.time_between_wave_ms < 8000 && this.waves_created % 4 === 0){
+            if(this.time_between_wave_ms < 10000 && this.waves_created % 4 === 0){
                 this.time_between_wave_ms + 250
             }
         }

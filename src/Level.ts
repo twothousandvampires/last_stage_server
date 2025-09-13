@@ -45,7 +45,7 @@ export default class Level{
        },
        {
          'name': 'ghost',
-         'weight': 10
+         'weight': 8
        },
         {
          'name': 'pile',
@@ -53,7 +53,7 @@ export default class Level{
        },  
        {
          'name': 'magic slime',
-         'weight': 7
+         'weight': 6
        },
         {
          'name': 'specter',
@@ -79,6 +79,7 @@ export default class Level{
     public time: number = Date.now()
     public started: number
     public ambient_time: number = 0
+    public check_grace_time: number = 0
 
     private need_to_check_grace: boolean = true
     private game_loop: NodeJS.Timeout | undefined = undefined
@@ -221,6 +222,12 @@ export default class Level{
             this.addSound('ambient', Func.random(20, 120), Func.random(10, 110))
         }
 
+        if(this.time > this.check_grace_time + 4000){
+            console.log('here')
+            this.check_grace_time = this.time
+            this.checkGraceCreating()
+        }
+
         this.players.forEach(player => {
             player.act(this.time)
         })
@@ -265,8 +272,9 @@ export default class Level{
         diff = Math.abs(diff)
         let chance = 20 + diff
 
-        if(chance){
-            this.grace_trashold += this.grace_trashold
+        console.log('kills - ' + this.kill_count + ", diff - " + diff + ", grace trashold" + this.grace_trashold)
+        if(Func.chance(chance)){
+            this.grace_trashold *= 2
             let portal: Grace = new Grace(this)
             while(portal.isOutOfMap()){
                 let random_player: Character = this.players[Math.floor(Math.random() * this.players.length)]
@@ -287,7 +295,6 @@ export default class Level{
 
                 if(enemy.count_as_killed){
                     this.kill_count ++
-                    this.checkGraceCreating()
                 }
 
                 if(Func.chance(enemy.create_chance)){

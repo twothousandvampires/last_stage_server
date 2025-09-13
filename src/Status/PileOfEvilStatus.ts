@@ -12,13 +12,13 @@ export default class PileOfEvilStatus extends Status{
     apply(unit: any){
         this.unit = unit
         
-        this.unit.move_speed += 0.2
+        this.unit.move_speed_penalty += 20
         this.unit.attack_speed -= 200
         this.unit.armour_rate += 10
     }
 
     clear(){
-        this.unit.move_speed -= 0.2
+        this.unit.move_speed_penalty -= 20
         this.unit.attack_speed += 200
         this.unit.armour_rate -= 10
     }

@@ -51,9 +51,9 @@ export default class SelfFlagellation extends CultistAbility{
         }
 
         if(this.lesson){
-            this.owner.move_speed += 0.2
+            this.owner.move_speed_penalty += 20
             setTimeout(() => {
-                this.owner.move_speed -= 0.2
+                this.owner.move_speed_penalty -= 20
             }, 3000)
         }
     }
