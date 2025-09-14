@@ -674,7 +674,7 @@ export default abstract class Character extends Unit{
         this.x = x
         this.y = y
 
-        this.level.socket.to(this.id).emit('change_level', this.zone_id)
+        this.level.socket.to(this.id).emit('change_level', this.zone_id, x, y)
     }
 
     public addLife(count: number = 1, ignore_poison: boolean = false, ignore_limit: boolean = false): void{
