@@ -20,6 +20,8 @@ import Unit from "./Unit"
 
 export default abstract class Character extends Unit{
 
+    static MAX_ITEMS_TO_BUY: number = 3
+
     pressed: { [key: string]: any, } = {}
     can_move_by_player: boolean = true
     direct_angle_to_move: any
@@ -95,6 +97,8 @@ export default abstract class Character extends Unit{
     cd_reduction: number = 0
     can_block: boolean = true
     no_armour: boolean = false
+    using_ability: any
+    items_to_buy: Item[] = []
 
     constructor(level: Level){
         super(level)
@@ -111,6 +115,7 @@ export default abstract class Character extends Unit{
     abstract useUtility(): void
     abstract regen(): void
     abstract getSecondResource(): number
+    abstract isBlock(): boolean
    
     protected useNotUtility(): void{
         this.use_not_utility_triggers.forEach(elem => {
@@ -178,8 +183,8 @@ export default abstract class Character extends Unit{
         })
     }
 
-    protected succesefulBlock(): void{
-        this.when_block_triggers.forEach(elem => elem.trigger(this))
+    protected succesefulBlock(unit: Unit | undefined): void{
+        this.when_block_triggers.forEach(elem => elem.trigger(this, unit))
     }
 
     public isStatusResist(): boolean{
@@ -408,7 +413,7 @@ export default abstract class Character extends Unit{
                         return character.grace > 1
                     },
                     teach: (character: Character) => {
-                        if(Func.chance(50, character.is_lucky)){
+                        if(Func.chance(35, character.is_lucky)){
                             character.grace *= 2
                         }
                         else{
@@ -542,22 +547,61 @@ export default abstract class Character extends Unit{
         }
     }
 
-    public buyNewItem(){
-        if(this.gold < 30) return
+    pickForging(item_id, id){
+        let item = this.item[item_id]
 
+        item.pick(id)
+        item.suggested_forgings = []
+
+        this.closeForgings()
+        this.closeSuggest()
+    }
+
+    buyItem(id){
         this.gold -= 30
 
-        let item_name = Item.list[Math.floor(Math.random() * Item.list.length)].name
-
-        let item = Builder.createItem(item_name)
+        let item = this.items_to_buy[id]
 
         item.setPlayer(this)
-
-        this.level.addSound('gold spending', this.x, this.y)
         
         this.item.push(item)
 
+        this.items_to_buy = []
+
         this.closeForgings()
+        this.closeSuggest()
+    }
+
+    closeSuggest(){
+        this.level.socket.to(this.id).emit('close_suggest')
+    }
+
+    public buyNewItem(){
+        if(this.gold < 30) return
+        if(this.item.length >= 4) return
+
+        if(this.items_to_buy.length === 0){
+            for(let i = 0; i < Character.MAX_ITEMS_TO_BUY; i++){
+                let item_name = Item.list[Math.floor(Math.random() * Item.list.length)].name
+                let item = Builder.createItem(item_name)
+
+                if(this.item.some(elem => elem.name === item.name)){
+                    i--
+                }
+                else{
+                    this.items_to_buy.push(item)
+                }
+            }
+        }
+
+        this.createSuggest(this.items_to_buy)
+    }
+
+    createSuggest(data: any){
+        this.level.socket.to(this.id).emit('suggest_items', data)
+    }
+    createSuggestForge(data: any, item_id){
+        this.level.socket.to(this.id).emit('suggest_forgings', data , item_id)
     }
 
     protected updateClientSkill(): void{
@@ -607,12 +651,12 @@ export default abstract class Character extends Unit{
 
         if(this.gold < cost) return
 
-        if(item.unlockForging()){
-            this.gold -= cost
+        if(item.unlockForgings()){
             this.level.addSound('gold spending', this.x, this.y)
+            this.gold -= cost
         }
-        
-        this.closeForgings()
+          
+        this.createSuggestForge(item.suggested_forgings, this.item.indexOf(item))
     }
 
     public holdGrace(): void{
@@ -683,7 +727,7 @@ export default abstract class Character extends Unit{
     protected subLife(unit: any = undefined, options = {}): void{
         this.life_status --
 
-        if(Func.chance(this.fragility)){
+        if(Func.notChance(100 - this.fragility, this.is_lucky)){
             this.life_status --
         }
 
@@ -705,7 +749,7 @@ export default abstract class Character extends Unit{
             } 
         }   
         else{
-            if(!this.freezed && !Func.chance(this.getSkipDamageStateChance(), this.is_lucky)){
+            if(!this.freezed && Func.notChance(this.getSkipDamageStateChance(), this.is_lucky)){
                 this.setState(this.setDamagedAct)
             }
 
@@ -739,7 +783,7 @@ export default abstract class Character extends Unit{
         })
     }
 
-    private reachNearDead(): void{
+    public reachNearDead(): void{
         this.reach_near_dead_triggers.forEach(elem => {
             elem.trigger(this)
         })
@@ -856,7 +900,7 @@ export default abstract class Character extends Unit{
         this.a += 0.03
     }
 
-    protected getTarget(): Unit | undefined {
+    public getTarget(): Unit | undefined {
         if(!this.target) return undefined
 
         let t = this.level.enemies.find(elem => elem.id === this.target)

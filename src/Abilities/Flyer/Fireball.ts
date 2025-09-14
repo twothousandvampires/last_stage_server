@@ -56,7 +56,7 @@ export default class Fireball extends FlyerAbility{
     act(){
         if(this.action && !this.hit){
             this.addCourage()
-            // this.payCost()
+            
             this.hit = true
             this.level.addSound('fire cast', this.x, this.y)
 

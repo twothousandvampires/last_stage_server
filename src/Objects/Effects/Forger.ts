@@ -30,6 +30,7 @@ export default class Forger extends Effect{
             else if(!this.closed.includes(elem.id)){
                 this.closed.push(elem.id)
                 elem.closeForgings()
+                elem.closeSuggest()
             } 
         })
     }

@@ -20,10 +20,25 @@ export default class StaticField extends FlyerAbility{
         return !this.used
     }
 
+    impact(){
+        this.owner.hit = true
+        this.used = true
+        this.owner.addCourage()
+
+        this.owner.level.addSound('cast', this.owner.x, this.owner.y)
+
+        let e = new StaticFiledEffect(this.owner.level)
+        e.hand_cuffing = this.hand_cuffing
+        e.collapse = this.collapse
+
+        e.setPoint(this.owner.c_x, this.owner.c_y)
+        this.owner.level.binded_effects.push(e)
+    }
+
     use(){
         if(this.used) return
         
-        this.used = true
+        this.owner.using_ability = this
 
         let rel_x = Math.round(this.owner.pressed.over_x + this.owner.x - 40)
         let rel_y = Math.round(this.owner.pressed.over_y + this.owner.y - 40)
@@ -63,17 +78,7 @@ export default class StaticField extends FlyerAbility{
 
     act(){
         if(this.action && !this.hit){
-            
-            this.hit = true
-            this.level.addSound('cast', this.x, this.y)
-
-            let e = new StaticFiledEffect(this.level)
-            e.hand_cuffing = this.utility.hand_cuffing
-            e.collapse = this.utility.collapse
-
-            e.setPoint(this.c_x, this.c_y)
-            this.level.binded_effects.push(e)
-            this.attack_angle = undefined
+            this.using_ability.impact()
         }
          else if(this.action_is_end){
             this.action_is_end = false

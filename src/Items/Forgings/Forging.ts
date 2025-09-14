@@ -3,7 +3,7 @@ import Item from "../Item";
 
 export default abstract class Forging{
 
-    stat: string | undefined
+    description: string | undefined
     max_value: number = 0
     gold_cost: number = 1
     name: string = ''
@@ -31,7 +31,7 @@ export default abstract class Forging{
 
     toJSON(){
        return {
-           stat: this.stat,
+           description: this.description,
            max: this.max_value,
            value: this.getValue(),
            can: this.canBeForged() && this.costEnough(),

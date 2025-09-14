@@ -22,10 +22,43 @@ export default class ForkedLightning extends FlyerAbility{
         return this.owner.resource >= this.cost && !this.used && !this.owner.is_attacking
     }
 
+    impact(){
+        this.owner.addCourage()
+        this.owner.hit = true
+        this.used = true
+        
+        this.owner.level.addSound('lightning cast', this.owner.x, this.owner.y)
+
+        let a = undefined
+                    
+        let target = this.owner.getTarget()
+
+        if(target){
+            a = Func.angle(this.owner.x, this.owner.y, target.x, target.y)
+        }
+
+        let proj = new ForkedLightningProjectile(this.owner.level)
+        proj.improved_chain_reaction = this.improved_chain_reaction
+        proj.lightning_eye = this.lightning_eye
+        
+        proj.setOwner(this.owner)
+        if(a){
+            proj.setAngle(a)
+        }
+        else if(this.owner.attack_angle){
+            proj.setAngle(this.owner.attack_angle)
+        }
+       
+        proj.setPoint(this.owner.x, this.owner.y)
+
+        this.owner.level.projectiles.push(proj)
+        this.owner.attack_angle = undefined
+    }
+
     use(){
         if(this.used) return
 
-        this.used = true
+        this.owner.using_ability = this
 
         let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
@@ -64,30 +97,7 @@ export default class ForkedLightning extends FlyerAbility{
 
     act(){
         if(this.action && !this.hit){
-
-            // this.payCost()
-            this.addCourage()
-
-            this.hit = true
-            this.level.addSound('lightning cast', this.x, this.y)
-
-            let a = undefined
-                        
-            let target = this.getTarget()
-            if(target){
-                a = Func.angle(this.x, this.y, target.x, target.y)
-            }
-
-            let proj = new ForkedLightningProjectile(this.level)
-            proj.improved_chain_reaction = this.improved_chain_reaction
-            proj.lightning_eye = this.lightning_eye
-            
-            proj.setOwner(this)
-            proj.setAngle(a ? a : this.attack_angle)
-            proj.setPoint(this.x, this.y)
-
-            this.level.projectiles.push(proj)
-            this.attack_angle = undefined
+            this.using_ability.impact()
         }
          else if(this.action_is_end){
             this.action_is_end = false

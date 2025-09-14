@@ -110,4 +110,17 @@ export default class Func{
             return chance >= Func.random()
         }
     }
+
+    public static notChance(chance: number = 0, luck: boolean = false){
+        if(luck){
+            let f = Func.random()
+            if(chance >= f) return false
+
+            let s = Func.random()
+            return chance <= s
+        }
+        else{
+            return chance < Func.random()
+        }
+    }
 }

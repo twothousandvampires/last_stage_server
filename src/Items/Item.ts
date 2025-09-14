@@ -15,6 +15,7 @@ export default abstract class Item {
     public count: number = 0
     public description: string = ''
     public disabled: boolean = false
+    public suggested_forgings: Forging[] = []
 
     static list = [
         {
@@ -165,16 +166,29 @@ export default abstract class Item {
         this.disabled = false
     }
 
-    public unlockForging(): boolean{
-        if(this.forge.length >= this.max_forgings) return false
-
-        let forging: Forging = this.getRandomForging()
+    pick(id: number){
+        let forging = this.suggested_forgings[id]
 
         this.player.gold += forging.gold_cost
         forging.forge(this.player)
 
         this.forge.push(forging)
+    }
 
+    public unlockForgings(): boolean{
+        if(this.forge.length >= this.max_forgings) return false
+        if(this.suggested_forgings.length != 0) return false
+
+        for(let i = 0; i < 3; i++){
+            let f = this.getRandomForging()
+            if(this.suggested_forgings.some(elem => elem.name === f.name)){
+                i--
+            }
+            else{
+                this.suggested_forgings.push(f)
+            }
+        }
+        
         return true
     }
 

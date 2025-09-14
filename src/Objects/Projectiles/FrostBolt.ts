@@ -1,5 +1,6 @@
 import Func from "../../Func";
 import Level from "../../Level";
+import FrostExplosionSmall from "../Effects/FrostExplosionSmall";
 import Projectiles from "./Projectiles";
 
 export class FrostBolt extends Projectiles{
@@ -25,9 +26,13 @@ export class FrostBolt extends Projectiles{
 
             if(!p.is_dead && p.z < this.w && Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
                 if(Func.chance(35)){
-                    p.setFreeze(3000)
+                    p.setFreeze(2300)
                 }
-            
+                
+                let e = new FrostExplosionSmall(this.level)
+                e.setPoint(p.x, p.y)
+                this.level.effects.push(e)
+
                 p.takeDamage()
                 this.impact()
                 return

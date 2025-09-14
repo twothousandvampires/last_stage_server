@@ -20,10 +20,65 @@ export default class AnnihilatorBeam extends FlyerAbility{
         return this.owner.resource >= this.cost && !this.used && !this.owner.is_attacking
     }
 
+    impact(){
+        this.owner.addCourage()
+        this.owner.hit = true
+        this.used = true
+
+        this.owner.level.addSound('cast', this.owner.x, this.owner.y)
+
+        let precision = 1.5
+        
+        let distance = 0
+        let enemies = this.owner.level.enemies
+        let point = undefined
+        
+        let n_x = 0
+        let n_y = 0
+
+        if(this.concentrating_energy){
+            this.owner.pierce += 100
+        }
+        
+        let radius = precision + this.owner.getAdditionalRadius() / 10
+
+        while(!point || !point.isOutOfMap()){
+
+            point = new ToothExplode(this.owner.level)
+
+            n_x =  Math.sin(this.owner.attack_angle) * (precision * distance)
+            n_y =  Math.cos(this.owner.attack_angle) * (precision * distance)
+
+            point.setPoint(
+                this.owner.x + n_x,
+                this.owner.y + n_y
+            )
+
+            distance += precision
+
+            let hit = point.getBoxElipse()
+            hit.r = radius
+
+            enemies.forEach(elem => {
+                if(Func.elipseCollision(hit, elem.getBoxElipse())){
+                    elem.takeDamage(this, {
+                        burn: true,
+                    })
+                }
+            })
+
+            this.owner.level.effects.push(point)
+        }
+        
+        if(this.concentrating_energy){
+            this.owner.pierce -= 100
+        }
+    }
+
     use(){
         if(this.used) return
 
-        this.used = true
+        this.owner.using_ability = this
 
         let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
         let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
@@ -60,59 +115,7 @@ export default class AnnihilatorBeam extends FlyerAbility{
 
     act(){
         if(this.action && !this.hit){
-        
-            this.hit = true
-            this.action = false
-            this.level.addSound('cast', this.x, this.y)
-
-            let precision = 1.5
-          
-            let distance = 0
-            let enemies = this.level.enemies
-            let point = undefined
-            
-            let n_x = 0
-            let n_y = 0
-
-            if(this.second_ability.concentrating_energy){
-                this.pierce += 100
-            }
-            
-            let radius = precision + this.getAdditionalRadius() / 10
-
-            while(!point || !point.isOutOfMap()){
-
-                point = new ToothExplode(this.level)
-
-                n_x =  Math.sin(this.attack_angle) * (precision * distance)
-                n_y =  Math.cos(this.attack_angle) * (precision * distance)
-
-                point.setPoint(
-                    this.x + n_x,
-                    this.y + n_y
-                )
-
-                distance += precision
-
-                let hit = point.getBoxElipse()
-                hit.r = radius
-
-                enemies.forEach(elem => {
-                    if(Func.elipseCollision(hit, elem.getBoxElipse())){
-                        elem.takeDamage(this, {
-                            burn: true,
-                        })
-                    }
-                })
-
-                this.level.effects.push(point)
-            }
-            
-            if(this.second_ability.concentrating_energy){
-                this.pierce -= 100
-            }
-            this.addCourage()
-            this.attack_angle = undefined
+            this.using_ability.impact()
         }
         else if(this.action_is_end){
             this.action_is_end = false

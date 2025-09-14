@@ -10,7 +10,7 @@ export default class Knowledge extends Forging{
         super(item)
         this.max_value = 20
         this.name = 'knowledge'
-        this.stat = 'increases your knowledge'
+        this.description = 'increases your knowledge'
         this.gold_cost = 5
     }
 

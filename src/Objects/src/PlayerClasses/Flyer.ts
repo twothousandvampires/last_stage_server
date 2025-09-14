@@ -574,6 +574,10 @@ export default class Flyer extends Character{
             this.can_regen_resource = true
         }
     }
+
+    isBlock(): boolean {
+        return this.state === 'defend' && this.resource > 0 && Func.chance(this.block_chance, this.is_lucky)
+    }
     
     takeDamage(unit: any = undefined, options: any){
         if(!this.can_be_damaged) return
@@ -607,10 +611,11 @@ export default class Flyer extends Character{
 
         this.playerWasHited(unit)
 
-        if(this.state === 'defend' && this.resource > 0 && Func.chance(this.block_chance, this.is_lucky)){
+        if(this.isBlock()){
 
-            if(this.charged_shield && Func.chance(75)){
+            if(this.charged_shield && Func.chance(75, this.is_lucky)){
                 let target = this.level.enemies[Math.floor(Math.random() * this.level.enemies.length)]
+
                 if(target){
                     let proj = new Lightning(this.level)
                     proj.setOwner(this)
@@ -621,11 +626,11 @@ export default class Flyer extends Character{
                 }
             }
 
-            if(!Func.chance(this.will * 5)){
+            if(Func.notChance(this.will * 4, this.is_lucky)){
                 this.resource --
             }
 
-            this.succesefulBlock()
+            this.succesefulBlock(unit)
             
             return
         }
@@ -660,7 +665,7 @@ export default class Flyer extends Character{
     subLife(unit: any = undefined, options = {}){
         this.life_status --
 
-        if(Func.chance(this.fragility)){
+        if(Func.notChance(100 - this.fragility, this.is_lucky)){
             this.life_status --
         }
 
@@ -682,7 +687,7 @@ export default class Flyer extends Character{
             } 
         }   
         else{
-            if(!Func.chance(this.getSkipDamageStateChance())){
+            if(!this.freezed && Func.notChance(this.getSkipDamageStateChance(), this.is_lucky)){
                 this.setState(this.setDamagedAct)
             }
             
@@ -783,7 +788,7 @@ export default class Flyer extends Character{
             chance = 70
         }
 
-        if(!Func.chance(chance)){
+        if(Func.notChance(chance, this.is_lucky)){
             this.resource -= this.pay_to_cost
         }
         

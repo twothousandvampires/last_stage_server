@@ -11,6 +11,7 @@ import UnleashPain from "../../../Abilities/Cultist/UnleashPain";
 import Func from "../../../Func";
 import Level from "../../../Level";
 import Immortality from "../../../Status/Immortality";
+import CallWarriorWhenBlock from "../../../Triggers/CallWarriorWhenBlock";
 import Armour from "../../Effects/Armour";
 import Blood from "../../Effects/Blood";
 import ToothExplode from "../../Effects/ToothExplode";
@@ -124,10 +125,6 @@ export default class Cultist extends Character{
         for(let i = 0; i < count;i ++){
             this.recent_hits.push(this.time)
         }
-    
-        // if(Func.chance(this.durability * 2)){
-        //     this.recent_hits.push(this.time)
-        // }
 
         if(this.can_be_enlighten && this.recent_hits.length >= 8){
             this.can_be_enlighten = false
@@ -182,7 +179,7 @@ export default class Cultist extends Character{
     subLife(unit: any = undefined, options = {}){
         this.life_status --
 
-        if(Func.chance(this.fragility)){
+        if(Func.notChance(100 - this.fragility, this.is_lucky)){
             this.life_status --
         }
 
@@ -204,7 +201,7 @@ export default class Cultist extends Character{
             } 
         }   
         else{
-            if(!Func.chance(this.getSkipDamageStateChance())){
+            if(!this.freezed && Func.notChance(this.getSkipDamageStateChance(), this.is_lucky)){
                 this.setState(this.setDamagedAct)
             }         
             if(this.life_status === 2){
@@ -215,6 +212,16 @@ export default class Cultist extends Character{
                 this.reachNearDead()
             }
         }
+    }
+
+    isBlock(): boolean {
+        let b_chance = this.block_chance + this.durability
+
+        if(b_chance > 90){
+            b_chance = 90
+        }
+
+        return this.state === 'defend' && Func.chance(b_chance, this.is_lucky)
     }
 
     takeDamage(unit:any = undefined, options: any = {}){      
@@ -249,13 +256,7 @@ export default class Cultist extends Character{
 
         this.playerWasHited(unit)
         
-        let b_chance = this.block_chance + this.durability
-
-        if(b_chance > 90){
-            b_chance = 90
-        }
-
-        if(this.state === 'defend' && Func.chance(b_chance, this.is_lucky)){
+        if(this.isBlock()){
             this.level.sounds.push({
                 name: 'metal hit',
                 x: this.x,
@@ -266,7 +267,7 @@ export default class Cultist extends Character{
                 this.addResourse()
             }
 
-            this.succesefulBlock()
+            this.succesefulBlock(unit)
 
             return
         } 
@@ -698,7 +699,7 @@ export default class Cultist extends Character{
                 cost: 1,
                 desc: 'gives a chance to create explode when your kill enemy'
             },
-             {
+            {
                 name: 'devouring flame',
                 type: 'burning circle',
                 canUse: (character: Character) => {
@@ -711,6 +712,19 @@ export default class Cultist extends Character{
                 },
                 cost: 1,
                 desc: 'gives a chance to increase duration when you kill enemy'
+            },
+            {
+                name: 'spiritual call',
+                canUse: (character: Character) => {
+                    return !character.when_block_triggers.some(elem => elem instanceof CallWarriorWhenBlock)
+                },
+                teach: (character: Character) => {
+                    if(character instanceof Cultist){
+                       character.when_block_triggers.push(new CallWarriorWhenBlock())
+                    }  
+                },
+                cost: 1,
+                desc: 'when you block you can summon spirit warrior'
             },
         ]
     }
@@ -853,7 +867,7 @@ export default class Cultist extends Character{
     }
 
     payCost(){
-        if(!Func.chance(this.knowledge * 4)){
+        if(Func.notChance(this.knowledge * 4, this.is_lucky)){
             this.resource -= this.pay_to_cost
         }
         

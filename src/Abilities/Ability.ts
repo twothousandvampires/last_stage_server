@@ -25,6 +25,11 @@ export default abstract class Ability{
     }
 
     afterUse(){
+        this.owner.using_ability = undefined
+        this.owner.attack_angle = undefined
+
+        if(!this.used) return
+
         setTimeout(() => {
             this.used = false
         }, this.getCd())

@@ -17,11 +17,11 @@ export default class Slime extends Enemy{
         this.name = 'slime'
         this.box_r = 3
         this.move_speed = 0.2
-        this.attack_radius = 6
+        this.attack_radius = 6.5
         this.attack_speed = 1800
         this.spawn_time = 1400
         this.say_z = 8
-        this.weapon_angle = 0.8
+        this.weapon_angle = 1
         this.getState()
     }
 

@@ -1,6 +1,4 @@
 import Character from "../Objects/src/Character";
-import Fragility from "../Status/Fragility";
-import Precision from "../Status/Precision";
 import Item from "./Item";
 
 export default class IceBelt extends Item{

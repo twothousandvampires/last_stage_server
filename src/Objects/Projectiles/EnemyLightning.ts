@@ -43,7 +43,7 @@ export class EnemyLightning extends Projectiles{
                 if(Func.chance(35)){
                     let s = new ShockStatus(this.level.time)
                     s.setDuration(4000)
-                    s.setPower(35)
+                    s.setPower(25)
                     this.level.setStatus(p, s)
                 }
                

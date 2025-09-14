@@ -8,6 +8,7 @@ export default class SwordHandle extends Item{
         this.name = 'sword handle'
         this.type = 1
         this.description = 'you are lucky'
+        this.max_forgings = 1
     }
 
     equip(character: Character): void {
@@ -24,7 +25,7 @@ export default class SwordHandle extends Item{
     enable(): void {
         this.disabled = false
         if(this.player){
-             this.player.is_lucky = false
+             this.player.is_lucky = true
         }
     }
 }
