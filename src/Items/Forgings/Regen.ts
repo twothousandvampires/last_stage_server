@@ -10,7 +10,7 @@ export default class Regen extends Forging{
         super(item)
         this.max_value = 4000
         this.name = 'regeneration'
-        this.stat = 'increase yours life regeneration speed'
+        this.description = 'increase yours life regeneration speed'
         this.gold_cost = 8
     }
 

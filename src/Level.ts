@@ -135,6 +135,7 @@ export default class Level{
         player.setPoint(88 + this.players.length * 4, 22)
         this.players.push(player)
         player.closeUpgrades()
+        player.closeSuggest()
     }
 
     // stop(): void{
@@ -223,7 +224,6 @@ export default class Level{
         }
 
         if(this.time > this.check_grace_time + 4000){
-            console.log('here')
             this.check_grace_time = this.time
             this.checkGraceCreating()
         }
@@ -272,7 +272,7 @@ export default class Level{
         diff = Math.abs(diff)
         let chance = 20 + diff
 
-        console.log('kills - ' + this.kill_count + ", diff - " + diff + ", grace trashold" + this.grace_trashold)
+       
         if(Func.chance(chance)){
             this.grace_trashold *= 2
             let portal: Grace = new Grace(this)

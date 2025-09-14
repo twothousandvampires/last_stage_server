@@ -7,7 +7,7 @@ export default class Recharge extends Forging {
         super(item)
         this.max_value = 90
         this.name = 'recharge item'
-        this.stat = 'recharge'
+        this.description = 'recharge'
         this.gold_cost = 2
     }
 

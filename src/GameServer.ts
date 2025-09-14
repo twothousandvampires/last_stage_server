@@ -156,6 +156,18 @@ export default class GameServer{
                     client.character.buyNewItem()
                 })
 
+                socket.on('buy_item', (id) => {   
+                    if(!client.character) return
+
+                    client.character.buyItem(id)
+                })
+
+                socket.on('pick_forging', (item_id, id) => {   
+                    if(!client.character) return
+
+                    client.character.pickForging(item_id, id)
+                })
+
                 socket.on('donate', () => {   
                     if(!client.character) return
 

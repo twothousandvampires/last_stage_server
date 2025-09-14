@@ -9,7 +9,7 @@ export default class Toughness extends Forging{
         super(item)
         this.max_value = 100
         this.name = 'toughness'
-        this.stat = 'increases your chance to avoid damaged state'
+        this.description = 'increases your chance to avoid damaged state'
         this.gold_cost = 4
     }
 

@@ -34,10 +34,11 @@ export class FlyingMucus extends Projectiles{
             if(p === this.owner) continue
 
             if(!p.is_dead && this.w >= p.z && Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
-          
-                let s = new EnvelopingMucus(this.level.time)
-                s.setDuration(5500)
-                this.level.setStatus(p, s)
+                if(!p.isBlock()){
+                    let s = new EnvelopingMucus(this.level.time)
+                    s.setDuration(5500)
+                    this.level.setStatus(p, s)
+                }
                 
                 this.impact()
                 return

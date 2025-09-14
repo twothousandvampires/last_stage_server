@@ -35,8 +35,8 @@ export default class ShockStatus extends Status{
     act(tick_time: number){
         if(tick_time > this.last_checked){
             this.last_checked += 500
-            if(!this.unit.zaped && Func.random() <= this.power){
-                let duration = Func.random(1, 1000)
+            if(!this.unit.zaped && Func.chance(this.power)){
+                let duration = Func.random(500, 1500)
                 this.unit.setZap(duration)
             }
         }

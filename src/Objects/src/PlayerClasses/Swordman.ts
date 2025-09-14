@@ -16,6 +16,7 @@ import Character from "../Character";
 import HeavenVengeance from "../../../Abilities/Swordman/HeavenVengeance";
 import EmergencyOrdersTrigger from "../../../Triggers/EmergencyOrdersTrigger";
 import SpectralSwords from "../../../Abilities/Swordman/SpectralSwords";
+import BlockingTechnique from "../../../Triggers/ BlockingTechnique";
 
 export default class Swordman extends Character{
     
@@ -154,6 +155,16 @@ export default class Swordman extends Character{
         }
     }
 
+    isBlock(): boolean {
+        let b_chance = this.block_chance + this.agility * 3
+
+        if(b_chance > 90){
+            b_chance = 90
+        }
+
+        return this.state === 'defend' && Func.chance(b_chance, this.is_lucky)
+    }
+
     takeDamage(unit:any = undefined, options: any = {}){
         if(!this.can_be_damaged) return
         
@@ -192,14 +203,14 @@ export default class Swordman extends Character{
             b_chance = 90
         }
 
-        if(this.state === 'defend' && Func.chance(b_chance, this.is_lucky)){
+        if(this.isBlock()){
             this.level.sounds.push({
                 name: 'metal hit',
                 x: this.x,
                 y: this.y
             })
 
-            this.succesefulBlock()
+            this.succesefulBlock(unit)
 
             return
         } 
@@ -209,7 +220,7 @@ export default class Swordman extends Character{
         if(arm > 90){
             arm = 90
         }
-
+        
         if(!this.no_armour && Func.chance(arm, this.is_lucky)){
             this.level.sounds.push({
                 name: 'metal hit',
@@ -232,7 +243,7 @@ export default class Swordman extends Character{
         e.z = Func.random(2, 8)
         this.level.effects.push(e)
 
-        if(!Func.chance(this.might * 7, this.is_lucky)){
+        if(Func.notChance(this.might * 7, this.is_lucky)){
             this.recent_kills = this.recent_kills.filter((elem, index) => index >= 5)
         }
        
@@ -583,6 +594,17 @@ export default class Swordman extends Character{
                 cost: 3,
                 desc: 'when you speak can apply command ability buff'
             },
+            {
+                name: 'blocking technique',
+                canUse: (character: Character) => {
+                    return !character.when_block_triggers.some(elem => elem instanceof BlockingTechnique)
+                },
+                teach: (character: Character) => {
+                    return character.when_block_triggers.push(new BlockingTechnique())
+                },
+                cost: 3,
+                desc: 'when you speak can apply command ability buff'
+            },
         ]
     }
 
@@ -728,7 +750,7 @@ export default class Swordman extends Character{
           return
        }
        
-       if(Func.chance(this.knowledge * 6, this.is_lucky)){
+       if(Func.chance(this.knowledge * 4, this.is_lucky)){
           count++
        }
 

@@ -8,7 +8,7 @@ export default class Chance extends Forging {
         super(item)
         this.max_value = 90
         this.name = 'chance'
-        this.stat = 'increases chance to item proc'
+        this.description = 'increases chance to item proc'
         this.gold_cost = 5
     }
 

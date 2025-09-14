@@ -9,7 +9,7 @@ export default class Sacredness extends Forging{
         super(item)
         this.max_value = 100
         this.name = 'sacredness'
-        this.stat = 'increases your chance to get grace after killing enemy'
+        this.description = 'increases your chance to get grace after killing enemy'
         this.gold_cost = 10
     }
 

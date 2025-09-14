@@ -10,7 +10,7 @@ export default class CooldownReduction extends Forging{
         super(item)
         this.max_value = 90
         this.name = 'cooldown reduction'
-        this.stat = 'reduces your cooldowns'
+        this.description = 'reduces your cooldowns'
         this.gold_cost = 6
     }
 

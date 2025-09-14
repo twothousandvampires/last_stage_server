@@ -10,7 +10,7 @@ export default class CastSpeed extends Forging{
         super(item)
         this.max_value = 200
         this.name = 'cast speed'
-        this.stat = 'increases your cast speed'
+        this.description = 'increases your cast speed'
         this.gold_cost = 7
     }
 
