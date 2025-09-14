@@ -74,6 +74,7 @@ export default class Level{
     public deleted: (string | number)[] = []
     public sounds: Sound[] = []
     public socket: Server
+    public last_update_time: number = 0
  
     public time: number = Date.now()
     public started: number
@@ -156,18 +157,23 @@ export default class Level{
         this.script.start(this)
         this.started = Date.now()
 
-        this.game_loop = setInterval(()=> {
-            let s = Date.now()
-            this.tick()
-            let e = Date.now() - s
-            this.socket.emit('tick_data', this, Date.now(), e)
+        this.loop()
+    }
+
+    loop(){
+        let time = Date.now()
+        if(time - this.last_update_time >= 30){
+            this.last_update_time = time
+            this.tick(time)
+            this.socket.emit('tick_data', this, Date.now())
             
             this.collectTheDead()
             this.effects.length = 0
             this.deleted.length = 0
             this.sounds.length = 0
-            
-        }, 30)
+        }
+        
+        setImmediate(this.loop.bind(this))
     }
 
     public toJSON(): any{
@@ -213,8 +219,8 @@ export default class Level{
         this.script.start(this)
     }
 
-    public tick(): void{
-        this.time = Date.now()
+    public tick(time: number): void{
+        this.time = time
         this.script.checkTime(this)
 
         if(Func.chance(10) && this.time > this.ambient_time + 1500){
