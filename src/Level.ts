@@ -75,7 +75,6 @@ export default class Level{
     public sounds: Sound[] = []
     public socket: Server
  
-    public time_between_wave_ms: number = 7500
     public time: number = Date.now()
     public started: number
     public ambient_time: number = 0
@@ -158,16 +157,16 @@ export default class Level{
         this.started = Date.now()
 
         this.game_loop = setInterval(()=> {
-            if(!this) return
-        
+            let s = Date.now()
             this.tick()
-            this.socket.emit('tick_data', this)
-            if(this){
-                this.collectTheDead()
-                this.effects.length = 0
-                this.deleted.length = 0
-                this.sounds.length = 0
-            }
+            let e = Date.now() - s
+            this.socket.emit('tick_data', this, Date.now(), e)
+            
+            this.collectTheDead()
+            this.effects.length = 0
+            this.deleted.length = 0
+            this.sounds.length = 0
+            
         }, 30)
     }
 
@@ -179,7 +178,6 @@ export default class Level{
             meta: {
                 ms: this.time - this.started,       
                 killed: this.kill_count,
-                time: this.time
             }
         }
     }
