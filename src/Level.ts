@@ -178,7 +178,8 @@ export default class Level{
             sounds: this.sounds,
             meta: {
                 ms: this.time - this.started,       
-                killed: this.kill_count
+                killed: this.kill_count,
+                time: this.time
             }
         }
     }
