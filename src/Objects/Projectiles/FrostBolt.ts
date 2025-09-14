@@ -26,7 +26,7 @@ export class FrostBolt extends Projectiles{
 
             if(!p.is_dead && p.z < this.w && Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
                 if(Func.chance(35)){
-                    p.setFreeze(2300)
+                    p.setFreeze(1800)
                 }
                 
                 let e = new FrostExplosionSmall(this.level)

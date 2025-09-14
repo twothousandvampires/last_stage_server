@@ -87,7 +87,7 @@ export default class Default extends Scenario{
         let add_count = Math.floor(level.kill_count / 25)
 
         let count = Func.random(1 + Math.floor(add_count / 3), 2 + Math.floor(add_count / 2))
-
+        
         for(let i = 0; i < count; i++){
 
             let enemy_name = undefined
