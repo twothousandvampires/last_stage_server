@@ -82,7 +82,7 @@ export default class Level{
     public check_grace_time: number = 0
 
     private need_to_check_grace: boolean = true
-    private game_loop: NodeJS.Timeout | undefined = undefined
+    private game_loop: any
     private script: Scenario = new Default()
     private status_pull: Status[] = []
     private last_id: number = 0
@@ -96,7 +96,7 @@ export default class Level{
     }
 
     public endGame(): void{
-        clearInterval(this.game_loop)
+        clearImmediate(this.game_loop)
         this.server.endOfLevel()
     }
 
@@ -138,16 +138,6 @@ export default class Level{
         player.closeSuggest()
     }
 
-    // stop(): void{
-    //     this.enemies = []
-    //     this.players = []
-    //     this.binded_effects = []
-    //     this.status_pull = []
-    //     this.projectiles.length = 0
-    //     this.sounds.length = 0
-    //     this.effects.length = 0
-    // }
-
     public start(forced_scenario_name: string | undefined): void{
 
         if(forced_scenario_name && forced_scenario_name === 'learning'){
@@ -173,7 +163,7 @@ export default class Level{
             this.sounds.length = 0
         }
         
-        setImmediate(this.loop.bind(this))
+        this.game_loop = setImmediate(this.loop.bind(this))
     }
 
     public toJSON(): any{
