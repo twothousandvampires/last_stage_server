@@ -37,6 +37,8 @@ export default class LightBeacon extends FlyerAbility{
         this.owner.is_attacking = true
         this.owner.state = 'fly up'
         this.owner.action_time = 800
+        this.owner.setImpactTime(90)
+
         this.owner.stateAct = this.act()
         let cast_speed = this.owner.getCastSpeed()
         this.owner.level.addSound('lightning cast', this.owner.x, this.owner.y)
@@ -122,6 +124,7 @@ export default class LightBeacon extends FlyerAbility{
                         ability.state = 2
                         owner.state = 'fly down'
                         owner.action_time = 800
+                        owner.setImpactTime(100)
                         clearInterval(timer)
                     }, 6000)
                 }

@@ -5,13 +5,11 @@ import SwordmanAbility from "./SwordmanAbility";
 
 export default class Commands extends SwordmanAbility{
 
-    cast: boolean
     fast_commands: boolean
 
     constructor(owner: Swordman){
         super(owner)
         this.cd = 20000
-        this.cast = false
         this.fast_commands = false
         this.name = 'commands'
     }
@@ -26,16 +24,15 @@ export default class Commands extends SwordmanAbility{
         this.used = true
 
         this.owner.state = 'cast'
-        this.owner.can_move_by_player = false
 
         this.owner.stateAct = this.getAct()
+        this.owner.action_time = this.owner.cast_speed
+        this.owner.setImpactTime(80)
 
         this.owner.cancelAct = () => {
             this.owner.action = false
-            this.owner.can_move_by_player = true
             this.owner.action_time = undefined
             this.afterUse()
-            this.cast = false
         }
 
         this.owner.action_time = 1500
@@ -50,8 +47,8 @@ export default class Commands extends SwordmanAbility{
         let owner = this.owner
         
         return function(){
-            if(ability.cast){
-                ability.cast = false
+            if(owner.action){
+                
                 this.level.sounds.push({
                     name:'holy cast',
                     x: this.x,
@@ -79,7 +76,9 @@ export default class Commands extends SwordmanAbility{
                     
                     owner.level.setStatus(elem, status)
                 })
-        
+            }
+            else if(owner.action_is_end){
+                owner.action_is_end = false
                 owner.getState()
             }
         }

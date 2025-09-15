@@ -4,13 +4,10 @@ import SwordmanAbility from "./SwordmanAbility";
 
 export default class CursedWeapon extends SwordmanAbility{
 
-    cast: boolean
     drinker: boolean
 
     constructor(owner: Swordman){
         super(owner)
-
-        this.cast = false
         this.drinker = false
         this.name = 'cursed weapon'
         this.cd = 12000
@@ -26,30 +23,25 @@ export default class CursedWeapon extends SwordmanAbility{
         this.used = true
 
         this.owner.state = 'cast'
-        this.owner.can_move_by_player = false
+
+        this.owner.action_time = this.owner.cast_speed
+        this.owner.setImpactTime(80)
 
         this.owner.stateAct = this.getAct()
 
         this.owner.cancelAct = () => {
             this.owner.action = false
-            this.owner.can_move_by_player = true
             this.owner.action_time = undefined
             this.afterUse()
-            this.cast = false
         }
-
-        this.owner.action_time = 1500
-    
-        setTimeout(() => {
-            this.cast = true
-        }, 1500)
     }
 
     getAct(){
         let ability = this
+        let owner = this.owner
 
         return function(){
-            if(ability.cast){
+            if(owner.action){
                 let second = this.getSecondResource()
 
                 let status = new CursedWeaponStatus(this.time, ability.drinker)
@@ -62,9 +54,10 @@ export default class CursedWeapon extends SwordmanAbility{
                     x: this.x,
                     y: this.y
                 })
-
-                ability.cast = false
-                this.getState()
+            }
+            else if(owner.action_is_end){
+                owner.action_is_end = false
+                owner.getState()
             }
         }
     }

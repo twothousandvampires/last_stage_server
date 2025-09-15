@@ -32,6 +32,7 @@ export default class BurningCircle extends CultistAbility{
         this.owner.addMoveSpeedPenalty(-70)
 
         this.owner.action_time = cact_speed
+        this.owner.setImpactTime(85)
 
         this.owner.cancelAct = () => {
             this.owner.action = false

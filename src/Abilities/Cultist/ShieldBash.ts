@@ -56,6 +56,7 @@ export default class ShieldBash extends CultistAbility{
         }
 
         this.owner.action_time = attack_speed
+        this.owner.setImpactTime(85)
 
         this.owner.cancelAct = () => {
             this.owner.action = false

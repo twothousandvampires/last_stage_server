@@ -80,6 +80,7 @@ export default class Skull extends Enemy{
         this.is_attacking = true
         this.stateAct = this.attackAct
         this.action_time = this.attack_speed
+        this.setImpactTime(85)
 
         this.cancelAct = () => {
             this.action = false

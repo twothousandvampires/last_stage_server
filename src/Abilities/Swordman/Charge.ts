@@ -60,6 +60,8 @@ export default class Charge extends SwordmanAbility{
         }  
         this.owner.state = 'charge'
         this.owner.can_move_by_player = false
+        this.owner.action_time = 200
+        this.owner.setImpactTime(100)
         
         this.owner.avoid_damaged_state_chance += 100
 

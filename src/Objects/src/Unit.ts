@@ -5,7 +5,10 @@ import GameObject from "./GameObject"
 
 export default abstract class Unit extends GameObject {
     move_speed_penalty: number
-   
+    
+    action_impact: number = 0
+    action_end: number = 0
+
     flipped: boolean
     is_attacking: boolean
     is_moving: boolean
@@ -65,6 +68,12 @@ export default abstract class Unit extends GameObject {
     
     isStatusResist(){
         return false
+    }
+
+    setImpactTime(c: number){
+        c += Func.chance(50) ? 5 : -5
+        this.action_impact = this.level.time + (this.action_time * (c / 100))
+        this.action_end =  this.level.time + this.action_time
     }
 
     zapedAct(){
