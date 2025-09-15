@@ -86,7 +86,7 @@ export default class Level{
     private script: Scenario = new Default()
     private status_pull: Status[] = []
     private last_id: number = 0
-    private kill_count: number = 0
+    public kill_count: number = 0
     private grace_trashold: number = 5
     
     constructor(private server: GameServer){
