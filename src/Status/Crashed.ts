@@ -34,7 +34,7 @@ export default class Crushed extends Status{
         }
     }
 
-     update(status: any){
+    update(status: any){
         this.time = Date.now()
 
         this.unit.newStatus({

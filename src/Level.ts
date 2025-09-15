@@ -252,6 +252,7 @@ export default class Level{
     }
 
     private checkGraceCreating(): void{
+        console.log(this.status_pull.length)
         if(!this.need_to_check_grace) return
 
         let diff: number = this.grace_trashold - this.kill_count

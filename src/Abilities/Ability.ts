@@ -17,8 +17,8 @@ export default abstract class Ability{
     getCd(){
         let red = this.owner.getCdRedaction()
         
-        if(red > 90){
-            red = 90
+        if(red > 95){
+            red = 95
         }
 
         return this.cd * (1 - red / 100)

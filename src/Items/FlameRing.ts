@@ -15,7 +15,7 @@ export default class FlameRing extends Item{
     }
 
     getSpecialForgings(): string[] {
-        return ['chance', 'distance', 'count']
+        return ['chance', 'distance', 'count', 'ignite when hit']
     }
 
     equip(character: Character): void {
