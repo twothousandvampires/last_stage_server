@@ -45,6 +45,7 @@ export default class ShatteredWeapon extends SwordmanAbility{
         let attack_speed = this.owner.getAttackSpeed()
 
         this.owner.action_time = attack_speed
+        this.owner.setImpactTime(80)
 
         this.owner.cancelAct = () => {
             this.owner.action = false

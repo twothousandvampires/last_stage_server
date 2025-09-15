@@ -51,7 +51,8 @@ export default class Impy extends Enemy{
         this.is_attacking = true
         this.stateAct = this.attackAct
         this.action_time = this.attack_speed
-
+        this.setImpactTime(80)
+        
         this.attack_angle = Func.angle(this.x, this.y, this.target?.x, this.target.y)
 
         this.cancelAct = () => {

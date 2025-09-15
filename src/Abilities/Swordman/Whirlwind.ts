@@ -13,7 +13,7 @@ export default class Whirlwind extends SwordmanAbility{
 
     constructor(owner: Swordman){
         super(owner)
-        this.cost = 7
+        this.cost = 0
         this.blood_harvest = false
         this.fan_of_swords = false
         this.name = 'whirlwind'
@@ -28,6 +28,7 @@ export default class Whirlwind extends SwordmanAbility{
 
         let action_time = this.owner.attack_speed / 2
 
+
         if(!echo){
             this.owner.pay_to_cost = this.cost
             this.owner.is_attacking = true
@@ -35,6 +36,7 @@ export default class Whirlwind extends SwordmanAbility{
 
             this.owner.stateAct = this.act
             this.owner.action_time = action_time
+            
 
             this.owner.cancelAct = () => {
                 this.owner.is_attacking = false
@@ -45,7 +47,8 @@ export default class Whirlwind extends SwordmanAbility{
         else{
             this.owner.hit = false
             this.owner.action = false
-        }  
+        }
+        this.owner.setImpactTime(50)  
     }
 
     act(){

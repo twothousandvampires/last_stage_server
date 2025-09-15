@@ -26,9 +26,10 @@ export default class SpectralSwords extends SwordmanAbility{
         this.owner.addMoveSpeedPenalty(-attack_move_speed_penalty)
 
         this.owner.stateAct = this.act
-        let attack_speed = this.owner.getAttackSpeed()
+        let attack_speed = this.owner.cast_speed
 
         this.owner.action_time = attack_speed
+        this.owner.setImpactTime(80)
 
         this.owner.cancelAct = () => {
             this.owner.action = false

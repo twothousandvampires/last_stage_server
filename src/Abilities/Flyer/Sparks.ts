@@ -31,6 +31,7 @@ export default class Sparks extends FlyerAbility{
         let cast_speed = this.owner.getCastSpeed()
 
         this.owner.action_time = cast_speed
+        this.owner.setImpactTime(85)
         
         this.owner.cancelAct = () => {
             this.owner.action = false

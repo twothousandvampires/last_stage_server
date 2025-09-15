@@ -217,28 +217,7 @@ export default class GameServer{
                         }
                     }
                 })
-
-                socket.on('action', (id: number) => {
-                    if(!this.level) return
-
-                    let actor = this.level.enemies.find(elem => elem.id === id)
-                    if(!actor){
-                        actor = this.level.players.find(elem => elem.id === id)
-                    }
-                    if(actor){
-                        actor.action = true
-                    }
-                })
-
-                socket.on('action_end', (id: number) => {
-                    if(!this.level) return
-
-                    let actor = this.level.players.find(elem => elem.id === id)
-                    if(actor){
-                          actor.action_is_end = true
-                    }
-                })
-
+                
                 socket.on('set_target', (id) => {
                     if(!client.character) return
                     client.character.setTarget(id)

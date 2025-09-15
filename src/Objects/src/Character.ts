@@ -22,6 +22,7 @@ export default abstract class Character extends Unit{
 
     static MAX_ITEMS_TO_BUY: number = 3
 
+    action_end: number = 0
     pressed: { [key: string]: any, } = {}
     can_move_by_player: boolean = true
     direct_angle_to_move: any
@@ -1233,6 +1234,20 @@ export default abstract class Character extends Unit{
         this.stateAct()
         this.moveAct()
         this.regen()
+
+        if(this.action_impact && time >= this.action_impact){
+            if(!this.action){
+                this.action = true
+            }
+            else{
+                this.action = false
+                this.action_impact = 0
+            }
+        }
+        if(this.action_end && time >= this.action_end){
+            this.action_is_end = true
+            this.action_end = 0
+        }
     }
 
     private setIdleState(): void {

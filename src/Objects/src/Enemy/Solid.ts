@@ -97,6 +97,7 @@ export default class Solid extends Enemy{
         this.is_attacking = true
         this.stateAct = this.attackAct
         this.action_time = this.attack_speed
+        this.setImpactTime(85)
 
         this.hit_x = this.target.x
         this.hit_y = this.target.y

@@ -55,6 +55,16 @@ export abstract class Enemy extends Unit{
         if(!this.can_act || !this.stateAct) return
     
         this.stateAct(time)
+       
+        if(this.action_impact && time >= this.action_impact){
+            if(!this.action){
+                this.action = true
+            }
+            else{
+                this.action = false
+                this.action_impact = 0
+            }
+        }
     }
 
     spawnAct(){
@@ -260,6 +270,7 @@ export abstract class Enemy extends Unit{
             this.is_attacking = true
             this.stateAct = this.attackAct
             this.action_time = this.attack_speed
+            this.setImpactTime(80)
     
             this.cancelAct = () => {
                 this.action = false

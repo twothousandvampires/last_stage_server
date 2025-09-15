@@ -236,6 +236,7 @@ export default class Ghost extends Enemy{
         this.stateAct = this.attackAct
         this.action_time = this.cast_speed
         this.invisible = false
+        this.setImpactTime(80)
 
         this.cancelAct = () => {
             this.action = false

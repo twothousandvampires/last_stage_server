@@ -173,6 +173,7 @@ export default class FlyingBones extends Enemy{
         this.is_attacking = true
         this.stateAct = this.attackAct
         this.action_time = this.attack_speed
+        this.setImpactTime(75)
 
         this.cancelAct = () => {
             this.action = false

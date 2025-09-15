@@ -58,6 +58,7 @@ export default class Teleportation extends FlyerAbility{
         }
 
         this.owner.action_time = this.owner.getCastSpeed()
+        this.owner.setImpactTime(85)
         
         this.owner.cancelAct = () => {
             this.owner.action = false
