@@ -92,7 +92,7 @@ export default abstract class Character extends Unit{
     gold_find: number = 0
     action_is_end: boolean = false
     voice_radius: number = 20
-    public gold: number = 2220
+    public gold: number = 0
     public block_chance: number = 0
     cd_reduction: number = 0
     can_block: boolean = true
