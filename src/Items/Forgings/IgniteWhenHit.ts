@@ -1,27 +1,28 @@
 import Func from "../../Func";
-import FrostNova from "../../Objects/Effects/FrostNova";
 import Character from "../../Objects/src/Character";
 import Unit from "../../Objects/src/Unit";
+import Ignite from "../../Status/Ignite";
 import Item from "../Item";
 import Forging from "./Forging";
 
-export default class NovaThenHit extends Forging{
+export default class IgniteWhenHit extends Forging{
 
     value: number = 0
     freq: number = 2000
     last_trigger_time: number = 0
 
+
     constructor(item: Item){
         super(item)
         this.max_value = 80
-        this.name = 'frost nova'
-        this.description = 'chance to cast frost nova when hit'
+        this.name = 'ignite on hit'
+        this.description = 'chance to ignite in radius of hitting'
         this.gold_cost = 20
     }
 
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
-            if(!player.on_hit_triggers.some(elem => elem instanceof NovaThenHit)){
+            if(!player.on_hit_triggers.some(elem => elem instanceof IgniteWhenHit)){
                 player.on_hit_triggers.push(this)
             }
 
@@ -39,22 +40,21 @@ export default class NovaThenHit extends Forging{
 
         if(player.level.time - this.last_trigger_time >= this.freq){
             this.last_trigger_time = player.level.time
-
-            let e = new FrostNova(player.level)
-            e.setPoint(target.x, target.y)
-
-            let targets = player.level.enemies.concat(player.level.players.filter(elem => elem != player))
             let box = target.getBoxElipse()
-            box.r = 12
+            box.r = 14
+
+            let targets = player.level.enemies.concat(player.level.players.filter(elem => elem != player)).filter(elem => !elem.is_dead && Func.elipseCollision(elem.getBoxElipse() ,box))
+            
 
             for(let i = 0; i < targets.length; i++){
                 let target = targets[i]
-                if(Func.elipseCollision(box, target.getBoxElipse())){
-                    target.setFreeze(2000)
-                }
-            }
+                
+                let s = new Ignite(player.level.time)
+                s.setDuration(6000)
+                s.setPower(40)
 
-            player.level.effects.push(e)
+                player.level.setStatus(target, s, true)
+            }
         }
     }
 

@@ -19,6 +19,7 @@ import Durability from "../Items/Forgings/Durability"
 import Duration from "../Items/Forgings/Duration"
 import Frequency from "../Items/Forgings/Frequency"
 import GoldFind from "../Items/Forgings/GoldFind"
+import IgniteWhenHit from "../Items/Forgings/IgniteWhenHit"
 import Knowledge from "../Items/Forgings/Knowledge"
 import MaxResource from "../Items/Forgings/MaxResource"
 import Might from "../Items/Forgings/Might"
@@ -148,6 +149,8 @@ export default class Builder{
         else if(item_name === 'ice belt'){
             return new IceBelt()
         }
+
+        
     }
 
     static createForging(name: string, item: Item){
@@ -202,6 +205,8 @@ export default class Builder{
                 return new Sacredness(item)
             case 'toughness':
                 return new Toughness(item)
+            case 'ignite when hit':
+                return new IgniteWhenHit(item)
             default:    
                 return new NovaThenHit(item)
         }
