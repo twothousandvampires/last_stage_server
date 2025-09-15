@@ -33,6 +33,9 @@ export default class Solid extends Enemy{
     setDeadState(){
         this.state = 'dead'
         this.stateAct = this.deadAct
+        
+        this.action_time = 1200
+        this.setImpactTime(100)
     }
 
     deadAct(){

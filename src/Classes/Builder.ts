@@ -37,6 +37,7 @@ import IceBelt from "../Items/IceBelt"
 import Item from "../Items/Item"
 import RedPotion from "../Items/RedPotion"
 import RingOfTransmutation from "../Items/RingOfTransmutation"
+import SearchingHeart from "../Items/SearchingHeart"
 import SkullOfFirstWarrior from "../Items/SkullOfFirstWarrior"
 import SoulAccumulator from "../Items/SoulAccumulator"
 import SparklingHelmet from "../Items/SparklingHelmet"
@@ -149,8 +150,9 @@ export default class Builder{
         else if(item_name === 'ice belt'){
             return new IceBelt()
         }
-
-        
+        else if(item_name === 'searching heart'){
+            return new SearchingHeart()
+        }   
     }
 
     static createForging(name: string, item: Item){

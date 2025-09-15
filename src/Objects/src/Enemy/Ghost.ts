@@ -1,6 +1,7 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
 import Despair from "../../../Status/Despair";
+import SkullCloud from "../../Effects/SkullCloud";
 import SmallTextLanguage3 from "../../Effects/SmallTextLanguage3";
 import { FrostBolt } from "../../Projectiles/FrostBolt";
 import { Enemy } from "./Enemy";
@@ -305,6 +306,11 @@ export default class Ghost extends Enemy{
              if(this.can_cast_despair && Func.distance(this, this.target) <= 10){
                 this.spell_name = 'despair'
                 this.can_cast_despair = false
+                
+                let e = new SkullCloud(this.level)
+                e.setPoint(this.x, this.y)
+                this.level.effects.push(e)
+
                 setTimeout(() => {
                     this.can_cast_despair = true
                 }, 10000)

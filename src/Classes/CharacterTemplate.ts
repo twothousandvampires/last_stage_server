@@ -81,7 +81,7 @@ export default class characterTemplate{
                     name: 'quake',
                     type: 3,
                     selected: false,
-                    desc: 'You jump and create 3 waves upon landing. The first one explodes enemies, the second one stuns them, and the third one slows them down. The radius depends on the might. After using it, you become weaker for 5 seconds.'
+                    desc: 'Summons 5 swords that fight by your side and have your attack speed.'
                 },
                 {
                     id: 9,
@@ -271,6 +271,13 @@ export default class characterTemplate{
                     type: 3,
                     selected: false,
                     desc: 'create a pile of bones which periodicly damage enemies around it'
+                },
+                {
+                    id: 9,
+                    name: 'wandering evil',
+                    type: 3,
+                    selected: false,
+                    desc: 'Summons evil, which enters the being and after some time tears it apart.'
                 },
                 {
                     id: 7,

@@ -5,6 +5,7 @@ import item from './Items/Item'
 import Level from './Level'
 import TemplateAbility from './Types/TemplateAbility'
 import Character from './Objects/src/Character'
+const mysql = require('mysql2');
 
 export default class GameServer{
 
@@ -18,6 +19,9 @@ export default class GameServer{
     private realise: string = '1.0.0'
     private realise_name: string | undefined = undefined
     private start_scenario_name: string | undefined = undefined
+    private remove_level_timeout: any
+    db: any
+    public db_is_connected: boolean = false
 
     new_game_timeout: any
     
@@ -62,7 +66,8 @@ export default class GameServer{
         return client
     }
 
-    public endOfLevel(): void{
+    public removeLevel(){
+        clearTimeout(this.remove_level_timeout)
         this.level = undefined
         this.game_started = false
         this.start_scenario_name = undefined
@@ -70,7 +75,79 @@ export default class GameServer{
         this.socket.emit('game_is_over')
     }
 
-    private initSocket(): void{
+    suggetRecord(player: Character){
+        this.socket.to(player.id).emit('suggers_record')
+    }
+
+    addRecord(name, socket_id){
+        if(!this.level) return
+        let p = this.level.players[0]
+
+        if(p.id != socket_id) return
+
+        this.db.query( 'INSERT INTO game_stats (name, kills, time, class) VALUES (?, ?, ?, ?)',
+        [name, this.level.kill_count, this.level.time - this.level.started, p.name],
+        (err, results) => {
+            if (err) {
+            console.error('Ошибка INSERT:', err);
+            return;
+            }
+            console.log('Добавлена запись');
+        })
+
+        p.closeSuggest()
+        this.removeLevel()
+    }
+
+    public endOfLevel(): void{
+        if(this.db_is_connected && this.level?.players.length === 1){
+            this.db.query('SELECT * FROM game_stats WHERE class = ? ORDER BY kills DESC LIMIT 3', 
+            [this.level?.players[0].name], 
+            (err, results) => {
+                if (err) {
+                    console.error('Ошибка запроса:', err);
+                    return;
+                }
+                let more = true
+
+                if(results.length > 2 && results.every(elem => elem.kills >= this.level?.kill_count)){
+                    more = false
+                }
+                
+                if(more){
+                    this.remove_level_timeout = setTimeout(() => {
+                        this.removeLevel()
+                    }, 10000)
+                    this.suggetRecord(this.level?.players[0])
+                }
+                else{
+                    this.removeLevel()
+                }
+            });
+        }
+        else{
+            this.removeLevel()
+        }
+    }
+
+     private initSocket() {
+
+        this.db = mysql.createConnection({
+            host: 'localhost',
+            user: 'myuser',
+            password: 'secure_password123',
+            database: 'last_stage'
+        });
+
+        this.db.connect((err) => {
+            if (err) {
+                this.db.end()
+                return;
+            }
+            this.db_is_connected = true
+        });
+
+
         this.socket.on('connection', (socket: Socket) => {
 
             socket.emit('server_status', {
@@ -87,8 +164,58 @@ export default class GameServer{
                     this.updateLobby()                
                 })
 
+                socket.on('add_record' ,(name) => {
+                    this.addRecord(name, socket.id)
+                })
+
                 socket.on('set_start_scenario', (start_scenario_name) => {
                     this.start_scenario_name = start_scenario_name
+                })
+
+                socket.on('get_records', () => {
+
+                    let result:any = []
+
+                    if(this.db_is_connected){
+                        this.db.query('SELECT * FROM game_stats WHERE class = "swordman" ORDER BY kills DESC LIMIT 3',
+                        (err, results) => {
+                                if(err){
+                                    
+                                }
+                                else{
+                                    result.push(results)
+                                    console.log(result)
+                                }
+                            }
+                        )
+
+                        this.db.query('SELECT * FROM game_stats WHERE class = "flyer" ORDER BY kills DESC LIMIT 3',
+                        (err, results) => {
+                                if(err){
+                                    
+                                }
+                                else{
+                                   
+                                }
+                            }
+                        )
+
+                        this.db.query('SELECT * FROM game_stats WHERE class = "cultist" ORDER BY kills DESC LIMIT 3',
+                        (err, results) => {
+                                if(err){
+                                    
+                                }
+                                else{
+                                    
+                                }
+                            }
+                        )
+
+                    }
+
+                    console.log(result)
+                    
+                    socket.emit('records', JSON.stringify(result))
                 })
 
                 socket.on('increase_stat', (stat: string) => {

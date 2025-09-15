@@ -8,6 +8,7 @@ import ShieldBash from "../../../Abilities/Cultist/ShieldBash";
 import Slam from "../../../Abilities/Cultist/Slam";
 import SoulShatter from "../../../Abilities/Cultist/SoulShatter";
 import UnleashPain from "../../../Abilities/Cultist/UnleashPain";
+import WanderingEvil from "../../../Abilities/Cultist/WanderingEvil";
 import Func from "../../../Func";
 import Level from "../../../Level";
 import Immortality from "../../../Status/Immortality";
@@ -108,7 +109,10 @@ export default class Cultist extends Character{
         else if(finisher_name === 'pile of thorns'){
             this.third_ability = new PileOfThornCast(this)
         }
-
+        else if(finisher_name === 'wandering evil'){
+            this.third_ability = new WanderingEvil(this)
+        }
+    
         let utility_name = abilities.find(elem => elem.type === 4 && elem.selected).name
 
         if(utility_name === 'self flagellation'){
@@ -314,6 +318,7 @@ export default class Cultist extends Character{
         }
 
         this.subLife(unit, options)
+        this.playerLoseLife()
     }
 
     getSecondResource(){

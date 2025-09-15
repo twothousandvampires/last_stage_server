@@ -3,6 +3,7 @@ import Level from "../../Level";
 import FireExplosion from "../Effects/FireExplosion";
 import FireExplosionMedium from "../Effects/FireExplosionMedium";
 import FireExplosionSmall from "../Effects/FireExplosionSmall";
+import Flyer from "../src/PlayerClasses/Flyer";
 import { FlameWallObject } from "./FlameWallObject";
 import Projectiles from "./Projectiles";
 
@@ -108,7 +109,12 @@ export class FireballProjectile extends Projectiles {
     }
 
     impact(){
-        let add_radius = this.owner.getAdditionalRadius()
+        let add_radius = 0
+
+        if(this.owner instanceof Flyer){
+            add_radius += this.owner.getAdditionalRadius()
+        }
+
         let effect = undefined
         let explosion_radius = 0
 

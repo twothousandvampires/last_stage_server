@@ -64,6 +64,7 @@ export default abstract class Character extends Unit{
     on_status_resist_triggers: any[] = []
     when_block_triggers: any[] = []
     when_say_phrase_triggers: any[] = []
+    when_lose_life_triggers: any[] = []
 
     avoid_damaged_state_chance: number = 0
     can_be_lethaled: boolean = true
@@ -762,6 +763,12 @@ export default abstract class Character extends Unit{
                 this.reachNearDead()
             }
         }
+    }
+
+    playerLoseLife(){
+        this.when_lose_life_triggers.forEach(elem => {
+            elem.trigger(this)
+        })
     }
     
     protected playerWasHited(unit: Unit | undefined): void{

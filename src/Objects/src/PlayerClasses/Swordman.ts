@@ -248,6 +248,7 @@ export default class Swordman extends Character{
         }
        
         this.subLife(unit, options)
+        this.playerLoseLife()
     }
 
     getSkipDamageStateChance(){

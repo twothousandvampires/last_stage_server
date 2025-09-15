@@ -612,7 +612,6 @@ export default class Flyer extends Character{
         this.playerWasHited(unit)
 
         if(this.isBlock()){
-
             if(this.charged_shield && Func.chance(75, this.is_lucky)){
                 let target = this.level.enemies[Math.floor(Math.random() * this.level.enemies.length)]
 
@@ -660,6 +659,7 @@ export default class Flyer extends Character{
 
         this.recent_cast = this.recent_cast.filter((elem, index) => index >= 4)
         this.subLife(unit, options)
+        this.playerLoseLife()
     }
 
     subLife(unit: any = undefined, options = {}){
