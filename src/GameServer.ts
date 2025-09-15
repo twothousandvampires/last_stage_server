@@ -141,7 +141,6 @@ export default class GameServer{
 
         this.db.connect((err) => {
             if (err) {
-                this.db.end()
                 return;
             }
             this.db_is_connected = true
