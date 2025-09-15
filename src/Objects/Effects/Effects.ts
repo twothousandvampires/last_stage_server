@@ -21,7 +21,8 @@ export default abstract class Effect extends GameObject{
             id: this.id,
             name: this.name,
             z: this.z,
-            light_r: this.light_r
+            light_r: this.light_r,
+            invisible: this.invisible
         }
     }
 

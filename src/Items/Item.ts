@@ -101,6 +101,10 @@ export default abstract class Item {
             name: "ice belt",
             description: 'increases maximum of resources'
         },
+        {
+            name: "searching heart",
+            description: 'every 10 seconds releases fireballs, the number of which depends on the health lost during this time'
+        },
     ]
 
     static forging_list_all = [

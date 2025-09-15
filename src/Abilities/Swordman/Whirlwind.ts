@@ -13,7 +13,7 @@ export default class Whirlwind extends SwordmanAbility{
 
     constructor(owner: Swordman){
         super(owner)
-        this.cost = 0
+        this.cost = 7
         this.blood_harvest = false
         this.fan_of_swords = false
         this.name = 'whirlwind'
