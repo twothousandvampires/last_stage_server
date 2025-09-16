@@ -151,6 +151,8 @@ export default abstract class Unit extends GameObject {
         this.is_moving = false
         
         if(this.cancelAct){
+            this.action_impact = 0
+            this.action_end = 0
             this.cancelAct()
             this.cancelAct = undefined
         }
