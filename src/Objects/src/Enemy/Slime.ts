@@ -86,9 +86,18 @@ export default class Slime extends Enemy{
                         let status = new Corrosion(this.level.time)
                         status.setDuration(6000)
                         this.level.setStatus(this.target, status)
+                        this.level.addSound('goo', this.x, this.y)
                     }
                 }
             }   
+        }
+    }
+
+    getWeaponHitedSound(){
+        return  {
+            name: 'goo',
+            x:this.x,
+            y:this.y
         }
     }
 

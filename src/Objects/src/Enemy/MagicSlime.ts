@@ -93,6 +93,14 @@ export default class MagicSlime extends Enemy{
         }
     }
 
+     getWeaponHitedSound(){
+        return  {
+            name: 'goo',
+            x:this.x,
+            y:this.y
+        }
+    }
+
     setAttackState(){
         this.state = 'attack'
         this.is_attacking = true
