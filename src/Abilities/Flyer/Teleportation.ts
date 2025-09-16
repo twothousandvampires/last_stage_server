@@ -126,6 +126,7 @@ export default class Teleportation extends FlyerAbility{
                     owner.y = ability.teleport_y
                     owner.state = 'teleport end'
                     ability.state = 1
+                    owner.setImpactTime(100)
                 }
             }
         }
