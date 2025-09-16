@@ -155,7 +155,7 @@ export default class Swordman extends Character{
         }
     }
 
-    isBlock(): boolean {
+    isBlock(crush: number = 0): boolean {
         let b_chance = this.block_chance + this.agility * 3
 
         if(b_chance > 90){
