@@ -42,6 +42,7 @@ export default class Pile extends Enemy{
     
         this.stateAct = this.DyingAct
         this.setTimerToGetState(this.dying_time)
+        this.level.addSound('skullpile', this.x, this.y)
     }
 
     takeDamage(unit: any = undefined, options: any = {}){

@@ -76,7 +76,7 @@ export default class GameServer{
     }
 
     suggetRecord(player: Character){
-        this.socket.to(player.id).emit('suggers_record')
+        this.socket.to(player.id).emit('suggers_record', this.level?.kill_count)
     }
 
     addRecord(name, socket_id){
@@ -117,7 +117,7 @@ export default class GameServer{
                 if(more){
                     this.remove_level_timeout = setTimeout(() => {
                         this.removeLevel()
-                    }, 10000)
+                    }, 20000)
                     this.suggetRecord(this.level?.players[0])
                 }
                 else{
