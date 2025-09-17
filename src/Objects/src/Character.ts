@@ -192,7 +192,7 @@ export default abstract class Character extends Unit{
         })
     }
 
-    protected succesefulBlock(unit: Unit | undefined): void{
+    public succesefulBlock(unit: Unit | undefined): void{
         this.when_block_triggers.forEach(elem => elem.trigger(this, unit))
     }
 

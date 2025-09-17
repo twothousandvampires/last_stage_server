@@ -73,6 +73,7 @@ export default class Slime extends Enemy{
                 let proj = new FlyingMucus(this.level)
                 proj.setAngle(Func.angle(this.x, this.y, this.target.x, this.target.y))
                 proj.setPoint(this.x, this.y)
+                proj.setOwner(this)
 
                 this.level.projectiles.push(proj)
             }

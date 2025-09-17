@@ -22,7 +22,7 @@ export default class TwilightGloves extends Item{
 
     getSpecialForgings(): string[] {
             return ['count', 'frequency', 'distance', 'chance']
-        }
+    }
     
     equip(character: Character): void {
         let status = new TwilightGlovesStatus(character.level.time, this)
