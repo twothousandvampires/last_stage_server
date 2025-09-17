@@ -740,7 +740,6 @@ export default class Swordman extends Character{
 
     addResourse(count: number = 1, ignore_limit = false){
         if(!this.can_regen_resource) return
-        console.log('sw')
         super.addResourse()
 
         this.addPoint(count, ignore_limit)

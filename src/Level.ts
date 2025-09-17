@@ -16,6 +16,7 @@ import GameServer from "./GameServer"
 import Sound from "./Types/Sound"
 import { Enemy } from "./Objects/src/Enemy/Enemy"
 import Learning from "./Scenarios/Learning"
+import ItemDrop from "./Objects/Effects/ItemDrop"
 
 export default class Level{
     static enemy_list = [
@@ -318,6 +319,9 @@ export default class Level{
                     }
                     else if(drop_name === 'intervention'){
                         drop_name = new Intervention(this)
+                    }
+                    else if(drop_name === 'item'){
+                        drop_name = new ItemDrop(this)
                     }
 
                     if(drop_name instanceof Effect){
