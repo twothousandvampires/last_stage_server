@@ -10,6 +10,10 @@ export default abstract class Ability{
     constructor(public owner: Player){
 
     }
+
+    isEnergyEnough(){
+        return this.owner.resource >= this.cost
+    }
     
     abstract use(): void 
     abstract canUse(): boolean
@@ -24,14 +28,16 @@ export default abstract class Ability{
         return this.cd * (1 - red / 100)
     }
 
-    afterUse(){
+    afterUse(forced_cd: number | undefined = undefined){
         this.owner.using_ability = undefined
         this.owner.attack_angle = undefined
 
         if(!this.used) return
 
+        let cd = forced_cd ? forced_cd : this.getCd()
+
         setTimeout(() => {
             this.used = false
-        }, this.getCd())
+        }, cd)
     }
 }

@@ -68,6 +68,7 @@ export default abstract class Character extends Unit{
     when_say_phrase_triggers: any[] = []
     when_lose_life_triggers: any[] = []
     when_gain_energy_triggers: any = []
+    when_start_block_triggers: any = []
 
     avoid_damaged_state_chance: number = 0
     can_be_lethaled: boolean = true
@@ -1222,6 +1223,9 @@ export default abstract class Character extends Unit{
     public setDefend(): void{
         this.state = 'defend'
         this.stateAct = this.defendAct
+
+        this.when_start_block_triggers.forEach(elem => elem.trigger(this))
+
         let reduce = 80
         this.addMoveSpeedPenalty(-reduce)
 

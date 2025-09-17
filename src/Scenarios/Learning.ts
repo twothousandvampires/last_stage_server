@@ -37,6 +37,7 @@ import Scenario from "./Scenario";
 import Portal from '../Objects/Effects/Grace'
 import ChargedSphere from "../Objects/Effects/ChargedSphere";
 import Split from "../Objects/Effects/Split";
+import Armour from "../Objects/Effects/Armour";
 
 export default class Learning extends Scenario{ 
 
@@ -178,7 +179,11 @@ export default class Learning extends Scenario{
             }
     
             this.life_status -= damage_value
-            unit?.succesefulHit(this)
+
+            if(unit){
+                unit?.succesefulHit(this)
+            }
+            
             
             if(this.life_status <= 0){
                 if(options?.explode){
@@ -204,7 +209,10 @@ export default class Learning extends Scenario{
         function buff(unit: any = undefined, options: any = {}){
             // this.super.takeDamage(unit, options)
 
-            unit.succesefulHit()
+            if(unit){
+                unit?.succesefulHit()
+            }
+            
 
             if(this.life_status <= 0 && unit?.blessed){
                 this.ressurect_chance = Math.round(this.ressurect_chance / 2)

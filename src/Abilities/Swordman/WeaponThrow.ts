@@ -21,15 +21,15 @@ export default class WeaponThrow extends SwordmanAbility{
     }
 
     canUse(): boolean {
-        return !this.used && !this.owner.is_attacking
+        return this.isEnergyEnough() && !this.used && !this.owner.is_attacking
     }
 
     use(){
         if(this.used || this.owner.is_attacking) return
 
+        this.owner.using_ability = this
         let cd_time = this.getCd()
-        this.used = true
-        
+       
         if(this.light_grip && Func.chance(50)){
             cd_time = Math.round(cd_time / 2)
         }
@@ -62,69 +62,68 @@ export default class WeaponThrow extends SwordmanAbility{
         this.owner.cancelAct = () => {
             this.owner.action = false
             this.owner.addMoveSpeedPenalty(attack_move_speed_penalty)
-            setTimeout(()=>{
-                this.used = false
-            }, cd_time)
+            this.afterUse(cd_time)
             this.owner.hit = false
             this.owner.is_attacking = false
         }
     }
+    impact(){
+        this.owner.level.sounds.push({
+            name: 'sword swing',
+            x:this.x,
+            y:this.y
+        })
 
+        this.used = true
+
+        let proj = new ThrowedWeapon(this.owner.level)
+        let second = this.owner.getSecondResource()
+
+        let is_returning = !this.shattering && this.returning && Func.chance(40 + second * 5)
+
+        if(is_returning){
+            proj.returned = true
+        }
+        else{
+            let is_shatter = this.shattering && !this.returning && Func.chance(40 + second * 5)
+            if(is_shatter){
+                proj.shattered = true
+            }
+        }
+
+        proj.setAngle(this.owner.attack_angle)
+        proj.setOwner(this.owner)
+        proj.setPoint(this.owner.x, this.owner.y)
+
+        this.owner.level.projectiles.push(proj)
+    
+        if(this.multiple){
+            let chance = Func.chance(50 + second * 5)
+            if(chance){
+                let add_proj = new ThrowedWeapon(this.owner.level)
+                add_proj.shattered = proj.shattered
+                add_proj.returned = proj.returned
+
+                add_proj.setAngle(proj.angle - 0.31)
+                add_proj.setOwner(this.owner)
+                add_proj.setPoint(this.owner.x, this.owner.y)
+                this.owner.level.projectiles.push(add_proj)
+
+                let add_proj2 = new ThrowedWeapon(this.owner.level)
+                add_proj2.shattered = proj.shattered
+                add_proj2.returned = proj.returned
+
+                add_proj2.setAngle(proj.angle + 0.31)
+                add_proj2.setOwner(this.owner)
+                add_proj2.setPoint(this.owner.x, this.owner.y)
+                this.owner.level.projectiles.push(add_proj2)
+            }
+        }
+    }
     act(){
         if(this.action && !this.hit){
-            this.level.sounds.push({
-                name: 'sword swing',
-                x:this.x,
-                y:this.y
-            })
-            
             this.hit = true
-        
-            let proj = new ThrowedWeapon(this.level)
-            let second = this.getSecondResource()
-
-            let is_returning = !this.first_ability.shattering && this.first_ability.returning && Func.chance(40 + second * 5)
-
-            if(is_returning){
-                proj.returned = true
-            }
-            else{
-                let is_shatter = this.first_ability.shattering && !this.first_ability.returning && Func.chance(40 + second * 5)
-                if(is_shatter){
-                    proj.shattered = true
-                }
-            }
-
-            proj.setAngle(this.attack_angle)
-            proj.setOwner(this)
-            proj.setPoint(this.x, this.y)
-
-            this.level.projectiles.push(proj)
-        
-            if(this.first_ability.multiple){
-                let chance = Func.chance(50 + second * 5)
-                if(chance){
-                    let add_proj = new ThrowedWeapon(this.level)
-                    add_proj.shattered = proj.shattered
-                    add_proj.returned = proj.returned
-
-                    add_proj.setAngle(proj.angle - 0.31)
-                    add_proj.setOwner(this)
-                    add_proj.setPoint(this.x, this.y)
-                    this.level.projectiles.push(add_proj)
-
-
-                    let add_proj2 = new ThrowedWeapon(this.level)
-                    add_proj2.shattered = proj.shattered
-                    add_proj2.returned = proj.returned
-
-                    add_proj2.setAngle(proj.angle + 0.31)
-                    add_proj2.setOwner(this)
-                    add_proj2.setPoint(this.x, this.y)
-                    this.level.projectiles.push(add_proj2)
-                }
-            }
-            this.attack_angle = undefined
+            this.using_ability.impact()
         }
         else if(this.action_is_end){
             this.action_is_end = false
