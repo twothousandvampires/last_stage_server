@@ -61,8 +61,6 @@ export default class Rune extends CultistAbility{
             this.owner.hit_x = undefined
             this.owner.hit_y = undefined
         }
-
-        // this.owner.setTimerToGetState(this.owner.getCastSpeed())
     }
 
     async act(){

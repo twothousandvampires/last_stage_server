@@ -16,15 +16,20 @@ export abstract class Enemy extends Unit{
     dying_time: number
     spawn_time: number
     dead_type: string | undefined
-    create_grace_chance: number
-    create_energy_chance: number
-    create_entity_chance: number
-    create_intervention_chance: number
-    create_chance: number
+
+    create_grace_chance: number = 15
+    create_energy_chance: number = 5
+    create_entity_chance: number = 5
+    create_intervention_chance: number = 2
+    create_item_chance: number = 0
+
+    create_chance: number = 15
+
     count_as_killed: boolean
     say_z: number = 12
     gold_revard: number = 1
     can_be_burned: boolean = true
+    
   
     constructor(level: Level){
         super(level)
@@ -35,11 +40,6 @@ export abstract class Enemy extends Unit{
         this.is_corpse = false
         this.dying_time = 1200
         this.spawn_time = 1200
-        this.create_grace_chance = 18
-        this.create_energy_chance = 5
-        this.create_entity_chance = 5
-        this.create_intervention_chance = 2
-        this.create_chance = 15
     }
 
     getTotalWeights(){
@@ -47,7 +47,8 @@ export abstract class Enemy extends Unit{
             ['grace', this.create_grace_chance],
             ['energy', this.create_energy_chance],
             ['entity', this.create_entity_chance],
-            ['intervention', this.create_intervention_chance]
+            ['intervention', this.create_intervention_chance],
+            ['item', this.create_item_chance]
         ]
     }
 
