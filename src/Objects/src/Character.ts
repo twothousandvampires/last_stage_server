@@ -143,7 +143,8 @@ export default abstract class Character extends Unit{
     showForgings(){
         this.level.socket.to(this.id).emit('show_forgings', {
             items: this.item,
-            gold: this.gold
+            gold: this.gold,
+            can_buy: this.buyed_items < 2
         })
     }
 

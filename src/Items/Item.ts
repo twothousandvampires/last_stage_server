@@ -17,6 +17,15 @@ export default abstract class Item {
     public disabled: boolean = false
     public suggested_forgings: Forging[] = []
 
+    toJSON(){
+        return {
+            forge: this.forge,
+            name: this.name,
+            description: this.description,
+            max_forgings: this.max_forgings
+        }
+    }
+
     static list = [
         {
             name: "skull of first warrior",
