@@ -54,6 +54,7 @@ export default class SpectralSword extends Enemy{
         this.action_time = this.attack_speed
 
         this.attack_angle = Func.angle(this.x, this.y, this.target?.x, this.target.y)
+        this.setImpactTime(85)
 
         this.cancelAct = () => {
             this.action = false

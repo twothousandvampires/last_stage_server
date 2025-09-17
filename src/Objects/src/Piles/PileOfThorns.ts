@@ -14,7 +14,7 @@ export default class PileOfThorns extends Pile{
         this.collection_of_bones = false
         this.kill_count = 0
         this.duration = 12000
-        this.cast_time = 1800
+        this.cast_time = 1500
         this.getState()
     }
 
