@@ -59,7 +59,7 @@ export class WeaponFragment extends Projectiles{
 
                     if(!this.point_added){
                         if(this.owner){
-                            this.owner.addPoint()
+                            this.owner.addResourse()
                             this.point_added = true
                         }
                        

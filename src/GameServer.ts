@@ -89,8 +89,7 @@ export default class GameServer{
         [name, this.level.kill_count, this.level.time - this.level.started, p.name],
         (err, results) => {
             if (err) {
-            console.error('Ошибка INSERT:', err);
-            return;
+                return;
             }
             console.log('Добавлена запись');
         })
@@ -105,8 +104,7 @@ export default class GameServer{
             [this.level?.players[0].name], 
             (err, results) => {
                 if (err) {
-                    console.error('Ошибка запроса:', err);
-                    return;
+                    return
                 }
                 let more = true
 
@@ -183,7 +181,6 @@ export default class GameServer{
                                 }
                                 else{
                                     result.push(results)
-                                    console.log(result)
                                 }
                             }
                         )
@@ -212,8 +209,6 @@ export default class GameServer{
 
                     }
 
-                    console.log(result)
-                    
                     socket.emit('records', JSON.stringify(result))
                 })
 

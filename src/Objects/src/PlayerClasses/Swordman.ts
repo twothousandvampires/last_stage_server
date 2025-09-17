@@ -180,7 +180,7 @@ export default class Swordman extends Character{
         if(this.damaged || this.is_dead) return
 
         if(this.ward){
-            this.ward --
+            this.loseWard()
             let e = new ToothExplode(this.level)
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)
@@ -538,7 +538,7 @@ export default class Swordman extends Character{
                     }
                 },
                 cost: 4,
-                desc: 'increases maximum of resource'
+                desc: 'increases maximum of energy'
             },
             {
                 name: 'heaven vengeance',
@@ -553,7 +553,7 @@ export default class Swordman extends Character{
                     }
                 },
                 cost: 3,
-                desc: 'increases maximum of resource'
+                desc: 'hits one enemy and strikes nearby enemies with lightning'
             },
             {
                 name: 'eye for eye',
@@ -740,7 +740,9 @@ export default class Swordman extends Character{
 
     addResourse(count: number = 1, ignore_limit = false){
         if(!this.can_regen_resource) return
-        
+        console.log('sw')
+        super.addResourse()
+
         this.addPoint(count, ignore_limit)
     }
 

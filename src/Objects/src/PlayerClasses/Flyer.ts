@@ -594,7 +594,7 @@ export default class Flyer extends Character{
         if(this.damaged || this.is_dead) return
 
         if(this.ward){
-            this.ward --
+            this.loseWard()
             let e = new ToothExplode(this.level)
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)
@@ -752,8 +752,11 @@ export default class Flyer extends Character{
     }
 
     addResourse(count: number = 1, ignore_limit = false){
+        
         if(!this.can_regen_resource) return
         
+        super.addResourse()
+
         if(this.resource < this.max_resource || ignore_limit){
             this.resource += count
         }

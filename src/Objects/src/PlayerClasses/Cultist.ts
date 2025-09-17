@@ -143,7 +143,9 @@ export default class Cultist extends Character{
 
     addResourse(count: number = 1, ignore_limit = false){
         if(!this.can_regen_resource) return
-                
+
+        super.addResourse()
+        
         if(this.resource < this.max_resource || ignore_limit){
             this.resource += count
         }
@@ -243,7 +245,7 @@ export default class Cultist extends Character{
         }
 
         if(this.ward){
-            this.ward --
+            this.loseWard()
             let e = new ToothExplode(this.level)
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)

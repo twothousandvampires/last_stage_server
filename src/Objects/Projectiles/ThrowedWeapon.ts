@@ -53,7 +53,7 @@ export class ThrowedWeapon extends Projectiles{
                 this.level.addSound(p.getWeaponHitedSound())
 
                 if(!this.point_added){
-                    this.owner?.addPoint()
+                    this.owner?.addResourse()
                     this.point_added = true
                 }
                 if(this.owner.getTargetsCount() <= this.hited.length){

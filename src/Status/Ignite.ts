@@ -22,7 +22,7 @@ export default class Ignite extends Status{
         if(this.unit instanceof Character){
             this.unit.statusWasApplied()
             this.unit.newStatus({
-                name: 'ignite',
+                name: 'ignite_status',
                 duration: this.duration,
                 desc: 'you are ignited'
             })
@@ -38,7 +38,7 @@ export default class Ignite extends Status{
 
         if(this.unit instanceof Character){
             this.unit.newStatus({
-                name: 'ignite',
+                name: 'ignite_status',
                 duration: this.duration,
                 desc: 'you are ignited'
             })
