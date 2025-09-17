@@ -29,6 +29,7 @@ export default abstract class Character extends Unit{
     direct_angle_to_move: any
     c_x: number = 0
     c_y: number = 0
+    buyed_items: number = 0
     max_resource: number = 7
     resource: number = 0
     exploded: boolean = false
@@ -606,6 +607,8 @@ export default abstract class Character extends Unit{
 
         this.items_to_buy = []
 
+        this.buyed_items ++
+
         this.closeForgings()
         this.closeSuggest()
     }
@@ -616,7 +619,7 @@ export default abstract class Character extends Unit{
 
     public buyNewItem(){
         if(this.gold < 30) return
-        if(this.item.length >= 4) return
+        if(this.item.buyed_items >= 2) return
 
         if(this.items_to_buy.length === 0){
             for(let i = 0; i < Character.MAX_ITEMS_TO_BUY; i++){
