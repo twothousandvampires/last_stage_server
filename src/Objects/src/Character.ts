@@ -553,7 +553,10 @@ export default abstract class Character extends Unit{
     }
 
     public upgrade(upgrade_name: string): void{
+        console.log(upgrade_name)
         let upgrade: Upgrade = this.upgrades.find(elem => elem.name === upgrade_name)
+        if(!upgrade) return
+
         upgrade.teach(this)
 
         this.grace -= upgrade.cost

@@ -604,7 +604,7 @@ export default class Swordman extends Character{
                     return character.when_block_triggers.push(new BlockingTechnique())
                 },
                 cost: 3,
-                desc: 'when you speak can apply command ability buff'
+                desc: 'when you block 5 hits the next three will be successfully blocked'
             },
         ]
     }

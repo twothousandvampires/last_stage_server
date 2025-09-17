@@ -261,7 +261,7 @@ export default class Level{
         let exist: boolean = this.binded_effects.some(elem => elem instanceof Grace)
 
         if(exist){
-            this.grace_trashold ++
+            this.grace_trashold += 5
             return
         }
 

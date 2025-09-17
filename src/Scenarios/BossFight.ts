@@ -21,6 +21,7 @@ export default class BossFight extends Scenario {
                     elem.armour_rate = 0
                     elem.life_status = 1
                     elem.create_chance = 0
+                    elem.count_as_killed = false
 
                     let r = Func.random(1, 3)
 
