@@ -23,7 +23,7 @@ export default class Rune extends CultistAbility{
     }
 
     canUse(): boolean {
-        return !this.used && this.owner.can_cast && !this.owner.is_attacking
+        return this.isEnergyEnough() && !this.used && this.owner.can_cast && !this.owner.is_attacking
     }
 
     use(){

@@ -762,6 +762,9 @@ export default class Swordman extends Character{
     setDefend(){
         this.state = 'defend'
         this.stateAct = this.defendAct
+
+        this.when_start_block_triggers.forEach(elem => elem.trigger(this))
+
         let reduce = 80 - this.speed * 5
         if(reduce < 0){
             reduce = 0

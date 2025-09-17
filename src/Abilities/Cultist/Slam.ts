@@ -15,7 +15,7 @@ export default class Slam extends CultistAbility{
     }
 
     canUse(): boolean {
-        return this.owner.can_attack && !this.owner.is_attacking
+        return this.isEnergyEnough() &&  this.owner.can_attack && !this.owner.is_attacking
     }
 
     use(){

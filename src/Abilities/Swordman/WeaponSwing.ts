@@ -18,7 +18,7 @@ export default class WeaponSwing extends SwordmanAbility{
     }
 
     canUse(): boolean {
-        return !this.owner.is_attacking && this.owner.can_attack
+        return this.isEnergyEnough() && !this.owner.is_attacking && this.owner.can_attack
     }
 
     use(){

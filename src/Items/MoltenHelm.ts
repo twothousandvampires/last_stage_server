@@ -1,0 +1,48 @@
+import Func from "../Func";
+import Character from "../Objects/src/Character";
+import Exhaustion from "../Status/Exhaustion";
+import Ignite from "../Status/Ignite";
+import Item from "./Item";
+
+export default class MoltenHelm extends Item{
+    
+    frequency: number = 10000
+    last_trigger_time: number = 0
+
+    constructor(){
+        super()
+        this.name = 'molten helm'
+        this.type = 1
+        this.description = 'when you start blocking you ignite enemies within a radius, the power of the burn depends on your armor. it has a 10-second cooldown'
+    }
+
+    equip(character: Character): void {
+        character.when_start_block_triggers.push(this)
+    }
+
+    trigger(character: Character){
+        if(this.disabled) return
+
+        let time = character.level.time
+
+        if(time - this.last_trigger_time >= this.frequency){
+            this.last_trigger_time = time
+
+            let s = new Exhaustion(time)
+            s.setDuration(4000)
+
+            character.level.setStatus(character, s, true)
+            let box = character.getBoxElipse()
+            box.r = 20
+            character.level.enemies.forEach(elem => {
+                if(Func.elipseCollision(box, elem.getBoxElipse())){
+                    let s = new Ignite(time)
+
+                    s.setDuration(6000)
+                    s.setPower(character.armour_rate)
+                    character.level.setStatus(elem, s)
+                }
+            })
+        }
+    }
+}

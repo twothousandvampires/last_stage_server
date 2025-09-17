@@ -18,7 +18,7 @@ export default class FrostSphere extends FlyerAbility{
     }
 
     canUse(){
-        return this.owner.resource >= this.cost && !this.owner.is_attacking
+        return this.isEnergyEnough() && this.owner.resource >= this.cost && !this.owner.is_attacking
     }
 
     use(){

@@ -549,6 +549,7 @@ export default class Flyer extends Character{
     setDefend(){
         this.state = 'defend'
         this.stateAct = this.defendAct
+        this.when_start_block_triggers.forEach(elem => elem.trigger(this))
 
         if(!this.allow_mana_regen_while_def){
             this.can_regen_resource = false

@@ -36,6 +36,7 @@ import GlacialChain from "../Items/GlacialChain"
 import GlassSword from "../Items/GlassSword"
 import IceBelt from "../Items/IceBelt"
 import Item from "../Items/Item"
+import MoltenHelm from "../Items/MoltenHelm"
 import RedPotion from "../Items/RedPotion"
 import RingOfTransmutation from "../Items/RingOfTransmutation"
 import SearchingHeart from "../Items/SearchingHeart"
@@ -156,7 +157,10 @@ export default class Builder{
         }
         else if(item_name === 'charged armour'){
             return new ChargedArmour()
-        }   
+        }
+        else if(item_name === 'molten helm'){
+            return new MoltenHelm()
+        }          
     }
 
     static createForging(name: string, item: Item){
