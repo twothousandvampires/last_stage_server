@@ -25,6 +25,7 @@ export class FrostBolt extends Projectiles{
             let p = this.level.players[i]
 
             if(!p.is_dead && p.z < this.w && Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
+
                 if(Func.chance(35)){
                     p.setFreeze(1800)
                 }
@@ -35,6 +36,7 @@ export class FrostBolt extends Projectiles{
 
                 p.takeDamage()
                 this.impact()
+                
                 return
             }
         }

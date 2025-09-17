@@ -1,7 +1,7 @@
 import Level from "../../Level";
 import Effect from "./Effects";
 
-export default class BoneArmour extends Effect{
+export default class BoneArmour extends Effect {
 
     x: any
     y: any
