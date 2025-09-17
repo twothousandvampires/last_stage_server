@@ -40,7 +40,7 @@ export default abstract class Item {
         },
         {
             name: "wall of bones",
-            description: 'when you kill an enemy, your armor is increased by 1 for 10 seconds'
+            description: 'if you kill an enemy, you receive a bone charge that increases your armor. If you reach the maximum charge (default 10), there is a chance that the charges will explode and injure enemies'
         },
         {
             name: "flame ring",

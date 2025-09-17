@@ -81,14 +81,14 @@ export default class characterTemplate{
                     name: 'quake',
                     type: 3,
                     selected: false,
-                    desc: 'Summons 5 swords that fight by your side and have your attack speed.'
+                    desc: 'You jump and create 3 waves upon landing. This ability deals damage to YOU by defautl. The first one explodes enemies, the second one stuns them, and the third one slows them down. The radius depends on the might. After using it, you become weaker for 5 seconds.'
                 },
                 {
                     id: 9,
                     name: 'spectral swords',
                     type: 3,
                     selected: false,
-                    desc: 'You jump and create 3 waves upon landing. The first one explodes enemies, the second one stuns them, and the third one slows them down. The radius depends on the might. After using it, you become weaker for 5 seconds.'
+                    desc: 'Summons 5 swords that fight by your side and have your attack speed.'
                 },
                 {
                     id: 7,

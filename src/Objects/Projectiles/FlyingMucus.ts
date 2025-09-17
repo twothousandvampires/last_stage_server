@@ -39,6 +39,9 @@ export class FlyingMucus extends Projectiles{
                     s.setDuration(5500)
                     this.level.setStatus(p, s)
                 }
+                else{
+                    p.succesefulBlock(this.owner)
+                }
                 
                 this.impact()
                 return

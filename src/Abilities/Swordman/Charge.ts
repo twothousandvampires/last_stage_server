@@ -59,7 +59,6 @@ export default class Charge extends SwordmanAbility{
             this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
         }  
         this.owner.state = 'charge'
-        this.owner.can_move_by_player = false
         this.owner.action_time = 200
         this.owner.setImpactTime(100)
         
@@ -72,7 +71,6 @@ export default class Charge extends SwordmanAbility{
         this.owner.cancelAct = () => {
             clearTimeout(this.end_timeout)
             this.owner.is_attacking = false
-            this.owner.can_move_by_player = true
             this.afterUse()
             this.owner.action = false
             this.point_added = false
@@ -80,8 +78,13 @@ export default class Charge extends SwordmanAbility{
             this.start_y = undefined
             this.start = false
             this.end = false
-            this.hited = []
+            
             this.owner.avoid_damaged_state_chance -= 100
+            if(this.possibilities && this.hited.length >= 3){
+                this.owner.addResourse()
+            }
+
+            this.hited = []
         }
 
         this.owner.stateAct = this.getAct()
@@ -95,9 +98,6 @@ export default class Charge extends SwordmanAbility{
 
         return () => {
             if(ability.end){
-                if(ability.possibilities && ability.hited.length >= 3 && Func.chance(50 + second)){
-                    owner.addPoint()
-                }
                 owner.getState()
                 owner.attack_angle = undefined
             }
@@ -105,8 +105,8 @@ export default class Charge extends SwordmanAbility{
                 ability.start = true
                 let speed = owner.getMoveSpeed()
     
-                let next_step_x = Math.sin(owner.attack_angle) * speed * 2
-                let next_step_y = Math.cos(owner.attack_angle) * speed * 2
+                let next_step_x = Math.sin(owner.attack_angle) * speed * 1.5
+                let next_step_y = Math.cos(owner.attack_angle) * speed * 1.5
     
                 if(!owner.isOutOfMap(owner.x + next_step_x, owner.y + next_step_y)){
                     owner.addToPoint(next_step_x, next_step_y)
@@ -131,7 +131,7 @@ export default class Charge extends SwordmanAbility{
                         
                         if(!ability.point_added){
                             ability.point_added = true
-                            owner.addPoint()
+                            owner.addResourse()
                         }
 
                         count --
@@ -144,7 +144,7 @@ export default class Charge extends SwordmanAbility{
                         elem.setStun(stun_power)
                         if(!ability.point_added){
                             ability.point_added = true
-                            owner.addPoint()
+                            owner.addResourse()
                         }
                     }
                 })
