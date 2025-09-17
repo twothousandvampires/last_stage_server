@@ -20,7 +20,7 @@ export default class Pile extends Enemy{
         this.life_status = 4
         this.frequency = 2000
         this.duration = 10000
-        this.cast_time = 200
+        this.cast_time = 2000
         this.created = Date.now()
     }
 
@@ -86,6 +86,7 @@ export default class Pile extends Enemy{
         this.is_attacking = true
         this.stateAct = this.castAct
         this.action_time = this.cast_time
+        this.setImpactTime(95)
 
         this.cancelAct = () => {
             this.action = false
