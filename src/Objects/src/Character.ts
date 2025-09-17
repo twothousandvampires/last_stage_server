@@ -16,6 +16,7 @@ import Upgrade from "../../Types/Upgrade"
 import Effect from "../Effects/Effects"
 import Grace from "../Effects/Grace"
 import SmallTextLanguage1 from "../Effects/SmallTextLanguage1"
+import Ward from "../Effects/Ward"
 import Unit from "./Unit"
 
 export default abstract class Character extends Unit{
@@ -65,6 +66,7 @@ export default abstract class Character extends Unit{
     when_block_triggers: any[] = []
     when_say_phrase_triggers: any[] = []
     when_lose_life_triggers: any[] = []
+    when_gain_energy_triggers: any = []
 
     avoid_damaged_state_chance: number = 0
     can_be_lethaled: boolean = true
@@ -119,6 +121,10 @@ export default abstract class Character extends Unit{
     abstract getSecondResource(): number
     abstract isBlock(): boolean
    
+    addResourse(){
+        this.when_gain_energy_triggers.forEach(elem => elem.trigger(this))
+    }
+
     protected useNotUtility(): void{
         this.use_not_utility_triggers.forEach(elem => {
             elem.trigger(this)
@@ -388,7 +394,7 @@ export default abstract class Character extends Unit{
                     desc: 'give a chance to ignore armour'
                 },
                 {
-                    name: 'true hit',
+                    name: 'critical hit',
                     canUse: (character: Character) => {
                         return character.critical < 100
                     },
@@ -517,6 +523,33 @@ export default abstract class Character extends Unit{
 
     public removeUpgrades(): void{
         this.upgrades.length = 0
+    }
+
+    public addWard(value: number = 1){
+        if(this.ward <= 0){
+            let e = new Ward(this.level)
+
+            e.setOwner(this)
+            e.setPoint(this.x, this.y)
+
+            this.level.binded_effects.push(e)
+        }
+
+        this.ward += value
+    }
+
+    public loseWard(value: number = 1){
+        this.ward -= value
+
+        if(this.ward <= 0){
+            this.ward = 0
+            let e = this.level.binded_effects.find(elem => elem.owner = this && elem instanceof Ward)
+
+            if(e){
+                this.level.binded_effects = this.level.binded_effects.filter(elem => elem != e)
+                this.level.deleted.push(e.id)
+            }
+        }
     }
 
     public upgrade(upgrade_name: string): void{

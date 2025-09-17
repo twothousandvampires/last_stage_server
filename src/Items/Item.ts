@@ -105,6 +105,10 @@ export default abstract class Item {
             name: "searching heart",
             description: 'every 10 seconds releases fireballs, the number of which depends on the health lost during this time'
         },
+        {
+            name: "charged armour",
+            description: 'when you get energy there is a chance that if it is not max - you get a ward, otherwise you lose the whole ward and get set on fire'
+        },
     ]
 
     static forging_list_all = [

@@ -23,7 +23,7 @@ export default class WhiteShield extends Item{
         if(this.disabled) return
         
         if(Func.chance(this.chance)){
-            character.ward ++
+            character.addWard(1)
         }
     }
 }

@@ -1,6 +1,7 @@
 
 import Func from "../../Func";
 import Level from "../../Level";
+import Ignite from "../../Status/Ignite";
 import FireExplosion from "../Effects/FireExplosion";
 import Projectiles from "./Projectiles";
 
@@ -56,11 +57,18 @@ export class FlamyFireBall extends Projectiles{
         this.level.deleted.push(this.id)
 
         let explosion = this.getBoxElipse()
-        explosion.r = 2
+        explosion.r = 4
 
         this.level.players.forEach(p => {
             if(p.z < 5 && Func.elipseCollision(explosion, p.getBoxElipse())){
                 p.takeDamage()
+                if(Func.chance(30)){
+                    let s = new Ignite(this.level.time)
+                    s.setDuration(6000)
+                    s.setPower(20)
+
+                    this.level.setStatus(p, s, true)
+                }
             }
         })
         

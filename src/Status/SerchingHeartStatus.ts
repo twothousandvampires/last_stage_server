@@ -46,7 +46,7 @@ export default class SerchingHeartStatus extends Status{
     trigger(){
         if(this.item.disabled) return
       
-        let count = this.item.hit_count
+        let count = this.item.hit_count + this.item.count
         
         let zones = 6.28 / count
         

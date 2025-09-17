@@ -1,4 +1,5 @@
 import Client from "../Client"
+import ChargedArmour from "../Items/ChargedArmour"
 import ChargedBow from "../Items/ChargedBow"
 import Cloak from "../Items/Cloak"
 import DaggerOfSmoke from "../Items/DaggerOfSmoke"
@@ -152,6 +153,9 @@ export default class Builder{
         }
         else if(item_name === 'searching heart'){
             return new SearchingHeart()
+        }
+        else if(item_name === 'charged armour'){
+            return new ChargedArmour()
         }   
     }
 
