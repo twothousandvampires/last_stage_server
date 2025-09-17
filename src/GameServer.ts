@@ -174,42 +174,23 @@ export default class GameServer{
                     let result:any = []
 
                     if(this.db_is_connected){
-                        this.db.query('SELECT * FROM game_stats WHERE class = "swordman" ORDER BY kills DESC LIMIT 3',
+                        this.db.query(`SELECT * FROM (SELECT * FROM game_stats WHERE class = 'swordman' ORDER BY kills DESC LIMIT 3) AS swordman_top UNION ALL SELECT * FROM (SELECT * FROM game_stats WHERE class = 'flyer' ORDER BY kills DESC LIMIT 3) AS flyer_top UNION ALL SELECT * FROM (SELECT * FROM game_stats WHERE class = 'cultist' ORDER BY kills DESC LIMIT 3) AS cultist_top;`,
                         (err, results) => {
                                 if(err){
-                                    
+                                    console.log(err)
                                 }
                                 else{
+                                    
                                     result.push(results)
+                                    socket.emit('records', JSON.stringify(result))
                                 }
                             }
                         )
 
-                        this.db.query('SELECT * FROM game_stats WHERE class = "flyer" ORDER BY kills DESC LIMIT 3',
-                        (err, results) => {
-                                if(err){
-                                    
-                                }
-                                else{
-                                   
-                                }
-                            }
-                        )
-
-                        this.db.query('SELECT * FROM game_stats WHERE class = "cultist" ORDER BY kills DESC LIMIT 3',
-                        (err, results) => {
-                                if(err){
-                                    
-                                }
-                                else{
-                                    
-                                }
-                            }
-                        )
-
+                        return
                     }
-
-                    socket.emit('records', JSON.stringify(result))
+                 
+                    socket.emit('records',[])
                 })
 
                 socket.on('increase_stat', (stat: string) => {
