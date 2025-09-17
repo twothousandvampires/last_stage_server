@@ -1,5 +1,6 @@
 import Func from "../../Func";
 import Level from "../../Level";
+import Phase from "../../Status/Phase";
 import Effect from "./Effects";
 
 export default class ChargedSphere extends Effect{
@@ -28,12 +29,13 @@ export default class ChargedSphere extends Effect{
                 if(elem.can_regen_resource){
                     elem.addResourse(2)
                 }
+
+                let phasing = new Phase(this.level.time)
+                phasing.setDuration(3000)
+                this.level.setStatus(elem, phasing, true)
+
                 this.level.deleted.push(this.id)
                 this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
-                elem.move_speed_penalty += 15
-                setTimeout(() => {
-                    elem.move_speed_penalty -= 15
-                }, 5000)
             } 
         })
     }
