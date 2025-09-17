@@ -30,7 +30,7 @@ export default class Level{
        },
        {
          'name': 'flamy',
-         'weight': 22
+         'weight': 20
        },
        {
          'name': 'solid',
@@ -38,7 +38,7 @@ export default class Level{
        },  
        {
          'name': 'slime',
-         'weight': 14
+         'weight': 18
        },
        {
          'name': 'flying bones',
