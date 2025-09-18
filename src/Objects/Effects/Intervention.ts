@@ -57,10 +57,12 @@ export default class Intervention extends Effect{
         players = players.filter(elem => elem != player)
         let targets = enemies.concat(players)
         let hit = player.getBoxElipse()
-        hit.r = 15
+        hit.r = 18
 
         targets.forEach(elem => {
             if(!elem.is_dead && Func.elipseCollision(hit, elem.getBoxElipse())){
+                elem.armour_rate = 0
+                elem.life_status = 1
                 elem.takeDamage(undefined, {
                     explode: true
                 })
@@ -72,6 +74,8 @@ export default class Intervention extends Effect{
                         hit.r = 15
 
                         if(!elem.is_dead && Func.elipseCollision(hit, elem2.getBoxElipse())){
+                            elem2.armour_rate = 0
+                            elem2.life_status = 1
                             elem2.takeDamage(undefined, {
                                 explode: true
                             })
@@ -83,6 +87,8 @@ export default class Intervention extends Effect{
                                     hit.r = 15
 
                                     if(!elem3.is_dead && Func.elipseCollision(hit, elem3.getBoxElipse())){
+                                        elem3.armour_rate = 0
+                                        elem3.life_status = 1
                                         elem3.takeDamage(undefined, {
                                             explode: true
                                         })
@@ -115,7 +121,8 @@ export default class Intervention extends Effect{
     }
 
     async activate2(player: any){
-        for(let i = 0; i < 20; i++){
+        for(let i = 0; i < 40; i++){
+
             await Func.sleep(80)
             let flame = new InfernoFlame(this.level)
             flame.setAngle(0)
@@ -146,7 +153,7 @@ export default class Intervention extends Effect{
             let hiting_box = {
                 x: x,
                 y: y,
-                r: 5
+                r: 8
             }
 
             for(let i = 0; i < targets.length; i++){
