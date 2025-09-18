@@ -4,7 +4,7 @@ import Character from "../Objects/src/Character";
 
 export default class CallWarriorWhenBlock {
 
-    chance: number = 100
+    chance: number = 50
     name: string = 'call warrior when block'
     cd: number = 1000
     last_trigger_time: number = 0

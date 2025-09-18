@@ -17,6 +17,7 @@ export default abstract class Item {
     public disabled: boolean = false
     public suggested_forgings: Forging[] = []
     public frequency = 5000
+    max_chance: number = 90
 
     toJSON(){
         return {
@@ -122,6 +123,14 @@ export default abstract class Item {
         {
             name: "molten helm",
             description: 'when you start blocking you ignite enemies within a radius, the power of the burn depends on your armor. it has a 15-second cooldown'
+        },
+        {
+            name: "soul blade",
+            description: 'when you kill enemy there is a chance to get ward'
+        },
+        {
+            name: "solar spear",
+            description: 'when you pierce enemy there is a chance to create light nova which heals allies'
         },
     ]
 

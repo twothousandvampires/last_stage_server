@@ -156,10 +156,9 @@ export abstract class Enemy extends Unit{
         if(this.is_dead) return
         
         if(options?.instant_death){
-            unit?.succesefulKill()
+            unit?.succesefulKill(this)
             this.is_dead = true
             this.create_grace_chance += unit?.additional_chance_grace_create ? unit?.additional_chance_grace_create : 0
-            unit?.succesefulKill()
             //todo
             if(unit instanceof Character){
                 unit?.addGold(this.gold_revard)
@@ -218,7 +217,7 @@ export abstract class Enemy extends Unit{
 
             this.is_dead = true
             this.create_grace_chance += unit?.additional_chance_grace_create ? unit?.additional_chance_grace_create : 0
-            unit?.succesefulKill()
+            unit?.succesefulKill(this)
             //todo
             if(unit instanceof Character){
                 unit?.addGold(this.gold_revard)

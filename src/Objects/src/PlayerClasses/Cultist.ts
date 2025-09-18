@@ -824,9 +824,9 @@ export default class Cultist extends Character{
         }
     }
 
-     succesefulKill(){
+    succesefulKill(enemy){
         this.on_kill_triggers.forEach(elem => {
-            elem.trigger(this)
+            elem.trigger(this, enemy)
         })
 
         if(this.pain_extract && Func.chance(5, this.is_lucky)){
