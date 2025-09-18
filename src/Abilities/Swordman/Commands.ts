@@ -21,12 +21,11 @@ export default class Commands extends SwordmanAbility{
     use(): void {
         if(this.used) return
 
-        this.used = true
-
         this.owner.state = 'cast'
 
         this.owner.stateAct = this.getAct()
         this.owner.action_time = this.owner.cast_speed
+        this.owner.using_ability = this
         this.owner.setImpactTime(80)
 
         this.owner.cancelAct = () => {
@@ -34,12 +33,6 @@ export default class Commands extends SwordmanAbility{
             this.owner.action_time = undefined
             this.afterUse()
         }
-
-        this.owner.action_time = 1500
-    
-        setTimeout(() => {
-            this.cast = true
-        }, 1500)
     }
 
     getAct(){
@@ -48,18 +41,18 @@ export default class Commands extends SwordmanAbility{
         
         return function(){
             if(owner.action){
-                
-                this.level.sounds.push({
-                    name:'holy cast',
-                    x: this.x,
-                    y: this.y
-                })
 
+                owner.level.sounds.push({
+                    name:'holy cast',
+                    x: owner.x,
+                    y: owner.y
+                })
+                ability.used = true
                 let skill_elip = owner.getBoxElipse()
                 skill_elip.r = 25
 
-                let second = this.getSecondResource()
-                let players = this.level.players.filter(elem => Func.elipseCollision(elem.getBoxElipse(), skill_elip))
+                let second = owner.getSecondResource()
+                let players = owner.level.players.filter(elem => Func.elipseCollision(elem.getBoxElipse(), skill_elip))
                 let move_buff = 5 + second
                 let armour_buff = 5 + second
                 let duration = 12000
@@ -73,9 +66,9 @@ export default class Commands extends SwordmanAbility{
                 players.forEach(elem => {
                     let status = new CommandsStatus(elem.time, move_buff, armour_buff) 
                     status.setDuration(duration)
-                    
                     owner.level.setStatus(elem, status)
                 })
+
             }
             else if(owner.action_is_end){
                 owner.action_is_end = false
