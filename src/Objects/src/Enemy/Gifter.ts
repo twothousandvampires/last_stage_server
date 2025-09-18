@@ -92,7 +92,7 @@ export default class Gifter extends Pile{
         
         if(this.life_status <= 0){
             this.is_dead = true
-            unit?.succesefulKill()
+            unit?.succesefulKill(this)
             this.setDyingAct()
         }
     }

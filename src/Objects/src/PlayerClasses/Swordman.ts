@@ -20,6 +20,7 @@ import BlockingTechnique from "../../../Triggers/ BlockingTechnique";
 import Dash from "../../../Abilities/Swordman/Dash";
 import MetalThorns from "../../../Abilities/Swordman/MetalThorns";
 import Unit from "../Unit";
+import Redemption from "../../../Triggers/Redemption";
 
 export default class Swordman extends Character{
     
@@ -79,9 +80,9 @@ export default class Swordman extends Character{
         }
     }
 
-    succesefulKill(){
+    succesefulKill(enemy){
         this.on_kill_triggers.forEach(elem => {
-            elem.trigger(this)
+            elem.trigger(this, enemy)
         })
 
         this.addCourage()   

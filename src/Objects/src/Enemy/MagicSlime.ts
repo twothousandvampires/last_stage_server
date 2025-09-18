@@ -34,7 +34,6 @@ export default class MagicSlime extends Enemy{
         this.is_corpse = true
         this.state = 'dead'
         this.stateAct = this.deadAct
-
     }
 
     setDyingAct(){

@@ -1,6 +1,5 @@
 import Character from "../Objects/src/Character";
 import SparklingHelmetStatus from "../Status/SparklingHelmetStatus";
-import Status from "../Status/Status";
 import Item from "./Item";
 
 export default class SparklingHelmet extends Item{

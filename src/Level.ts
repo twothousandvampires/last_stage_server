@@ -156,6 +156,7 @@ export default class Level{
         if(time - this.last_update_time >= 30){
             this.last_update_time = time
             this.tick(time)
+           
             this.socket.emit('tick_data', this, Date.now())
             
             this.collectTheDead()
@@ -230,9 +231,19 @@ export default class Level{
         this.projectiles.forEach(proj => {
             proj.act(this.time)
         })
-        this.enemies.forEach(enemy => {
-            enemy.act(this.time)
-        })
+        for(let i = 0; i < this.enemies.length; i ++){
+            let e = this.enemies[i]
+            if(e){
+               e.act(this.time) 
+               if(e.is_corpse){
+                    this.players.forEach(elem => {
+                        if(Func.distance(e, elem) <= 20){
+                            elem.enemyDeadNearby(e)
+                        }
+                    })
+               }
+            }
+        }
         this.binded_effects.forEach(effect => {
             effect.act(this.time)
         })
@@ -284,54 +295,59 @@ export default class Level{
         }
     }
 
+    removeEnemy(enemy: Enemy | undefined){
+        if(!enemy) return
+
+        if(enemy.count_as_killed){
+            this.kill_count ++
+        }
+
+        if(Func.chance(enemy.create_chance)){
+            let drop_name: Effect | undefined | string = undefined
+
+            let total_weights = enemy.getTotalWeights()
+            let sum = total_weights.reduce((acc, elem) => elem[1] + acc, 0)
+            let w2 = 0;
+            let rnd = Math.random() * sum
+            for (let item of total_weights) {
+                w2 += item[1];
+                if (rnd <= w2) {
+                    drop_name = item[0];
+                    break;
+                }
+            }
+
+            if(drop_name === 'grace'){
+                drop_name = new GraceShard(this)                   
+            }
+            else if(drop_name === 'energy'){
+                drop_name = new ChargedSphere(this)
+            }
+            else if(drop_name === 'entity'){
+                drop_name = new Split(this)
+            }
+            else if(drop_name === 'intervention'){
+                drop_name = new Intervention(this)
+            }
+            else if(drop_name === 'item'){
+                drop_name = new ItemDrop(this)
+            }
+
+            if(drop_name instanceof Effect){
+                drop_name.setPoint(enemy.x, enemy.y)
+                this.binded_effects.push(drop_name)
+            }
+        }
+
+        let index = this.enemies.indexOf(enemy)
+        this.enemies.splice(index, 1)
+    }
+
     private collectTheDead(): void{
         for(let i = 0; i < this.enemies.length; i++){
             let enemy: Enemy = this.enemies[i]
             if(enemy.is_corpse){
-
-                if(enemy.count_as_killed){
-                    this.kill_count ++
-                }
-
-                if(Func.chance(enemy.create_chance)){
-                    let drop_name: Effect | undefined | string = undefined
-
-                    let total_weights = enemy.getTotalWeights()
-                    let sum = total_weights.reduce((acc, elem) => elem[1] + acc, 0)
-                    let w2 = 0;
-                    let rnd = Math.random() * sum
-                    for (let item of total_weights) {
-                        w2 += item[1];
-                        if (rnd <= w2) {
-                            drop_name = item[0];
-                            break;
-                        }
-                    }
-
-                    if(drop_name === 'grace'){
-                        drop_name = new GraceShard(this)                   
-                    }
-                    else if(drop_name === 'energy'){
-                        drop_name = new ChargedSphere(this)
-                    }
-                    else if(drop_name === 'entity'){
-                        drop_name = new Split(this)
-                    }
-                    else if(drop_name === 'intervention'){
-                        drop_name = new Intervention(this)
-                    }
-                    else if(drop_name === 'item'){
-                        drop_name = new ItemDrop(this)
-                    }
-
-                    if(drop_name instanceof Effect){
-                        drop_name.setPoint(enemy.x, enemy.y)
-                        this.binded_effects.push(drop_name)
-                    }
-                }
-
-                let index = this.enemies.indexOf(enemy)
-                this.enemies.splice(index, 1)
+                this.removeEnemy(enemy)
             }
         }
     }

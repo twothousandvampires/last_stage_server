@@ -11,12 +11,14 @@ import Touch from "../../Status/Touch"
 import WithColdStatus from "../../Status/WithColdStatus"
 import WithFireStatus from "../../Status/WithFireStatus"
 import WithStormStatus from "../../Status/WithStormStatus"
+import Redemption from "../../Triggers/Redemption"
 import Sound from "../../Types/Sound"
 import Upgrade from "../../Types/Upgrade"
 import Effect from "../Effects/Effects"
 import Grace from "../Effects/Grace"
 import SmallTextLanguage1 from "../Effects/SmallTextLanguage1"
 import Ward from "../Effects/Ward"
+import { Enemy } from "./Enemy/Enemy"
 import Unit from "./Unit"
 
 export default abstract class Character extends Unit{
@@ -70,6 +72,7 @@ export default abstract class Character extends Unit{
     when_lose_life_triggers: any[] = []
     when_gain_energy_triggers: any = []
     when_start_block_triggers: any = []
+    when_enemy_die: any = []
 
     avoid_damaged_state_chance: number = 0
     can_be_lethaled: boolean = true
@@ -528,6 +531,17 @@ export default abstract class Character extends Unit{
                     cost: 4,
                     desc: 'gives you 10 ward'
                 },
+                {
+                    name: 'redemtion',
+                    canUse: (character: Character) => {
+                        return !this.when_enemy_die.some(elem => elem.name === 'redemption')
+                    },
+                    teach: (character: Character) => {
+                        return character.when_enemy_die.push(new Redemption())
+                    },
+                    cost: 10,
+                    desc: 'when enemy dies there is a chance to restore life'
+                },
         ]
     }
 
@@ -859,9 +873,9 @@ export default abstract class Character extends Unit{
         })
     }
 
-    public succesefulKill(): void{
+    public succesefulKill(enemy): void{
         this.on_kill_triggers.forEach(elem => {
-            elem.trigger(this)
+            elem.trigger(this, enemy)
         })
     }
 
@@ -990,6 +1004,12 @@ export default abstract class Character extends Unit{
     
     protected canMove(): boolean{
         return this.can_move && !this.freezed && !this.zaped
+    }
+
+    enemyDeadNearby(enemy: Enemy){
+        this.when_enemy_die.forEach(elem => {
+            elem.trigger(this, enemy)
+        })
     }
 
     private directMove(): void{

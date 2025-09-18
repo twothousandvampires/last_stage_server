@@ -41,7 +41,9 @@ import RedPotion from "../Items/RedPotion"
 import RingOfTransmutation from "../Items/RingOfTransmutation"
 import SearchingHeart from "../Items/SearchingHeart"
 import SkullOfFirstWarrior from "../Items/SkullOfFirstWarrior"
+import SolarSpear from "../Items/SolarSpear"
 import SoulAccumulator from "../Items/SoulAccumulator"
+import SoulBlade from "../Items/SoulBlade"
 import SparklingHelmet from "../Items/SparklingHelmet"
 import Staff from "../Items/Staff"
 import SwordHandle from "../Items/SwordHandle"
@@ -160,7 +162,13 @@ export default class Builder{
         }
         else if(item_name === 'molten helm'){
             return new MoltenHelm()
-        }          
+        }
+        else if(item_name === 'soul blade'){
+            return new SoulBlade()
+        }
+        else if(item_name === 'solar spear'){
+            return new SolarSpear()
+        }                
     }
 
     static createForging(name: string, item: Item){
