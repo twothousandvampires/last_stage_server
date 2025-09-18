@@ -43,7 +43,6 @@ export class ThrowedWeaponShard extends Projectiles{
             if(Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
             
                 p.takeDamage(this.owner)
-                this.level.addSound(p.getWeaponHitedSound())
 
                 if(!this.point_added){
                     this.owner?.addPoint()
@@ -60,7 +59,6 @@ export class ThrowedWeaponShard extends Projectiles{
             if(!e.is_dead && Func.elipseCollision(this.getBoxElipse(), e.getBoxElipse())){
                 
                 e.takeDamage(this.owner)
-                this.level.addSound(e.getWeaponHitedSound())
     
                 if(!this.point_added){
                     this.owner?.addPoint()

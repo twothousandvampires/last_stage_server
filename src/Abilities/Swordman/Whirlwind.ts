@@ -73,7 +73,6 @@ export default class Whirlwind extends SwordmanAbility{
                 if(elem != this && Func.elipseCollision(e, elem.getBoxElipse())){
                     was_hit = true
                     elem.takeDamage(this)
-                    this.level.sounds.push(elem.getWeaponHitedSound())
                     if(elem.is_dead){
                         kill_count ++
 

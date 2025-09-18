@@ -517,6 +517,17 @@ export default abstract class Character extends Unit{
                     cost: 2,
                     desc: 'reduces cooldowns'
                 },
+                {
+                    name: 'strong ward',
+                    canUse: (character: Character) => {
+                        return true
+                    },
+                    teach: (character: Character) => {
+                        return character.addWard(10)
+                    },
+                    cost: 4,
+                    desc: 'gives you 10 ward'
+                },
         ]
     }
 

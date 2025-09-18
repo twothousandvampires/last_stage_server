@@ -6,14 +6,14 @@ import Item from "./Item";
 
 export default class MoltenHelm extends Item{
     
-    frequency: number = 10000
+    frequency: number = 15000
     last_trigger_time: number = 0
 
     constructor(){
         super()
         this.name = 'molten helm'
         this.type = 1
-        this.description = 'when you start blocking you ignite enemies within a radius, the power of the burn depends on your armor. it has a 10-second cooldown'
+        this.description = 'when you start blocking you ignite enemies within a radius, the power of the burn depends on your armor. it has a 15-second cooldown'
     }
 
     equip(character: Character): void {
@@ -30,6 +30,7 @@ export default class MoltenHelm extends Item{
 
             let s = new Exhaustion(time)
             s.setDuration(4000)
+            character.level.addSound('fire cast', character.x, character.y)
 
             character.level.setStatus(character, s, true)
             let box = character.getBoxElipse()

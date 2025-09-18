@@ -2,9 +2,8 @@ import Func from "../../Func";
 import Swordman from "../../Objects/src/PlayerClasses/Swordman";
 import SwordmanAbility from "./SwordmanAbility";
 
-export default class Charge extends SwordmanAbility{
+export default class Dash extends SwordmanAbility{
    
-    cost: number
     distance: number
     point_added: boolean
     start_x: number | undefined
@@ -12,23 +11,18 @@ export default class Charge extends SwordmanAbility{
     hited: any[]
     start: boolean
     end: boolean
-    destroyer: boolean
-    possibilities: boolean
     end_timeout: any
 
     constructor(owner: Swordman){
         super(owner)
-        this.cost = 4
-        this.distance = 2000
+        this.distance = 450
         this.point_added = false
         this.hited = []
         this.start = false
         this.end = false
-        this.destroyer = false
         this.end_timeout = undefined
-        this.possibilities = false
-        this.name = 'charge'
-        this.cd = 10000
+        this.name = 'dash'
+        this.cd = 3000
     }
 
     canUse(){
@@ -58,9 +52,10 @@ export default class Charge extends SwordmanAbility{
         if(!this.owner.attack_angle){
             this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
         }  
-        this.owner.state = 'charge'
-        this.owner.action_time = 200
+        this.owner.state = 'dash'
+        this.owner.action_time = 0
         this.owner.setImpactTime(100)
+        this.owner.level.addSound('holy cast', this.owner.x, this.owner.y)
         
         this.owner.avoid_damaged_state_chance += 100
 
@@ -78,12 +73,7 @@ export default class Charge extends SwordmanAbility{
             this.start_y = undefined
             this.start = false
             this.end = false
-            
             this.owner.avoid_damaged_state_chance -= 100
-            if(this.possibilities && this.hited.length >= 3){
-                this.owner.addResourse()
-            }
-
             this.hited = []
         }
 
@@ -93,8 +83,7 @@ export default class Charge extends SwordmanAbility{
     getAct(){
         let owner = this.owner
         let ability = this
-        let second = this.owner.getSecondResource()
-        let count = this.owner.getTargetsCount() + second
+        let count = this.owner.resource
 
         return () => {
             if(ability.end){
@@ -112,23 +101,15 @@ export default class Charge extends SwordmanAbility{
                     owner.addToPoint(next_step_x, next_step_y)
                 }
 
-                let stun_power = 2000
-
                 owner.level.enemies.forEach((elem) => {
                     if(!ability.hited.includes(elem) && Func.elipseCollision(owner.getBoxElipse(), elem.getBoxElipse())){
                         ability.hited.push(elem)
 
-                        if(count > 0 && ability.destroyer && Func.chance(35 + second)){
-                            elem.takeDamage(owner, {
-                                explode: true
-                            })
+                        if(count > 0){
+                            elem.takeDamage(owner)
                             count--
                         }
-                        
-                        if(!elem.is_dead){
-                            elem.setStun(stun_power)
-                        }
-                        
+                   
                         if(!ability.point_added){
                             ability.point_added = true
                             owner.addResourse()
@@ -139,10 +120,15 @@ export default class Charge extends SwordmanAbility{
                 owner.level.players.forEach((elem) => {
                     if(elem != owner && !ability.hited.includes(elem) && Func.elipseCollision(owner.getBoxElipse(), elem.getBoxElipse())){
                         ability.hited.push(elem)
-                        elem.setStun(stun_power)
+
                         if(!ability.point_added){
                             ability.point_added = true
                             owner.addResourse()
+                        }
+
+                        if(count > 0){
+                            elem.takeDamage(owner)
+                            count--
                         }
                     }
                 })

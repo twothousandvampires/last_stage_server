@@ -210,7 +210,9 @@ export abstract class Enemy extends Unit{
                 this.dead_type = 'burn_dying'
                 this.is_corpse = true
             }
-           
+            
+            this.level.addSound(this.getWeaponHitedSound())
+
             this.is_dead = true
             this.create_grace_chance += unit?.additional_chance_grace_create ? unit?.additional_chance_grace_create : 0
             unit?.succesefulKill()

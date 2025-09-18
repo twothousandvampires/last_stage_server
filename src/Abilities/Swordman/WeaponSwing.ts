@@ -106,7 +106,7 @@ export default class WeaponSwing extends SwordmanAbility{
             filtered_by_attack_radius.forEach(elem => {
                 elem.takeDamage(this)
                 if(!point_added){
-                    this.level.addSound(elem.getWeaponHitedSound())
+
                     this.addResourse()
                     point_added = true
                 }

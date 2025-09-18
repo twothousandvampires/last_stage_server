@@ -55,7 +55,6 @@ export class WeaponFragment extends Projectiles{
                 if(p != this.owner && Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
                 
                     p.takeDamage(this.owner)
-                    this.level.addSound(p.getWeaponHitedSound())
 
                     if(!this.point_added){
                         if(this.owner){
@@ -75,7 +74,6 @@ export class WeaponFragment extends Projectiles{
                 if(Func.elipseCollision(this.getBoxElipse(), e.getBoxElipse())){
                   
                     e.takeDamage(this.owner)
-                    this.level.addSound(e.getWeaponHitedSound())
         
                     if(!this.point_added){
                         this.owner?.addPoint()
