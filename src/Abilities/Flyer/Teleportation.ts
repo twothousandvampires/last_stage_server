@@ -4,33 +4,27 @@ import FlyerAbility from "./FlyerAbility";
 
 export default class Teleportation extends FlyerAbility{
     
-    state: number
+    static TELEPOR_START_STATE: number = 1
+    static TELEPOR_OUT_STATE: number = 2
+    static TELEPOR_END_STATE: number = 3
+
+    state: number = Teleportation.TELEPOR_START_STATE
+
     teleport_x: number | undefined
     teleport_y: number | undefined
     protected: boolean = false
     increased_gate: boolean = false
     out_of_map_start: number = 0
-    out_of_map_duration: number = 250
+    out_of_map_duration: number = 300
 
     constructor(owner: Flyer){
         super(owner)
         this.cd = 15000
-        this.state = 0
         this.name = 'teleportaion'
     }
 
     canUse(){
         return !this.used
-    }
-
-    afterUse(){
-        this.owner.using_ability = undefined
-
-        if(!this.used) return
-        
-        setTimeout(() => {
-            this.used = false
-        }, this.getCd() - this.owner.getSecondResource() * 500)
     }
 
     use(){
@@ -49,8 +43,10 @@ export default class Teleportation extends FlyerAbility{
 
         this.owner.using_ability = this
         this.owner.can_move_by_player = false
+
         this.owner.state = 'teleport start'
         this.owner.level.addSound('cast', this.owner.x, this.owner.y)
+
         this.owner.stateAct = this.act()
 
         if(this.protected){
@@ -66,7 +62,7 @@ export default class Teleportation extends FlyerAbility{
             this.teleport_x = undefined
             this.teleport_y = undefined
             this.afterUse()
-            this.state = 0
+            this.state = Teleportation.TELEPOR_START_STATE
             this.owner.can_be_damaged = true
         }
     }
@@ -75,26 +71,22 @@ export default class Teleportation extends FlyerAbility{
         let ability = this
         let owner = this.owner
 
-        return () => {
-            if(this.owner.action_is_end){
-                this.owner.action_is_end = false
-                
-                if(ability.state === 0){
+        return (tick: number) => {
+            if(owner.action_is_end){
+                if(ability.state === Teleportation.TELEPOR_START_STATE){
                     owner.x = 666
                     owner.y = 666
                     owner.can_be_damaged = false
-                    ability.state = 2
+                    ability.state = Teleportation.TELEPOR_OUT_STATE
                     ability.out_of_map_start = owner.level.time
                 }
-
-                else{
+                else if(ability.state === Teleportation.TELEPOR_END_STATE){
                     let box = owner.getBoxElipse()
                     box.r += 2
                     
                     if(ability.increased_gate){
                         box.r += 8
                     }
-                    
                     owner.can_be_damaged = true
 
                     owner.level.enemies.forEach((e) => {
@@ -120,12 +112,12 @@ export default class Teleportation extends FlyerAbility{
                     owner.getState()
                 }
             }
-            else if(this.state === 2){
+            else if(ability.state === Teleportation.TELEPOR_OUT_STATE){
                 if(owner.level.time - ability.out_of_map_start >= ability.out_of_map_duration){
                     owner.x = ability.teleport_x
                     owner.y = ability.teleport_y
                     owner.state = 'teleport end'
-                    ability.state = 1
+                    ability.state = Teleportation.TELEPOR_END_STATE
                     owner.setImpactTime(100)
                 }
             }

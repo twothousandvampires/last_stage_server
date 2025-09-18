@@ -1,6 +1,4 @@
 import Character from "../Objects/src/Character";
-import SparklingHelmetStatus from "../Status/SparklingHelmetStatus";
-import Status from "../Status/Status";
 import TwilightGlovesStatus from "../Status/TwilightGlovesStatus";
 import Item from "./Item";
 

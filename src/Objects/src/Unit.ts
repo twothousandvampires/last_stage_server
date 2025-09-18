@@ -8,7 +8,8 @@ export default abstract class Unit extends GameObject {
     
     action_impact: number = 0
     action_end: number = 0
-
+     action_is_end: boolean = false
+     
     flipped: boolean
     is_attacking: boolean
     is_moving: boolean
@@ -38,6 +39,7 @@ export default abstract class Unit extends GameObject {
     ward: number = 0
     cast_speed: number = 2000
     can_be_damaged: boolean = true
+    pierce: number = 0
     
     constructor(level: Level){
         super(level)
@@ -93,13 +95,23 @@ export default abstract class Unit extends GameObject {
     checkArmour(unit: any){
        if(this.armour_rate === 0) return false
 
-       let check = Func.chance(this.armour_rate)
+       let p = 0
 
-       if(!unit || !unit.pierce){
-            return check
+       if(unit && unit.pierce){
+            p = unit.pierce
        }
 
-        return Func.chance(unit.pierce)
+       if(p >= this.armour_rate) return false
+
+       let arm = this.armour_rate - p
+
+       if(arm > 95){
+          arm = 95
+       }
+
+       let check = Func.chance(arm)
+
+        return check
     }
 
     setZap(duration: number = 100){
@@ -153,6 +165,7 @@ export default abstract class Unit extends GameObject {
         if(this.cancelAct){
             this.action_impact = 0
             this.action_end = 0
+            this.action_is_end = false
             this.cancelAct()
             this.cancelAct = undefined
         }

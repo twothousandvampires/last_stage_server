@@ -1,6 +1,4 @@
 import Func from "../Func"
-import BurningCircleEffect from "../Objects/Effects/BurningCircleEffect"
-import FireExplosion from "../Objects/Effects/FireExplosion"
 import MetalThornsEffect from "../Objects/Effects/MetalThornsEffect"
 import Status from "./Status"
 
@@ -17,7 +15,7 @@ export default class MetalThornsStatus extends Status{
         super(time)
         this.radius = 12
         this.name = 'metal thorns'
-        this.frequency = 500
+        this.frequency = 1000
     }
 
     clear(){

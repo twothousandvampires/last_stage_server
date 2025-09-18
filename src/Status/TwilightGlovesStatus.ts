@@ -1,10 +1,12 @@
 import Func from "../Func";
 import Item from "../Items/Item";
 import ShadowDrop from "../Objects/Effects/ShadowDrop";
+import Character from "../Objects/src/Character";
 import Status from "./Status";
 
 export default class TwilightGlovesStatus extends Status{
 
+    unit: Character | undefined
     last_trigger_time: number
     public disabled: boolean = false
 
@@ -46,7 +48,9 @@ export default class TwilightGlovesStatus extends Status{
 
     trigger(){
         if(this.item.disabled) return
-        if(!Func.chance(this.item.chance)) return
+        if(!this.unit) return
+
+        if(Func.notChance(this.item.chance, this.unit.is_lucky)) return
 
         let count = this.item.count
         let b = this.unit.getBoxElipse()

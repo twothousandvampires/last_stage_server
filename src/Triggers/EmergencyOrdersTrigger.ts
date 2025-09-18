@@ -11,14 +11,14 @@ export default class EmergencyOrdersTrigger {
     }
 
     trigger(player: Character){
-        if(!Func.chance(this.chance)) return
+        if(Func.notChance(this.chance)) return
 
         let box = player.getBoxElipse()
         box.r = player.voice_radius
 
         player.level.players.forEach(elem => {
             if(Func.elipseCollision(box, elem.getBoxElipse())){
-                let status = new CommandsStatus(player.level.time)
+                let status = new CommandsStatus(player.level.time, 20, 10)
                 status.setDuration(3000)
 
                 player.level.setStatus(elem, status, true)

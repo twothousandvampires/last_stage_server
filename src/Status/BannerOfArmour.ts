@@ -23,7 +23,7 @@ export default class BannerOfArmour extends Status{
 
     apply(unit: any){
         this.unit = unit
-
+        unit.gold_revard += 1
         let effect = new BannerOfArmourEffect(this.unit.level)
         effect.setOwner(this.unit)
         effect.setPoint(this.unit.x, this.unit.y)

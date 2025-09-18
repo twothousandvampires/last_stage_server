@@ -40,7 +40,7 @@ export class EnemyLightning extends Projectiles{
             if(!p.is_dead && this.w >= p.z && Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
                 p.takeDamage(this.owner)
                 
-                if(Func.chance(35)){
+                if(Func.chance(15)){
                     let s = new ShockStatus(this.level.time)
                     s.setDuration(4000)
                     s.setPower(25)

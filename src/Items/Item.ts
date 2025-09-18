@@ -16,6 +16,7 @@ export default abstract class Item {
     public description: string = ''
     public disabled: boolean = false
     public suggested_forgings: Forging[] = []
+    public frequency = 5000
 
     toJSON(){
         return {

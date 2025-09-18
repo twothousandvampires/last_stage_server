@@ -17,6 +17,7 @@ import Armour from "../../Effects/Armour";
 import Blood from "../../Effects/Blood";
 import ToothExplode from "../../Effects/ToothExplode";
 import Character from "../Character";
+import Unit from "../Unit";
 import Flyer from "./Flyer";
 
 export default class Cultist extends Character{
@@ -182,12 +183,22 @@ export default class Cultist extends Character{
         this.level.addSound('enlight', this.x, this.y)
     }
 
+    getTotalArmour(){
+        return this.armour_rate + this.might
+    }
+
     subLife(unit: any = undefined, options = {}){
-        this.life_status --
+        let value = 1
+               
+        if(unit && unit.pierce > this.getTotalArmour()){
+            value = 2
+        }
 
         if(Func.notChance(100 - this.fragility, this.is_lucky)){
-            this.life_status --
+            value *= 2
         }
+
+        this.life_status -= value
 
         if(this.life_status <= 0){
             this.playerTakeLethalDamage()
@@ -228,6 +239,26 @@ export default class Cultist extends Character{
         }
 
         return this.state === 'defend' && Func.chance(b_chance, this.is_lucky)
+    }
+
+    isArmourHit(unit: Unit): boolean{
+        let p = 0
+
+        if(unit){
+            p = unit.pierce
+        }
+
+        let total = this.getTotalArmour()
+
+        if(p >= total) return false
+
+        let arm = total - p
+
+        if(arm > Cultist.MAX_ARMOUR){
+            arm = Cultist.MAX_ARMOUR
+        }
+
+        return !this.no_armour && Func.chance(arm, this.is_lucky)
     }
 
     takeDamage(unit:any = undefined, options: any = {}){      
@@ -281,13 +312,7 @@ export default class Cultist extends Character{
         this.addResourse()
         this.addCourage()
 
-        let arm = this.armour_rate + this.might
-        
-        if(arm > Cultist.MAX_ARMOUR){
-            arm = Cultist.MAX_ARMOUR
-        }
-
-        if(!this.no_armour && Func.chance(arm, this.is_lucky)){
+        if(this.isArmourHit(unit)){
             this.level.sounds.push({
                 name: 'metal hit',
                 x: this.x,

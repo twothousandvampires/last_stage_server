@@ -91,7 +91,6 @@ export default class GameServer{
             if (err) {
                 return;
             }
-            console.log('Добавлена запись');
         })
 
         p.closeSuggest()
@@ -180,7 +179,6 @@ export default class GameServer{
                                     console.log(err)
                                 }
                                 else{
-                                    
                                     result.push(results)
                                     socket.emit('records', JSON.stringify(result))
                                 }
