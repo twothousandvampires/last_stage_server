@@ -85,7 +85,6 @@ export default abstract class Character extends Unit{
     additional_chance_grace_create: number = 0
     killed_by: any
     blessed: boolean = false
-    pierce: number = 0
     critical: number = 0
     status_resistance: number = 5
     can_attack: boolean = true
@@ -96,7 +95,7 @@ export default abstract class Character extends Unit{
     mad_target: any
     after_grace_statuses: Status[] = []
     gold_find: number = 0
-    action_is_end: boolean = false
+
     voice_radius: number = 20
     public gold: number = 0
     public block_chance: number = 0
@@ -116,7 +115,7 @@ export default abstract class Character extends Unit{
 
     abstract startGame(): void
     abstract createAbilities(abilities: any): void
-    abstract takeDamage(unut: Unit, options: object): void
+    abstract takeDamage(unut: Unit | undefined, options: object): void
     abstract getSkipDamageStateChance(): number
     abstract useUtility(): void
     abstract regen(): void
@@ -388,13 +387,13 @@ export default abstract class Character extends Unit{
                  {
                     name: 'pressure',
                     canUse: (character: Character) => {
-                        return character.pierce < 100
+                        return true
                     },
                     teach: (character: Character) => {
-                        character.pierce += 15
+                        character.pierce += 3
                     },
                     cost: 2,
-                    desc: 'give a chance to ignore armour'
+                    desc: 'increases a chance to ignore armour'
                 },
                 {
                     name: 'critical hit',
@@ -402,7 +401,7 @@ export default abstract class Character extends Unit{
                         return character.critical < 100
                     },
                     teach: (character: Character) => {
-                        character.critical += 15
+                        character.critical += 5
                     },
                     cost: 2,
                     desc: 'give a chance to deal double damage'
@@ -410,7 +409,7 @@ export default abstract class Character extends Unit{
                 {
                     name: 'armour',
                     canUse: (character: Character) => {
-                        return character.armour_rate < 95
+                        return true
                     },
                     teach: (character: Character) => {
                         character.armour_rate += 3
@@ -567,7 +566,6 @@ export default abstract class Character extends Unit{
     }
 
     public upgrade(upgrade_name: string): void{
-        console.log(upgrade_name)
         let upgrade: Upgrade = this.upgrades.find(elem => elem.name === upgrade_name)
         if(!upgrade) return
 
@@ -777,13 +775,24 @@ export default abstract class Character extends Unit{
             elem.trigger(this, status)
         })
     }
+
+    getTotalArmour(){
+        return 0
+    }
     
     protected subLife(unit: any = undefined, options = {}): void{
-        this.life_status --
+
+        let value = 1
+       
+        if(unit && unit.pierce > this.getTotalArmour()){
+            value = 2
+        }
 
         if(Func.notChance(100 - this.fragility, this.is_lucky)){
-            this.life_status --
+            value *= 2
         }
+
+        this.life_status -= value
 
         if(this.life_status <= 0){
             this.playerTakeLethalDamage()
@@ -1293,7 +1302,7 @@ export default abstract class Character extends Unit{
             this.setState(this.setDefend)
         }
        
-        this.stateAct()
+        this.stateAct(time)
         this.moveAct()
         this.regen()
 
@@ -1307,8 +1316,13 @@ export default abstract class Character extends Unit{
             }
         }
         if(this.action_end && time >= this.action_end){
-            this.action_is_end = true
-            this.action_end = 0
+            if(!this.action_is_end){
+                this.action_is_end = true
+            }
+            else{
+                this.action_is_end = false
+                this.action_end = 0
+            }
         }
     }
 

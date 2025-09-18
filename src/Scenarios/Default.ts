@@ -18,6 +18,8 @@ import PileOfStorm from "../Objects/src/Piles/PileOfStorm";
 import PileOfSummoning from "../Objects/src/Piles/PileOfSummoning";
 import PileOfVeil from "../Objects/src/Piles/PileOfVeil";
 import BannerOfArmour from "../Status/BannerOfArmour";
+import ElementalEnchanted from "../Status/ElementalEnchanted";
+import UnholyPower from "../Status/UnholyPower";
 import BossFight from "./BossFight";
 import Scenario from "./Scenario";
 
@@ -26,6 +28,10 @@ export default class Default extends Scenario{
     last_checked: number
     time_between_wave_ms: number
     waves_created: number = 0
+    add_e_life: number = 0
+    add_e_armour: number = 0
+    add_e_pierce: number = 0
+    add_e_speed: number = 0
 
     constructor(){
         super()
@@ -71,10 +77,10 @@ export default class Default extends Scenario{
         }
         if(level.time - this.last_checked >= this.time_between_wave_ms){
             this.last_checked = level.time
-            this.createWave(level)
             this.waves_created ++
-
-            if(this.time_between_wave_ms < 10000 && this.waves_created % 2 === 0){
+            this.createWave(level)
+            
+            if(this.time_between_wave_ms < 15000 && this.waves_created % 2 === 0){
                 this.time_between_wave_ms + 250
             }
         }
@@ -84,7 +90,7 @@ export default class Default extends Scenario{
         let player_in_zone = level.players.some(elem =>  elem.zone_id === 0)
         if(!player_in_zone) return
 
-        let add_count = Math.floor(level.kill_count / 25)
+        let add_count = Math.floor(level.kill_count / 30)
 
         let count = Func.random(1 + Math.floor(add_count / 3), 2 + Math.floor(add_count / 2))
         
@@ -179,12 +185,40 @@ export default class Default extends Scenario{
                 enemy.setPoint(random_player.x + Math.sin(angle) * distance_x, random_player.y + Math.cos(angle) * distance_y)
             }
 
-            if(enemy instanceof Solid && Func.chance(15)){
-                let status = new BannerOfArmour(level.time)
-                level.setStatus(enemy, status)
+            if(Func.chance(10) && (enemy instanceof Solid) || (enemy instanceof FlyingBones) || (enemy instanceof Specter)){
+                let r = Func.random(1, 3)
+
+                if(r === 1){
+                    let status = new BannerOfArmour(level.time)
+                    level.setStatus(enemy, status)
+                }
+                else if(r === 2){
+                    let status = new ElementalEnchanted(level.time)
+                    level.setStatus(enemy, status)
+                }
+                else if(r === 3){
+                    let status = new UnholyPower(level.time)
+                    level.setStatus(enemy, status)
+                }
             }
 
-            level.enemies.push(enemy)
-        }       
+            enemy.life_status += this.add_e_life
+            enemy.armour_rate += this.add_e_armour
+            enemy.pierce += this.add_e_pierce
+            enemy.move_speed += this.add_e_speed
+            
+            level.enemies.push(enemy)   
+        }
+
+        if(this.waves_created % 20 === 0){
+            this.add_e_armour += 2
+            this.add_e_pierce += 2
+        }
+        if(this.waves_created % 40 === 0){
+            this.add_e_life += 1
+        }
+        if(this.waves_created % 60 === 0){
+            this.add_e_speed += 0.1
+        } 
     }
 }

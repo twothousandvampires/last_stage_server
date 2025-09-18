@@ -169,7 +169,6 @@ export abstract class Enemy extends Unit{
         }
 
         if(this.checkArmour(unit)){
-
             this.level.addSound({
                 name: 'metal hit',
                 x: this.x,
@@ -187,6 +186,10 @@ export abstract class Enemy extends Unit{
 
         if(options?.damage_value){
            damage_value = options.damage_value
+        }
+
+        if(unit && unit?.pierce > this.armour_rate && Func.chance(unit.pierce - this.armour_rate)){
+            damage_value ++
         }
        
         if(unit && unit?.critical && Func.chance(unit.critical)){

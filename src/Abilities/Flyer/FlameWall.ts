@@ -84,8 +84,6 @@ export default class FlameWall extends FlyerAbility{
         }
     }
 
-    
-
     act(){
         if(this.action && !this.hit){
             this.using_ability.impact()

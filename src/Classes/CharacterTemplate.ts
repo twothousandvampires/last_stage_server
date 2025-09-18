@@ -60,7 +60,7 @@ export default class characterTemplate{
                     name: 'dash',
                     type: 1,
                     selected: false,
-                    desc: 'makes a dash, damaging enemies, the maximum number of targets is equal to energy.'
+                    desc: 'makes a dash damaging enemies.'
                 },
                 {
                     id: 3,

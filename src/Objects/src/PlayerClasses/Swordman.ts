@@ -19,6 +19,7 @@ import SpectralSwords from "../../../Abilities/Swordman/SpectralSwords";
 import BlockingTechnique from "../../../Triggers/ BlockingTechnique";
 import Dash from "../../../Abilities/Swordman/Dash";
 import MetalThorns from "../../../Abilities/Swordman/MetalThorns";
+import Unit from "../Unit";
 
 export default class Swordman extends Character{
     
@@ -174,6 +175,26 @@ export default class Swordman extends Character{
         return this.state === 'defend' && Func.chance(b_chance, this.is_lucky)
     }
 
+    isArmourHit(unit: Unit): boolean{
+        let p = 0
+
+        if(unit){
+            p = unit.pierce
+        }
+
+        let total = this.getTotalArmour()
+
+        if(p >= total) return false
+
+        let arm = total - p
+
+        if(arm > 95){
+            arm = 95
+        }
+
+        return !this.no_armour && Func.chance(arm, this.is_lucky)
+    }
+
     takeDamage(unit:any = undefined, options: any = {}){
         if(!this.can_be_damaged) return
         
@@ -224,13 +245,8 @@ export default class Swordman extends Character{
             return
         } 
 
-        let arm = this.armour_rate + this.durability
-
-        if(arm > 90){
-            arm = 90
-        }
         
-        if(!this.no_armour && Func.chance(arm, this.is_lucky)){
+        if(this.isArmourHit(unit)){
             this.level.sounds.push({
                 name: 'metal hit',
                 x: this.x,
@@ -258,6 +274,10 @@ export default class Swordman extends Character{
        
         this.subLife(unit, options)
         this.playerLoseLife()
+    }
+
+    getTotalArmour(){
+        return this.armour_rate + this.durability
     }
 
     getSkipDamageStateChance(){

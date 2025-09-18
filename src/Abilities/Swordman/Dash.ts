@@ -11,7 +11,8 @@ export default class Dash extends SwordmanAbility{
     hited: any[]
     start: boolean
     end: boolean
-    end_timeout: any
+    end_timeout: number = 350
+    start_time: number = 0
 
     constructor(owner: Swordman){
         super(owner)
@@ -20,7 +21,6 @@ export default class Dash extends SwordmanAbility{
         this.hited = []
         this.start = false
         this.end = false
-        this.end_timeout = undefined
         this.name = 'dash'
         this.cd = 3000
     }
@@ -37,8 +37,6 @@ export default class Dash extends SwordmanAbility{
         this.start_x = this.owner.x
         this.start_y = this.owner.y
 
-        this.used = true
-
         let rel_x =  this.owner.pressed.canvas_x + this.owner.x - 40
         let rel_y =  this.owner.pressed.canvas_y + this.owner.y - 40
 
@@ -53,16 +51,11 @@ export default class Dash extends SwordmanAbility{
             this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
         }  
         this.owner.state = 'dash'
-        this.owner.action_time = 0
+        this.owner.action_time = Math.floor(this.owner.cast_speed / 10)
         this.owner.setImpactTime(100)
         this.owner.level.addSound('holy cast', this.owner.x, this.owner.y)
         
         this.owner.avoid_damaged_state_chance += 100
-
-        this.end_timeout = setTimeout(() => {
-            this.end = true
-        } ,this.distance)
-
         this.owner.cancelAct = () => {
             clearTimeout(this.end_timeout)
             this.owner.is_attacking = false
@@ -71,9 +64,9 @@ export default class Dash extends SwordmanAbility{
             this.point_added = false
             this.start_x = undefined
             this.start_y = undefined
-            this.start = false
             this.end = false
             this.owner.avoid_damaged_state_chance -= 100
+            this.start_time = 0
             this.hited = []
         }
 
@@ -83,15 +76,25 @@ export default class Dash extends SwordmanAbility{
     getAct(){
         let owner = this.owner
         let ability = this
-        let count = this.owner.resource
+        let count = this.owner.getTargetsCount()
 
-        return () => {
+        return (tick: number) => {
             if(ability.end){
                 owner.getState()
                 owner.attack_angle = undefined
             }
-            else if(owner.action || ability.start){
-                ability.start = true
+            else if(owner.action || ability.start_time){
+                if(!ability.start_time){
+                    ability.used = true
+                    ability.start_time = tick
+                }
+                
+                if(tick - ability.start_time >= ability.end_timeout){
+                    ability.end = true
+                    ability.start_time = 0
+                    return
+                }
+
                 let speed = owner.getMoveSpeed()
     
                 let next_step_x = Math.sin(owner.attack_angle) * speed * 1.5

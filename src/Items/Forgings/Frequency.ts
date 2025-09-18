@@ -16,7 +16,7 @@ export default class Frequency extends Forging{
     forge(){
         if(this.canBeForged() && this.costEnough()){
             this.value ++
-            this.item.frequency -= 200
+            this.item.frequency -= 50
              this.payCost()
         }
     }

@@ -9,7 +9,7 @@ export default class Commands extends SwordmanAbility{
 
     constructor(owner: Swordman){
         super(owner)
-        this.cd = 20000
+        this.cd = 16000
         this.fast_commands = false
         this.name = 'commands'
     }
@@ -39,14 +39,14 @@ export default class Commands extends SwordmanAbility{
         let ability = this
         let owner = this.owner
         
-        return function(){
+        return () => {
             if(owner.action){
-
                 owner.level.sounds.push({
                     name:'holy cast',
                     x: owner.x,
                     y: owner.y
                 })
+                
                 ability.used = true
                 let skill_elip = owner.getBoxElipse()
                 skill_elip.r = 25
@@ -71,7 +71,6 @@ export default class Commands extends SwordmanAbility{
 
             }
             else if(owner.action_is_end){
-                owner.action_is_end = false
                 owner.getState()
             }
         }

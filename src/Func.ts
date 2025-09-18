@@ -37,7 +37,11 @@ export default class Func{
     }
 
     static distance(one: GameObject, two: GameObject){
-        return Math.sqrt(((one.x - two.x) ** 2) + ((one.y - two.y) ** 2))
+        let a = Func.angle(one.x, one.y, two.x, two.y)
+
+        let l = 1 - Math.abs(0.5 * Math.cos(a))
+
+        return Math.sqrt(((one.x - two.x) ** 2) + ((one.y - two.y) ** 2)) * l
     }
 
     public static elipseCollision(el: Elip, el2: Elip){
@@ -98,7 +102,7 @@ export default class Func{
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
-    public static chance(chance: number, luck: boolean = false){
+    public static chance(chance: number, luck: boolean | undefined  = undefined){
         if(luck){
             let f = Func.random()
             if(chance >= f) return true
@@ -111,7 +115,7 @@ export default class Func{
         }
     }
 
-    public static notChance(chance: number = 0, luck: boolean = false){
+    public static notChance(chance: number = 0, luck: boolean | undefined = undefined){
         if(luck){
             let f = Func.random()
             if(chance >= f) return false

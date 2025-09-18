@@ -17,6 +17,7 @@ import Blood from "../../Effects/Blood";
 import ToothExplode from "../../Effects/ToothExplode";
 import { Lightning } from "../../Projectiles/Lightning";
 import Character from "../Character";
+import Unit from "../Unit";
 
 export default class Flyer extends Character{
 
@@ -579,6 +580,26 @@ export default class Flyer extends Character{
     isBlock(): boolean {
         return this.state === 'defend' && this.resource > 0 && Func.chance(this.block_chance, this.is_lucky)
     }
+
+    isArmourHit(unit: Unit){
+        let p = 0
+        
+        if(unit){
+            p = unit.pierce
+        }
+
+        let total = this.getTotalArmour()
+
+        if(p >= total) return false
+
+        let arm = total - p
+
+        if(arm > 95){
+            arm = 95
+        }
+
+        return !this.no_armour && Func.chance(arm, this.is_lucky)
+    }
     
     takeDamage(unit: any = undefined, options: any){
         if(!this.can_be_damaged) return
@@ -635,11 +656,7 @@ export default class Flyer extends Character{
             return
         }
 
-        let arm = this.armour_rate + (this.agility * 3) + (this.mental_shield ? this.getSecondResource() * 3 : 0)
-
-        arm = arm > 95 ? 95 : arm
-
-        if(!this.no_armour && Func.chance(arm, this.is_lucky)){
+        if(this.isArmourHit(unit)){
             let e = new Armour(this.level)
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)
@@ -663,12 +680,22 @@ export default class Flyer extends Character{
         this.playerLoseLife()
     }
 
+    getTotalArmour(){
+        return this.armour_rate + (this.agility * 3) + (this.mental_shield ? this.getSecondResource() * 3 : 0)
+    }
+
     subLife(unit: any = undefined, options = {}){
-        this.life_status --
+        let value = 1
+               
+        if(unit && unit.pierce > this.getTotalArmour()){
+            value = 2
+        }
 
         if(Func.notChance(100 - this.fragility, this.is_lucky)){
-            this.life_status --
+            value *= 2
         }
+
+        this.life_status -= value
 
         if(this.life_status <= 0){
             this.playerTakeLethalDamage()

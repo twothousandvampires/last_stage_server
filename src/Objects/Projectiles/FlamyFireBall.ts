@@ -62,7 +62,7 @@ export class FlamyFireBall extends Projectiles{
         this.level.players.forEach(p => {
             if(p.z < 5 && Func.elipseCollision(explosion, p.getBoxElipse())){
                 p.takeDamage()
-                if(Func.chance(30)){
+                if(Func.chance(15)){
                     let s = new Ignite(this.level.time)
                     s.setDuration(6000)
                     s.setPower(20)
