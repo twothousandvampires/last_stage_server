@@ -17,6 +17,8 @@ import HeavenVengeance from "../../../Abilities/Swordman/HeavenVengeance";
 import EmergencyOrdersTrigger from "../../../Triggers/EmergencyOrdersTrigger";
 import SpectralSwords from "../../../Abilities/Swordman/SpectralSwords";
 import BlockingTechnique from "../../../Triggers/ BlockingTechnique";
+import Dash from "../../../Abilities/Swordman/Dash";
+import MetalThorns from "../../../Abilities/Swordman/MetalThorns";
 
 export default class Swordman extends Character{
     
@@ -123,6 +125,9 @@ export default class Swordman extends Character{
         else if(main_name === 'weapon throw'){
             this.first_ability = new WeaponThrow(this)
         }
+        else if(main_name === 'dash'){
+            this.first_ability = new Dash(this)
+        }
 
         let secondary_name = abilities.find(elem => elem.type === 2 && elem.selected).name
 
@@ -132,6 +137,10 @@ export default class Swordman extends Character{
         else if(secondary_name === 'charge'){
             this.second_ability = new Charge(this)
         }
+        else if(secondary_name === 'metal thorns'){
+            this.second_ability = new MetalThorns(this)
+        }
+       
 
         let finisher_name = abilities.find(elem => elem.type === 3 && elem.selected).name
 

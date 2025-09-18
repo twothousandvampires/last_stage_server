@@ -56,6 +56,13 @@ export default class characterTemplate{
                     desc: 'throw your weapon.'
                 },
                 {
+                    id: 10,
+                    name: 'dash',
+                    type: 1,
+                    selected: false,
+                    desc: 'makes a dash, damaging enemies, the maximum number of targets is equal to energy.'
+                },
+                {
                     id: 3,
                     name: 'jump',
                     type: 2,
@@ -65,6 +72,13 @@ export default class characterTemplate{
                 {
                     id: 4,
                     name: 'charge',
+                    type: 2,
+                    selected: false,
+                    desc: 'You dash forward, stunning everyone in your path.'
+                },
+                {
+                    id: 11,
+                    name: 'metal thorns',
                     type: 2,
                     selected: false,
                     desc: 'You dash forward, stunning everyone in your path.'

@@ -120,7 +120,7 @@ export default abstract class Item {
         },
         {
             name: "molten helm",
-            description: 'when you start blocking you ignite enemies within a radius, the power of the burn depends on your armor. it has a 10-second cooldown'
+            description: 'when you start blocking you ignite enemies within a radius, the power of the burn depends on your armor. it has a 15-second cooldown'
         },
     ]
 
