@@ -104,30 +104,27 @@ export default class ElementalEnchanted extends Status{
         if(tick_time > this.last_checked){
             this.last_checked += 1000
 
-            if(Func.notChance(10)) return
-
-            let box = this.unit.getBoxElipse()
-            box.r = this.radius
-
             this.unit.level.players.forEach(elem => {
-                let r = Func.random(1, 3)
-                if(r === 1){
-                    elem.setFreeze(2000)
-                }
-                else if(r === 2){
-                    let s = new ShockStatus(tick_time)
-                    s.setPower(25)
-                    s.setDuration(5000)
+                if (Func.chance(10) && Func.distance(elem, this.unit) <= this.radius){
+                    let r = Func.random(1, 3)
+                    if(r === 1){
+                        elem.setFreeze(2000)
+                    }
+                    else if(r === 2){
+                        let s = new ShockStatus(tick_time)
+                        s.setPower(25)
+                        s.setDuration(5000)
 
-                    elem.level.setStatus(elem, s, true)
-                }
-                else{
-                    let s = new Ignite(tick_time)
-                    s.setPower(25)
-                    s.setDuration(5000)
+                        elem.level.setStatus(elem, s, true)
+                    }
+                    else{
+                        let s = new Ignite(tick_time)
+                        s.setPower(25)
+                        s.setDuration(5000)
 
-                    elem.level.setStatus(elem, s, true)
-                }
+                        elem.level.setStatus(elem, s, true)
+                    }
+                }        
             })
         }
     }

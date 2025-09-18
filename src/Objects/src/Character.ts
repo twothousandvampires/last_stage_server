@@ -54,6 +54,7 @@ export default abstract class Character extends Unit{
     can_get_courage: boolean = true
 
     is_lucky: boolean = false
+    can_move: boolean = true
 
     on_kill_triggers: any[] = []
     on_hit_triggers: any[] = []
@@ -940,12 +941,14 @@ export default abstract class Character extends Unit{
         this.damaged = true
         this.state = 'damaged'
         this.can_move_by_player = false
+        this.can_move = false
 
         this.stateAct = this.damagedAct
 
         this.cancelAct = () => {
             this.can_move_by_player = true
             this.damaged = false
+            this.can_move = true
         }
 
         this.setTimerToGetState(300)
@@ -986,7 +989,7 @@ export default abstract class Character extends Unit{
     }
     
     protected canMove(): boolean{
-        return !this.freezed && !this.zaped
+        return this.can_move && !this.freezed && !this.zaped
     }
 
     private directMove(): void{

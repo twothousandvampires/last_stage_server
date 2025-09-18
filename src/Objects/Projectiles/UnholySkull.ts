@@ -20,9 +20,9 @@ export class UnholySkull extends Projectiles{
         super(level)
         this.box_r = 0.6
         this.name = 'unholy skull'
-        this.move_speed = 0.45
+        this.move_speed = 0.35
         this.w = 3
-        this.max_distance = 30
+        this.max_distance = 35
     }
 
     setPoint(x: number = 0, y: number = 0): void{
@@ -33,7 +33,6 @@ export class UnholySkull extends Projectiles{
     }
 
     act(): void { 
-
         this.level.players.forEach(elem => {
             if(Func.elipseCollision(this.getBoxElipse(), elem.getBoxElipse())){
                 if(elem.isBlock()){
@@ -51,19 +50,19 @@ export class UnholySkull extends Projectiles{
                         let status = new Exhaustion(elem.time)
                         status.setDuration(10000)
 
-                        this.level.setStatus(elem, status)
+                        this.level.setStatus(elem, status, true)
                     }
                     else if(r === 3){
                         let status = new Madness(elem.time)
-                        status.setDuration(5000)
+                        status.setDuration(3000)
 
-                        this.level.setStatus(elem, status)
+                        this.level.setStatus(elem, status, true)
                     }
                     else if(r === 4){
                         let status = new Fear(elem.time)
-                        status.setDuration(5000)
+                        status.setDuration(3000)
 
-                        this.level.setStatus(elem, status)
+                        this.level.setStatus(elem, status, true)
                     }
                 }
                 

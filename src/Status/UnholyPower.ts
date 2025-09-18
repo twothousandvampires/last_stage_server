@@ -37,7 +37,7 @@ export default class UnholyPower extends Status{
 
     act(tick_time: number){
         if(tick_time > this.last_checked){
-            this.last_checked += 5000
+            this.last_checked += 8000
             if(!this.unit) return
 
             let possible = this.unit?.level.players.filter(elem => Func.distance(elem, this.unit) < 30)
@@ -52,7 +52,6 @@ export default class UnholyPower extends Status{
                     this.unit.level.projectiles.push(proj)
                 } 
             }
-            
         }
     }
 }

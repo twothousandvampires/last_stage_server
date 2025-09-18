@@ -210,14 +210,14 @@ export default class Default extends Scenario{
             level.enemies.push(enemy)   
         }
 
-        if(this.waves_created % 20 === 0){
+        if(this.waves_created % 40 === 0){
             this.add_e_armour += 2
             this.add_e_pierce += 2
         }
-        if(this.waves_created % 40 === 0){
+        if(this.waves_created % 80 === 0){
             this.add_e_life += 1
         }
-        if(this.waves_created % 60 === 0){
+        if(this.waves_created % 160 === 0){
             this.add_e_speed += 0.1
         } 
     }
