@@ -30,7 +30,7 @@ export default class Level{
        },
        {
          'name': 'flamy',
-         'weight': 20
+         'weight': 16
        },
        {
          'name': 'solid',
