@@ -30,35 +30,35 @@ export default class Level{
        },
        {
          'name': 'flamy',
-         'weight': 16
+         'weight': 14
        },
        {
          'name': 'solid',
-         'weight': 14
+         'weight': 12
        },  
        {
          'name': 'slime',
-         'weight': 18
+         'weight': 20
        },
        {
          'name': 'flying bones',
-         'weight': 12
+         'weight': 10
        },
        {
          'name': 'ghost',
-         'weight': 8
+         'weight': 5
        },
         {
          'name': 'pile',
-         'weight': 12
+         'weight': 14
        },  
        {
          'name': 'magic slime',
-         'weight': 6
+         'weight': 4
        },
         {
          'name': 'specter',
-         'weight': 3
+         'weight': 2
        },      
         {
          'name': 'gifter',
