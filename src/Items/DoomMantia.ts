@@ -6,7 +6,8 @@ export default class DoomMantia extends Item {
    
     constructor(){
         super()
-        this.chance = 30
+        this.chance = 20
+        this.max_chance = 50
         this.distance = 20
         this.name = 'doom mantia'
         this.type = 2

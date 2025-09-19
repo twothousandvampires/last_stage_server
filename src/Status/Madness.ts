@@ -32,6 +32,8 @@ export default class Madness extends Status {
     }
 
     act(tick_time: number){
+        this.unit.can_move_by_player = false
+        
         if(tick_time > this.last_checked){
             this.last_checked += 500
             if(this.unit.is_attacking) return

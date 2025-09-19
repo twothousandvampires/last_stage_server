@@ -7,6 +7,7 @@ export default class PileOfThorns extends Pile{
 
     collection_of_bones: boolean
     kill_count: number
+    radius: number = 12
 
     constructor(level: Level, public power: number = 0){
         super(level)
@@ -15,31 +16,14 @@ export default class PileOfThorns extends Pile{
         this.kill_count = 0
         this.duration = 12000
         this.cast_time = 1500
+        
         this.getState()
     }
 
-    
     setDyingAct(){
         this.is_dead = true
         this.state = 'dying'
         
-        if(this.kill_count > 0){
-             let count = this.kill_count
-                                    
-            let zones = 6.28 / count
-    
-            for(let i = 1; i <= count; i++){
-                let min_a = (i - 1) * zones
-                let max_a = i * zones
-    
-                let angle = Math.random() * (max_a - min_a) + min_a
-                let proj = new Bone(this.level)
-                proj.setAngle(angle)
-                proj.setPoint(this.x, this.y)
-    
-                this.level.projectiles.push(proj)
-            }
-        }
 
         this.stateAct = this.DyingAct
         this.setTimerToGetState(this.dying_time)
@@ -56,7 +40,7 @@ export default class PileOfThorns extends Pile{
             })
             
             let e = this.getBoxElipse()
-            e.r = 10 + this.power
+            e.r = this.radius + this.power
 
             this.level.enemies.forEach(elem => {
                 if(elem != this && Func.elipseCollision(elem.getBoxElipse(), e)){
@@ -66,6 +50,25 @@ export default class PileOfThorns extends Pile{
                     }
                 }
             })
+
+            if(this.kill_count > 0){
+                let count = this.kill_count
+                                        
+                let zones = 6.28 / count
+        
+                for(let i = 1; i <= count; i++){
+                    let min_a = (i - 1) * zones
+                    let max_a = i * zones
+        
+                    let angle = Math.random() * (max_a - min_a) + min_a
+                    let proj = new Bone(this.level)
+    
+                    proj.setAngle(angle)
+                    proj.setPoint(this.x + Math.sin(angle) * 2, this.y + Math.cos(angle) * 2)
+        
+                    this.level.projectiles.push(proj)
+                }
+            }
         }
     }
 }

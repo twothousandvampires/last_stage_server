@@ -185,7 +185,7 @@ export default class Default extends Scenario{
                 enemy.setPoint(random_player.x + Math.sin(angle) * distance_x, random_player.y + Math.cos(angle) * distance_y)
             }
 
-            if(Func.chance(10) && (enemy instanceof Solid) || (enemy instanceof FlyingBones) || (enemy instanceof Specter)){
+            if(Func.chance(5) && (enemy instanceof Solid) || (enemy instanceof FlyingBones) || (enemy instanceof Specter)){
                 let r = Func.random(1, 3)
 
                 if(r === 1){

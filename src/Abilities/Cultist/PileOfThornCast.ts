@@ -15,7 +15,7 @@ export default class PileOfThornCast extends CultistAbility{
         this.distance = 25
         this.ring_of_pain = false
         this.collection_of_bones = false
-        this.cost = 7
+        this.cost = 6
     }
 
     canUse(): boolean {
@@ -86,7 +86,8 @@ export default class PileOfThornCast extends CultistAbility{
             pile.collection_of_bones = this.third_ability.collection_of_bones
             
             if(this.third_ability.ring_of_pain){
-                pile.frequency = 2500
+                pile.frequency = 2000
+                pile.radius += 4
             }
             
             pile.setPoint(hit_x, hit_y)

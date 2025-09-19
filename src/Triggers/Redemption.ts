@@ -13,7 +13,6 @@ export default class Redemption {
     }
 
     trigger(player: Character, target: any){
-            console.log(target.id)
         if(!target) return  
         if(player.level.deleted.includes(target.id)) return
         if(player.level.time - this.last_trigger_time < this.cd) return

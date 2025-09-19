@@ -35,13 +35,13 @@ export default class Flyer extends Character{
 
         this.cast_speed = 1500
         this.name = 'flyer'
-        this.move_speed = 0.4
+        this.move_speed = 0.45
         this.avoid_damaged_state_chance = 0
         this.armour_rate = 0
         this.resource = 0
         this.max_resource = 7
         this.life_status = 3
-        this.base_regen_time = 12000
+        this.base_regen_time = 11000
         this.takeoff = false
         this.allow_mana_regen_while_def = false
         this.charged_shield = false
@@ -677,55 +677,21 @@ export default class Flyer extends Character{
 
         this.recent_cast = this.recent_cast.filter((elem, index) => index >= 4)
         this.subLife(unit, options)
-        this.playerLoseLife()
     }
 
     getTotalArmour(){
         return this.armour_rate + (this.agility * 3) + (this.mental_shield ? this.getSecondResource() * 3 : 0)
     }
 
-    subLife(unit: any = undefined, options = {}){
-        let value = 1
-               
-        if(unit && unit.pierce > this.getTotalArmour()){
-            value = 2
+    getPenaltyByLifeStatus(){
+        if(this.life_status === 2){
+            return 10
         }
-
-        if(Func.notChance(100 - this.fragility, this.is_lucky)){
-            value *= 2
+        else if(this.life_status === 1){
+            return 30
         }
-
-        this.life_status -= value
-
-        if(this.life_status <= 0){
-            this.playerTakeLethalDamage()
-
-            if(this.can_be_lethaled){
-                if(options?.explode){
-                    this.exploded = true
-                }
-                this.is_dead = true
-                unit?.succesefulKill()
-                this.setState(this.setDyingState)
-                this.level.playerDead()
-            }
-            else{
-                this.life_status ++
-                this.can_be_lethaled = true
-            } 
-        }   
         else{
-            if(!this.freezed && Func.notChance(this.getSkipDamageStateChance(), this.is_lucky)){
-                this.setState(this.setDamagedAct)
-            }
-            
-            if(this.life_status === 2){
-                this.addMoveSpeedPenalty(-10)
-            }
-            else if(this.life_status === 1){
-                this.addMoveSpeedPenalty(-30)
-                this.reachNearDead()
-            }
+            return 0
         }
     }
 

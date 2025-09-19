@@ -21,27 +21,25 @@ export default class SolarSpear extends Item{
     }
 
     equip(character: Character): void {
-        character.on_hit_triggers.push(this)
+        character.on_pierce_triggers.push(this)
     }
 
     trigger(player: Character, enemy: Enemy){
         if(this.disabled) return
-        if(enemy.armour_rate >= player.pierce) return
+    
+        
+        if(player.level.time - this.last_trigger >= this.frequency){
+            this.last_trigger = player.level.time
 
-        if(Func.chance(player.pierce - enemy.armour_rate, player.is_lucky)){
-            if(player.level.time - this.last_trigger >= this.frequency){
-                this.last_trigger = player.level.time
+            let e = new LightNova(player.level)
+            e.setPoint(enemy.x, enemy.y)
+            player.level.effects.push(e)
 
-                let e = new LightNova(player.level)
-                e.setPoint(enemy.x, enemy.y)
-                player.level.effects.push(e)
-
-                player.level.players.forEach(elem => {
-                    if(Func.distance(elem, player) <= 12){
-                        elem.addLife()
-                    }
-                })
-            }
+            player.level.players.forEach(elem => {
+                if(Func.distance(elem, player) <= 12){
+                    elem.addLife()
+                }
+            })
         }
     }
 }
