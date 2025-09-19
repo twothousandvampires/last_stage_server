@@ -45,15 +45,19 @@ export default class Solid extends Enemy{
             this.explode = true
             this.action = false
             this.state = 'dead_explode'
-            let targets = this.level.enemies.concat(this.level.players)
             
-            targets.forEach((e) => {
-                if(e != this && Func.distance(this, e) <= 12){
-                    e.takeDamage(this, {
-                        burn: true
-                    })
+            this.level.enemies.forEach( elem => {
+                if(elem != this && Func.distance(this, elem) <= 12){
+                    elem.takeDamage()
                 }
             })
+
+            this.level.players.forEach( elem => {
+                if(Func.distance(this, elem) <= 12){
+                    elem.takeDamage(undefined, {})
+                }
+            })
+
             setTimeout(()=> {
                 this.is_corpse = true
             }, 800)
