@@ -25,6 +25,7 @@ export default class FlyingBones extends Enemy{
         this.move_speed = 0.1
         this.attack_radius = 6
         this.attack_speed = 1600
+        this.cooldown_attack = 3000
         this.life_status = 2
         this.spawn_time = 1600
         this.can_cast_grip = true
@@ -206,7 +207,7 @@ export default class FlyingBones extends Enemy{
         this.setTimerToGetState(2000)
     }
 
-    idleAct(){
+    idleAct(tick){
         if(this.can_check_player){
            if(!this.target){
                 this.can_check_player = false
@@ -239,7 +240,7 @@ export default class FlyingBones extends Enemy{
         if(this.want_to_cast){
             this.want_to_cast = false
             
-             if(this.can_cast_grip && Func.distance(this, this.target) <= 10){
+            if(this.can_cast_grip && Func.distance(this, this.target) <= 10){
                 this.spell_name = 'ghost grip'
                 this.can_cast_grip = false
                 setTimeout(() => {
@@ -269,10 +270,14 @@ export default class FlyingBones extends Enemy{
         //todo can cast
         if(this.spell_name){
             this.setState(this.setAttackState)
+            return
         }
 
-        else{
+        else if(Func.distance(this, this.target) <= 8 && Func.chance(70)){
             this.setState(this.setRetreatState)
+        }
+        else{
+            this.setState(this.setIdleAct)
         }
     }
 }

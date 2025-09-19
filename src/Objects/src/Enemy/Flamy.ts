@@ -4,8 +4,10 @@ import { FlamyFireBall } from "../../Projectiles/FlamyFireBall";
 import { Enemy } from "./Enemy";
 
 export class Flamy extends Enemy{
+
     retreat_distance: number
     retreat_angle: number | undefined
+    cooldown_attack: number = 4000
 
     constructor(level: Level){
         super(level)
@@ -13,7 +15,7 @@ export class Flamy extends Enemy{
         this.box_r = 2
         this.move_speed = 0.3
         this.attack_radius = 5
-        this.attack_speed = 3000
+        this.attack_speed = 2000
         this.retreat_distance = 8
         this.retreat_angle = undefined
         this.spawn_time = 1400
@@ -22,9 +24,8 @@ export class Flamy extends Enemy{
         this.getState()
     }
 
-    idleAct(){
+    idleAct(tick: number){
         if(this.can_check_player){
-
             if(!this.target){
                 this.can_check_player = false
             
@@ -50,14 +51,12 @@ export class Flamy extends Enemy{
             return
         } 
 
-
         if(Func.distance(this, this.target) <= this.retreat_distance && Math.random() > 0.5){
             this.setState(this.setRetreatState)
         }
-        else{
+        else if(this.enemyCanAtack(tick)){
             this.setState(this.setAttackState)
         }
-
     }
 
     retreatAct(){

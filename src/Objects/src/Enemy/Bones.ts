@@ -16,7 +16,8 @@ export default class Bones extends Enemy{
         this.box_r = 2.2
         this.move_speed = 0.15
         this.attack_radius = 5
-        this.attack_speed = 1600
+        this.attack_speed = 1500
+        this.cooldown_attack = 2200
         this.life_status = 2
         this.spawn_time = 1600
         this.ressurect_chance = 40
@@ -130,7 +131,7 @@ export default class Bones extends Enemy{
         this.setTimerToGetState(this.attack_speed)
     }
 
-    idleAct(){
+    idleAct(tick){
         if(this.can_check_player){
            if(!this.target){
                 this.can_check_player = false
@@ -162,8 +163,9 @@ export default class Bones extends Enemy{
         a_e.r = this.attack_radius
 
         if(Func.elipseCollision(a_e, this.target.getBoxElipse())){
-           
-            this.setState(this.setAttackState)
+            if (this.enemyCanAtack(tick)){
+                this.setState(this.setAttackState)
+            }
         }
         else{
             this.moveAct()

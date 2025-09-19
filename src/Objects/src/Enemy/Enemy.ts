@@ -16,6 +16,7 @@ export abstract class Enemy extends Unit{
     dying_time: number
     spawn_time: number
     dead_type: string | undefined
+    cooldown_attack: number = 2000
 
     create_grace_chance: number = 15
     create_energy_chance: number = 5
@@ -24,6 +25,7 @@ export abstract class Enemy extends Unit{
     create_item_chance: number = 0
 
     create_chance: number = 15
+    last_action: number = 0
 
     count_as_killed: boolean
     say_z: number = 12
@@ -52,9 +54,19 @@ export abstract class Enemy extends Unit{
         ]
     }
 
+    setImpactTime(c: number){
+        c += Func.chance(50) ? 5 : -5
+        this.action_impact = this.level.time + (this.action_time * (c / 100))
+        this.action_end =  this.level.time + this.action_time
+        this.last_action = this.level.time + this.action_time
+    }
+
+    enemyCanAtack(tick: number){
+        return tick - this.last_action >= this.cooldown_attack
+    }
+
     act(time: number){
         if(!this.can_act || !this.stateAct) return
-    
         this.stateAct(time)
        
         if(this.action_impact && time >= this.action_impact){

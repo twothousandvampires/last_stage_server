@@ -271,7 +271,7 @@ export default class Ghost extends Enemy{
         this.setTimerToGetState(2000)
     }
 
-    idleAct(){
+    idleAct(tick){
         if(this.can_check_player){
            if(!this.target){
                 this.can_check_player = false
@@ -330,12 +330,11 @@ export default class Ghost extends Enemy{
         }
        
         //todo can cast
-        if(this.spell_name){
-            this.setState(this.setAttackState)
-        }
-
-        else{
+        else if(Func.distance(this, this.target) <= 8 && Func.chance(70)){
             this.setState(this.setRetreatState)
+        }
+        else{
+            this.setState(this.setIdleAct)
         }
     }
 }

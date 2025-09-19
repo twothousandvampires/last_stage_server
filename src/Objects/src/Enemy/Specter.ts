@@ -21,6 +21,7 @@ export default class Specter extends Enemy{
         this.name = 'specter'
         this.box_r = 2.5
         this.move_speed = 0.05
+        this.cooldown_attack = 2000
         this.attack_radius = 7
         this.attack_speed = 2000
         this.life_status = 2
@@ -149,7 +150,7 @@ export default class Specter extends Enemy{
         this.setTimerToGetState(this.attack_speed)
     }
 
-    idleAct(){
+    idleAct(tick){
         if(this.can_check_player){
            if(!this.target){
                 this.can_check_player = false
@@ -211,8 +212,9 @@ export default class Specter extends Enemy{
             a_e.r = this.attack_radius
 
             if(Func.elipseCollision(a_e, this.target.getBoxElipse())){
-                
-                this.setState(this.setAttackState)
+                if (this.enemyCanAtack(tick)){
+                    this.setState(this.setAttackState)
+                }
             }
             else{
                 this.moveAct()
