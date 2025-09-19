@@ -155,19 +155,13 @@ export abstract class Enemy extends Unit{
     takeDamage(unit: any = undefined, options: any = {}){
         if(this.is_dead) return
         
-        if(options?.instant_death){
-            unit?.succesefulKill(this)
-            this.is_dead = true
-            this.create_grace_chance += unit?.additional_chance_grace_create ? unit?.additional_chance_grace_create : 0
-            //todo
-            if(unit instanceof Character){
-                unit?.addGold(this.gold_revard)
-            }
-            this.setDyingAct()
-            return
+        let instantly = options?.instant_death
+
+        if(instantly){
+            this.life_status = 1
         }
 
-        if(this.checkArmour(unit)){
+        if(this.checkArmour(unit) && !instantly){
             this.level.addSound({
                 name: 'metal hit',
                 x: this.x,
@@ -187,8 +181,11 @@ export abstract class Enemy extends Unit{
            damage_value = options.damage_value
         }
 
-        if(unit && unit?.pierce > this.armour_rate && Func.chance(unit.pierce - this.armour_rate)){
+        let is_pierce = unit && unit?.pierce > this.armour_rate && Func.chance(unit.pierce - this.armour_rate)
+
+        if(is_pierce){
             damage_value ++
+            unit.succesefulPierce(this)
         }
        
         if(unit && unit?.critical && Func.chance(unit.critical)){
@@ -200,7 +197,10 @@ export abstract class Enemy extends Unit{
         }
 
         this.life_status -= damage_value
-        unit?.succesefulHit(this)
+
+        if(!instantly){
+            unit?.succesefulHit(this)
+        }
         
         if(this.life_status <= 0){
             if(options?.explode){
@@ -213,7 +213,9 @@ export abstract class Enemy extends Unit{
                 this.is_corpse = true
             }
             
-            this.level.addSound(this.getWeaponHitedSound())
+            if(!instantly){
+                this.level.addSound(this.getWeaponHitedSound())
+            }
 
             this.is_dead = true
             this.create_grace_chance += unit?.additional_chance_grace_create ? unit?.additional_chance_grace_create : 0

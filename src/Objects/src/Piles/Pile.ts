@@ -16,7 +16,7 @@ export default class Pile extends Enemy{
         this.box_r = 2
         this.move_speed = 0
         this.spawn_time = 1000
-        this.last_cast_time = Date.now()
+        this.last_cast_time = 0
         this.life_status = 4
         this.frequency = 2000
         this.duration = 10000

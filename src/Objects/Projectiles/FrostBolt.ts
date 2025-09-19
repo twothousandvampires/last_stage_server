@@ -10,7 +10,7 @@ export class FrostBolt extends Projectiles{
         super(level)
         this.box_r = 0.3
         this.name = 'frost bolt'
-        this.move_speed = 1.6
+        this.move_speed = 1.2
         this.w = 3
     }
 

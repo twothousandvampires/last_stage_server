@@ -33,6 +33,8 @@ export default class Fear extends Status {
     }
 
     act(tick_time: number){
+        this.unit.can_move_by_player = false
+        
         if(tick_time > this.last_checked){
             this.last_checked += 1000
             

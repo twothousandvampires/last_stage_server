@@ -43,13 +43,13 @@ export default class Cultist extends Character{
         super(level)
 
         this.weapon_angle = 1.6
-        this.attack_point_radius = 4
+        this.attack_point_radius = 4.3
         this.attack_radius = 7
-        this.attack_speed = 1800
+        this.attack_speed = 1700
         this.might = 100
-        this.cast_speed = 2000
+        this.cast_speed = 1700
         this.name = 'cultist'
-        this.move_speed = 0.4
+        this.move_speed = 0.43
         this.avoid_damaged_state_chance = 15
         this.armour_rate = 25
         this.resource = 0
@@ -58,7 +58,7 @@ export default class Cultist extends Character{
         this.hit_y = undefined
 
         this.life_status = 3
-        this.base_regen_time = 9000
+        this.base_regen_time = 8500
         this.service = false
         this.conduct_of_pain = false
         this.pain_extract = false
@@ -187,47 +187,15 @@ export default class Cultist extends Character{
         return this.armour_rate + this.might
     }
 
-    subLife(unit: any = undefined, options = {}){
-        let value = 1
-               
-        if(unit && unit.pierce > this.getTotalArmour()){
-            value = 2
+    getPenaltyByLifeStatus(): number{
+        if(this.life_status === 2){
+            return 5
         }
-
-        if(Func.notChance(100 - this.fragility, this.is_lucky)){
-            value *= 2
+        else if(this.life_status === 1){
+            return 10
         }
-
-        this.life_status -= value
-
-        if(this.life_status <= 0){
-            this.playerTakeLethalDamage()
-
-            if(this.can_be_lethaled){
-                if(options?.explode){
-                    this.exploded = true
-                }
-                unit?.succesefulKill()
-                this.is_dead = true
-                this.setState(this.setDyingState)
-                this.level.playerDead()
-            }
-            else{
-                this.life_status ++
-                this.can_be_lethaled = true
-            } 
-        }   
         else{
-            if(!this.freezed && Func.notChance(this.getSkipDamageStateChance(), this.is_lucky)){
-                this.setState(this.setDamagedAct)
-            }         
-            if(this.life_status === 2){
-                this.addMoveSpeedPenalty(-5)
-            }
-            else if(this.life_status === 1){
-                this.addMoveSpeedPenalty(-10)
-                this.reachNearDead()
-            }
+            return 0
         }
     }
 
@@ -345,7 +313,6 @@ export default class Cultist extends Character{
         }
 
         this.subLife(unit, options)
-        this.playerLoseLife()
     }
 
     getSecondResource(){
@@ -578,7 +545,7 @@ export default class Cultist extends Character{
                     }
                 },
                 cost: 3,
-                desc: 'increases radius'
+                desc: 'increases radius and frequency'
             },
             {
                 name: 'collection of bones',
@@ -831,32 +798,6 @@ export default class Cultist extends Character{
 
         if(this.pain_extract && Func.chance(5, this.is_lucky)){
             this.addResourse()
-        }
-    }
-
-    addLife(count = 1, ignore_poison = false, ignore_limit = false){
-        if(!this.can_regen_life && !ignore_poison) return
-
-        for(let i = 0; i < count; i++){
-            let previous = this.life_status
-
-            if(previous >= 3){
-                if(ignore_limit || (this.lust_for_life && Func.chance(this.getSecondResource() * 4, this.is_lucky))){
-
-                }
-                else{
-                    return
-                } 
-            }
-            
-            this.life_status ++
-            this.playerWasHealed()
-            if(previous === 1){
-                this.addMoveSpeedPenalty(10)
-            }
-            if(previous === 2){
-                this.addMoveSpeedPenalty(5)
-            }
         }
     }
 

@@ -20,7 +20,6 @@ import BlockingTechnique from "../../../Triggers/ BlockingTechnique";
 import Dash from "../../../Abilities/Swordman/Dash";
 import MetalThorns from "../../../Abilities/Swordman/MetalThorns";
 import Unit from "../Unit";
-import Redemption from "../../../Triggers/Redemption";
 
 export default class Swordman extends Character{
     
@@ -52,7 +51,7 @@ export default class Swordman extends Character{
         this.max_resource = 7
 
         this.life_status = 3
-        this.base_regen_time = 10000
+        this.base_regen_time = 9000
         this.recent_kills = []
         this.block_chance = 50
     }
@@ -103,7 +102,7 @@ export default class Swordman extends Character{
             this.level.effects.push(proj)
         }
 
-        this.addLife(1, true, true)
+        this.addLife()
         this.attack_speed -= 500
 
         setTimeout(() => {
@@ -274,7 +273,18 @@ export default class Swordman extends Character{
         }
        
         this.subLife(unit, options)
-        this.playerLoseLife()
+    }
+
+    getPenaltyByLifeStatus(){
+        if(this.life_status === 2){
+            return 10
+        }
+        else if(this.life_status === 1){
+            return 30
+        }
+        else{
+            return 0
+        }
     }
 
     getTotalArmour(){
@@ -696,34 +706,8 @@ export default class Swordman extends Character{
         }
     }
 
-    addLife(count = 1, ignore_poison = false, ignore_limit = false){
-        if(!this.can_regen_life && !ignore_poison) return
-
-        if(Func.chance(this.durability, this.is_lucky)){
-            count ++
-        }
-        
-        for(let i = 0; i < count; i++){
-            let previous = this.life_status
-
-            if(previous >= 3){
-                if(ignore_limit || (this.lust_for_life && Func.chance(this.getSecondResource() * 4, this.is_lucky))){
-
-                }
-                else{
-                    return
-                } 
-            }
-
-            this.life_status ++
-            this.playerWasHealed()
-            if(previous === 1){
-                this.addMoveSpeedPenalty(30)
-            }
-            if(previous === 2){
-                this.addMoveSpeedPenalty(10)
-            }
-        }
+    isRegenAdditionalLife(){
+        return Func.chance(this.durability, this.is_lucky)
     }
 
     setDamagedAct(){
@@ -794,7 +778,7 @@ export default class Swordman extends Character{
         this.stateAct = this.defendAct
 
         this.when_start_block_triggers.forEach(elem => elem.trigger(this))
-
+    
         let reduce = 80 - this.speed * 5
         if(reduce < 0){
             reduce = 0

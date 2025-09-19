@@ -22,7 +22,7 @@ export default class Level{
     static enemy_list = [
        {
          'name': 'impy',
-         'weight': 100
+         'weight': 110
        },
        {
          'name': 'bones',
@@ -50,7 +50,7 @@ export default class Level{
        },
         {
          'name': 'pile',
-         'weight': 14
+         'weight': 12
        },  
        {
          'name': 'magic slime',

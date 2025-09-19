@@ -73,6 +73,7 @@ export default abstract class Character extends Unit{
     when_gain_energy_triggers: any = []
     when_start_block_triggers: any = []
     when_enemy_die: any = []
+    on_pierce_triggers: any = []
 
     avoid_damaged_state_chance: number = 0
     can_be_lethaled: boolean = true
@@ -125,6 +126,7 @@ export default abstract class Character extends Unit{
     abstract regen(): void
     abstract getSecondResource(): number
     abstract isBlock(): boolean
+    abstract getPenaltyByLifeStatus(): number
    
     addResourse(){
         this.when_gain_energy_triggers.forEach(elem => elem.trigger(this))
@@ -175,6 +177,10 @@ export default abstract class Character extends Unit{
             ward: this.ward,
             invisible: this.invisible
         }
+    }
+
+    succesefulPierce(enemy){
+        this.on_pierce_triggers.forEach(elem => elem.trigger(this, enemy))
     }
 
     setFreeze(duration: number){
@@ -743,10 +749,17 @@ export default abstract class Character extends Unit{
 
         this.level.socket.to(this.id).emit('change_level', this.zone_id, x, y)
     }
+    isRegenAdditionalLife(){
+        return false
+    }
 
     public addLife(count: number = 1, ignore_poison: boolean = false, ignore_limit: boolean = false): void{
         if(!this.can_regen_life && !ignore_poison) return
         
+        if(this.isRegenAdditionalLife()){
+            count ++
+        }
+
         for(let i = 0; i < count; i++){
             let previous = this.life_status
 
@@ -758,20 +771,16 @@ export default abstract class Character extends Unit{
                     return
                 } 
             }
+            let penalty = this.getPenaltyByLifeStatus()
+            this.addMoveSpeedPenalty(penalty)
 
             this.life_status ++
-            this.playerWasHealed()
-
-            if(previous === 1){
-                this.addMoveSpeedPenalty(30)
-            }
-            if(previous === 2){
-                this.addMoveSpeedPenalty(10)
-            }
         }
+
+        this.playerWasHealed()
     }
 
-    private playerWasHealed(): void{
+    public playerWasHealed(): void{
         this.on_heal_triggers.forEach(elem => {
             elem.trigger(this)
         })
@@ -799,7 +808,7 @@ export default abstract class Character extends Unit{
 
         let value = 1
        
-        if(unit && unit.pierce > this.getTotalArmour()){
+        if(unit && unit.pierce > this.getTotalArmour() && Func.chance(this.getTotalArmour() - unit.pierce)){
             value = 2
         }
 
@@ -807,37 +816,46 @@ export default abstract class Character extends Unit{
             value *= 2
         }
 
-        this.life_status -= value
+        for(let i = 0; i < value; i++){
+            if(this.life_status <= 0) continue
 
-        if(this.life_status <= 0){
-            this.playerTakeLethalDamage()
+            this.life_status --
 
-            if(this.can_be_lethaled){
-                if(options?.explode){
-                    this.exploded = true
+            if(this.life_status <= 0){
+                this.playerTakeLethalDamage()
+
+                if(this.can_be_lethaled){
+                    if(options?.explode){
+                        this.exploded = true
+                    }
+                    unit?.succesefulKill()
+                    this.is_dead = true
+                    this.setState(this.setDyingState)
+                    this.level.playerDead()
                 }
-                unit?.succesefulKill()
-                this.is_dead = true
-                this.setState(this.setDyingState)
-                this.level.playerDead()
             }
-            else{
-                this.life_status = 1
-                this.can_be_lethaled = true
-            } 
-        }   
-        else{
-            if(!this.freezed && Func.notChance(this.getSkipDamageStateChance(), this.is_lucky)){
-                this.setState(this.setDamagedAct)
-            }
+           
+            let penalty = -this.getPenaltyByLifeStatus()
+            this.addMoveSpeedPenalty(penalty) 
+        }
 
-            if(this.life_status === 2){
-                this.addMoveSpeedPenalty(-10)
-            }
-            else if(this.life_status === 1){
-                this.addMoveSpeedPenalty(-30)
+        if(this.is_dead) return
+
+        if(this.life_status > 0){
+            this.playerLoseLife()
+
+            if(this.life_status === 1){
                 this.reachNearDead()
             }
+        }
+
+        if(!this.can_be_lethaled){
+            this.life_status = 1
+            this.can_be_lethaled = true
+        }
+
+        if(!this.freezed && Func.notChance(this.getSkipDamageStateChance(), this.is_lucky)){
+            this.setState(this.setDamagedAct)
         }
     }
 
@@ -1267,7 +1285,6 @@ export default abstract class Character extends Unit{
     public setDefend(): void{
         this.state = 'defend'
         this.stateAct = this.defendAct
-
         this.when_start_block_triggers.forEach(elem => elem.trigger(this))
 
         let reduce = 80
