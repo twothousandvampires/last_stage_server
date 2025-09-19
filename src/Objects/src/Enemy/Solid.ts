@@ -24,6 +24,7 @@ export default class Solid extends Enemy{
         this.hit_y = 0
         this.armour_rate = 10
         this.create_grace_chance = 50
+        this.cooldown_attack = 3000
         this.create_chance = 80
         this.create_chance = 80
         this.say_z = 18
@@ -116,7 +117,7 @@ export default class Solid extends Enemy{
         this.setTimerToGetState(this.attack_speed)
     }
 
-    idleAct(){
+    idleAct(tick){
         if(this.can_check_player){
            if(!this.target){
                 this.can_check_player = false
@@ -148,7 +149,9 @@ export default class Solid extends Enemy{
         a_e.r = this.attack_radius
 
         if(Func.elipseCollision(a_e, this.target.getBoxElipse())){
-            this.setState(this.setAttackState)
+            if (this.enemyCanAtack(tick)){
+                this.setState(this.setAttackState)
+            }
         }
         else{
             this.moveAct()

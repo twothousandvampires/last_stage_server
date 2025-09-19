@@ -91,7 +91,9 @@ export default class WeaponThrow extends SwordmanAbility{
             }
         }
 
-        proj.setAngle(this.owner.attack_angle)
+        let target = this.owner.getTarget()
+
+        proj.setAngle(target ? Func.angle(this.owner.x, this.owner.y, target.x, target.y) : this.owner.attack_angle)
         proj.setOwner(this.owner)
         proj.setPoint(this.owner.x, this.owner.y)
 

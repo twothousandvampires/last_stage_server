@@ -13,7 +13,8 @@ export default class Impy extends Enemy{
         this.box_r = 2
         this.move_speed = 0.26
         this.attack_radius = 4.5
-        this.attack_speed = 1450
+        this.attack_speed = 1400
+        this.cooldown_attack = 1800
         this.spawn_time = 1000
         this.say_z = 8
         this.weapon_angle = 0.7
@@ -65,7 +66,7 @@ export default class Impy extends Enemy{
         this.setTimerToGetState(this.attack_speed)
     }
 
-    idleAct(){
+    idleAct(tick){
         if(this.can_check_player){
            if(!this.target){
                 this.can_check_player = false
@@ -98,15 +99,17 @@ export default class Impy extends Enemy{
 
         if(Func.elipseCollision(a_e, this.target.getBoxElipse())){
 
-            if(Func.chance(30)){
-                this.level.sounds.push({
-                    x: this.x,
-                    y: this.y,
-                    name: 'impy'
-                })
+            if (this.enemyCanAtack(tick)){
+                if(Func.chance(30)){
+                    this.level.sounds.push({
+                        x: this.x,
+                        y: this.y,
+                        name: 'impy'
+                    })
+                }
+            
+                this.setState(this.setAttackState)
             }
-           
-            this.setState(this.setAttackState)
         }
         else{
             this.moveAct()

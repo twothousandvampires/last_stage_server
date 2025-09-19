@@ -144,7 +144,7 @@ export default class MagicSlime extends Enemy{
         this.setTimerToGetState(2000)
     }
 
-    idleAct(){
+    idleAct(tick){
         if(this.can_check_player){
         
             if(!this.target){
@@ -172,11 +172,11 @@ export default class MagicSlime extends Enemy{
             return
         } 
 
-        if(Func.distance(this, this.target) <= this.retreat_distance && Math.random() > 0.5){
+        if(Func.distance(this, this.target) <= 8 && Func.chance(70)){
             this.setState(this.setRetreatState)
         }
 
-        else if(!this.is_attacking){
+        else if(this.enemyCanAtack(tick) && Func.distance(this, this.target) <= this.player_check_radius){
             this.setState(this.setAttackState)
         }
     }

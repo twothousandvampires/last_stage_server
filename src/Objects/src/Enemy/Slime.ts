@@ -157,9 +157,10 @@ export default class Slime extends Enemy{
             this.setState(this.setAttackState)
             this.mucus = true
         }
-
         else if(Func.elipseCollision(a_e, this.target.getBoxElipse())){
-            this.setState(this.setAttackState)
+            if (this.enemyCanAtack(tick)){
+                this.setState(this.setAttackState)
+            }
         }
         else{
             this.moveAct()

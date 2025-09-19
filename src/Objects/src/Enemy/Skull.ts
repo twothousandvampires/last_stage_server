@@ -12,6 +12,7 @@ export default class Skull extends Enemy{
         this.move_speed = 0.2
         this.attack_radius = 1
         this.attack_speed = 1100
+        this.cooldown_attack = 1200
         this.is_spawning = false
         this.create_grace_chance = 0
         this.create_entity_chance = 0
@@ -91,7 +92,7 @@ export default class Skull extends Enemy{
         this.setTimerToGetState(this.attack_speed)
     }
 
-    idleAct(){
+    idleAct(tick){
         if(this.can_check_player){
            if(!this.target){
                 this.can_check_player = false
@@ -123,7 +124,9 @@ export default class Skull extends Enemy{
         a_e.r = this.attack_radius
 
         if(Func.elipseCollision(a_e, this.target.getBoxElipse())){
-            this.setState(this.setAttackState)
+            if (this.enemyCanAtack(tick)){
+                this.setState(this.setAttackState)
+            }
         }
         else{
             this.moveAct()
