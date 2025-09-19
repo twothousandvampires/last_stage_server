@@ -60,7 +60,7 @@ export default class characterTemplate{
                     name: 'dash',
                     type: 1,
                     selected: false,
-                    desc: 'makes a dash damaging enemies.'
+                    desc: 'makes a dash damaging enemies. The total distance depends on cast speed.'
                 },
                 {
                     id: 3,
@@ -81,7 +81,7 @@ export default class characterTemplate{
                     name: 'metal thorns',
                     type: 2,
                     selected: false,
-                    desc: 'You dash forward, stunning everyone in your path.'
+                    desc: 'Deals damage around you over time. The chance to deal damage depends on your arnour rating. The frequency of hits depends on your cast speed.'
                 },
                 {
                     id: 5,

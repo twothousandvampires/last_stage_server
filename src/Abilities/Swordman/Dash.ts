@@ -77,6 +77,12 @@ export default class Dash extends SwordmanAbility{
         let owner = this.owner
         let ability = this
         let count = this.owner.getTargetsCount()
+        let a_speed = ability.end_timeout
+        let bonus = 2000 - this.owner.getCastSpeed()
+        
+        if(bonus > 0){
+            a_speed += bonus
+        }
 
         return (tick: number) => {
             if(ability.end){
@@ -89,7 +95,7 @@ export default class Dash extends SwordmanAbility{
                     ability.start_time = tick
                 }
                 
-                if(tick - ability.start_time >= ability.end_timeout){
+                if(tick - ability.start_time >= a_speed){
                     ability.end = true
                     ability.start_time = 0
                     return

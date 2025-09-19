@@ -132,6 +132,10 @@ export default abstract class Character extends Unit{
         this.when_gain_energy_triggers.forEach(elem => elem.trigger(this))
     }
 
+    getCastSpeed(){
+        return this.cast_speed
+    }
+
     protected useNotUtility(): void{
         this.use_not_utility_triggers.forEach(elem => {
             elem.trigger(this)
