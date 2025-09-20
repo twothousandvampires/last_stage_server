@@ -7,7 +7,7 @@ export default class GoldFind extends Forging {
 
     constructor(item: Item){
         super(item)
-        this.max_value = 100
+        this.max_value = 25
         this.name = 'gold find'
         this.description = 'increase a chance to get additional gold'
         this.gold_cost = 10
@@ -15,8 +15,8 @@ export default class GoldFind extends Forging {
 
     forge(){
         if(this.canBeForged() && this.costEnough()){
-            this.value += 5
-            this.item.player.gold_find += 5
+            this.value += 3
+            this.item.player.gold_find += 3
             this.payCost()
         }
     }
@@ -28,6 +28,6 @@ export default class GoldFind extends Forging {
     canBeForged(): boolean {
         if(!this.item || !this.item.player) return false
 
-        return this.item.player.gold_find < this.max_value
+        return this.value < this.max_value
     }
 }

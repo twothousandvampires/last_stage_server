@@ -8,7 +8,7 @@ export default class Speed extends Forging{
 
     constructor(item: Item){
         super(item)
-        this.max_value = 20
+        this.max_value = 5
         this.name = 'speed'
         this.description = 'increases your speed'
         this.gold_cost = 5
@@ -29,6 +29,6 @@ export default class Speed extends Forging{
      canBeForged(): boolean {
         if(!this.item || !this.item.player) return false
 
-        return this.item.player.speed < this.max_value
+        return this.value < this.max_value
     }
 }

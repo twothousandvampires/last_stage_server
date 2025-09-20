@@ -11,14 +11,14 @@ export default class CastSpeed extends Forging{
         this.max_value = 200
         this.name = 'cast speed'
         this.description = 'increases your cast speed'
-        this.gold_cost = 7
+        this.gold_cost = 6
     }
 
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
             this.value += 20
             this.item.player.cast_speed -= 20
-             this.payCost()
+            this.payCost()
         }
     }
 
@@ -29,6 +29,6 @@ export default class CastSpeed extends Forging{
     canBeForged(): boolean {
         if(!this.item || !this.item.player) return false
 
-        return this.item.player.cast_speed > this.max_value
+        return this.value < this.max_value
     }
 }

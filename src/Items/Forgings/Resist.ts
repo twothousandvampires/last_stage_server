@@ -8,7 +8,7 @@ export default class Resist extends Forging{
 
     constructor(item: Item){
         super(item)
-        this.max_value = 100
+        this.max_value = 10
         this.name = 'resist'
         this.description = 'increases your status resist'
         this.gold_cost = 5
@@ -16,8 +16,8 @@ export default class Resist extends Forging{
 
     forge(){
         if(this.canBeForged() && this.costEnough()){
-            this.value += 2
-            this.item.player.status_resistance += 2
+            this.value += 1
+            this.item.player.status_resistance += 1
              this.payCost()
         }
     }
@@ -29,6 +29,6 @@ export default class Resist extends Forging{
      canBeForged(): boolean {
         if(!this.item || !this.item.player) return false
 
-        return this.item.player.status_resistance < this.max_value
+        return this.value < this.max_value
     }
 }

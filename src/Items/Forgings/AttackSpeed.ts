@@ -18,7 +18,7 @@ export default class AttackSpeed extends Forging{
         if(this.canBeForged() && this.costEnough()){
             this.value += 20
             this.item.player.attack_speed -= 20
-             this.payCost()
+            this.payCost()
         }
     }
 
@@ -30,6 +30,6 @@ export default class AttackSpeed extends Forging{
     canBeForged(): boolean {
         if(!this.item || !this.item.player) return false
 
-        return this.item.player.attack_speed > this.max_value
+        return this.value < this.max_value
     }
 }

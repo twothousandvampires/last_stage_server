@@ -7,7 +7,7 @@ export default class Regen extends Forging{
 
     constructor(item: Item){
         super(item)
-        this.max_value = 4000
+        this.max_value = 1200
         this.name = 'regeneration'
         this.description = 'increase yours life regeneration speed'
         this.gold_cost = 8
@@ -28,6 +28,6 @@ export default class Regen extends Forging{
     canBeForged(): boolean {
         if(!this.item || !this.item.player) return false
 
-        return this.item.player.base_regen_time > this.max_value
+        return this.value < this.max_value
     }
 }

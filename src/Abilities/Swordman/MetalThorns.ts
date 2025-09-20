@@ -50,6 +50,8 @@ export default class MetalThorns extends SwordmanAbility{
         this.owner.hit = true
         
         let status = new MetalThornsStatus(this.owner.time)
+        status.frequency = this.owner.getAttackSpeed()
+
         status.setDuration(10000)
         
         this.owner.level.setStatus(this.owner, status)

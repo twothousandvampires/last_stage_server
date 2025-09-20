@@ -2,6 +2,7 @@ import Client from "../Client"
 import ChargedArmour from "../Items/ChargedArmour"
 import ChargedBow from "../Items/ChargedBow"
 import Cloak from "../Items/Cloak"
+import CrystalGreaves from "../Items/CrystalGreaves"
 import DaggerOfSmoke from "../Items/DaggerOfSmoke"
 import DoomMantia from "../Items/DoomMantia"
 import EmeraldKnife from "../Items/EmeraldKnife"
@@ -168,7 +169,10 @@ export default class Builder{
         }
         else if(item_name === 'solar spear'){
             return new SolarSpear()
-        }                
+        }
+        else if(item_name === 'crystal greaves'){
+            return new CrystalGreaves()
+        }                      
     }
 
     static createForging(name: string, item: Item){

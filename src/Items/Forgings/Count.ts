@@ -5,7 +5,7 @@ export default class Count extends Forging {
 
     constructor(item: Item){
         super(item)
-        this.max_value = 10
+        this.max_value = 5
         this.name = 'count'
         this.description = 'increases count of projectiles etc'
         this.gold_cost = 10
@@ -20,6 +20,6 @@ export default class Count extends Forging {
     }
 
     canBeForged(): boolean {
-        return this.item.count != undefined && (this.item.count < this.max_value)
+        return this.item.count != undefined && (this.value < this.max_value)
     }
 }
