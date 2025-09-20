@@ -7,10 +7,10 @@ export default class BlockChance extends Forging {
 
     constructor(item: Item){
         super(item)
-        this.max_value = 90
+        this.max_value = 12
         this.name = 'block chance'
         this.description = 'increase a chance to block'
-        this.gold_cost = 10
+        this.gold_cost = 8
     }
 
     forge(){
@@ -28,6 +28,6 @@ export default class BlockChance extends Forging {
     canBeForged(): boolean {
         if(!this.item || !this.item.player) return false
 
-        return this.item.player.block_chance < this.max_value
+        return this.value < this.max_value
     }
 }

@@ -78,7 +78,7 @@ export default class Dash extends SwordmanAbility{
         let ability = this
         let count = this.owner.getTargetsCount()
         let a_speed = ability.end_timeout
-        let bonus = 2000 - this.owner.getCastSpeed()
+        let bonus = Math.round((1700 - this.owner.getAttackSpeed()) / 2)
         
         if(bonus > 0){
             a_speed += bonus
@@ -109,6 +109,9 @@ export default class Dash extends SwordmanAbility{
                 if(!owner.isOutOfMap(owner.x + next_step_x, owner.y + next_step_y)){
                     owner.addToPoint(next_step_x, next_step_y)
                 }
+
+                let box = owner.getBoxElipse()
+                box.r = owner.attack_radius
 
                 owner.level.enemies.forEach((elem) => {
                     if(!ability.hited.includes(elem) && Func.elipseCollision(owner.getBoxElipse(), elem.getBoxElipse())){

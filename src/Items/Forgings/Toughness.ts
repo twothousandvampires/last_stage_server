@@ -7,10 +7,10 @@ export default class Toughness extends Forging{
 
     constructor(item: Item){
         super(item)
-        this.max_value = 100
+        this.max_value = 20
         this.name = 'toughness'
         this.description = 'increases your chance to avoid damaged state'
-        this.gold_cost = 4
+        this.gold_cost = 5
     }
 
     forge(){
@@ -28,6 +28,6 @@ export default class Toughness extends Forging{
      canBeForged(): boolean {
         if(!this.item || !this.item.player) return false
 
-        return this.item.player.avoid_damaged_state_chance < this.max_value
+        return this.value < this.max_value
     }
 }

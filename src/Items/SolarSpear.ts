@@ -13,7 +13,7 @@ export default class SolarSpear extends Item{
         super()
         this.name = 'solar spear'
         this.type = 1
-        this.description = 'when you pierce enemy there is a chance to create light nova which heals allies'
+        this.description = 'when you pierce enemy you create light nova which heals allies'
     }
     
     getSpecialForgings(): string[] {
@@ -26,7 +26,7 @@ export default class SolarSpear extends Item{
 
     trigger(player: Character, enemy: Enemy){
         if(this.disabled) return
-    
+        if(!enemy) return
         
         if(player.level.time - this.last_trigger >= this.frequency){
             this.last_trigger = player.level.time
@@ -36,7 +36,7 @@ export default class SolarSpear extends Item{
             player.level.effects.push(e)
 
             player.level.players.forEach(elem => {
-                if(Func.distance(elem, player) <= 12){
+                if(Func.distance(elem, enemy) <= 12){
                     elem.addLife()
                 }
             })

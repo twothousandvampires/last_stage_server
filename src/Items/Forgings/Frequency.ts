@@ -7,7 +7,7 @@ export default class Frequency extends Forging{
 
     constructor(item: Item){
         super(item)
-        this.max_value = 300
+        this.max_value = 500
         this.name = 'frequency'
         this.description = 'increases item frequency of procing'
         this.gold_cost = 5
@@ -15,9 +15,9 @@ export default class Frequency extends Forging{
 
     forge(){
         if(this.canBeForged() && this.costEnough()){
-            this.value ++
+            this.value += 50
             this.item.frequency -= 50
-             this.payCost()
+            this.payCost()
         }
     }
 
@@ -28,6 +28,6 @@ export default class Frequency extends Forging{
     canBeForged(): boolean {
         if(!this.item) return false
 
-        return this.item.frequency > this.max_value
+        return this.value < this.max_value
     }
 }

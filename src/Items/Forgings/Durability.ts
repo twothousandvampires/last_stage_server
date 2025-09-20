@@ -8,7 +8,7 @@ export default class Durability extends Forging{
 
     constructor(item: Item){
         super(item)
-        this.max_value = 20
+        this.max_value = 5
         this.name = 'durability'
         this.description = 'increases your durability'
         this.gold_cost = 5
@@ -18,7 +18,7 @@ export default class Durability extends Forging{
         if(this.canBeForged() && this.costEnough()){
             this.value += 1
             this.item.player.durability += 1
-             this.payCost()
+            this.payCost()
         }
     }
 
@@ -29,6 +29,6 @@ export default class Durability extends Forging{
     canBeForged(): boolean {
         if(!this.item || !this.item.player) return false
 
-        return this.item.player.durability < this.max_value
+        return this.value < this.max_value
     }
 }
