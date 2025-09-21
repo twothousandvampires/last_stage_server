@@ -26,7 +26,7 @@ export default class MagicSlime extends Enemy{
         this.life_status = 2
         this.create_chance = 25
         this.player_check_radius = 25
-        this.create_item_chance = 3
+        this.create_item_chance = 1
         this.getState()
     }
 

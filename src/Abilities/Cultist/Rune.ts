@@ -85,8 +85,16 @@ export default class Rune extends CultistAbility{
             rune.explosive = this.first_ability.explosive
             rune.second_detanation = this.first_ability.second_detanation
 
+            let t = this.getTarget()
+
             rune.setOwner(this)
-            rune.setPoint(hit_x, hit_y)
+            if(t){
+                rune.setPoint(t.x, t.y)
+            }
+            else{
+                rune.setPoint(hit_x, hit_y)
+            }
+            
 
             this.level.binded_effects.push(rune)
             
