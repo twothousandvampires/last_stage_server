@@ -121,6 +121,8 @@ export default class WeaponThrow extends SwordmanAbility{
                 this.owner.level.projectiles.push(add_proj2)
             }
         }
+
+        this.owner.target = undefined
     }
     act(){
         if(this.action && !this.hit){
