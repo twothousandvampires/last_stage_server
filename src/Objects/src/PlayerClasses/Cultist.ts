@@ -18,7 +18,6 @@ import Blood from "../../Effects/Blood";
 import ToothExplode from "../../Effects/ToothExplode";
 import Character from "../Character";
 import Unit from "../Unit";
-import Flyer from "./Flyer";
 
 export default class Cultist extends Character{
     
@@ -45,9 +44,9 @@ export default class Cultist extends Character{
         this.weapon_angle = 1.6
         this.attack_point_radius = 4.3
         this.attack_radius = 7
-        this.attack_speed = 1700
+        this.attack_speed = 1550
         this.might = 100
-        this.cast_speed = 1700
+        this.cast_speed = 1600
         this.name = 'cultist'
         this.move_speed = 0.43
         this.avoid_damaged_state_chance = 15
@@ -57,7 +56,6 @@ export default class Cultist extends Character{
         this.hit_x = undefined
         this.hit_y = undefined
 
-        this.life_status = 3
         this.base_regen_time = 8500
         this.service = false
         this.conduct_of_pain = false
