@@ -8,7 +8,7 @@ export default class GraceShard extends Effect{
     constructor(level: Level){
         super(level)
         this.name = 'grace shard'
-        this.box_r = 1.2
+        this.box_r = 1.4
         this.time = Date.now()
     }
 
