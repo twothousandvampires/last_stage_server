@@ -22,7 +22,7 @@ export default class Solid extends Enemy{
         this.life_status = 4
         this.hit_x = 0
         this.hit_y = 0
-        this.armour_rate = 10
+        this.armour_rate = 15
         this.create_grace_chance = 50
         this.cooldown_attack = 3000
         this.create_chance = 80

@@ -18,10 +18,11 @@ export default class Bones extends Enemy{
         this.attack_radius = 5
         this.attack_speed = 1500
         this.cooldown_attack = 2200
-        this.life_status = 2
+        this.life_status = 1
         this.spawn_time = 1600
-        this.ressurect_chance = 40
-        this.gold_revard = 2
+        this.ressurect_chance = 60
+        this.armour_rate = 10
+        this.gold_revard = 1
         this.weapon_angle = 0.8
         this.getState()
     }
@@ -46,6 +47,7 @@ export default class Bones extends Enemy{
         else{
             this.state = 'dead_with_skull'
             this.stateAct = this.deadAct
+            this.ressurect_chance -= 10
             setTimeout(() => {
                 this.setState(this.setResurectAct)
             }, 3000)
