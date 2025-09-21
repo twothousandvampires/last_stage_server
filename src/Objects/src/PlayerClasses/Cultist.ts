@@ -290,6 +290,7 @@ export default class Cultist extends Character{
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)
             this.level.effects.push(e)
+            this.succesefulArmourBlock(unit)
             return
         }
 

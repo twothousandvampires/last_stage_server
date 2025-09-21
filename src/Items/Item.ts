@@ -136,6 +136,14 @@ export default abstract class Item {
             name: "crystal greaves",
             description: 'You are fragile (15%) when you move, nearby enemies are frigile when you stand'
         },
+        {
+            name: "flying shards",
+            description: 'When you block hit with armour there is a chance to realise metal shards to enemies'
+        },
+        {
+            name: "pale blade",
+            description: 'when you hit enemy there is a chance to summon spectral blade which will fight on you side'
+        },
     ]
 
     static forging_list_all = [

@@ -662,7 +662,7 @@ export default class Flyer extends Character{
             e.z = Func.random(2, 8)
 
             this.level.effects.push(e)
-
+            this.succesefulArmourBlock(unit)
             return
         }
 
