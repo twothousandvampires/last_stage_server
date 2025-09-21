@@ -74,6 +74,7 @@ export default abstract class Character extends Unit{
     when_start_block_triggers: any = []
     when_enemy_die: any = []
     on_pierce_triggers: any = []
+    block_with_armour_triggers: any = []
 
     avoid_damaged_state_chance: number = 0
     can_be_lethaled: boolean = true
@@ -136,6 +137,12 @@ export default abstract class Character extends Unit{
 
     getCastSpeed(){
         return this.cast_speed
+    }
+
+    succesefulArmourBlock(target){
+        this.block_with_armour_triggers.forEach(elem => {
+            elem.trigger(this, target)
+        })
     }
 
     protected useNotUtility(): void{
