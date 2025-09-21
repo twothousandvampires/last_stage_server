@@ -8,7 +8,7 @@ import Forging from "./Forging";
 export default class IgniteWhenHit extends Forging{
 
     value: number = 0
-    freq: number = 2000
+    freq: number = 4000
     last_trigger_time: number = 0
 
 
@@ -41,7 +41,7 @@ export default class IgniteWhenHit extends Forging{
         if(player.level.time - this.last_trigger_time >= this.freq){
             this.last_trigger_time = player.level.time
             let box = target.getBoxElipse()
-            box.r = 14
+            box.r = 12
 
             let targets = player.level.enemies.concat(player.level.players.filter(elem => elem != player)).filter(elem => !elem.is_dead && Func.elipseCollision(elem.getBoxElipse() ,box))
             

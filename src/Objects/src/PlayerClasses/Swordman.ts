@@ -40,7 +40,7 @@ export default class Swordman extends Character{
 
         this.weapon_angle = 0.8
         this.attack_radius = 7
-        this.attack_speed = 1500
+        this.attack_speed = 1400
         this.name = 'swordman'
         this.move_speed = 0.5
         this.avoid_damaged_state_chance = 10
@@ -50,7 +50,6 @@ export default class Swordman extends Character{
         this.resource = 0
         this.max_resource = 7
 
-        this.life_status = 3
         this.base_regen_time = 9000
         this.recent_kills = []
         this.block_chance = 50

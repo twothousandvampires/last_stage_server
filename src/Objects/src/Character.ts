@@ -24,6 +24,7 @@ import Unit from "./Unit"
 export default abstract class Character extends Unit{
 
     static MAX_ITEMS_TO_BUY: number = 3
+    static MAX_LIFE: number = 4
 
     action_end: number = 0
     pressed: { [key: string]: any, } = {}
@@ -113,11 +114,13 @@ export default abstract class Character extends Unit{
     start_move_time: number = 0
     end_move_time: number = 0
 
+
+
     constructor(level: Level){
         super(level)
         this.box_r = 2.5
         this.light_r = 16
-    
+        this.life_status = 4
         this.getState()
     }
 
@@ -776,7 +779,7 @@ export default abstract class Character extends Unit{
         for(let i = 0; i < count; i++){
             let previous = this.life_status
 
-            if(previous >= 3){
+            if(previous >= Character.MAX_LIFE){
                 if(ignore_limit || (this.lust_for_life && Func.chance(this.getSecondResource() * 4, this.is_lucky))){
 
                 }
@@ -1030,7 +1033,7 @@ export default abstract class Character extends Unit{
             return t
         }
 
-        
+
         return undefined
     }
     

@@ -40,7 +40,6 @@ export default class Flyer extends Character{
         this.armour_rate = 0
         this.resource = 0
         this.max_resource = 7
-        this.life_status = 3
         this.base_regen_time = 11000
         this.takeoff = false
         this.allow_mana_regen_while_def = false
