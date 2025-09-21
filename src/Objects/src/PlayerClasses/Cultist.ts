@@ -335,11 +335,11 @@ export default class Cultist extends Character{
                 teach: (character: Character) => {
                     if(character.first_ability && character.first_ability instanceof Rune){
                         character.first_ability.runefield = true
-                        character.first_ability.cost ++
+                        character.first_ability.cost += 1
                     }
                 },
                 cost: 5,
-                desc: 'you will create additional rune for each resourse but now it has coldown for each rune created by this way'
+                desc: 'you will create additional rune for each resourse but now it also increased cost by 1'
             },
             {
                 name: 'explosive runes',
@@ -350,7 +350,6 @@ export default class Cultist extends Character{
                 teach: (character: Character) => {
                     if(character.first_ability && character.first_ability instanceof Rune){
                         character.first_ability.explosive = true
-                        character.first_ability.cost ++
                     }
                 },
                 cost: 2,
@@ -379,10 +378,11 @@ export default class Cultist extends Character{
                 teach: (character: Character) => {
                     if(character.first_ability && character.first_ability instanceof Rune){
                         character.first_ability.second_detanation = true
+                        character.first_ability.cost ++
                     }
                 },
                 cost: 1,
-                desc: 'your runes have a chance to explode additional time'
+                desc: 'your runes have a chance to explode additional time but now it also increased cost by 1'
             },
             {
                 name: 'soul shatter',
