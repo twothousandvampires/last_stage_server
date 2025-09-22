@@ -53,8 +53,6 @@ export default class BossFight extends Scenario {
                     elem.takeDamage(undefined)
                 })
 
-                //todo return this method
-                level.need_to_check_grace = false
             }
         },
         {
@@ -164,9 +162,13 @@ export default class BossFight extends Scenario {
             elem.setDyingAct()
         })
 
-        level.need_to_check_grace = true
         level.boss_kills_trashold *= 2.5
-        level.setScript(new Default())
+        if(level.previuos_script){
+            level.script = level.previuos_script
+        }
+        else{
+            level.setScript(new Default())
+        }   
     }
 
     start(level: Level): void {

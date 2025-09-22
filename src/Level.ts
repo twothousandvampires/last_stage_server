@@ -82,13 +82,14 @@ export default class Level{
     public ambient_time: number = 0
     public check_grace_time: number = 0
 
-    private need_to_check_grace: boolean = true
+
     private game_loop: any
-    private script: Scenario = new Default()
+    public script: Scenario = new Default()
     private status_pull: Status[] = []
     private last_id: number = 0
     public kill_count: number = 0
     private grace_trashold: number = 5
+    public previuos_script: Scenario | undefined 
     
     constructor(private server: GameServer){
         this.server = server
@@ -220,11 +221,6 @@ export default class Level{
             this.addSound('ambient', Func.random(20, 120), Func.random(10, 110))
         }
 
-        if(this.time > this.check_grace_time + 4000){
-            this.check_grace_time = this.time
-            this.checkGraceCreating()
-        }
-
         this.players.forEach(player => {
             player.act(this.time)
         })
@@ -261,38 +257,6 @@ export default class Level{
                 status.act(this.time)
             }
         })
-    }
-
-    private checkGraceCreating(): void{
-        if(!this.need_to_check_grace) return
-
-        let diff: number = this.grace_trashold - this.kill_count
-        if(diff > 0) return
-
-        let exist: boolean = this.binded_effects.some(elem => elem instanceof Grace)
-
-        if(exist){
-            this.grace_trashold += 5
-            return
-        }
-
-        diff = Math.abs(diff)
-        let chance = 20 + diff
-
-       
-        if(Func.chance(chance)){
-            this.grace_trashold *= 2
-            let portal: Grace = new Grace(this)
-            while(portal.isOutOfMap()){
-                let random_player: Character = this.players[Math.floor(Math.random() * this.players.length)]
-                let angle: number = Math.random() * 6.28
-                let distance: number = Func.random(15, 30)
-
-                portal.setPoint(random_player.x + Math.sin(angle) * distance, random_player.y + Math.cos(angle) * distance)
-            }
-
-            this.binded_effects.push(portal)
-        }
     }
 
     removeEnemy(enemy: Enemy | undefined){

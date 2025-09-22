@@ -34,7 +34,7 @@ export default class MoltenHelm extends Item{
 
             character.level.setStatus(character, s, true)
             let box = character.getBoxElipse()
-            box.r = 20
+            box.r = 12
             character.level.enemies.forEach(elem => {
                 if(Func.elipseCollision(box, elem.getBoxElipse())){
                     let s = new Ignite(time)

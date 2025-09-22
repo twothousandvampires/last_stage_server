@@ -66,6 +66,7 @@ export default class WanderingEvilEffect extends Effect {
 
         if(time - this.start >= 12000){
             this.delete()
+            return
         }
         
         if(!this.target){

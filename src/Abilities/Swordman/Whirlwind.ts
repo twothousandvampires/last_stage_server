@@ -10,6 +10,7 @@ export default class Whirlwind extends SwordmanAbility{
     cost: number
     blood_harvest: boolean
     fan_of_swords: boolean
+    courage_when_use: number = 0
 
     constructor(owner: Swordman){
         super(owner)
@@ -37,11 +38,13 @@ export default class Whirlwind extends SwordmanAbility{
             this.owner.stateAct = this.act
             this.owner.action_time = action_time
             
+            this.courage_when_use = this.owner.getSecondResource()
 
             this.owner.cancelAct = () => {
                 this.owner.is_attacking = false
                 this.owner.action = false
                 this.owner.hit = false
+                this.courage_when_use = 0
             }
         }
         else{
@@ -55,15 +58,13 @@ export default class Whirlwind extends SwordmanAbility{
         if(this.action && !this.hit){
             this.hit = true
 
-            let second = this.getSecondResource()
-           
             let enemies = this.level.enemies
             let players = this.level.players
 
             let targets = enemies.concat(players)
 
             let e = this.getBoxElipse()
-            e.r += 5 + Math.ceil(second / 2)
+            e.r += this.attack_radius + 2
 
             let was_hit = false
 
@@ -140,7 +141,9 @@ export default class Whirlwind extends SwordmanAbility{
         }
         else if(this.action_is_end){
             this.action_is_end = false
-            let proc = this.getSecondResource() * 10
+            
+            let proc = this.third_ability.courage_when_use * 7
+
             if(proc > 80){
                 proc = 80
             }
