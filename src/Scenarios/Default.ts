@@ -178,9 +178,10 @@ export default class Default extends Scenario{
             while(enemy.isOutOfMap()){
                 let players_in_zone = level.players.filter(elem => elem.zone_id === 0)
                 let random_player = players_in_zone[Math.floor(Math.random() * players_in_zone.length)]
+
                 let angle = Math.random() * 6.28
-                let distance_x = Func.random(15, 30)
-                let distance_y = Func.random(15, 30)
+                let distance_x = Func.random(10, 30)
+                let distance_y = Func.random(10, 30)
 
                 enemy.setPoint(random_player.x + Math.sin(angle) * distance_x, random_player.y + Math.cos(angle) * distance_y)
             }
@@ -210,15 +211,20 @@ export default class Default extends Scenario{
             level.enemies.push(enemy)   
         }
 
-        if(this.waves_created % 40 === 0){
+        console.log(this.waves_created)
+
+        if(this.waves_created % 20 === 0){
             this.add_e_armour += 2
             this.add_e_pierce += 2
+            console.log('add armour')
+        }
+        if(this.waves_created % 40 === 0){
+            this.add_e_life += 1
+            console.log('add life')
         }
         if(this.waves_created % 80 === 0){
-            this.add_e_life += 1
-        }
-        if(this.waves_created % 160 === 0){
             this.add_e_speed += 0.1
+            console.log('add speed')
         } 
     }
 }
