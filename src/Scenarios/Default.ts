@@ -154,11 +154,11 @@ export default class Default extends Scenario{
                         enemy = new PileOfEvil(level)
                         break;
                     case 'frost':
-                            enemy = new PileOfFrost(level)
-                            break;
+                        enemy = new PileOfFrost(level)
+                        break;
                     case 'blind':
-                            enemy = new PileOfVeil(level)
-                            break;
+                        enemy = new PileOfVeil(level)
+                        break;
                     case 'shock':
                         enemy =  new PileOfStorm(level)
                         break;

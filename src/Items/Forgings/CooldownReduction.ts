@@ -8,10 +8,10 @@ export default class CooldownReduction extends Forging{
 
     constructor(item: Item){
         super(item)
-        this.max_value = 95
+        this.max_value = 20
         this.name = 'cooldown reduction'
         this.description = 'reduces your cooldowns'
-        this.gold_cost = 6
+        this.gold_cost = 8
     }
 
     forge(){
@@ -29,6 +29,6 @@ export default class CooldownReduction extends Forging{
     canBeForged(): boolean {
         if(!this.item || !this.item.player) return false
 
-        return this.item.player.cd_reduction < this.max_value
+        return this.value < this.max_value
     }
 }

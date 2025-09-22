@@ -41,41 +41,40 @@ export default class Func{
 
         let l = 1 - Math.abs(0.5 * Math.cos(a))
 
-        return Math.sqrt(((one.x - two.x) ** 2) + ((one.y - two.y) ** 2)) * l
+        return Math.sqrt( ((one.x - two.x) ** 2) + ( ((one.y - two.y) / l) ** 2 ) ) 
     }
 
-    public static elipseCollision(el: Elip, el2: Elip){
+    public static elipseCollision(one: Elip, two: Elip){
 
-        let unit_angle = Func.angle(el.x, el.y, el2.x, el2.y)
-        let unit1_angle = Func.angle(el2.x, el2.y, el.x, el.y)
+        let a1 = one.r; 
+        let b1 = one.r / 2;
+        let a2 = two.r; 
+        let b2 = two.r / 2;
+    
+        let maxDistanceX = a1 + a2;
+        let maxDistanceY = b1 + b2;
 
-        let angle = Math.atan2((el.r / 2) * Math.cos(unit_angle), el.r * Math.sin(unit_angle))
-
-        let d = Math.cos(angle) * el.r + el.x
-        let d2 = Math.sin(angle) * (el.r / 2) + el.y
-       
-        let res = (d - el2.x) ** 2 / el2.r ** 2 + (d2 - el2.y) ** 2 / (el2.r / 2) ** 2 <= 1
-
-        if(res){
-            return res
+        if (Math.abs(one.x - two.x) > maxDistanceX || Math.abs(one.y - two.y) > maxDistanceY) {
+            return false; 
         }
 
-        angle = Math.atan2((el2.r / 2) * Math.cos(unit1_angle), el2.r * Math.sin(unit1_angle))
-
-        d = Math.cos(angle) * el2.r + el2.x
-        d2 = Math.sin(angle) * (el2.r / 2) + el2.y
-       
-        res = (d - el.x) ** 2 / el.r ** 2 + (d2 - el.y) ** 2 / (el.r / 2) ** 2 <= 1
-
-        if(res){
-            return res
+        let dx = two.x - one.x;
+        let dy = two.y - one.y;
+        let centerDistanceSquared = dx * dx + dy * dy;
+    
+        if (centerDistanceSquared === 0) {
+            return true;
         }
+    
+        const distance = Math.sqrt(centerDistanceSquared);
+        const nx = dx / distance;
+        const ny = dy / distance;
+    
+        // "Радиус" каждого эллипса в направлении к другому эллипсу
+        const r1 = Math.sqrt((a1 * nx) ** 2 + (b1 * ny) ** 2);
+        const r2 = Math.sqrt((a2 * nx) ** 2 + (b2 * ny) ** 2);
 
-        if(el.x === el2.x && el.y === el2.y){
-            return true
-        }
-
-        return false
+        return distance <= r1 + r2;
     }
     public static checkAngle(one: GameObject, two: GameObject, angle: number, diff_check: number){
        

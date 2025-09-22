@@ -24,17 +24,17 @@ export default class Specter extends Enemy{
         this.cooldown_attack = 2000
         this.attack_radius = 7
         this.attack_speed = 2000
-        this.life_status = 2
+        this.life_status = 3
         this.spawn_time = 1600
         this.ressurect_chance = 30
-        this.armour_rate = 70
+        this.armour_rate = 45
         this.want_to_cast = true
         this.can_cast_vortex = true
         this.can_cast_seekers = true
         this.create_grace_chance = 90
         this.create_chance = 90
         this.gold_revard = 5
-        this.create_item_chance = 12
+        this.create_item_chance = 8
 
         this.getState()
     }

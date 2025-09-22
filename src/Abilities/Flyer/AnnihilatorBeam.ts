@@ -61,7 +61,7 @@ export default class AnnihilatorBeam extends FlyerAbility{
 
             enemies.forEach(elem => {
                 if(Func.elipseCollision(hit, elem.getBoxElipse())){
-                    elem.takeDamage(this, {
+                    elem.takeDamage(this.owner, {
                         burn: true,
                     })
                 }

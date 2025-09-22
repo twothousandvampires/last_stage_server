@@ -8,7 +8,7 @@ export default class Critical extends Forging{
 
     constructor(item: Item){
         super(item)
-        this.max_value = 100
+        this.max_value = 25
         this.name = 'critical'
         this.description = 'increases your chance to deal double damage'
         this.gold_cost = 5
@@ -18,7 +18,7 @@ export default class Critical extends Forging{
         if(this.canBeForged() && this.costEnough()){
             this.value ++
             this.item.player.critical += 1
-             this.payCost()
+            this.payCost()
         }
     }
 
@@ -29,6 +29,6 @@ export default class Critical extends Forging{
     canBeForged(): boolean {
         if(!this.item || !this.item.player) return false
 
-        return this.item.player.critical < this.max_value
+        return this.value < this.max_value
     }
 }

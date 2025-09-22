@@ -1,4 +1,3 @@
-import Character from "../../Objects/src/Character";
 import Item from "../Item";
 import Forging from "./Forging";
 
@@ -8,17 +7,17 @@ export default class Pierce extends Forging{
 
     constructor(item: Item){
         super(item)
-        this.max_value = 100
+        this.max_value = 45
         this.name = 'pierce'
         this.description = 'provides you a chance to ignore enemy armour'
-        this.gold_cost = 6
+        this.gold_cost = 5
     }
 
     forge(){
         if(this.canBeForged() && this.costEnough()){
             this.value ++
             this.item.player.pierce += 1
-             this.payCost()
+            this.payCost()
         }
     }
 
@@ -29,6 +28,6 @@ export default class Pierce extends Forging{
     canBeForged(): boolean {
         if(!this.item || !this.item.player) return false
 
-        return this.item.player.pierce < this.max_value
+        return this.value < this.max_value
     }
 }

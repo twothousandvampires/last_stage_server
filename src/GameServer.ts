@@ -36,14 +36,21 @@ export default class GameServer{
         this.level.start(this.start_scenario_name)
     }
 
-    private updateLobby(): void{
-        let data: Client[] = Array.from(this.clients.values())
+    getAllPlayersItems(data){
+        
         let p_items: string[] = []
 
         data.forEach(elem => {
             p_items.push(...elem.template.item.map((i => i.name)))
         })
 
+        return p_items
+
+    }
+
+    private updateLobby(): void{
+        let data: Client[] = Array.from(this.clients.values())
+        let p_items = this.getAllPlayersItems(data)
         let list = item.list
         let available = []
 
@@ -209,6 +216,10 @@ export default class GameServer{
                 })
 
                 socket.on('pick_item', (item_name: string) => {
+                    let data: Client[] = Array.from(this.clients.values())
+                    let items = this.getAllPlayersItems(data)
+                    if(items.some(elem => elem === item_name)) return
+
                     let item = Builder.createItem(item_name)
 
                     if(client.template.item.length >= client.template.max_items){

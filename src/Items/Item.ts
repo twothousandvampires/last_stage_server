@@ -130,7 +130,19 @@ export default abstract class Item {
         },
         {
             name: "solar spear",
-            description: 'when you pierce enemy there is a chance to create light nova which heals allies'
+            description: 'when you pierce enemy you create light nova which heals allies'
+        },
+        {
+            name: "crystal greaves",
+            description: 'You are fragile (15%) when you move, nearby enemies are frigile when you stand'
+        },
+        {
+            name: "flying shards",
+            description: 'When you block hit with armour there is a chance to realise metal shards to enemies'
+        },
+        {
+            name: "pale blade",
+            description: 'when you hit enemy there is a chance to summon spectral blade which will fight on you side'
         },
     ]
 
@@ -138,7 +150,8 @@ export default abstract class Item {
         'critical',
         'pierce',
         'sacredness',
-        'toughness'
+        'toughness',
+        'gold find',
     ]
 
     static forging_list_type_1 = [
@@ -161,7 +174,6 @@ export default abstract class Item {
         'will',
         'knowledge',
         'max resources',
-        'gold find',
         'cooldown reduction'
     ]
 

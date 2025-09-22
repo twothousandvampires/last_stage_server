@@ -2,10 +2,12 @@ import Client from "../Client"
 import ChargedArmour from "../Items/ChargedArmour"
 import ChargedBow from "../Items/ChargedBow"
 import Cloak from "../Items/Cloak"
+import CrystalGreaves from "../Items/CrystalGreaves"
 import DaggerOfSmoke from "../Items/DaggerOfSmoke"
 import DoomMantia from "../Items/DoomMantia"
 import EmeraldKnife from "../Items/EmeraldKnife"
 import FlameRing from "../Items/FlameRing"
+import FlyingShards from "../Items/FlyingShards"
 import Agility from "../Items/Forgings/Agility"
 import ArmourRate from "../Items/Forgings/ArmourRate"
 import AttackSpeed from "../Items/Forgings/AttackSpeed"
@@ -37,6 +39,7 @@ import GlassSword from "../Items/GlassSword"
 import IceBelt from "../Items/IceBelt"
 import Item from "../Items/Item"
 import MoltenHelm from "../Items/MoltenHelm"
+import PaleBlade from "../Items/PaleBlade"
 import RedPotion from "../Items/RedPotion"
 import RingOfTransmutation from "../Items/RingOfTransmutation"
 import SearchingHeart from "../Items/SearchingHeart"
@@ -168,7 +171,16 @@ export default class Builder{
         }
         else if(item_name === 'solar spear'){
             return new SolarSpear()
-        }                
+        }
+        else if(item_name === 'crystal greaves'){
+            return new CrystalGreaves()
+        }
+        else if(item_name === 'flying shards'){
+            return new FlyingShards()
+        }
+        else if(item_name === 'pale blade'){
+            return new PaleBlade()
+        }                 
     }
 
     static createForging(name: string, item: Item){

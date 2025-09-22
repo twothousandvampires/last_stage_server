@@ -24,6 +24,7 @@ import Unit from "./Unit"
 export default abstract class Character extends Unit{
 
     static MAX_ITEMS_TO_BUY: number = 3
+    static MAX_LIFE: number = 4
 
     action_end: number = 0
     pressed: { [key: string]: any, } = {}
@@ -74,6 +75,7 @@ export default abstract class Character extends Unit{
     when_start_block_triggers: any = []
     when_enemy_die: any = []
     on_pierce_triggers: any = []
+    block_with_armour_triggers: any = []
 
     avoid_damaged_state_chance: number = 0
     can_be_lethaled: boolean = true
@@ -109,12 +111,16 @@ export default abstract class Character extends Unit{
     no_armour: boolean = false
     using_ability: any
     items_to_buy: Item[] = []
+    start_move_time: number = 0
+    end_move_time: number = 0
+
+
 
     constructor(level: Level){
         super(level)
         this.box_r = 2.5
         this.light_r = 16
-    
+        this.life_status = 4
         this.getState()
     }
 
@@ -134,6 +140,12 @@ export default abstract class Character extends Unit{
 
     getCastSpeed(){
         return this.cast_speed
+    }
+
+    succesefulArmourBlock(target){
+        this.block_with_armour_triggers.forEach(elem => {
+            elem.trigger(this, target)
+        })
     }
 
     protected useNotUtility(): void{
@@ -407,7 +419,7 @@ export default abstract class Character extends Unit{
                         character.pierce += 3
                     },
                     cost: 2,
-                    desc: 'increases a chance to ignore armour'
+                    desc: 'increases a pierce rating'
                 },
                 {
                     name: 'critical hit',
@@ -767,7 +779,7 @@ export default abstract class Character extends Unit{
         for(let i = 0; i < count; i++){
             let previous = this.life_status
 
-            if(previous >= 3){
+            if(previous >= Character.MAX_LIFE){
                 if(ignore_limit || (this.lust_for_life && Func.chance(this.getSecondResource() * 4, this.is_lucky))){
 
                 }
@@ -1021,6 +1033,7 @@ export default abstract class Character extends Unit{
             return t
         }
 
+
         return undefined
     }
     
@@ -1128,20 +1141,26 @@ export default abstract class Character extends Unit{
         }
     }
 
-    private moveAct(): void{
+    private moveAct(tick: number): void{
         if(this.direct_angle_to_move){
             this.directMove()
             return
         }
         if(this.moveIsPressed() && this.canMove()){
-            this.is_moving = true
+            if(!this.is_moving){
+                this.is_moving = true
+                this.start_move_time = tick
+            }
             if(this.state === 'idle'){
                 this.state = 'move'
             }
         }
         else if(!this.moveIsPressed() || !this.canMove()){
             this.reaA()
-            this.is_moving = false
+            if(this.is_moving){
+                this.is_moving = false
+                this.end_move_time = tick
+            }
             if(this.state === 'move'){
                 this.state = 'idle'
             }
@@ -1347,7 +1366,7 @@ export default abstract class Character extends Unit{
         }
        
         this.stateAct(time)
-        this.moveAct()
+        this.moveAct(time)
         this.regen()
 
         if(this.action_impact && time >= this.action_impact){

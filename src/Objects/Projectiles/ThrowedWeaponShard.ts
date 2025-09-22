@@ -40,15 +40,8 @@ export class ThrowedWeaponShard extends Projectiles{
         for(let i = 0; i < this.level.players.length; i++){
             let p = this.level.players[i]
 
-            if(Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
-            
+            if(p != this.owner && Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
                 p.takeDamage(this.owner)
-
-                if(!this.point_added){
-                    this.owner?.addPoint()
-                    this.point_added = true
-                }
-                
                 this.impact()
             }
         }
@@ -57,14 +50,7 @@ export class ThrowedWeaponShard extends Projectiles{
             let e = this.level.enemies[i]
 
             if(!e.is_dead && Func.elipseCollision(this.getBoxElipse(), e.getBoxElipse())){
-                
                 e.takeDamage(this.owner)
-    
-                if(!this.point_added){
-                    this.owner?.addPoint()
-                    this.point_added = true
-                }
-
                 this.impact()
             }
         }

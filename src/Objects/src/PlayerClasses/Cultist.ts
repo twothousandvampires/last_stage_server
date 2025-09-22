@@ -18,7 +18,6 @@ import Blood from "../../Effects/Blood";
 import ToothExplode from "../../Effects/ToothExplode";
 import Character from "../Character";
 import Unit from "../Unit";
-import Flyer from "./Flyer";
 
 export default class Cultist extends Character{
     
@@ -45,9 +44,9 @@ export default class Cultist extends Character{
         this.weapon_angle = 1.6
         this.attack_point_radius = 4.3
         this.attack_radius = 7
-        this.attack_speed = 1700
+        this.attack_speed = 1550
         this.might = 100
-        this.cast_speed = 1700
+        this.cast_speed = 1600
         this.name = 'cultist'
         this.move_speed = 0.43
         this.avoid_damaged_state_chance = 15
@@ -57,7 +56,6 @@ export default class Cultist extends Character{
         this.hit_x = undefined
         this.hit_y = undefined
 
-        this.life_status = 3
         this.base_regen_time = 8500
         this.service = false
         this.conduct_of_pain = false
@@ -290,6 +288,7 @@ export default class Cultist extends Character{
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)
             this.level.effects.push(e)
+            this.succesefulArmourBlock(unit)
             return
         }
 
@@ -334,11 +333,11 @@ export default class Cultist extends Character{
                 teach: (character: Character) => {
                     if(character.first_ability && character.first_ability instanceof Rune){
                         character.first_ability.runefield = true
-                        character.first_ability.cost ++
+                        character.first_ability.cost += 1
                     }
                 },
                 cost: 5,
-                desc: 'you will create additional rune for each resourse but now it has coldown for each rune created by this way'
+                desc: 'you will create additional rune for each resourse but now it also increased cost by 1'
             },
             {
                 name: 'explosive runes',
@@ -349,7 +348,6 @@ export default class Cultist extends Character{
                 teach: (character: Character) => {
                     if(character.first_ability && character.first_ability instanceof Rune){
                         character.first_ability.explosive = true
-                        character.first_ability.cost ++
                     }
                 },
                 cost: 2,
@@ -378,10 +376,11 @@ export default class Cultist extends Character{
                 teach: (character: Character) => {
                     if(character.first_ability && character.first_ability instanceof Rune){
                         character.first_ability.second_detanation = true
+                        character.first_ability.cost ++
                     }
                 },
                 cost: 1,
-                desc: 'your runes have a chance to explode additional time'
+                desc: 'your runes have a chance to explode additional time but now it also increased cost by 1'
             },
             {
                 name: 'soul shatter',

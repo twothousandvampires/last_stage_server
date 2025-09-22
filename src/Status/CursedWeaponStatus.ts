@@ -12,7 +12,7 @@ export default class CursedWeaponStatus extends Status{
         this.unit = unit
         if(this.unit instanceof Character){
             this.unit.attack_radius += 4
-            this.unit.attack_speed -= 500
+            this.unit.attack_speed -= 400
 
             this.unit.newStatus({
                 name: 'cursed weapon',
@@ -27,7 +27,7 @@ export default class CursedWeaponStatus extends Status{
     }
 
     trigger(){
-        if(Func.chance(10)){
+        if(Func.chance(15, this.unit.is_lucky)){
             this.unit.addLife(1)
         }
     }
@@ -35,7 +35,7 @@ export default class CursedWeaponStatus extends Status{
     clear(){
         if(this.unit instanceof Character){
             this.unit.attack_radius -= 4
-            this.unit.attack_speed += 500
+            this.unit.attack_speed += 400
             if(!Func.chance(this.unit.getSecondResource() * 10)){
                 this.unit.avoid_damaged_state_chance += 100
                 this.unit.takePureDamage()

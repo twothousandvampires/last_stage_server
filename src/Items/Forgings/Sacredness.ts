@@ -7,16 +7,16 @@ export default class Sacredness extends Forging{
 
     constructor(item: Item){
         super(item)
-        this.max_value = 100
+        this.max_value = 10
         this.name = 'sacredness'
         this.description = 'increases your chance to get grace after killing enemy'
-        this.gold_cost = 10
+        this.gold_cost = 8
     }
 
     forge(){
         if(this.canBeForged() && this.costEnough()){
-            this.value += 2
-            this.item.player.additional_chance_grace_create += 2
+            this.value += 1
+            this.item.player.additional_chance_grace_create += 1
              this.payCost()
         }
     }
@@ -28,6 +28,6 @@ export default class Sacredness extends Forging{
      canBeForged(): boolean {
         if(!this.item || !this.item.player) return false
 
-        return this.item.player.additional_chance_grace_create < this.max_value
+        return this.value < this.max_value
     }
 }

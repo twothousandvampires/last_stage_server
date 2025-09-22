@@ -19,7 +19,6 @@ export default class Rune extends CultistAbility{
         this.fast_detonation = false
         this.explosive = false
         this.second_detanation = false
-        this.cd = 0
     }
 
     canUse(): boolean {
@@ -85,8 +84,16 @@ export default class Rune extends CultistAbility{
             rune.explosive = this.first_ability.explosive
             rune.second_detanation = this.first_ability.second_detanation
 
+            let t = this.getTarget()
+
             rune.setOwner(this)
-            rune.setPoint(hit_x, hit_y)
+            if(t){
+                rune.setPoint(t.x, t.y)
+            }
+            else{
+                rune.setPoint(hit_x, hit_y)
+            }
+            
 
             this.level.binded_effects.push(rune)
             
@@ -118,16 +125,6 @@ export default class Rune extends CultistAbility{
                     rune.setPoint(x, y)
 
                     this.level.binded_effects.push(rune)
-                }
-
-                if(count){
-                    this.first_ability.used = true
-                    this.first_ability.cd = 1500 * count
-                    setTimeout(() => {
-                        this.first_ability.cd = 0
-                        this.first_ability.used = false
-
-                    }, this.first_ability.getCd())
                 }
             }
 

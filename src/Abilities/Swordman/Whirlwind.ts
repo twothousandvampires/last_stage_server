@@ -105,6 +105,10 @@ export default class Whirlwind extends SwordmanAbility{
             if(this.third_ability.fan_of_swords){
                 let count = this.getTargetsCount()
                 
+                if(count > 15){
+                    count = 15
+                }
+                
                 let zones = 6.28 / count
         
                 for(let i = 1; i <= count; i++){
