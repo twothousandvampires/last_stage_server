@@ -17,6 +17,8 @@ type Elip = {
 export default class Func{
 
     public static angle(x: number, y: number, x1: number, y1: number): number{
+        if(x === x1 && y === y1) return 0
+        
         let angle = Math.atan( (x - x1) / (y - y1) )
        
         if(x1 <= x && y1 <= y){

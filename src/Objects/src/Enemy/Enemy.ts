@@ -171,6 +171,7 @@ export abstract class Enemy extends Unit{
 
         if(instantly){
             this.life_status = 1
+            this.armour_rate = 0
         }
 
         if(this.checkArmour(unit) && !instantly){
@@ -196,11 +197,13 @@ export abstract class Enemy extends Unit{
         let is_pierce = unit && unit?.pierce > this.armour_rate && Func.chance(unit.pierce - this.armour_rate)
 
         if(is_pierce){
+            console.log("PIERCE")
             damage_value ++
             unit.succesefulPierce(this)
         }
        
         if(unit && unit?.critical && Func.chance(unit.critical)){
+            console.log("CRITICAL")
             damage_value *= 2
         }
 
@@ -213,7 +216,7 @@ export abstract class Enemy extends Unit{
         if(!instantly){
             unit?.succesefulHit(this)
         }
-        
+
         if(this.life_status <= 0){
             if(options?.explode){
                 this.dead_type = 'explode'
@@ -225,10 +228,6 @@ export abstract class Enemy extends Unit{
                 this.is_corpse = true
             }
             
-            if(!instantly){
-                this.level.addSound(this.getWeaponHitedSound())
-            }
-
             this.is_dead = true
             this.create_grace_chance += unit?.additional_chance_grace_create ? unit?.additional_chance_grace_create : 0
             unit?.succesefulKill(this)
@@ -238,6 +237,9 @@ export abstract class Enemy extends Unit{
             }
             
             this.setDyingAct()
+        }
+        if(!instantly){
+            this.level.addSound(this.getWeaponHitedSound())
         }
     }
 
