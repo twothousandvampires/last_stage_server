@@ -1,7 +1,6 @@
 import Func from "../../Func";
 import Level from "../../Level";
 import { Bone } from "../Projectiles/Bone";
-import Character from "../src/Character";
 import Effect from "./Effects";
 
 export default class WanderingEvilEffect extends Effect {

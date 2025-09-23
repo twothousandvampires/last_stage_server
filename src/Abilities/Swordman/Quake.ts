@@ -80,8 +80,9 @@ export default class Quake extends SwordmanAbility{
                 targets.forEach((elem) => {
                     if(Func.elipseCollision(first_wave, elem.getBoxElipse())){
                         hited.push(elem)
+                        elem.life_status = 1
                         elem.takeDamage(owner, {
-                            explode: true
+                            explode: true,
                         })
                     }
                 })

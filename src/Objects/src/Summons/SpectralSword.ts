@@ -1,5 +1,6 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
+import Character from "../Character";
 import { Enemy } from "../Enemy/Enemy";
 
 export default class SpectralSword extends Enemy{
@@ -8,20 +9,21 @@ export default class SpectralSword extends Enemy{
     target: any
     created: number = Date.now()
 
-    constructor(level: Level, private ttl: number = 12000, attack_speed: number = 1450){
+    constructor(level: Level, private ttl: number = 12000, creator: Character){
         super(level)
         this.name = 'spectral sword'
         this.box_r = 2
         this.move_speed = 0.25
         this.attack_radius = 6.5
-        this.attack_speed = attack_speed
+        this.attack_speed = creator.getAttackSpeed()
         this.spawn_time = 1000
         this.say_z = 8
         this.weapon_angle = 0.9
-        this.create_chance = 5
+        this.create_chance = 2
         this.count_as_killed = false
         this.phasing = true
         this.player_check_radius = 25
+        this.life_status = creator.life_status
 
         this.getState()
     }

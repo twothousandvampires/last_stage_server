@@ -1,7 +1,6 @@
 import Func from "../../Func";
 import Cultist from "../../Objects/src/PlayerClasses/Cultist";
 import CultistAbility from "./CultistAbility";
-import PileOfThorns from "../../Objects/src/Piles/PileOfThorns";
 import WanderingEvilEffect from "../../Objects/Effects/WanderingEvilEffect";
 
 export default class WanderingEvil extends CultistAbility{

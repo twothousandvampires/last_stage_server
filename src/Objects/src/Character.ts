@@ -596,7 +596,24 @@ export default abstract class Character extends Unit{
                     cost: 10,
                     desc: 'when enemy dies there is a chance to restore life'
                 },
+                {
+                name: 'discipline',
+                canUse: (character: Character) => {
+                    return character.max_resource < 12
+                },
+                teach: (character: Character) => {
+                    if(character instanceof Character){
+                        character.max_resource ++
+                    }
+                },
+                cost: 5,
+                desc: 'increases maximum of energy'
+            },
         ]
+    }
+
+    getAttackSpeed(){
+        return this.attack_speed
     }
 
     public takePureDamage(): void{
