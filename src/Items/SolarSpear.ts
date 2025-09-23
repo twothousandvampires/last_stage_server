@@ -1,4 +1,5 @@
 import Func from "../Func";
+import Heal from "../Objects/Effects/Heal";
 import LightNova from "../Objects/Effects/LightNova";
 import Character from "../Objects/src/Character";
 import { Enemy } from "../Objects/src/Enemy/Enemy";
@@ -37,6 +38,14 @@ export default class SolarSpear extends Item{
 
             player.level.players.forEach(elem => {
                 if(Func.distance(elem, enemy) <= 12){
+                    player.level.addSound('heal', elem.x, elem.y)
+
+                    let e = new Heal(player.level)
+                    e.setPoint(elem.x, elem.y)
+                    e.z += 8 
+
+                    player.level.effects.push(e)
+
                     elem.addLife()
                 }
             })

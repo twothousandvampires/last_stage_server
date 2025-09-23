@@ -20,7 +20,7 @@ export default class SkullOfFirstWarrior extends Item {
     }
 
     getSpecialForgings(): string[] {
-        return ['duration']
+        return ['duration', 'stun when hit']
     }
     
     equip(character: Character): void {

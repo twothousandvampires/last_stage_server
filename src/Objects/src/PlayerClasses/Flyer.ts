@@ -29,10 +29,11 @@ export default class Flyer extends Character{
     recent_cast: any[]
     check_recent_hits_timer: any
     mental_shield: boolean
+    
 
     constructor(level: Level){
         super(level)
-
+        this.steps = false
         this.cast_speed = 1500
         this.name = 'flyer'
         this.move_speed = 0.45
@@ -599,6 +600,13 @@ export default class Flyer extends Character{
 
         return !this.no_armour && Func.chance(arm, this.is_lucky)
     }
+
+    public succesefulBlock(unit: Unit | undefined): void{
+        if(Func.notChance(this.will * 4, this.is_lucky)){
+            this.resource --
+        }
+        this.when_block_triggers.forEach(elem => elem.trigger(this, unit))
+    }
     
     takeDamage(unit: any = undefined, options: any){
         if(!this.can_be_damaged) return
@@ -644,10 +652,6 @@ export default class Flyer extends Character{
 
                     this.level.projectiles.push(proj)
                 }
-            }
-
-            if(Func.notChance(this.will * 4, this.is_lucky)){
-                this.resource --
             }
 
             this.succesefulBlock(unit)

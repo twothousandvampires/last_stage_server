@@ -26,6 +26,8 @@ export default class DaggerOfSmoke extends Item{
         if(this.disabled) return
         
         if(Func.chance(this.chance)){
+            character.level.addSound('blood', character.x, character.y)
+
             let box = character.getBoxElipse()
             box.r = 9
 

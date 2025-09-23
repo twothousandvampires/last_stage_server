@@ -32,6 +32,7 @@ import Regen from "../Items/Forgings/Regen"
 import Resist from "../Items/Forgings/Resist"
 import Sacredness from "../Items/Forgings/Sacredness"
 import Speed from "../Items/Forgings/Speed"
+import StunWhenHit from "../Items/Forgings/StunWhenHit"
 import Toughness from "../Items/Forgings/Toughness"
 import Will from "../Items/Forgings/Will"
 import GlacialChain from "../Items/GlacialChain"
@@ -237,6 +238,8 @@ export default class Builder{
                 return new Toughness(item)
             case 'ignite when hit':
                 return new IgniteWhenHit(item)
+            case 'stun when hit':
+                return new StunWhenHit(item)
             default:    
                 return new NovaThenHit(item)
         }

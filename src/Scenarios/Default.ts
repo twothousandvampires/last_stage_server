@@ -208,8 +208,8 @@ export default class Default extends Scenario{
                 let random_player = players_in_zone[Math.floor(Math.random() * players_in_zone.length)]
 
                 let angle = Math.random() * 6.28
-                let distance_x = Func.random(10, 30)
-                let distance_y = Func.random(10, 30)
+                let distance_x = Func.random(14, 30)
+                let distance_y = Func.random(14, 30)
 
                 enemy.setPoint(random_player.x + Math.sin(angle) * distance_x, random_player.y + Math.cos(angle) * distance_y)
             }
@@ -276,14 +276,15 @@ export default class Default extends Scenario{
         let chance = 20 + delta * 3
 
         if(Func.chance(chance)){
-            this.grace_trashold += 20 + Math.floor(this.waves_created / 3)
+            this.grace_trashold += 20 + Math.floor(this.waves_created / 5)
             let portal: Grace = new Grace(level)
             while(portal.isOutOfMap()){
                 let random_player: Character = level.players[Math.floor(Math.random() * level.players.length)]
                 let angle: number = Math.random() * 6.28
-                let distance: number = Func.random(15, 30)
+                let distance_x: number = Func.random(15, 28)
+                let distance_y: number = Func.random(15, 28)
 
-                portal.setPoint(random_player.x + Math.sin(angle) * distance, random_player.y + Math.cos(angle) * distance)
+                portal.setPoint(random_player.x + Math.sin(angle) * distance_x, random_player.y + Math.cos(angle) * distance_y)
             }
 
             level.binded_effects.push(portal)

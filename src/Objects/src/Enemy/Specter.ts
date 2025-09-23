@@ -34,7 +34,7 @@ export default class Specter extends Enemy{
         this.create_grace_chance = 90
         this.create_chance = 90
         this.gold_revard = 5
-        this.create_item_chance = 8
+        this.create_item_chance = 6
 
         this.getState()
     }

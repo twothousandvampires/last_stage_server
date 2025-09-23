@@ -21,8 +21,10 @@ export default class ItemDrop extends Effect{
             return
         }
 
+       
         this.level.players.forEach(elem => {
-            if(elem.item.length < 6 && Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
+            let col = Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())
+            if(elem.item.length < 6 && col){
                 
                 for(let i = 0; i < 1; i++){
                     let item_name = Item.list[Math.floor(Math.random() * Item.list.length)].name
@@ -32,6 +34,7 @@ export default class ItemDrop extends Effect{
                         i--
                     }
                     else{
+                        elem.level.addSound('menu item take', elem.x, elem.y)
                         item.setPlayer(elem)
                         elem.item.push(item)
                     }
@@ -39,6 +42,9 @@ export default class ItemDrop extends Effect{
 
                 this.level.deleted.push(this.id)
                 this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
+            }
+            else if(elem.item.length >= 6 && col){
+                elem.addGold(20)
             }
         })
     }
