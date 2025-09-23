@@ -82,6 +82,7 @@ export default class Soulrender extends CultistAbility{
         
                     let angle = Math.random() * (max_a - min_a) + min_a
                     let proj = new SoulShatterProj(this.owner.level)
+                    proj.setStart(this.owner.level.time)
                     proj.setAngle(angle)
                     proj.setPoint(t.x, t.y)
         
