@@ -24,8 +24,8 @@ import Unit from "./Unit"
 export default abstract class Character extends Unit{
 
     static MAX_ITEMS_TO_BUY: number = 3
-    static MAX_LIFE: number = 4
-
+  
+    max_life_status: number = 4
     action_end: number = 0
     pressed: { [key: string]: any, } = {}
     can_move_by_player: boolean = true
@@ -76,7 +76,9 @@ export default abstract class Character extends Unit{
     when_enemy_die: any = []
     on_pierce_triggers: any = []
     block_with_armour_triggers: any = []
+    on_critical_triggers: any[] = []
 
+    chance_to_instant_kill: number = 0
     avoid_damaged_state_chance: number = 0
     can_be_lethaled: boolean = true
     can_regen_resource: boolean = true
@@ -102,6 +104,7 @@ export default abstract class Character extends Unit{
     mad_target: any
     after_grace_statuses: Status[] = []
     gold_find: number = 0
+    can_regen_more_life_chance: number = 0
 
     voice_radius: number = 20
     public gold: number = 0
@@ -115,8 +118,6 @@ export default abstract class Character extends Unit{
     end_move_time: number = 0
     steps: boolean = true
     last_steps_time: number = 0
-
-
 
     constructor(level: Level){
         super(level)
@@ -195,6 +196,10 @@ export default abstract class Character extends Unit{
             ward: this.ward,
             invisible: this.invisible
         }
+    }
+
+    succesefulCritical(enemy){
+        this.on_critical_triggers.forEach(elem => elem.trigger(this, enemy))
     }
 
     succesefulPierce(enemy){
@@ -459,7 +464,7 @@ export default abstract class Character extends Unit{
                         return character.critical < 100
                     },
                     teach: (character: Character) => {
-                        character.critical += 5
+                        character.critical += 2
                     },
                     cost: 2,
                     desc: 'give a chance to deal double damage'
@@ -814,8 +819,13 @@ export default abstract class Character extends Unit{
 
         this.level.socket.to(this.id).emit('change_level', this.zone_id, x, y)
     }
+
     isRegenAdditionalLife(){
         return false
+    }
+    
+    canRegenMoreLife(){
+        return Func.chance(this.can_regen_more_life_chance, this.is_lucky) || (this.lust_for_life && Func.chance(this.getSecondResource() * 4, this.is_lucky))
     }
 
     public addLife(count: number = 1, ignore_poison: boolean = false, ignore_limit: boolean = false): void{
@@ -828,8 +838,8 @@ export default abstract class Character extends Unit{
         for(let i = 0; i < count; i++){
             let previous = this.life_status
 
-            if(previous >= Character.MAX_LIFE){
-                if(ignore_limit || (this.lust_for_life && Func.chance(this.getSecondResource() * 4, this.is_lucky))){
+            if(previous >= this.max_life_status){
+                if(ignore_limit || this.canRegenMoreLife()){
 
                 }
                 else{

@@ -167,7 +167,7 @@ export abstract class Enemy extends Unit{
     takeDamage(unit: any = undefined, options: any = {}){
         if(this.is_dead) return
         
-        let instantly = options?.instant_death
+        let instantly = options?.instant_death || (unit && unit.chance_to_instant_kill && Func.chance(unit.chance_to_instant_kill))
 
         if(instantly){
             this.life_status = 1
@@ -197,14 +197,14 @@ export abstract class Enemy extends Unit{
         let is_pierce = unit && unit?.pierce > this.armour_rate && Func.chance(unit.pierce - this.armour_rate)
 
         if(is_pierce){
-            console.log("PIERCE")
             damage_value ++
             unit.succesefulPierce(this)
         }
        
         if(unit && unit?.critical && Func.chance(unit.critical)){
-            console.log("CRITICAL")
+
             damage_value *= 2
+            unit.succesefulCritical(this)
         }
 
         if(Func.chance(this.fragility)){
@@ -238,9 +238,8 @@ export abstract class Enemy extends Unit{
             
             this.setDyingAct()
         }
-        if(!instantly){
-            this.level.addSound(this.getWeaponHitedSound())
-        }
+        
+        this.level.addSound(this.getWeaponHitedSound())
     }
 
     getWeaponHitedSound(){

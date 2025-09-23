@@ -4,7 +4,7 @@ import CommandsStatus from "../Status/CommandsStatus";
 
 export default class EmergencyOrdersTrigger {
 
-    chance: number = 20
+    chance: number = 35
 
     constructor(){
 

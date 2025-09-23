@@ -259,6 +259,13 @@ export default class characterTemplate{
                     desc: 'create explosive rune.'
                 },
                 {
+                    id: 10,
+                    name: 'soulrender',
+                    type: 1,
+                    selected: false,
+                    desc: 'create explosive rune.'
+                },
+                {
                     id: 3,
                     name: 'shield bash',
                     type: 2,

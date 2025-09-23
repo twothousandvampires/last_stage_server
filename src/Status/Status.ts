@@ -1,3 +1,4 @@
+import Character from "../Objects/src/Character"
 import Unit from "../Objects/src/Unit"
 
 export default abstract class Status{
@@ -13,7 +14,7 @@ export default abstract class Status{
        this.last_checked = time
     }
 
-    checkResist(player: Unit){
+    checkResist(player: Unit | Character){
         if(!this.need_to_check_resist){
             return false
         }
