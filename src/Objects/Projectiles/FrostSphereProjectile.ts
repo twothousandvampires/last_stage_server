@@ -141,7 +141,7 @@ export class FrostSphereProjectile extends Projectiles{
                 if(p !== this.owner){
                     if(p.freezed){
                         p.takeDamage(this.owner, {
-                            instant_death: true
+                            damage_value: 2
                         })
                     }
                     else{
@@ -154,7 +154,7 @@ export class FrostSphereProjectile extends Projectiles{
             if(Func.elipseCollision(explosion, p.getBoxElipse())){
                 if(p.freezed){
                     p.takeDamage(this.owner, {
-                        instant_death: true
+                        damage_value: 2
                     })
                 }
                 else{

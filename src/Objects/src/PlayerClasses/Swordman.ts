@@ -38,6 +38,7 @@ export default class Swordman extends Character{
     constructor(level: Level){
         super(level)
 
+        this.pierce = 100
         this.weapon_angle = 0.8
         this.attack_radius = 7
         this.attack_speed = 1400

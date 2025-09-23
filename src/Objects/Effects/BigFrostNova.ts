@@ -58,7 +58,7 @@ export default class BigFrostNova extends Effect{
             }
 
             if(this.spires){
-                let count = 3 + this.owner.getAdditionalRadius()
+                let count = this.owner.getAdditionalRadius()
                 let zones = 6.28 / count
 
                 for(let i = 1; i <= count; i++){

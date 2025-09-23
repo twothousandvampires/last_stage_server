@@ -8,7 +8,7 @@ import Forging from "./Forging";
 export default class IgniteWhenHit extends Forging{
 
     value: number = 0
-    freq: number = 4000
+    freq: number = 3000
     last_trigger_time: number = 0
 
 
@@ -27,7 +27,7 @@ export default class IgniteWhenHit extends Forging{
             }
 
             this.payCost()
-            this.value += 20
+            this.value += 10
         }
     }
 

@@ -32,7 +32,7 @@ export default class Ghost extends Enemy{
         this.can_be_burned = false
         this.dying_time = 1200
         this.phasing = true
-        this.create_item_chance = 15
+        this.create_item_chance = 3
        
         this.getState()
     }

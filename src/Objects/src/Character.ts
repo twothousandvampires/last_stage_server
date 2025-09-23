@@ -113,6 +113,8 @@ export default abstract class Character extends Unit{
     items_to_buy: Item[] = []
     start_move_time: number = 0
     end_move_time: number = 0
+    steps: boolean = true
+    last_steps_time: number = 0
 
 
 
@@ -197,6 +199,36 @@ export default abstract class Character extends Unit{
 
     succesefulPierce(enemy){
         this.on_pierce_triggers.forEach(elem => elem.trigger(this, enemy))
+    }
+
+    setStun(duration: number): void {
+        if(this.is_dead) return
+        if(!this.can_be_damaged) return
+
+        if(this.isStatusResist()){
+            this.statusWasResisted(undefined)
+            return
+        }
+        
+        this.setState(this.setStunState)
+
+        this.setTimerToGetState(duration)
+    }
+
+    setStunState(){
+        this.can_move_by_player = false     
+        this.state = 'stunned'
+        this.stateAct = this.stunAct
+
+        this.cancelAct = () => {
+            if(!this.is_dead){
+                this.can_move_by_player = true
+            }
+        }
+    }
+
+    stunAct(){
+
     }
 
     setFreeze(duration: number){
@@ -556,7 +588,7 @@ export default abstract class Character extends Unit{
                 {
                     name: 'redemtion',
                     canUse: (character: Character) => {
-                        return !this.when_enemy_die.some(elem => elem.name === 'redemption')
+                        return !this.when_enemy_die.some(elem => elem instanceof Redemption)
                     },
                     teach: (character: Character) => {
                         return character.when_enemy_die.push(new Redemption())
@@ -820,9 +852,13 @@ export default abstract class Character extends Unit{
         return 0
     }
     
-    protected subLife(unit: any = undefined, options = {}): void{
+    protected subLife(unit: any = undefined, options: any): void{
 
         let value = 1
+
+        if(options?.damage_value){
+            value = options.damage_value
+        }
        
         if(unit && unit.pierce > this.getTotalArmour() && Func.chance(this.getTotalArmour() - unit.pierce)){
             value = 2
@@ -1166,6 +1202,12 @@ export default abstract class Character extends Unit{
             }
             return
         }
+
+        // if(this.steps && tick - this.last_steps_time >= 550){
+        //     this.last_steps_time = tick
+
+        //     this.level.addSound('walk', this.x, this.y)
+        // }
 
         this.incA()
 
