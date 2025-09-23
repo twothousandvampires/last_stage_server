@@ -568,19 +568,6 @@ export default class Swordman extends Character{
                 desc: 'increases attack speed'
             },
             {
-                name: 'discipline',
-                canUse: (character: Character) => {
-                    return character.max_resource < 12
-                },
-                teach: (character: Character) => {
-                    if(character instanceof Swordman){
-                        character.max_resource ++
-                    }
-                },
-                cost: 4,
-                desc: 'increases maximum of energy'
-            },
-            {
                 name: 'heaven vengeance',
                 type: 'new ability',
                 canUse: (character: Character) => {

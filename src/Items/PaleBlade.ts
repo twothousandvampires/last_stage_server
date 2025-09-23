@@ -31,7 +31,7 @@ export default class PaleBlade extends Item {
 
         if(character.level.time - this.last_trigger_time >= this.frequency && Func.chance(this.chance)){
             this.last_trigger_time = character.level.time
-            let summon = new SpectralSword(character.level, this.duration, character.attack_speed)
+            let summon = new SpectralSword(character.level, this.duration, character)
             summon.setPoint(character.x , character.y)
             
             character.level.enemies.push(summon)
