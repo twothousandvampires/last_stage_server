@@ -181,7 +181,7 @@ export default class Level{
         }
     }
 
-    public setStatus(unit: Unit, status: Status, with_check: boolean = false): void{
+    public setStatus(unit: Unit | Character, status: Status, with_check: boolean = false): void{
         status.setTime(this.time)
         
         let resist = status.checkResist(unit)

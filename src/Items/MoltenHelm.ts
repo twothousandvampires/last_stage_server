@@ -12,7 +12,7 @@ export default class MoltenHelm extends Item{
     constructor(){
         super()
         this.name = 'molten helm'
-        this.type = 1
+        this.type = 2
         this.description = 'when you start blocking you ignite enemies within a radius, the power of the burn depends on your armor. it has a 15-second cooldown'
     }
 

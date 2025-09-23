@@ -15,16 +15,21 @@ import BlockChance from "../Items/Forgings/BlockChance"
 import BonesWhenBlock from "../Items/Forgings/BonesWhenBlock"
 import CastSpeed from "../Items/Forgings/CastSpeed"
 import Chance from "../Items/Forgings/Chance"
+import Charisma from "../Items/Forgings/Charisma"
 import CooldownReduction from "../Items/Forgings/CooldownReduction"
 import Count from "../Items/Forgings/Count"
 import Critical from "../Items/Forgings/Critical"
 import Distance from "../Items/Forgings/Distance"
+import DominanceWhenCritical from "../Items/Forgings/DominanceWhenCritical"
 import Durability from "../Items/Forgings/Durability"
 import Duration from "../Items/Forgings/Duration"
+import FortifyWhenHit from "../Items/Forgings/FortifyWhenHit"
 import Frequency from "../Items/Forgings/Frequency"
 import GoldFind from "../Items/Forgings/GoldFind"
 import IgniteWhenHit from "../Items/Forgings/IgniteWhenHit"
+import InstantKill from "../Items/Forgings/InstantKill"
 import Knowledge from "../Items/Forgings/Knowledge"
+import MaxLIfe from "../Items/Forgings/MaxLIfe"
 import MaxResource from "../Items/Forgings/MaxResource"
 import Might from "../Items/Forgings/Might"
 import NovaThenHit from "../Items/Forgings/NovaThenHit"
@@ -246,6 +251,18 @@ export default class Builder{
                 return new ShockNovaWhenArmour(item)
             case 'bones when block':
                 return new BonesWhenBlock(item)
+            case 'instant kill':
+                return new InstantKill(item)
+            case 'charisma':
+                return new Charisma(item)
+            case 'when critical':
+                return new DominanceWhenCritical(item)
+            case 'when hit':
+                return new FortifyWhenHit(item)
+            case 'blessed life':
+                return new MaxLIfe(item)
+                
+            
             default:    
                 return new NovaThenHit(item)
         }

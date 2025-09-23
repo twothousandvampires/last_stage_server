@@ -6,6 +6,7 @@ import Rune from "../../../Abilities/Cultist/Rune";
 import SelfFlagellation from "../../../Abilities/Cultist/SelfFlagellation";
 import ShieldBash from "../../../Abilities/Cultist/ShieldBash";
 import Slam from "../../../Abilities/Cultist/Slam";
+import Soulrender from "../../../Abilities/Cultist/Soulrender";
 import SoulShatter from "../../../Abilities/Cultist/SoulShatter";
 import UnleashPain from "../../../Abilities/Cultist/UnleashPain";
 import WanderingEvil from "../../../Abilities/Cultist/WanderingEvil";
@@ -90,6 +91,10 @@ export default class Cultist extends Character{
         else if(main_name === 'rune'){
             this.first_ability = new Rune(this)
         }
+        else if(main_name === 'soulrender'){
+            this.first_ability = new Soulrender(this)
+        }
+        
     
         let secondary_name = abilities.find(elem => elem.type === 2 && elem.selected).name
         

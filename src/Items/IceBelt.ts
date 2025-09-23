@@ -6,7 +6,7 @@ export default class IceBelt extends Item{
     constructor(){
         super()
         this.name = 'ice belt'
-        this.type = 1
+        this.type = 2
         this.description = 'increases maximum of resources'
     }
 

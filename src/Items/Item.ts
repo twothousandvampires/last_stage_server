@@ -152,13 +152,16 @@ export default abstract class Item {
         'sacredness',
         'toughness',
         'gold find',
+        'charisma'
     ]
 
     static forging_list_type_1 = [
         'attack speed',
         'might',
         'durability',
-        'cast speed'
+        'cast speed',
+        'instant kill',
+        'when critical'
     ]
 
     static forging_list_type_2 = [
@@ -166,7 +169,8 @@ export default abstract class Item {
         'speed',
         'agility',
         'regen time',
-        'block chance'
+        'block chance',
+        'when hit'
     ]
     
     static forging_list_type_3 = [
@@ -174,7 +178,8 @@ export default abstract class Item {
         'will',
         'knowledge',
         'max resources',
-        'cooldown reduction'
+        'cooldown reduction',
+        'blessed life'
     ]
 
 
