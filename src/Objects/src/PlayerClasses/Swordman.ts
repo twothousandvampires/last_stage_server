@@ -38,7 +38,6 @@ export default class Swordman extends Character{
     constructor(level: Level){
         super(level)
 
-        this.pierce = 100
         this.weapon_angle = 0.8
         this.attack_radius = 7
         this.attack_speed = 1400
@@ -54,7 +53,6 @@ export default class Swordman extends Character{
         this.base_regen_time = 9000
         this.recent_kills = []
         this.block_chance = 50
-        this.gold =2222
     }
 
     getTargetsCount(){

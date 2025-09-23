@@ -66,6 +66,7 @@ export default class Statue extends Pile{
         this.is_attacking = true
         this.stateAct = this.castAct
         this.action_time = this.cast_time
+        this.setImpactTime(95)
 
         this.cancelAct = () => {
             this.action = false
