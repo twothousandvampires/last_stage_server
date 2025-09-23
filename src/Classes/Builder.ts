@@ -12,6 +12,7 @@ import Agility from "../Items/Forgings/Agility"
 import ArmourRate from "../Items/Forgings/ArmourRate"
 import AttackSpeed from "../Items/Forgings/AttackSpeed"
 import BlockChance from "../Items/Forgings/BlockChance"
+import BonesWhenBlock from "../Items/Forgings/BonesWhenBlock"
 import CastSpeed from "../Items/Forgings/CastSpeed"
 import Chance from "../Items/Forgings/Chance"
 import CooldownReduction from "../Items/Forgings/CooldownReduction"
@@ -31,6 +32,7 @@ import Pierce from "../Items/Forgings/Pierce"
 import Regen from "../Items/Forgings/Regen"
 import Resist from "../Items/Forgings/Resist"
 import Sacredness from "../Items/Forgings/Sacredness"
+import ShockNovaWhenArmour from "../Items/Forgings/ShockNovaWhenArmour"
 import Speed from "../Items/Forgings/Speed"
 import StunWhenHit from "../Items/Forgings/StunWhenHit"
 import Toughness from "../Items/Forgings/Toughness"
@@ -240,6 +242,10 @@ export default class Builder{
                 return new IgniteWhenHit(item)
             case 'stun when hit':
                 return new StunWhenHit(item)
+            case 'shock nova when armour':
+                return new ShockNovaWhenArmour(item)
+            case 'bones when block':
+                return new BonesWhenBlock(item)
             default:    
                 return new NovaThenHit(item)
         }

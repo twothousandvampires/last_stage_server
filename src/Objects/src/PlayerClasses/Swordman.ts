@@ -54,6 +54,7 @@ export default class Swordman extends Character{
         this.base_regen_time = 9000
         this.recent_kills = []
         this.block_chance = 50
+        this.gold =2222
     }
 
     getTargetsCount(){

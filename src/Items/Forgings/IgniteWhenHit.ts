@@ -51,7 +51,7 @@ export default class IgniteWhenHit extends Forging{
                 
                 let s = new Ignite(player.level.time)
                 s.setDuration(6000)
-                s.setPower(40)
+                s.setPower(30)
 
                 player.level.setStatus(target, s, true)
             }

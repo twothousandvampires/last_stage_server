@@ -28,7 +28,7 @@ import Item from "./Item";
         }
 
         getSpecialForgings(): string[] {
-            return ['count', 'duration']
+            return ['count', 'duration', 'bones when block']
         }
             
         remove(character){

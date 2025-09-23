@@ -34,6 +34,8 @@ export default class ChargedBow extends Item {
                 this.cd = false
             }, 2000)
 
+            character.level.addSound('zap', target.x, target.y)
+
             let count =  this.count
             
             let zones = 6.28 / count
