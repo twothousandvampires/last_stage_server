@@ -24,7 +24,7 @@ export class Bone extends Projectiles{
             let p = this.level.players[i]
 
             if(p != this.owner && !p.is_dead && p.z < this.w && Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
-                p.takeDamage()
+                p.takeDamage(this.owner)
                 this.impact()
                 return
             }
@@ -34,7 +34,7 @@ export class Bone extends Projectiles{
             let p = this.level.enemies[i]
 
             if(!p.is_dead && p.z < this.w && Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
-                p.takeDamage()
+                p.takeDamage(this.owner)
                 this.impact()
                 return
             }

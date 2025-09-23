@@ -106,6 +106,7 @@ export default class ShieldBash extends CultistAbility{
                 
                             let angle = Math.random() * (max_a - min_a) + min_a
                             let proj = new Bone(this.level)
+                            proj.setOwner(this)
                             proj.setAngle(angle)
                             proj.setPoint(elem.x, elem.y)
                 
