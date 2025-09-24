@@ -98,13 +98,6 @@ export default class Specter extends Enemy{
             this.getState()
         }, 1500)
     }
-    moveAct(){
-        this.state = 'move'
-
-        let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
-
-        this.moveByAngle(a)
-    }
 
     getExplodedSound(){
         return {

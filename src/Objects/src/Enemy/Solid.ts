@@ -64,14 +64,6 @@ export default class Solid extends Enemy{
         }
     }
 
-    moveAct(){
-        this.state = 'move'
-
-        let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
-
-        this.moveByAngle(a)
-    }
-
     attackAct(){
         if(this.action && !this.hit){
             this.hit = true

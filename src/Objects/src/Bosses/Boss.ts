@@ -104,14 +104,6 @@ export default class Boss extends Enemy{
         }
     }
 
-    moveAct(){
-        this.state = 'move'
-
-        let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
-
-        this.moveByAngle(a)
-    }
-
     attackAct(){
         return
 

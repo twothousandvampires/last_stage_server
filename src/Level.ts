@@ -171,7 +171,7 @@ export default class Level{
 
     public toJSON(): any{
         return {
-            actors: [...this.players, ...this.enemies, ...this.projectiles, ...this.effects, ...this.binded_effects],
+            actors: [...this.players, ...this.enemies.filter(elem => elem.was_changed), ...this.projectiles, ...this.effects, ...this.binded_effects],
             deleted: this.deleted,
             sounds: this.sounds,
             meta: {

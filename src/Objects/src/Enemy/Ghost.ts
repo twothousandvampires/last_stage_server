@@ -112,14 +112,6 @@ export default class Ghost extends Enemy{
 
     }
 
-    moveAct(){
-        this.state = 'move'
-
-        let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
-
-        this.moveByAngle(a)
-    }
-
     getExplodedSound(){
         return {
             name: 'bones explode',

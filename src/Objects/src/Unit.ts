@@ -161,6 +161,7 @@ export default abstract class Unit extends GameObject {
 
     setState(newState: Function) {
         this.is_moving = false
+        this.was_changed = true
         
         if(this.cancelAct){
             this.action_impact = 0

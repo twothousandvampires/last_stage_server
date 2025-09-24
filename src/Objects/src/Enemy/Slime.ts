@@ -57,14 +57,6 @@ export default class Slime extends Enemy{
         this.setTimerToGetState(this.dying_time)
     }
 
-    moveAct(){
-        this.state = 'move'
-
-        let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
-
-        this.moveByAngle(a)
-    }
-
     attackAct(){
         if(this.action && !this.hit){
             this.hit = true

@@ -98,14 +98,6 @@ export default class FlyingBones extends Enemy{
         }, 1500)
     }
 
-    moveAct(){
-        this.state = 'move'
-
-        let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
-
-        this.moveByAngle(a)
-    }
-
     getExplodedSound(){
         return {
             name: 'bones explode',

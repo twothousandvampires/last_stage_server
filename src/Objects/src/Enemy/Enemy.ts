@@ -5,7 +5,7 @@ import SmallTextLanguage2 from "../../Effects/SmallTextLanguage2";
 import Character from "../Character";
 import Unit from "../Unit";
 
-export abstract class Enemy extends Unit{
+export abstract class Enemy extends Unit {
 
     is_spawning: boolean
     target: Character | undefined
@@ -31,7 +31,7 @@ export abstract class Enemy extends Unit{
     say_z: number = 12
     gold_revard: number = 1
     can_be_burned: boolean = true
-    
+   
   
     constructor(level: Level){
         super(level)
@@ -54,6 +54,14 @@ export abstract class Enemy extends Unit{
         ]
     }
 
+    moveAct(){
+        this.state = 'move'
+        this.was_changed = true
+        let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
+
+        this.moveByAngle(a)
+    }
+
     setImpactTime(c: number){
         c += Func.chance(50) ? 5 : -5
         this.action_impact = this.level.time + (this.action_time * (c / 100))
@@ -67,6 +75,7 @@ export abstract class Enemy extends Unit{
 
     act(time: number){
         if(!this.can_act || !this.stateAct) return
+        this.was_changed = false
         this.stateAct(time)
        
         if(this.action_impact && time >= this.action_impact){
@@ -255,7 +264,6 @@ export abstract class Enemy extends Unit{
             this.setState(this.setDeadState)
         }
         else if(this.is_spawning){
-            this.action_time = this.spawn_time
             this.setState(this.setSpawsState)
         }
         else{
@@ -267,7 +275,8 @@ export abstract class Enemy extends Unit{
     setSpawsState(){
         this.state = 'spawn'
         this.stateAct = this.spawnAct
-
+        this.action_time = this.spawn_time
+        
         this.cancelAct = () => {
             this.is_spawning = false
         }

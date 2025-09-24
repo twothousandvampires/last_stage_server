@@ -10,6 +10,7 @@ export default abstract class GameObject {
     zone_id: number
     id: number | string
     public invisible: boolean = false
+    was_changed: boolean = true
 
     constructor(public level: Level, public x: number = 0, public y: number = 0){
         this.id = level.getId()

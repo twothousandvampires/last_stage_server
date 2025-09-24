@@ -3,7 +3,7 @@ import Level from "../../../Level";
 import Bleed from "../../../Status/Bleed";
 import { Enemy } from "./Enemy";
 
-export default class Impy extends Enemy{
+export default class Impy extends Enemy {
 
     weapon_angle: number
 
@@ -19,14 +19,6 @@ export default class Impy extends Enemy{
         this.say_z = 8
         this.weapon_angle = 0.7
         this.getState()
-    }
-
-    moveAct(){
-        this.state = 'move'
-
-        let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
-
-        this.moveByAngle(a)
     }
 
     attackAct(){
