@@ -1,4 +1,5 @@
 import Func from "../../Func";
+import { Lightning } from "../../Objects/Projectiles/Lightning";
 import Swordman from "../../Objects/src/PlayerClasses/Swordman";
 import SwordmanAbility from "./SwordmanAbility";
 
@@ -13,6 +14,7 @@ export default class Dash extends SwordmanAbility{
     end: boolean
     end_timeout: number = 350
     start_time: number = 0
+    electrified: boolean = false
 
     constructor(owner: Swordman){
         super(owner)
@@ -55,7 +57,7 @@ export default class Dash extends SwordmanAbility{
         this.owner.setImpactTime(100)
         this.owner.level.addSound('holy cast', this.owner.x, this.owner.y)
         
-        this.owner.avoid_damaged_state_chance += 100
+        this.owner.chance_to_avoid_damage_state += 100
         this.owner.cancelAct = () => {
             clearTimeout(this.end_timeout)
             this.owner.is_attacking = false
@@ -65,7 +67,7 @@ export default class Dash extends SwordmanAbility{
             this.start_x = undefined
             this.start_y = undefined
             this.end = false
-            this.owner.avoid_damaged_state_chance -= 100
+            this.owner.chance_to_avoid_damage_state -= 100
             this.start_time = 0
             this.hited = []
         }
@@ -86,6 +88,24 @@ export default class Dash extends SwordmanAbility{
 
         return (tick: number) => {
             if(ability.end){
+                if(ability.electrified){
+                    let count = ability.hited.length
+                    
+                    let zones = 6.28 / count
+            
+                    for(let i = 1; i <= count; i++){
+                        let min_a = (i - 1) * zones
+                        let max_a = i * zones
+            
+                        let angle = Math.random() * (max_a - min_a) + min_a
+                        let proj = new Lightning(owner.level)
+                        proj.setAngle(angle)
+                        proj.setPoint(owner.x, owner.y)
+                        proj.setOwner(owner)
+            
+                        owner.level.projectiles.push(proj)
+                    }
+                }
                 owner.getState()
                 owner.attack_angle = undefined
             }

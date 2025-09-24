@@ -22,7 +22,7 @@ export default class SolarSpear extends Item{
     }
 
     equip(character: Character): void {
-        character.on_pierce_triggers.push(this)
+        character.triggers_on_pierce.push(this)
     }
 
     trigger(player: Character, enemy: Enemy){

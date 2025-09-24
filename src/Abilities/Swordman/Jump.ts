@@ -59,7 +59,7 @@ export default class Jump extends SwordmanAbility{
         
         this.owner.is_attacking = true
         this.owner.state = 'jump'
-        this.owner.can_move_by_player = false
+        this.owner.can_be_controlled_by_player = false
 
         setTimeout(() => {
             this.direction = true
@@ -70,16 +70,16 @@ export default class Jump extends SwordmanAbility{
         }, this.total_jump_time)
 
         this.owner.stateAct = this.getAct()  
-        this.owner.avoid_damaged_state_chance += 100
+        this.owner.chance_to_avoid_damage_state += 100
 
         this.owner.cancelAct = () => {
             this.owner.z = 0
             this.owner.is_attacking = false
-            this.owner.avoid_damaged_state_chance -= 100
+            this.owner.chance_to_avoid_damage_state -= 100
             this.afterUse()
             this.direction = false
             this.impact = false
-            this.owner.can_move_by_player = true
+            this.owner.can_be_controlled_by_player = true
         }
     }
 

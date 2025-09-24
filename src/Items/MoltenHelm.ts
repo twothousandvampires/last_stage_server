@@ -17,7 +17,7 @@ export default class MoltenHelm extends Item{
     }
 
     equip(character: Character): void {
-        character.when_start_block_triggers.push(this)
+        character.triggers_on_start_block.push(this)
     }
 
     trigger(character: Character){

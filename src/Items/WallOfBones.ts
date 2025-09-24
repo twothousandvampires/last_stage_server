@@ -24,7 +24,7 @@ import Item from "./Item";
         }
 
         equip(character: Character): void {
-            character.on_kill_triggers.push(this)
+            character.triggers_on_kill.push(this)
         }
 
         getSpecialForgings(): string[] {

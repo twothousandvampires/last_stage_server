@@ -3,22 +3,18 @@ import Level from "../../Level"
 export default abstract class GameObject {
     
     name: string
-    move_speed: number
-    box_r: number
-    z: number
-    light_r: number
-    zone_id: number
+    move_speed: number = 0
+    box_r: number = 0
+    z: number = 0
+    light_r: number = 0
+    zone_id: number = 0
     id: number | string
-    public invisible: boolean = false
+    invisible: boolean = false
+    phasing: boolean = false
 
     constructor(public level: Level, public x: number = 0, public y: number = 0){
         this.id = level.getId()
         this.name = 'object'
-        this.move_speed = 0
-        this.box_r = 0
-        this.z = 0
-        this.light_r = 0
-        this.zone_id = 0
     }
 
     public isOutOfMap(x: number = this.x, y: number = this.y): boolean{

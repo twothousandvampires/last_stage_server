@@ -213,7 +213,7 @@ export default class Ghost extends Enemy{
         }
     }
 
-     setDyingAct(){
+     setdyingAct(){
         if(this.freezed){
             this.state = 'freeze_dying'
             this.is_corpse = true
@@ -227,7 +227,7 @@ export default class Ghost extends Enemy{
             this.state = this.dead_type ? this.dead_type : 'dying'
         }
 
-        this.stateAct = this.DyingAct
+        this.stateAct = this.dyingAct
         this.invisible = false
         this.setTimerToGetState(this.dying_time)
     }

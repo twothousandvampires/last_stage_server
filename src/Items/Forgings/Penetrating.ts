@@ -1,22 +1,22 @@
 import Item from "../Item";
 import Forging from "./Forging";
 
-export default class Toughness extends Forging{
+export default class Penetrating extends Forging{
 
     value: number = 0
 
     constructor(item: Item){
         super(item)
-        this.max_value = 20
-        this.name = 'toughness'
-        this.description = 'increases your chance to avoid damaged state'
+        this.max_value = 10
+        this.name = 'penetrating'
+        this.description = 'increases your penetrate rating'
         this.gold_cost = 5
     }
 
     forge(){
         if(this.canBeForged() && this.costEnough()){
-            this.value += 2
-            this.item.player.chance_to_avoid_damage_state += 2
+            this.value ++
+            this.item.player.penetrate += 1
             this.payCost()
         }
     }
@@ -25,7 +25,7 @@ export default class Toughness extends Forging{
         return this.value
     }
 
-     canBeForged(): boolean {
+    canBeForged(): boolean {
         if(!this.item || !this.item.player) return false
 
         return this.value < this.max_value

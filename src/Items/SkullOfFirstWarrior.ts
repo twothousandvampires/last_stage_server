@@ -24,7 +24,7 @@ export default class SkullOfFirstWarrior extends Item {
     }
     
     equip(character: Character): void {
-        character.on_hit_triggers.push(this)
+        character.triggers_on_hit.push(this)
     }
 
     trigger(character: Character){

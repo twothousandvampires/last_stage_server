@@ -67,7 +67,7 @@ export default class Level{
     ]
 
     public boss_kills_trashold: number = 300
-    public enemies: Enemy[] = []
+    public enemies: (Enemy | Unit)[] = []
     public players: Character[] = []
     public projectiles: Projectiles[] = []
     public effects: Effect[] = []

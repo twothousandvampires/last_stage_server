@@ -16,7 +16,7 @@ export default class Regen extends Forging{
     forge(){
         if(this.canBeForged() && this.costEnough()){
             this.value += 200
-            this.item.player.base_regen_time -= 200
+            this.item.player.base_regeneration_time -= 200
              this.payCost()
         }
     }

@@ -22,8 +22,8 @@ export default class DominanceWhenCritical extends Forging{
 
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
-            if(!player.on_critical_triggers.some(elem => elem instanceof DominanceWhenCritical)){
-                player.on_critical_triggers.push(this)
+            if(!player.triggers_on_critical.some(elem => elem instanceof DominanceWhenCritical)){
+                player.triggers_on_critical.push(this)
             }
 
             this.payCost()

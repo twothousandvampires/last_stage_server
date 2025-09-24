@@ -16,7 +16,7 @@ export default class WhiteShield extends Item{
     }
 
     equip(character: Character): void {
-        character.when_block_triggers.push(this)
+        character.triggers_on_block.push(this)
     }
 
     trigger(character: Character){

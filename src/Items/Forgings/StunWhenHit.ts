@@ -23,8 +23,8 @@ export default class StunWhenHit extends Forging{
 
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
-            if(!player.on_hit_triggers.some(elem => elem instanceof StunWhenHit)){
-                player.on_hit_triggers.push(this)
+            if(!player.triggers_on_hit.some(elem => elem instanceof StunWhenHit)){
+                player.triggers_on_hit.push(this)
             }
 
             this.payCost()

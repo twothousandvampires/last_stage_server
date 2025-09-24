@@ -20,7 +20,7 @@ export default class SearchingHeart extends Item{
     }
 
     equip(character: Character): void {
-        character.when_lose_life_triggers.push(this)
+        character.triggers_on_lose_life.push(this)
 
         let s = new SerchingHeartStatus(character.level.time, this)
         character.level.setStatus(character, s)

@@ -2,6 +2,7 @@ import Client from "../Client"
 import ChargedArmour from "../Items/ChargedArmour"
 import ChargedBow from "../Items/ChargedBow"
 import Cloak from "../Items/Cloak"
+import Crossbow from "../Items/Crossbow"
 import CrystalGreaves from "../Items/CrystalGreaves"
 import DaggerOfSmoke from "../Items/DaggerOfSmoke"
 import DoomMantia from "../Items/DoomMantia"
@@ -27,12 +28,14 @@ import FortifyWhenHit from "../Items/Forgings/FortifyWhenHit"
 import Frequency from "../Items/Forgings/Frequency"
 import GoldFind from "../Items/Forgings/GoldFind"
 import IgniteWhenHit from "../Items/Forgings/IgniteWhenHit"
+import Impact from "../Items/Forgings/Impact"
 import InstantKill from "../Items/Forgings/InstantKill"
 import Knowledge from "../Items/Forgings/Knowledge"
 import MaxLIfe from "../Items/Forgings/MaxLIfe"
 import MaxResource from "../Items/Forgings/MaxResource"
 import Might from "../Items/Forgings/Might"
 import NovaThenHit from "../Items/Forgings/NovaThenHit"
+import Penetrating from "../Items/Forgings/Penetrating"
 import Pierce from "../Items/Forgings/Pierce"
 import Regen from "../Items/Forgings/Regen"
 import Resist from "../Items/Forgings/Resist"
@@ -50,6 +53,7 @@ import MoltenHelm from "../Items/MoltenHelm"
 import PaleBlade from "../Items/PaleBlade"
 import RedPotion from "../Items/RedPotion"
 import RingOfTransmutation from "../Items/RingOfTransmutation"
+import RoyalMace from "../Items/RoyalMace"
 import SearchingHeart from "../Items/SearchingHeart"
 import SkullOfFirstWarrior from "../Items/SkullOfFirstWarrior"
 import SolarSpear from "../Items/SolarSpear"
@@ -188,9 +192,14 @@ export default class Builder{
         }
         else if(item_name === 'pale blade'){
             return new PaleBlade()
-        }                 
-    }
-
+        }
+        else if(item_name === 'crossbow'){
+            return new Crossbow()
+        }
+        else if(item_name === 'royal mace') 
+            return new RoyalMace()
+    }    
+        
     static createForging(name: string, item: Item){
         switch (name){
             case 'critical':
@@ -261,8 +270,10 @@ export default class Builder{
                 return new FortifyWhenHit(item)
             case 'blessed life':
                 return new MaxLIfe(item)
-                
-            
+             case 'impact':
+                return new Impact(item)
+              case 'penetrating':
+                return new Penetrating(item)  
             default:    
                 return new NovaThenHit(item)
         }

@@ -17,7 +17,7 @@ export default class FlyingShards extends Item {
     }
 
     equip(character: Character): void {
-        character.block_with_armour_triggers.push(this)
+        character.triggers_on_armour_hit.push(this)
     }
 
     getSpecialForgings(): string[] {

@@ -32,7 +32,7 @@ export default class Slime extends Enemy{
 
     }
 
-    setDyingAct(){
+    setdyingAct(){
         if(this.freezed){
             this.state = 'freeze_dying'
             this.is_corpse = true
@@ -53,7 +53,7 @@ export default class Slime extends Enemy{
             this.level.binded_effects.push(e)
         }
 
-        this.stateAct = this.DyingAct
+        this.stateAct = this.dyingAct
         this.setTimerToGetState(this.dying_time)
     }
 

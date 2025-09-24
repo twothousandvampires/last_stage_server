@@ -16,7 +16,7 @@ export default class Crushed extends Status{
         if(this.unit instanceof Character){
             this.unit.statusWasApplied()
 
-            this.unit.block_chance -= 30
+            this.unit.chance_to_block -= 30
             this.unit.armour_rate -= 30
 
             this.unit.newStatus({
@@ -29,7 +29,7 @@ export default class Crushed extends Status{
 
     clear(){
         if(this.unit instanceof Character){
-            this.unit.block_chance += 30
+            this.unit.chance_to_block += 30
             this.unit.armour_rate += 30
         }
     }
