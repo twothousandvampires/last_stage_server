@@ -14,7 +14,7 @@ export default class ChargedArmour extends Item{
     }
 
     equip(character: Character): void {
-        character.when_gain_energy_triggers.push(this)
+        character.triggers_on_get_energy.push(this)
     }
 
     getSpecialForgings(): string[] {
@@ -25,7 +25,7 @@ export default class ChargedArmour extends Item{
         if(this.disabled) return
         if(Func.notChance(this.chance)) return
 
-        if(character.resource < character.max_resource){
+        if(character.resource < character.maximum_resources){
             character.addWard(1)
         }
         else{

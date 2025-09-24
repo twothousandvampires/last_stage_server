@@ -19,7 +19,7 @@ export default class RingOfTransmutation extends Item{
     }
 
     equip(character: Character): void {
-        character.when_hited_triggers.push(this)
+        character.triggers_on_get_hit.push(this)
     }
     
     trigger(character: Character, unit: Unit | undefined){

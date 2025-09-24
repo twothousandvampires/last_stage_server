@@ -16,7 +16,7 @@ export default class BlockChance extends Forging {
     forge(){
         if(this.canBeForged() && this.costEnough()){
             this.value += 2
-            this.item.player.block_chance += 2
+            this.item.player.chance_to_block += 2
             this.payCost()
         }
     }

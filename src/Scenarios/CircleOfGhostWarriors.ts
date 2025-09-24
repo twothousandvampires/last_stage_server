@@ -179,7 +179,7 @@ export default class CircleOfGhostWarriors extends Scenario{
             elem.x = 60
             elem.y = 60
             elem.light_r = 20
-            elem.can_move_by_player = true
+            elem.can_be_controlled_by_player = true
         })
     }
 

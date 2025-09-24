@@ -17,7 +17,7 @@ export default class CooldownReduction extends Forging{
     forge(){
         if(this.canBeForged() && this.costEnough()){
             this.value += 2
-            this.item.player.cd_reduction += 2
+            this.item.player.cooldown_redaction += 2
             this.payCost()
         }
     }

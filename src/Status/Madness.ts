@@ -21,7 +21,7 @@ export default class Madness extends Status {
         if(this.unit instanceof Character){
             this.unit.statusWasApplied()
 
-            this.unit.can_move_by_player = false
+            this.unit.can_be_controlled_by_player = false
 
             this.unit.newStatus({
                 name: 'madness',
@@ -32,7 +32,7 @@ export default class Madness extends Status {
     }
 
     act(tick_time: number){
-        this.unit.can_move_by_player = false
+        this.unit.can_be_controlled_by_player = false
         
         if(tick_time > this.last_checked){
             this.last_checked += 500
@@ -53,7 +53,7 @@ export default class Madness extends Status {
             let angle = Func.angle(this.unit.x, this.unit.y, this.target.x, this.target.y)
          
             if(this.move && distance > 5){
-                this.unit.direct_angle_to_move = angle
+                this.unit.angle_for_forced_movement = angle
             }
             else{
                 this.unit.attack_angle = angle
@@ -71,8 +71,8 @@ export default class Madness extends Status {
 
     clear(): void {
         if(!this.unit.is_dead){
-            this.unit.can_move_by_player = true 
+            this.unit.can_be_controlled_by_player = true 
         }
-        this.unit.direct_angle_to_move = undefined
+        this.unit.angle_for_forced_movement = undefined
     }
 }

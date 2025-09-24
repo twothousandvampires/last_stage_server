@@ -14,7 +14,7 @@ export default class Despair extends Status{
     apply(unit: any){
         this.unit = unit
         if(this.unit instanceof Character){
-            this.unit.when_hited_triggers.push(this)
+            this.unit.triggers_on_get_hit.push(this)
 
             this.unit.statusWasApplied()
 
@@ -28,7 +28,7 @@ export default class Despair extends Status{
 
     clear(){
         if(this.unit instanceof Character){
-            this.unit.when_hited_triggers = this.unit.when_hited_triggers.filter(elem => elem != this)
+            this.unit.triggers_on_get_hit = this.unit.triggers_on_get_hit.filter(elem => elem != this)
         }
     }
 

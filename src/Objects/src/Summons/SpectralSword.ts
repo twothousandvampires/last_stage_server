@@ -64,7 +64,7 @@ export default class SpectralSword extends Enemy{
 
         if(tick - this.created >= this.ttl){
             this.is_dead = true
-            this.setDyingAct()
+            this.setdyingAct()
             return
         }
 

@@ -11,20 +11,20 @@ export default class IceBelt extends Item{
     }
 
     equip(character: Character): void {
-        character.max_resource ++
+        character.maximum_resources ++
     }
 
     disable(): void {
         this.disabled = true
         if(this.player){
-            this.player.max_resource --
+            this.player.maximum_resources --
         }
     }
 
     enable(): void {
         this.disabled = false
         if(this.player){
-            this.player.max_resource ++
+            this.player.maximum_resources ++
         }
     }
 }

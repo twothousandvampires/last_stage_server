@@ -63,7 +63,7 @@ export default class Slam extends CultistAbility{
             let second_resource = this.getSecondResource()
 
             if(this.first_ability.soul_extraction){
-                this.additional_chance_grace_create += 10
+                this.chance_to_create_grace += 10
             }
 
             this.hit = true
@@ -105,7 +105,7 @@ export default class Slam extends CultistAbility{
             })
 
             if(this.first_ability.soul_extraction){
-                this.additional_chance_grace_create -= 10
+                this.chance_to_create_grace -= 10
             }
 
             this.attack_angle = undefined

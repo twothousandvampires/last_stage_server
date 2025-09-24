@@ -20,12 +20,12 @@ export default class PileOfThorns extends Pile{
         this.getState()
     }
 
-    setDyingAct(){
+    setdyingAct(){
         this.is_dead = true
         this.state = 'dying'
         
 
-        this.stateAct = this.DyingAct
+        this.stateAct = this.dyingAct
         this.setTimerToGetState(this.dying_time)
     }
 

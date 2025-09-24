@@ -144,6 +144,14 @@ export default abstract class Item {
             name: "pale blade",
             description: 'when you hit enemy there is a chance to summon spectral blade which will fight on you side'
         },
+        {
+            name: "crossbow",
+            description: 'when you lead critical damage there is a chance to penetrate nearby enemies'
+        },
+        {
+            name: "royal mace",
+            description: 'increases impact, penetrate and critical rating'
+        },
     ]
 
     static forging_list_all = [
@@ -152,7 +160,9 @@ export default abstract class Item {
         'sacredness',
         'toughness',
         'gold find',
-        'charisma'
+        'charisma',
+        'impact',
+        'penetrating'
     ]
 
     static forging_list_type_1 = [

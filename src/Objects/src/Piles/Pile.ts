@@ -36,11 +36,11 @@ export default class Pile extends Enemy{
          // immune
     }
 
-    setDyingAct(){
+    setdyingAct(){
         this.is_dead = true
         this.state = 'dying'
     
-        this.stateAct = this.DyingAct
+        this.stateAct = this.dyingAct
         this.setTimerToGetState(this.dying_time)
         this.level.addSound('skullpile', this.x, this.y)
     }
@@ -51,7 +51,7 @@ export default class Pile extends Enemy{
         if(options?.instant_death){
             unit?.succesefulKill(this)
             this.is_dead = true
-            this.setDyingAct()
+            this.setdyingAct()
             return
         }
 
@@ -75,9 +75,9 @@ export default class Pile extends Enemy{
 
         if(this.life_status <= 0){
             this.is_dead = true
-            this.create_grace_chance += unit?.additional_chance_grace_create ? unit?.additional_chance_grace_create : 0
+            this.create_grace_chance += unit?.chance_to_create_grace ? unit?.chance_to_create_grace : 0
             unit?.succesefulKill(this)
-            this.setDyingAct()
+            this.setdyingAct()
         }
     }
 
@@ -101,7 +101,7 @@ export default class Pile extends Enemy{
        let last_cast = this.last_cast_time
        
        if(time - this.created >= this.duration){
-            this.setDyingAct()
+            this.setdyingAct()
        }
        else if(time - last_cast >= this.frequency){
             this.last_cast_time = time

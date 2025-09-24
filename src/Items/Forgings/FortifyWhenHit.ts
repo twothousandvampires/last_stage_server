@@ -23,8 +23,8 @@ export default class FortifyWhenHit extends Forging{
 
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
-            if(!player.on_hit_triggers.some(elem => elem instanceof FortifyWhenHit)){
-                player.on_hit_triggers.push(this)
+            if(!player.triggers_on_hit.some(elem => elem instanceof FortifyWhenHit)){
+                player.triggers_on_hit.push(this)
             }
 
             this.payCost()

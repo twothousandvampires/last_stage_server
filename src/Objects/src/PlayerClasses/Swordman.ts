@@ -3,7 +3,6 @@ import Commands from "../../../Abilities/Swordman/Commands";
 import CursedWeapon from "../../../Abilities/Swordman/CursedWeapon";
 import Jump from "../../../Abilities/Swordman/Jump";
 import Quake from "../../../Abilities/Swordman/Quake";
-import ShatteredWeapon from "../../../Abilities/Swordman/ShatteredWeapon";
 import WeaponSwing from "../../../Abilities/Swordman/WeaponSwing";
 import WeaponThrow from "../../../Abilities/Swordman/WeaponThrow";
 import Whirlwind from "../../../Abilities/Swordman/Whirlwind";
@@ -13,13 +12,11 @@ import Armour from "../../Effects/Armour";
 import Blood from "../../Effects/Blood";
 import ToothExplode from "../../Effects/ToothExplode";
 import Character from "../Character";
-import HeavenVengeance from "../../../Abilities/Swordman/HeavenVengeance";
-import EmergencyOrdersTrigger from "../../../Triggers/EmergencyOrdersTrigger";
 import SpectralSwords from "../../../Abilities/Swordman/SpectralSwords";
-import BlockingTechnique from "../../../Triggers/ BlockingTechnique";
 import Dash from "../../../Abilities/Swordman/Dash";
 import MetalThorns from "../../../Abilities/Swordman/MetalThorns";
 import Unit from "../Unit";
+import Upgrades from "../../../Classes/Upgrades";
 
 export default class Swordman extends Character{
     
@@ -30,7 +27,7 @@ export default class Swordman extends Character{
     chance_to_get_additional_point: number
     chance_to_hit_additional_target: number
     resource: number
-    max_resource: number
+    maximum_resources: number
     next_life_regen_time: any
     recent_kills: any[]
     check_recent_hits_timer: any
@@ -43,16 +40,16 @@ export default class Swordman extends Character{
         this.attack_speed = 1400
         this.name = 'swordman'
         this.move_speed = 0.5
-        this.avoid_damaged_state_chance = 10
+        this.chance_to_avoid_damage_state = 10
         this.chance_to_get_additional_point = 0
         this.chance_to_hit_additional_target = 0
         this.armour_rate = 15
         this.resource = 0
-        this.max_resource = 7
+        this.maximum_resources = 7
 
-        this.base_regen_time = 9000
+        this.base_regeneration_time = 9000
         this.recent_kills = []
-        this.block_chance = 50
+        this.chance_to_block = 50
     }
 
     getTargetsCount(){
@@ -79,7 +76,7 @@ export default class Swordman extends Character{
     }
 
     succesefulKill(enemy){
-        this.on_kill_triggers.forEach(elem => {
+        this.triggers_on_kill.forEach(elem => {
             elem.trigger(this, enemy)
         })
 
@@ -165,7 +162,7 @@ export default class Swordman extends Character{
     }
 
     isBlock(crush: number = 0): boolean {
-        let b_chance = this.block_chance + this.agility * 3
+        let b_chance = this.chance_to_block + this.agility * 3
 
         if(b_chance > 90){
             b_chance = 90
@@ -191,7 +188,7 @@ export default class Swordman extends Character{
             arm = 95
         }
 
-        return !this.no_armour && Func.chance(arm, this.is_lucky)
+        return Func.chance(arm, this.is_lucky)
     }
 
     takeDamage(unit:any = undefined, options: any = {}){
@@ -226,7 +223,7 @@ export default class Swordman extends Character{
 
         this.playerWasHited(unit)
 
-        let b_chance = this.block_chance + this.agility * 3
+        let b_chance = this.chance_to_block + this.agility * 3
 
         if(b_chance > 90){
             b_chance = 90
@@ -292,356 +289,19 @@ export default class Swordman extends Character{
     }
 
     getSkipDamageStateChance(){
-        return this.avoid_damaged_state_chance + this.will * 5
+        return this.chance_to_avoid_damage_state + this.will * 5
     }
 
     getRegenTimer(){
-        return this.base_regen_time - this.will * 150
-    }
-
-    getAllUpgrades(){
-        return [
-            {
-                name: 'echo swing',
-                type: 'weapon swing',
-                canUse: (character: Character) => {
-                    return character.first_ability instanceof WeaponSwing && !character.first_ability.echo_swing
-                },
-                teach: (character: Character) => {
-                    if(character.first_ability && character.first_ability instanceof WeaponSwing){
-                        character.first_ability.echo_swing = true
-                    }
-                },
-                cost: 3,
-                desc: 'gives your weapon swing chance to land an additional swing after a short time'
-            },
-            {
-                name: 'improved swing technology',
-                type: 'weapon swing',
-                canUse: (character: Character) => {
-                    return character.first_ability instanceof WeaponSwing && !character.first_ability.improved_swing_technology
-                },
-                teach: (character: Character) => {
-                    if(character.first_ability && character.first_ability instanceof WeaponSwing){
-                        character.first_ability.improved_swing_technology = true
-                    }
-                },
-                cost: 2,
-                desc: 'gives your weapon swing chance to increase move and attack speed for a short period'
-            },
-            {
-                name: 'light grip',
-                type: 'weapon throw',
-                canUse: (character: Character) => {
-                    return character.first_ability instanceof WeaponThrow && !character.first_ability.light_grip
-                },
-                teach: (character: Character) => {
-                    if(character.first_ability && character.first_ability instanceof WeaponThrow){
-                        character.first_ability.light_grip = true
-                    }
-                },
-                cost: 2,
-                desc: 'gives your weapon throw ability a chance to reduce cd time between uses by 50%'
-            },
-            {
-                name: 'multiple blades',
-                type: 'weapon throw',
-                canUse: (character: Character) => {
-                    return character.first_ability instanceof WeaponThrow && !character.first_ability.multiple
-                },
-                teach: (character: Character) => {
-                    if(character.first_ability && character.first_ability instanceof WeaponThrow){
-                        character.first_ability.multiple = true
-                    }
-                },
-                cost: 5,
-                desc: 'can create additional copies your throwed weapon'
-            },
-            {
-                name: 'returning',
-                type: 'weapon throw',
-                canUse: (character: Character) => {
-                    return character.first_ability instanceof WeaponThrow && !character.first_ability.returning && !character.first_ability.shattering
-                },
-                teach: (character: Character) => {
-                    if(character.first_ability && character.first_ability instanceof WeaponThrow){
-                        character.first_ability.returning = true
-                    }
-                },
-                cost: 3,
-                desc: 'gives your weapon throw ability a chance to return'
-            },
-            {
-                name: 'shattering',
-                type: 'weapon throw',
-                canUse: (character: Character) => {
-                    return character.first_ability instanceof WeaponThrow && !character.first_ability.returning && !character.first_ability.shattering
-                },
-                teach: (character: Character) => {
-                    if(character.first_ability && character.first_ability instanceof WeaponThrow){
-                        character.first_ability.shattering = true
-                    }
-                },
-                cost: 3,
-                desc: 'gives your weapon throw ability a chance to shatter up to 3 shards'
-            },
-            {
-                name: 'heavy landing',
-                type: 'jump',
-                canUse: (character: Character) => {
-                    return character.second_ability instanceof Jump && !character.second_ability.heavy_landing
-                },
-                teach: (character: Character) => {
-                    if(character.second_ability && character.second_ability instanceof Jump){
-                        character.second_ability.heavy_landing = true
-                    }
-                },
-                cost: 2,
-                desc: 'after landing by jump ability your will get armour by each hited enemy'
-            },
-             {
-                name: 'stomp',
-                type: 'jump',
-                canUse: (character: Character) => {
-                    return character.second_ability instanceof Jump && !character.second_ability.stomp
-                },
-                teach: (character: Character) => {
-                    if(character.second_ability && character.second_ability instanceof Jump){
-                        character.second_ability.stomp = true
-                    }
-                },
-                cost: 5,
-                desc: 'increases the radius in which enemies will take damage'
-            },
-            {
-                name: 'destroyer',
-                type: 'charge',
-                canUse: (character: Character) => {
-                    return character.second_ability instanceof Charge && !character.second_ability.destroyer
-                },
-                teach: (character: Character) => {
-                    if(character.second_ability && character.second_ability instanceof Charge){
-                        character.second_ability.destroyer = true
-                    }
-                },
-                cost: 2,
-                desc: 'gives a chance to deal damage by charge ability'
-            },
-            {
-                name: 'vision of possibilities',
-                type: 'charge',
-                canUse: (character: Character) => {
-                    return character.second_ability instanceof Charge && !character.second_ability.possibilities
-                },
-                teach: (character: Character) => {
-                    if(character.second_ability && character.second_ability instanceof Charge){
-                        character.second_ability.possibilities = true
-                    }
-                },
-                cost: 1,
-                desc: 'if you hit 3 or more enemies by charge ability you have a chance to get resourse'
-            },
-            {
-                name: 'blood harvest',
-                type: 'whirlwind',
-                canUse: (character: Character) => {
-                    return character.third_ability instanceof Whirlwind && !character.third_ability.blood_harvest
-                },
-                teach: (character: Character) => {
-                    if(character.third_ability && character.third_ability instanceof Whirlwind){
-                        character.third_ability.blood_harvest = true
-                    }
-                },
-                cost: 3,
-                desc: 'after using whirlwind you have a chance to create blood sphere'
-            },
-            {
-                name: 'fan of swords',
-                type: 'whirlwind',
-                canUse: (character: Character) => {
-                    return character.third_ability instanceof Whirlwind && !character.third_ability.fan_of_swords
-                },
-                teach: (character: Character) => {
-                    if(character.third_ability && character.third_ability instanceof Whirlwind){
-                        character.third_ability.fan_of_swords = true
-                    }
-                },
-                cost: 8,
-                desc: 'your whirlwind now fires fan of swords, inproves of weapon throw ability also works'
-            },
-            {
-                name: 'consequences',
-                type: 'quake',
-                canUse: (character: Character) => {
-                    return character.third_ability instanceof Quake && !character.third_ability.consequences
-                },
-                teach: (character: Character) => {
-                    if(character.third_ability && character.third_ability instanceof Quake){
-                        character.third_ability.consequences = true
-                    }
-                },
-                cost: 3,
-                desc: 'quake has a biger radius but incresed weakness duration'
-            },
-            {
-                name: 'selfcare',
-                type: 'quake',
-                canUse: (character: Character) => {
-                    return character.third_ability instanceof Quake && !character.third_ability.selfcare
-                },
-                teach: (character: Character) => {
-                    if(character.third_ability && character.third_ability instanceof Quake){
-                        character.third_ability.selfcare = true
-                    }
-                },
-                cost: 1,
-                desc: 'your quake ability dont deals damage to you'
-            },
-        
-            {
-                name: 'drinker',
-                type: 'cursed weapon',
-                canUse: (character: Character) => {
-                    return character.utility instanceof CursedWeapon && !character.utility.drinker
-                },
-                teach: (character: Character) => {
-                    if(character.utility && character.utility instanceof CursedWeapon){
-                        character.utility.drinker = true
-                    }
-                },
-                cost: 1,
-                desc: 'while you are affected by cursed weapon you have a chance to restore life after killing enemy'
-            },
-            {
-                name: 'fast commands',
-                type: 'commands',
-                canUse: (character: Character) => {
-                    return character.utility instanceof Commands && !character.utility.fast_commands
-                },
-                teach: (character: Character) => {
-                    if(character.utility && character.utility instanceof Commands){
-                        character.utility.fast_commands = true
-                    }
-                },
-                cost: 1,
-                desc: 'buff becomes shorter but stronger'
-            },
-            {
-                name: 'shattered weapon',
-                type: 'new ability',
-                canUse: (character: Character) => {
-                    return !(character.second_ability instanceof ShatteredWeapon)
-                },
-                teach: (character: Character) => {
-                    if(character instanceof Swordman){
-                        character.second_ability = new ShatteredWeapon(character)
-                        character.updateClientSkill()
-                    }
-                },
-                cost: 3,
-                desc: 'fires a magic fragments of your weapon when it hits walls or enemies it will returns and increases your armour rate'
-            },
-            {
-                name: 'searching weapon',
-                canUse: (character: Character) => {
-                    return character.attack_radius < 10
-                },
-                teach: (character: Character) => {
-                    if(character instanceof Swordman){
-                        character.attack_radius ++
-                    }
-                },
-                cost: 2,
-                desc: 'increases attack range'
-            },
-            {
-                name: 'attack speed',
-                canUse: (character: Character) => {
-                    return character.attack_speed > 1000
-                },
-                teach: (character: Character) => {
-                    if(character instanceof Swordman){
-                        character.attack_speed -= 80
-                    }
-                },
-                cost: 2,
-                desc: 'increases attack speed'
-            },
-            {
-                name: 'heaven vengeance',
-                type: 'new ability',
-                canUse: (character: Character) => {
-                    return !(character.first_ability instanceof HeavenVengeance)
-                },
-                teach: (character: Character) => {
-                    if(character instanceof Swordman){
-                        character.first_ability = new HeavenVengeance(character)
-                        character.updateClientSkill()
-                    }
-                },
-                cost: 3,
-                desc: 'hits one enemy and strikes nearby enemies with lightning'
-            },
-            {
-                name: 'eye for eye',
-                type: 'heaven vengeance',
-                canUse: (character: Character) => {
-                    return character.first_ability instanceof HeavenVengeance && !character.first_ability.eye
-                },
-                teach: (character: Character) => {
-                    if(character instanceof Swordman && character.first_ability instanceof HeavenVengeance){
-                        character.first_ability.eye = true
-                    }
-                },
-                cost: 3,
-                desc: 'increases radius of serching targets by your courage'
-            },
-            {
-                name: 'heaven grace',
-                type: 'heaven vengeance',
-                canUse: (character: Character) => {
-                    return character.first_ability instanceof HeavenVengeance && !character.first_ability.grace
-                },
-                teach: (character: Character) => {
-                    if(character instanceof Swordman && character.first_ability instanceof HeavenVengeance){
-                        character.first_ability.grace = true
-                        character.when_hited_triggers.push(character.first_ability)
-                    }
-                },
-                cost: 1,
-                desc: 'gives a chance when hit to clear skill cd'
-            },
-            {
-                name: 'emergency orders',
-                canUse: (character: Character) => {
-                    return !character.when_say_phrase_triggers.some(elem => elem instanceof EmergencyOrdersTrigger)
-                },
-                teach: (character: Character) => {
-                    return character.when_say_phrase_triggers.push(new EmergencyOrdersTrigger())
-                },
-                cost: 3,
-                desc: 'when you speak can apply command ability buff'
-            },
-            {
-                name: 'blocking technique',
-                canUse: (character: Character) => {
-                    return !character.when_block_triggers.some(elem => elem instanceof BlockingTechnique)
-                },
-                teach: (character: Character) => {
-                    return character.when_block_triggers.push(new BlockingTechnique())
-                },
-                cost: 3,
-                desc: 'when you block 5 hits the next three will be successfully blocked'
-            },
-        ]
+        return this.base_regeneration_time - this.will * 150
     }
 
     generateUpgrades(){
         if(this.upgrades.length) return
 
         //get all upgrades for this class
-        let p = super.getAllUpgrades()
-        let all = this.getAllUpgrades().concat(p)
+        let p = Upgrades.getAllUpgrades()
+        let all = Upgrades.getSwordmanUpgrades().concat(p)
        
         //filter by usability
         let filtered = all.filter(elem => {
@@ -700,11 +360,11 @@ export default class Swordman extends Character{
     setDamagedAct(){
         this.damaged = true
         this.state = 'damaged'
-        this.can_move_by_player = false
+        this.can_be_controlled_by_player = false
         this.stateAct = this.damagedAct
 
         this.cancelAct = () => {
-            this.can_move_by_player = true
+            this.can_be_controlled_by_player = true
             this.damaged = false
         }
 
@@ -749,7 +409,7 @@ export default class Swordman extends Character{
     addPoint(count: number = 1, ignore_limit = false){
        if(!this.can_regen_resource) return
 
-       if(this.resource >= this.max_resource && !ignore_limit){
+       if(this.resource >= this.maximum_resources && !ignore_limit){
           return
        }
        
@@ -764,7 +424,7 @@ export default class Swordman extends Character{
         this.state = 'defend'
         this.stateAct = this.defendAct
 
-        this.when_start_block_triggers.forEach(elem => elem.trigger(this))
+        this.triggers_on_start_block.forEach(elem => elem.trigger(this))
     
         let reduce = 80 - this.speed * 5
         if(reduce < 0){

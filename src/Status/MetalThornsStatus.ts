@@ -4,6 +4,8 @@ import Status from "./Status"
 
 export default class MetalThornsStatus extends Status{
 
+    pointed: boolean = false
+
     radius: number
     frequency: number
     x: any
@@ -65,6 +67,9 @@ export default class MetalThornsStatus extends Status{
             this.unit.level.enemies.forEach(elem => {
                 if(Func.elipseCollision(box, elem.getBoxElipse())){
                     elem.takeDamage(this.unit)
+                    if(this.pointed){
+                        elem.penetrated_rating += 30
+                    }
                 }
             })
 

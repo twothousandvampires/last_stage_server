@@ -20,7 +20,7 @@ import Item from "./Item";
         }
 
         equip(character: Character): void {
-            character.reach_near_dead_triggers.push(this)
+            character.triggers_on_near_dead.push(this)
         }
 
         getSpecialForgings(): string[] {

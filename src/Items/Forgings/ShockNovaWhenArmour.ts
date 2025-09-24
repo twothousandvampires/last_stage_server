@@ -22,8 +22,8 @@ export default class ShockNovaWhenArmour extends Forging{
 
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
-            if(!player.block_with_armour_triggers.some(elem => elem instanceof ShockNovaWhenArmour)){
-                player.block_with_armour_triggers.push(this)
+            if(!player.triggers_on_armour_hit.some(elem => elem instanceof ShockNovaWhenArmour)){
+                player.triggers_on_armour_hit.push(this)
             }
 
             this.payCost()

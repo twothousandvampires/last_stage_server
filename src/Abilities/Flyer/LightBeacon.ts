@@ -29,7 +29,7 @@ export default class LightBeacon extends FlyerAbility{
     }
 
     use(){    
-        this.owner.can_move_by_player = false
+        this.owner.can_be_controlled_by_player = false
 
         this.state = 0
         this.owner.pay_to_cost = this.cost
@@ -47,7 +47,7 @@ export default class LightBeacon extends FlyerAbility{
 
         this.owner.cancelAct = () => {
             this.owner.action = false
-            this.owner.can_move_by_player = true
+            this.owner.can_be_controlled_by_player = true
             this.owner.hit = false
             this.owner.is_attacking = false
             this.owner.can_regen_resource = true

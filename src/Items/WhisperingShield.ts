@@ -18,8 +18,8 @@ export default class WhisperingShield extends Item {
     }
 
     equip(character: Character): void {
-        character.when_block_triggers.push(this)
-        character.block_chance += 5
+        character.triggers_on_block.push(this)
+        character.chance_to_block += 5
     }
     
     trigger(character: Character){

@@ -17,7 +17,7 @@ export default class YellowStone extends Item{
     }
 
     equip(character: Character): void {
-        character.on_status_resist_triggers.push(this)
+        character.triggers_on_status_resist.push(this)
     }
 
     trigger(character: Character){

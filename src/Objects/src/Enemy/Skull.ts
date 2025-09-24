@@ -22,7 +22,7 @@ export default class Skull extends Enemy{
         this.getState()
     }
 
-    setDyingAct(){
+    setdyingAct(){
         this.is_corpse = true
         if(this.freezed){
             this.state = 'freeze_dying'
@@ -35,7 +35,7 @@ export default class Skull extends Enemy{
         else{
             this.state = 'dying'
         }
-        this.stateAct = this.DyingAct
+        this.stateAct = this.dyingAct
         this.setTimerToGetState(this.dying_time)
     }
 

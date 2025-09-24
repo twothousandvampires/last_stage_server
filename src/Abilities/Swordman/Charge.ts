@@ -62,7 +62,7 @@ export default class Charge extends SwordmanAbility{
         this.owner.action_time = 200
         this.owner.setImpactTime(100)
         
-        this.owner.avoid_damaged_state_chance += 100
+        this.owner.chance_to_avoid_damage_state += 100
 
         this.end_timeout = setTimeout(() => {
             this.end = true
@@ -79,7 +79,7 @@ export default class Charge extends SwordmanAbility{
             this.start = false
             this.end = false
             
-            this.owner.avoid_damaged_state_chance -= 100
+            this.owner.chance_to_avoid_damage_state -= 100
             if(this.possibilities && this.hited.length >= 3){
                 this.owner.addResourse()
             }

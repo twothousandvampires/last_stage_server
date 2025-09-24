@@ -14,10 +14,10 @@ export default class FrostSpire extends Pile{
         this.getState()
     }
 
-    setDyingAct(){
+    setdyingAct(){
         this.state = 'dying'
     
-        this.stateAct = this.DyingAct
+        this.stateAct = this.dyingAct
         this.setTimerToGetState(this.dying_time)
 
         if(this.life_status <= 0){

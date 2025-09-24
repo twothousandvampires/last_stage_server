@@ -6,7 +6,6 @@ import GraceShard from "./Objects/Effects/GraceShard"
 import Func from "./Func"
 import Split from "./Objects/Effects/Split"
 import ChargedSphere from "./Objects/Effects/ChargedSphere"
-import Grace from "./Objects/Effects/Grace"
 import Intervention from "./Objects/Effects/Intervention"
 import Default from "./Scenarios/Default"
 import Scenario from "./Scenarios/Scenario"
@@ -67,7 +66,7 @@ export default class Level{
     ]
 
     public boss_kills_trashold: number = 300
-    public enemies: Enemy[] = []
+    public enemies: (Enemy | Unit)[] = []
     public players: Character[] = []
     public projectiles: Projectiles[] = []
     public effects: Effect[] = []
