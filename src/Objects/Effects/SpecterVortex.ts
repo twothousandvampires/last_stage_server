@@ -23,9 +23,7 @@ export default class SpecterVortex extends Effect{
 
     act(game_tick: number){
         if(!this.owner || game_tick - this.start >= 5000){
-            this.level.deleted.push(this.id)
-            this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
-
+            this.delete()
             return
         }
 

@@ -55,7 +55,7 @@ export default class BurningCircle extends CultistAbility{
                     y: this.y
             })
 
-            let status = new BurningCircleStatus(this.time)
+            let status = new BurningCircleStatus(this.level.time)
             let second = this.getSecondResource()
             status.setFrequency(1800 - second * 150)
             

@@ -35,7 +35,7 @@ export class Spark extends Projectiles{
     act(tick: number): void { 
       
         if(tick - this.start >= this.ttl){
-            this.delete()
+            this.impact()
             return
         }
 
@@ -54,7 +54,7 @@ export class Spark extends Projectiles{
                 elem.takeDamage(this.owner)
                 this.pierce_count --
                 if(this.pierce_count === 0){
-                    this.delete()
+                    this.impact()
                 }
                 else{
                     this.hitted.push(elem.id)
@@ -67,13 +67,14 @@ export class Spark extends Projectiles{
                 elem.takeDamage()
                 this.pierce_count --
                 if(this.pierce_count === 0){
-                    this.delete()
+                    this.impact()
                 }
                 else{
                     this.hitted.push(elem.id)
                 }
             }
         })
+
 
         let l = 1 - Math.abs(0.5 * Math.cos(this.angle))    
 
@@ -97,11 +98,9 @@ export class Spark extends Projectiles{
 
              this.addToPoint(n_x, n_y)
         } 
-    }
 
-    delete(){
-        this.level.deleted.push(this.id)
-        this.level.projectiles = this.level.projectiles.filter(elem => elem != this)
+        
+        this.wasChanged()
     }
 
     reflect(angle: number){

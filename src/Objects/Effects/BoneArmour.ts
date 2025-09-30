@@ -11,17 +11,4 @@ export default class BoneArmour extends Effect {
         this.name = 'bone armour'
         this.x = undefined
     }
-
-    act(tick: number){
-        if(!this.owner){
-             return
-        }  
-
-        this.x = this.owner.x
-        this.y = this.owner.y
-    }
-
-    setOwner(character){
-        this.owner = character
-    }
 }

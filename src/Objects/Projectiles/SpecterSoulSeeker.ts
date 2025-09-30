@@ -28,7 +28,6 @@ export class SpecterSoulSeeker extends Projectiles{
     }
 
     act(): void { 
-
         this.level.players.forEach(elem => {
             if(Func.elipseCollision(this.getBoxElipse(), elem.getBoxElipse())){
                 let status = new Drained(elem.time)
@@ -47,11 +46,6 @@ export class SpecterSoulSeeker extends Projectiles{
             }
         })
 
-        if(this.isOutOfMap()){
-            this.impact()
-            return
-        }
-
         let traveled = Math.sqrt(((this.x - this.start_x) ** 2) + ((this.y - this.start_y) ** 2))
 
         if(traveled >= this.max_distance){
@@ -67,26 +61,6 @@ export class SpecterSoulSeeker extends Projectiles{
             this.angle = Func.angle(this.x, this.y, this.target.x, this.target.y)
         }
         
-        let l = 1 - Math.abs(0.5 * Math.cos(this.angle))    
-
-        let n_x = Math.sin(this.angle) * l
-        let n_y = Math.cos(this.angle) * l
-
-        n_x *= this.move_speed
-        n_y *= this.move_speed
-
-        if(n_x < 0){
-            this.flipped = true
-        }
-        else{
-            this.flipped = false
-        }
-
-        this.addToPoint(n_x, n_y)
-    }
-
-    impact(){
-        this.level.deleted.push(this.id)
-        this.level.projectiles = this.level.projectiles.filter(elem => elem != this)
+        this.moveAct()
     }
 }

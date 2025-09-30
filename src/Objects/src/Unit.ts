@@ -8,7 +8,11 @@ export default abstract class Unit extends GameObject {
     action_impact: number = 0
     action_end_time: number = 0
     action_is_end: boolean = false
-     
+       
+    exploded: boolean = false
+    burned: boolean = false
+    
+        is_corpse: boolean = false
     flipped: boolean = false
     is_attacking: boolean = false
     is_moving: boolean = false
@@ -121,10 +125,10 @@ export default abstract class Unit extends GameObject {
         this.move_speed_penalty += value
     }
 
-    setState(newState: Function) {
+    setState(newState: Function, with_update = true) {
+        if(this.is_corpse) return
+
         this.is_moving = false
-        this.was_changed = true
-        
         if(this.cancelAct){
             this.action_impact = 0
             this.action_end_time = 0
@@ -140,6 +144,7 @@ export default abstract class Unit extends GameObject {
         }
 
         newState.apply(this)
+        this.wasChanged()
     }
 
     moveByAngle(angle: number){
@@ -178,7 +183,8 @@ export default abstract class Unit extends GameObject {
 
                 if(enemy === this) continue
                 if(enemy.phasing) continue
-
+                if(enemy.is_dead) continue
+                
                 if(Func.elipseCollision(this.getBoxElipse(n_x, 0), enemy.getBoxElipse())){
                     x_coll = true
                     n_x = 0

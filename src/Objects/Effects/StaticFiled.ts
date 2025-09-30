@@ -24,7 +24,6 @@ export default class StaticFiled extends Effect{
 
     act(time: number){
         if(time - this.time >= 5000){
-            
             this.level.enemies.forEach(elem => {
                 if(this.affected.has(elem.id)){
                     elem.move_speed = this.affected.get(elem.id)

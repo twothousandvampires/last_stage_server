@@ -97,6 +97,13 @@ export default class characterTemplate{
                     selected: false,
                     desc: 'You jump and create 3 waves upon landing. This ability deals damage to YOU by defautl. The first one explodes enemies, the second one stuns them, and the third one slows them down. The radius depends on the might. After using it, you become weaker for 5 seconds.'
                 },
+                 {
+                    id: 6,
+                    name: 'heaven wrath',
+                    type: 3,
+                    selected: false,
+                    desc: 'Get a 10 second buff that causes destruction to enemies if you have been hitting an enemy in the last 1.5 seconds.'
+                },
                 {
                     id: 9,
                     name: 'spectral swords',
@@ -117,6 +124,20 @@ export default class characterTemplate{
                     type: 4,
                     selected: false,
                     desc: 'Grants nearby allies speed and armor for 12 seconds. Effect increases by courage.'
+                },
+                {
+                    id: 8,
+                    name: 'inner power',
+                    type: 5,
+                    selected: true,
+                    desc: 'when you near dead, get a strong buff to help you survive. has long cd'
+                },
+                {
+                    id: 8,
+                    name: 'heaven intervention',
+                    type: 5,
+                    selected: false,
+                    desc: 'when you get damage there is a chance that heaven will help you'
                 },
             ]
         }
@@ -204,7 +225,7 @@ export default class characterTemplate{
                 },
                 {
                     id: 7,
-                    name: 'teleportaion',
+                    name: 'teleportation',
                     type: 4,
                     selected: true,
                     desc: 'Teleports you in certain place.'
@@ -263,7 +284,7 @@ export default class characterTemplate{
                     name: 'soulrender',
                     type: 1,
                     selected: false,
-                    desc: 'create explosive rune.'
+                    desc: "tears the enemy, granting a soul charge, each soul charge increases cast speed. if you have more than one soul charge, there is a chance to tear the enemy apart and lose all soul charges."
                 },
                 {
                     id: 3,

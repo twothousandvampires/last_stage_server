@@ -122,6 +122,7 @@ export default class Default extends Scenario{
         
         count += (level.players.length - 1)
 
+
         for(let i = 0; i < count; i++){
 
             let enemy_name = undefined
@@ -254,8 +255,7 @@ export default class Default extends Scenario{
             level.enemies.push(enemy) 
         }
 
-        console.log(this.waves_created)
-      
+    
         this.checkUpgrade(level)
         this.checkPortal(level) 
     }
@@ -272,7 +272,7 @@ export default class Default extends Scenario{
         if(this.waves_created < this.grace_trashold) return
 
         let delta = this.waves_created - this.grace_trashold
-        console.log('delta ' + delta)
+
         let chance = 20 + delta * 3
 
         if(Func.chance(chance)){

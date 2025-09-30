@@ -25,11 +25,8 @@ export default class BigFrostNova extends Effect{
     }
 
     act(){
-
         if(this.stage > 3){
-
             if(this.genesis){
-
                 let box = this.getBoxElipse()
                 box.r = 30
 

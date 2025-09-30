@@ -27,7 +27,6 @@ export default class MagicSlime extends Enemy{
         this.create_chance = 25
         this.player_check_radius = 25
         this.create_item_chance = 1
-        this.getState()
     }
 
     setDeadState(){
@@ -120,14 +119,6 @@ export default class MagicSlime extends Enemy{
         }
 
         this.setTimerToGetState(this.attack_speed)
-    }
-
-    retreatAct(){
-        let a = this.retreat_angle
-
-        if(!a) return
-        
-        this.moveByAngle(a)
     }
 
     setRetreatState(){

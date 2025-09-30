@@ -2,7 +2,7 @@ import Func from "../../Func";
 import Level from "../../Level";
 import Effect from "./Effects";
 
-export default class Forger extends Effect{
+export default class Forger extends Effect {
 
     closed: any[] = []
 

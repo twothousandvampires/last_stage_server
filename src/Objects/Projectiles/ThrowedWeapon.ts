@@ -36,13 +36,13 @@ export class ThrowedWeapon extends Projectiles{
 
     act(): void { 
 
-        if(Math.sqrt(((this.x - this.start_x) ** 2) + ((this.y - this.start_y) ** 2)) >= this.max_distance + (this.owner.might * 10)){
+        if(Math.sqrt(((this.x - this.start_x) ** 2) + ((this.y - this.start_y) ** 2)) >= this.max_distance){
             this.impact()
             return
         }
 
         let box = this.getBoxElipse()
-        box.r = (this.owner?.attack_radius / 10)
+        box.r = (this.owner?.attack_radius / 8)
 
         for(let i = 0; i < this.level.players.length; i++){
             let p = this.level.players[i]
@@ -78,28 +78,7 @@ export class ThrowedWeapon extends Projectiles{
             }
         }
 
-        let l = 1 - Math.abs(0.5 * Math.cos(this.angle))
-
-        let n_x = Math.sin(this.angle) * l
-        let n_y = Math.cos(this.angle) * l
-
-        n_x *= this.move_speed
-        n_y *= this.move_speed
-
-        if(this.isOutOfMap(this.x + n_x, this.y + n_y)){
-            this.impact()
-            return
-        }
-        else{
-            if(n_x < 0){
-                this.flipped = true
-            }
-            else{
-                this.flipped = false
-            }
-
-             this.addToPoint(n_x, n_y)
-        } 
+        this.moveAct()
     }
 
     impact(){

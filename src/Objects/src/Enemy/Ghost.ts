@@ -33,8 +33,6 @@ export default class Ghost extends Enemy{
         this.dying_time = 1200
         this.phasing = true
         this.create_item_chance = 3
-       
-        this.getState()
     }
 
     setResurectAct(){
@@ -76,7 +74,7 @@ export default class Ghost extends Enemy{
     }
 
     setDeadState(){
-        if(!this.freezed && this.state != 'burn_dying' && !Func.chance(this.ressurect_chance)){
+        if(Func.notChance(this.ressurect_chance)){
             this.is_corpse = true
             this.state = 'dead'
             this.stateAct = this.deadAct
@@ -84,6 +82,7 @@ export default class Ghost extends Enemy{
         else{
             this.state = 'fake_dead'
             this.stateAct = this.deadAct
+            this.ressurect_chance -= 10
             setTimeout(() => {
                 this.setState(this.setResurectAct)
             }, 3000)
@@ -171,6 +170,7 @@ export default class Ghost extends Enemy{
             })
 
             if(this.spell_name === 'frost bolts'){
+                console.log('frost bolts')
                 let angle = Func.angle(this.x, this.y, this.target.x, this.target.y)
 
                 let proj = new FrostBolt(this.level)
@@ -240,13 +240,6 @@ export default class Ghost extends Enemy{
         }
 
         this.setTimerToGetState(this.attack_speed)
-    }
-    retreatAct(){
-            let a = this.retreat_angle
-    
-            if(!a) return
-            
-            this.moveByAngle(a)
     }
     
     setRetreatState(){

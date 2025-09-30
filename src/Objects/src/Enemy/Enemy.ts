@@ -13,7 +13,6 @@ export abstract class Enemy extends Unit {
     check_timer: any
     player_check_radius = 40
     can_check_player: boolean = true
-    is_corpse: boolean = false
     dying_time: number = 1200
     spawn_time: number = 1200
     dead_type: string | undefined
@@ -52,11 +51,14 @@ export abstract class Enemy extends Unit {
     }
 
     moveAct(){
+        if(this.is_dead) return
+        
         this.state = 'move'
-        this.was_changed = true
+
         let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
 
         this.moveByAngle(a)
+        this.wasChanged()
     }
 
     setImpactTime(c: number){
@@ -72,8 +74,21 @@ export abstract class Enemy extends Unit {
         return tick - this.last_action >= this.cooldown_attack
     }
 
+    retreatAct(){
+        let a = this.retreat_angle
+      
+        if(!a) return
+        
+        this.moveByAngle(a)
+         this.wasChanged()
+    }
+
     act(time: number){
-        if(!this.can_act || !this.stateAct) return
+
+        if(!this.stateAct){
+            this.getState()
+        }
+        
         this.stateAct(time)
        
         if(this.action_impact && time >= this.action_impact){
@@ -109,21 +124,33 @@ export abstract class Enemy extends Unit {
     }
 
     setdyingAct(){
+        let to_delete = true
         if(this.freezed){
             this.state = 'freeze_dying'
-            this.is_corpse = true
             this.level.sounds.push({
                 name: 'shatter',
                 x: this.x,
                 y: this.y
             })
         }
+        else if(this.burned){
+            this.state = 'burn_dying'
+        }
+        else if(this.exploded){
+            this.state = 'explode'
+        }
         else{
-            this.state = this.dead_type ? this.dead_type : 'dying'
+            this.state = 'dying'
+            to_delete = false
         }
 
-        this.stateAct = this.dyingAct
-        this.setTimerToGetState(this.dying_time)
+        if(to_delete){
+            this.is_corpse = true
+        }
+        else{
+            this.stateAct = this.dyingAct
+            this.setTimerToGetState(this.dying_time)
+        }
     }
 
     setIdleAct(){
@@ -171,7 +198,7 @@ export abstract class Enemy extends Unit {
             this.armour_rate = 0
         }
 
-        if(this.checkArmour(unit) && !instantly){
+        if(this.checkArmour(unit)){
             this.level.addSound({
                 name: 'metal hit',
                 x: this.x,
@@ -226,25 +253,23 @@ export abstract class Enemy extends Unit {
         }
 
         if(this.life_status <= 0){
+            this.is_dead = true
+
             if(options?.explode){
-                this.dead_type = 'explode'
-                this.is_corpse = true
+                this.exploded = true
                 this.level.addSound(this.getExplodedSound())
             }
             else if(options?.burn && this.can_be_burned){
-                this.dead_type = 'burn_dying'
-                this.is_corpse = true
+                this.burned = true
             }
-            
-            this.is_dead = true
-           
+
             if(is_player_deal_hit){
                 this.create_grace_chance += unit.chance_to_create_grace
                 unit.succesefulKill(this)
                 unit.addGold(this.gold_revard)
             }
          
-            this.setdyingAct()
+            this.setState(this.setdyingAct)
         }
         
         if(is_player_deal_hit && unit.impact > 0 && unit.level.time - unit.last_impact_time >= unit.impact_cooldown){

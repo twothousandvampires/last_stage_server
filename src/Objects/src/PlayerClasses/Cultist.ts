@@ -127,7 +127,7 @@ export default class Cultist extends Character{
         if(!this.can_get_courage) return
 
         for(let i = 0; i < count;i ++){
-            this.recent_hits.push(this.time)
+            this.recent_hits.push(this.level.time)
         }
 
         if(this.can_be_enlighten && this.recent_hits.length >= 8){
@@ -359,13 +359,13 @@ export default class Cultist extends Character{
     regen(){
         let second_resouce_timer = this.getSecondResourceTimer()
 
-        if(this.time >= this.check_recent_hits_timer){
+        if(this.level.time >= this.check_recent_hits_timer){
             this.check_recent_hits_timer += 1000
 
             for(let i = this.recent_hits.length; i >= 0; i--){
                 let hit_time = this.recent_hits[i]
 
-                if(this.time - hit_time >= second_resouce_timer){
+                if(this.level.time - hit_time >= second_resouce_timer){
                     this.recent_hits.splice(i, 1);
                 }
             }
@@ -373,7 +373,7 @@ export default class Cultist extends Character{
             this.sayPhrase()
         }
 
-        if(this.time >= this.next_life_regen_time){
+        if(this.level.time >= this.next_life_regen_time){
             this.next_life_regen_time += this.getRegenTimer()
             
             this.addLife()

@@ -9,13 +9,17 @@ export default abstract class GameObject {
     light_r: number = 0
     zone_id: number = 0
     id: number | string
-    was_changed: boolean = true
     invisible: boolean = false
     phasing: boolean = false
 
     constructor(public level: Level, public x: number = 0, public y: number = 0){
         this.id = level.getId()
         this.name = 'object'
+        this.wasChanged()
+    }
+
+    wasChanged(){
+        this.level.changed_actors.set(this.id, this)
     }
 
     public isOutOfMap(x: number = this.x, y: number = this.y): boolean{

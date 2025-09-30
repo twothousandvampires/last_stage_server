@@ -16,7 +16,6 @@ export default class Statue extends Pile{
         this.casted = false
         this.create_chance = 0
         this.count_as_killed = false
-        this.getState()
     }
 
     idleAct(time: number){

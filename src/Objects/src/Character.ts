@@ -25,12 +25,12 @@ export default abstract class Character extends Unit {
     c_x: number = 0
     c_y: number = 0
     purchased_items: number = 0
-   
-    exploded: boolean = false
+
     first_ability: Ability | undefined
     second_ability: Ability | undefined
     third_ability: Ability | undefined
     utility: Ability | undefined
+    passive: any
     item: item[] = []
 
     start_move_time: number = 0
@@ -38,6 +38,7 @@ export default abstract class Character extends Unit {
     last_time_the_skill_was_used: number | undefined
     last_steps_time: number = 0
     last_impact_time: number = 0
+    last_hit_time: number = 0
 
     knowledge: number = 0
     agility: number = 0
@@ -117,7 +118,7 @@ export default abstract class Character extends Unit {
     
     using_ability: any
     items_to_buy: Item[] = []
-    
+
     constructor(level: Level){
         super(level)
         this.box_r = 2.5
@@ -178,14 +179,11 @@ export default abstract class Character extends Unit {
 
     toJSON(){
         return {
+            abilities: [this.first_ability.name, this.second_ability?.name, this.third_ability?.name, this.utility?.name],
+            can_use: [this.first_ability.canUse(), this.second_ability.canUse(), this.third_ability.canUse(), this.utility.canUse()],
             resource: this.resource,
             maximum_resources: this.maximum_resources,
             life_status: this.life_status,
-            first: this.first_ability?.canUse(),
-            secondary: this.second_ability?.canUse(),
-            finisher: this.third_ability?.canUse(),
-            utility: this.utility?.canUse(),
-            second: this.getSecondResource(),
             life: this.life_status,
             x: this.x,
             y: this.y,
@@ -578,6 +576,10 @@ export default abstract class Character extends Unit {
 
             this.life_status --
 
+            if(this.life_status === 1){
+                this.reachNearDead()
+            }
+
             if(this.life_status <= 0){
                 this.playerTakeLethalDamage()
 
@@ -602,10 +604,6 @@ export default abstract class Character extends Unit {
 
         if(this.life_status > 0){
             this.playerLoseLife()
-
-            if(this.life_status === 1){
-                this.reachNearDead()
-            }
         }
 
         if(!this.can_be_lethaled){
@@ -660,6 +658,8 @@ export default abstract class Character extends Unit {
         this.triggers_on_hit.forEach(elem => {
             elem.trigger(this, target)
         })
+
+        this.last_hit_time = this.level.time
     }
 
     public applyStats(stats: any): void{
@@ -748,17 +748,24 @@ export default abstract class Character extends Unit {
             this.a = 0
             return
         }
-
-        this.a -= 0.08
+        this.a = 0.005
     }
 
     protected incA(): void{
         if(this.a >= 1){
-            this.a = 1
             return
         }
 
-        this.a += 0.08
+        if(this.a <= 0){
+            this.a = 0.005
+        }
+        else{
+            this.a *= 2
+        }
+        
+        if(this.a >= 1){
+            this.a = 1
+        }
     }
 
     public getTarget(): Unit | undefined {
@@ -789,6 +796,7 @@ export default abstract class Character extends Unit {
 
     private directMove(): void{
         if(this.canMove()){
+            this.incA()
             this.is_moving = true
             if(this.state === 'idle'){
                 this.state = 'move'
@@ -908,8 +916,6 @@ export default abstract class Character extends Unit {
             return
         }
     
-        
-      
         let next_step_x = 0
         let next_step_y = 0
 
@@ -960,6 +966,7 @@ export default abstract class Character extends Unit {
                 let enemy = this.level.enemies[i]
 
                 if(enemy.phasing) continue
+                if(enemy.is_dead) continue
 
                 if(Func.elipseCollision(this.getBoxElipse(next_step_x, 0), enemy.getBoxElipse())){
                     x_coll = true
@@ -982,7 +989,6 @@ export default abstract class Character extends Unit {
         }
 
         if(!this.isOutOfMap(this.x + next_step_x, this.y + next_step_y)){
-
             if(x_coll && next_step_y === 0){
                 if(this.y <= coll_e_x.y){
                     next_step_y = - 0.2

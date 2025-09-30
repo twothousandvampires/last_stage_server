@@ -20,7 +20,7 @@ export default class Teleportation extends FlyerAbility{
     constructor(owner: Flyer){
         super(owner)
         this.cd = 15000
-        this.name = 'teleportaion'
+        this.name = 'teleportation'
     }
 
     canUse(){

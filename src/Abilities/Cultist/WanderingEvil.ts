@@ -6,15 +6,11 @@ import WanderingEvilEffect from "../../Objects/Effects/WanderingEvilEffect";
 export default class WanderingEvil extends CultistAbility{
 
     distance: 25
-    ring_of_pain: boolean
-    collection_of_bones: boolean
 
     constructor(owner: Cultist){
         super(owner)
         this.name = 'wandering evil'
         this.distance = 25
-        this.ring_of_pain = false
-        this.collection_of_bones = false
         this.cost = 8
     }
 

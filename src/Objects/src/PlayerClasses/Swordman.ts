@@ -17,6 +17,9 @@ import Dash from "../../../Abilities/Swordman/Dash";
 import MetalThorns from "../../../Abilities/Swordman/MetalThorns";
 import Unit from "../Unit";
 import Upgrades from "../../../Classes/Upgrades";
+import InnerPowerTrigger from "../../../Triggers/InnerPowerTrigger";
+import HeavenIntervention from "../../../Triggers/HeavenIntervention";
+import HeavenWrath from "../../../Abilities/Swordman/HeavenWrath";
 
 export default class Swordman extends Character{
     
@@ -60,9 +63,9 @@ export default class Swordman extends Character{
         if(!this.can_get_courage) return
 
         if(Func.chance(this.knowledge * 3, this.is_lucky)){
-            this.recent_kills.push(this.time)
+            this.recent_kills.push(this.level.time)
         }
-        this.recent_kills.push(this.time)
+        this.recent_kills.push(this.level.time)
 
         if(this.can_be_enlighten && this.recent_kills.length >= 10){
             this.can_be_enlighten = false
@@ -150,7 +153,10 @@ export default class Swordman extends Character{
         else if(finisher_name === 'spectral swords'){
             this.third_ability = new SpectralSwords(this)
         }
-
+        else if(finisher_name === 'heaven wrath'){
+            this.third_ability = new HeavenWrath(this)
+        }
+    
         let utility_name = abilities.find(elem => elem.type === 4 && elem.selected).name
 
         if(utility_name === 'cursed weapon'){
@@ -158,6 +164,16 @@ export default class Swordman extends Character{
         }
         else if(utility_name === 'commands'){
             this.utility = new Commands(this)
+        }
+
+        let passive_name = abilities.find(elem => elem.type === 5 && elem.selected).name
+
+        if(passive_name === 'inner power'){
+            this.triggers_on_near_dead.push(new InnerPowerTrigger())
+        }
+
+        if(passive_name === 'heaven intervention'){
+            this.triggers_on_get_hit.push(new HeavenIntervention())
         }
     }
 
@@ -332,13 +348,13 @@ export default class Swordman extends Character{
     regen(){
         let second_resouce_timer = this.getSecondResourceTimer()
 
-        if(this.time >= this.check_recent_hits_timer){
+        if(this.level.time >= this.check_recent_hits_timer){
             this.check_recent_hits_timer += 1000
 
             for(let i = this.recent_kills.length; i >= 0; i--){
                 let hit_time = this.recent_kills[i]
 
-                if(this.time - hit_time >= second_resouce_timer){
+                if(this.level.time - hit_time >= second_resouce_timer){
                     this.recent_kills.splice(i, 1);
                 }
             }
@@ -346,7 +362,7 @@ export default class Swordman extends Character{
             this.sayPhrase()
         }
 
-        if(this.time >= this.next_life_regen_time){
+        if(this.level.time >= this.next_life_regen_time){
             this.next_life_regen_time += this.getRegenTimer()
             
             this.addLife()

@@ -142,7 +142,7 @@ export default class Flyer extends Character{
         
         let utility_name = abilities.find(elem => elem.type === 4 && elem.selected).name
 
-        if(utility_name === 'teleportaion'){
+        if(utility_name === 'teleportation'){
             this.utility = new Teleportation(this)
         }
         else if(utility_name === 'static field'){
@@ -327,13 +327,13 @@ export default class Flyer extends Character{
 
 
     regen(){
-        if(this.time >= this.check_recent_hits_timer){
+        if(this.level.time >= this.check_recent_hits_timer){
             this.check_recent_hits_timer += 1000
 
             for(let i = this.recent_cast.length; i >= 0; i--){
                 let hit_time = this.recent_cast[i]
                 // todo timer
-                if(this.time - hit_time >= 8000){
+                if(this.level.time - hit_time >= 8000){
                     this.recent_cast.splice(i, 1);
                 }
             }
@@ -341,12 +341,12 @@ export default class Flyer extends Character{
             this.sayPhrase()
         }
 
-        if(this.time >= this.next_life_regen_time){
+        if(this.level.time >= this.next_life_regen_time){
             this.next_life_regen_time += this.getRegenTimer()
             
             this.addLife()
         }
-        if(this.time >= this.next_mana_regen_time){
+        if(this.level.time >= this.next_mana_regen_time){
             this.next_mana_regen_time += this.getManaRegenTimer()
 
             if(this.can_regen_resource && !this.is_dead){
@@ -406,7 +406,7 @@ export default class Flyer extends Character{
     addCourage(){
         if(!this.can_get_courage) return
 
-        this.recent_cast.push(this.time)
+        this.recent_cast.push(this.level.time)
 
         if(this.can_be_enlighten && this.recent_cast.length >= 8){
             this.can_be_enlighten = false
@@ -419,7 +419,7 @@ export default class Flyer extends Character{
         }
 
         if(Func.chance(this.speed * 2.5, this.is_lucky)){
-            this.recent_cast.push(this.time)
+            this.recent_cast.push(this.level.time)
         }
     }
 

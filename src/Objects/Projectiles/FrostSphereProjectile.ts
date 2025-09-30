@@ -40,12 +40,6 @@ export class FrostSphereProjectile extends Projectiles{
     }
 
     act(): void { 
-
-        if(this.isOutOfMap()){
-            this.impact()
-            return
-        }
-
         let enemies = this.level.enemies
         let players = this.level.players
 
@@ -83,22 +77,7 @@ export class FrostSphereProjectile extends Projectiles{
             this.name = 'medium frost sphere'
         }
             
-        let l = 1 - Math.abs(0.5 * Math.cos(this.angle))
-
-        let n_x = Math.sin(this.angle) * l
-        let n_y = Math.cos(this.angle) * l
-
-        n_x *= this.move_speed
-        n_y *= this.move_speed
-
-        if(n_x < 0){
-            this.flipped = true
-        }
-        else{
-            this.flipped = false
-        }
-
-        this.addToPoint(n_x, n_y)
+        this.moveAct()
     }
 
     impact(){
@@ -125,8 +104,7 @@ export class FrostSphereProjectile extends Projectiles{
 
         effect.setPoint(this.x, this.y)
         this.level.effects.push(effect)
-        this.level.deleted.push(this.id)
-        
+       
         let explosion = this.getBoxElipse()
         explosion.r = explosion_radius
 
@@ -163,6 +141,7 @@ export class FrostSphereProjectile extends Projectiles{
             }
         })
         
+        this.level.deleted.push(this.id)
         this.level.projectiles = this.level.projectiles.filter(elem => elem != this)
     }
 }

@@ -35,8 +35,6 @@ export default class Specter extends Enemy{
         this.create_chance = 90
         this.gold_revard = 5
         this.create_item_chance = 6
-
-        this.getState()
     }
 
     takeDamage(unit: any = undefined, options: any = {}){
@@ -48,19 +46,19 @@ export default class Specter extends Enemy{
     }
 
     setDeadState(){
-       
-        if(!this.freezed && this.state != 'burn_dying' && !Func.chance(this.ressurect_chance)){
+        if(Func.notChance(this.ressurect_chance)){
             this.is_corpse = true
             this.state = 'dead'
             this.stateAct = this.deadAct
             let skull = new Skull(this.level)
             skull.setPoint(this.x, this.y)
+
             this.level.enemies.push(skull)
         }
         else{
-            this.phasing = true
             this.state = 'dead_with_skull'
             this.stateAct = this.deadAct
+            this.ressurect_chance -= 5
             setTimeout(() => {
                 this.setState(this.setResurectAct)
             }, 3000)

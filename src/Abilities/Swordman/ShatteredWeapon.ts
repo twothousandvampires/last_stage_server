@@ -61,7 +61,7 @@ export default class ShatteredWeapon extends SwordmanAbility{
 
             let second = this.getSecondResource()
             this.hit = true
-        
+            
             let a = undefined                    
             let target = this.getTarget()
             
@@ -75,6 +75,8 @@ export default class ShatteredWeapon extends SwordmanAbility{
             let zone_per_tooth = 0.6
             
             a -= (Math.round(count / 2) * zone_per_tooth)
+
+            this.addResourse()
 
             for (let i = 1; i <= count; i++){
                 let min_a = a + ((i - 1) * zone_per_tooth)

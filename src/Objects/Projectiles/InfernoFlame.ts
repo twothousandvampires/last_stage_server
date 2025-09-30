@@ -22,15 +22,13 @@ export class InfernoFlame extends Projectiles{
     act(tick: number): void { 
 
         if(tick - this.start_time >= 5000){
-            this.level.deleted.push(this.id)
-            this.level.projectiles = this.level.projectiles.filter(elem => elem != this)
+            this.impact()
             return
         }
 
         let enemies = this.level.enemies
         let players = this.level.players
 
-    
         for(let i = 0; i < players.length; i++){
             let p = players[i]
             if(p === this.owner) continue
@@ -52,21 +50,9 @@ export class InfernoFlame extends Projectiles{
             }
         }
 
-        let l = 1 - Math.abs(0.5 * Math.cos(this.angle))
-
-        let n_x = Math.sin(this.angle) * l
-        let n_y = Math.cos(this.angle) * l
-
-        n_x *= this.move_speed
-        n_y *= this.move_speed
-
-        this.addToPoint(n_x, n_y)
+        this.moveAct()
 
         this.angle += 0.05
         this.move_speed += 0.005
-    }
-
-    impact(){
-        
     }
 }

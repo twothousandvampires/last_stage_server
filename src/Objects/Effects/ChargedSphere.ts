@@ -4,6 +4,7 @@ import Phase from "../../Status/Phase";
 import Effect from "./Effects";
 
 export default class ChargedSphere extends Effect{
+
     x: any
     y: any
     time: number
@@ -19,8 +20,7 @@ export default class ChargedSphere extends Effect{
 
     act(time: number){
         if(time - this.time >= 10000){
-            this.level.deleted.push(this.id)
-            this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
+            this.delete()
             return
         }
 

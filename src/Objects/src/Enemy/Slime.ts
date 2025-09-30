@@ -22,7 +22,6 @@ export default class Slime extends Enemy{
         this.spawn_time = 1400
         this.say_z = 8
         this.weapon_angle = 1
-        this.getState()
     }
 
     setDeadState(){

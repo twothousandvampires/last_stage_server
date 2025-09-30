@@ -48,6 +48,7 @@ import Swordman from "../Objects/src/PlayerClasses/Swordman"
 import MetalThorns from "../Abilities/Swordman/MetalThorns"
 import Dash from "../Abilities/Swordman/Dash"
 import SpectralSwords from "../Abilities/Swordman/SpectralSwords"
+import Soulrender from "../Abilities/Cultist/Soulrender"
 
 export default class Upgrades{
     static getAllUpgrades(): Upgrade[]{
@@ -337,7 +338,7 @@ export default class Upgrades{
                     desc: 'gives you 10 ward'
                 },
                 {
-                    name: 'redemtion',
+                    name: 'redemption',
                     canUse: (character: Character) => {
                         return !character.triggers_on_enemy_die.some(elem => elem instanceof Redemption)
                     },
@@ -792,6 +793,19 @@ export default class Upgrades{
                 cost: 1,
                 desc: 'when you block you can summon spirit warrior'
             },
+            {
+                name: 'soul fragments',
+                canUse: (character: Character) => {
+                    return character.first_ability instanceof Soulrender && !character.first_ability.soul_fragments
+                },
+                teach: (character: Character) => {
+                    if(character.first_ability instanceof Soulrender){
+                        character.first_ability.soul_fragments = true
+                    }
+                },
+                cost: 1,
+                desc: 'increases the count of shards after tear enemy'
+            },
         ]
     }
     static getFlyerUpgrades(){
@@ -1122,10 +1136,10 @@ export default class Upgrades{
                         name: 'light stream',
                         type: 'annihilator beam',
                         canUse: (character: Character) => {
-                            return character instanceof Flyer && character.second_ability instanceof AnnihilatorBeam
+                            return character.second_ability instanceof AnnihilatorBeam && character.second_ability.cost >= 5
                         },
                         teach: (character: Character) => {
-                            if(character instanceof Flyer && character.second_ability instanceof AnnihilatorBeam){
+                            if(character.second_ability instanceof AnnihilatorBeam){
                                 character.second_ability.cost -= 2
                             }
                         },
@@ -1136,10 +1150,10 @@ export default class Upgrades{
                         name: 'concentrating energy',
                         type: 'annihilator beam',
                         canUse: (character: Character) => {
-                            return character instanceof Flyer && character.second_ability instanceof AnnihilatorBeam
+                            return character.second_ability instanceof AnnihilatorBeam && !character.second_ability.concentrating_energy
                         },
                         teach: (character: Character) => {
-                            if(character.second_ability instanceof AnnihilatorBeam&& !character.second_ability.concentrating_energy){
+                            if(character.second_ability instanceof AnnihilatorBeam) {
                                 character.second_ability.concentrating_energy = true
                             }
                         },

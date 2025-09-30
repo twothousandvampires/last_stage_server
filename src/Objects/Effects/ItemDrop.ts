@@ -16,8 +16,7 @@ export default class ItemDrop extends Effect{
 
     act(time: number){
         if(time - this.time >= 10000){
-            this.level.deleted.push(this.id)
-            this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
+            this.delete()
             return
         }
 

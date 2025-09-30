@@ -18,7 +18,6 @@ export default class Impy extends Enemy {
         this.spawn_time = 1000
         this.say_z = 8
         this.weapon_angle = 0.7
-        this.getState()
     }
 
     attackAct(){

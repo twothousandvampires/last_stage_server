@@ -46,6 +46,10 @@ export default class Func{
         return Math.sqrt( ((one.x - two.x) ** 2) + ( ((one.y - two.y) / l) ** 2 ) ) 
     }
 
+    static getRandomFromArray(array: any){
+        return array[Math.floor(Math.random() * array.length)]
+    }
+
     public static elipseCollision(one: Elip, two: Elip){
 
         let a1 = one.r; 

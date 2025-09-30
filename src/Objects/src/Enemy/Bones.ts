@@ -1,7 +1,6 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
 import Poison from "../../../Status/Poison";
-import Armour from "../../Effects/Armour";
 import { Enemy } from "./Enemy";
 import Skull from "./Skull";
 
@@ -24,7 +23,6 @@ export default class Bones extends Enemy{
         this.armour_rate = 10
         this.gold_revard = 1
         this.weapon_angle = 0.8
-        this.getState()
     }
 
     takeDamage(unit: any = undefined, options: any = {}){
@@ -36,12 +34,13 @@ export default class Bones extends Enemy{
     }
 
     setDeadState(){
-        if(!this.freezed && this.state != 'burn_dying' && !Func.chance(this.ressurect_chance)){
+        if(Func.notChance(this.ressurect_chance)){
             this.is_corpse = true
             this.state = 'dead'
             this.stateAct = this.deadAct
             let skull = new Skull(this.level)
             skull.setPoint(this.x, this.y)
+
             this.level.enemies.push(skull)
         }
         else{
