@@ -11,17 +11,4 @@ export default class GhostGrip extends Effect{
         this.x = undefined
         this.y = undefined
     }
-
-    act(){
-        if(!this.owner){
-             return
-        }  
-        
-        this.x = this.owner.x
-        this.y = this.owner.y
-    }
-
-    setOwner(character: any){
-        this.owner = character
-    }
 }

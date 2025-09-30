@@ -1,6 +1,5 @@
 import Cultist from "../../Objects/src/PlayerClasses/Cultist";
 import CultistAbility from "./CultistAbility";
-import RuneEffect from "../../Objects/Effects/Rune";
 import Func from "../../Func";
 import Soul from "../../Objects/Effects/Soul";
 import { SoulShatterProj } from "../../Objects/Projectiles/SoulShatterProj";
@@ -9,6 +8,7 @@ export default class Soulrender extends CultistAbility{
 
     distance: number
     count: number = 0
+    soul_fragments: boolean = false
 
     constructor(owner: Cultist){
         super(owner)
@@ -34,8 +34,6 @@ export default class Soulrender extends CultistAbility{
         let hit_x = this.owner.x + (Math.sin(this.owner.attack_angle) * distance)
         let hit_y = this.owner.y + (Math.cos(this.owner.attack_angle) * distance)
 
-       
-   
         let t = this.owner.getTarget()
 
         if(!t){
@@ -43,54 +41,55 @@ export default class Soulrender extends CultistAbility{
             box.x = hit_x
             box.y = hit_y
             box.r = 4
-
-
-           t = this.owner.level.enemies.filter(elem => Func.elipseCollision(box, elem.getBoxElipse()))[0]
+ 
+            t = this.owner.level.enemies.filter(elem => Func.elipseCollision(box, elem.getBoxElipse()))[0]
         }
 
-        if(!t){
-            this.owner.target = undefined
-            return
-        }
-       
-        if(Func.notChance(20 * this.count)){
-            this.count ++
-            this.owner.cast_speed -= 150
+        if(t){
+            if(Func.notChance(20 * this.count)){
+                this.count ++
+                this.owner.cast_speed -= 150
 
-             let e = new Soul(this.owner.level)
-             e.setPoint(t.x, t.y)
+                let e = new Soul(this.owner.level)
+                e.setPoint(t.x, t.y)
 
-             this.owner.level.effects.push(e)
-        }
-        else{
-            this.owner.cast_speed += this.count * 150
-            this.count = 0
+                this.owner.level.effects.push(e)
+            }
+            else{
+                this.owner.cast_speed += this.count * 150
+                this.count = 0
 
-            t.takeDamage(this.owner, {
-                instant_death: true,
-                explode: true
-            })
+                t.takeDamage(this.owner, {
+                    instant_death: true,
+                    explode: true
+                })
 
-            if(t.is_dead){
-                let count = 5
-                
-                let zones = 6.28 / count
-        
-                for(let i = 1; i <= count; i++){
-                    let min_a = (i - 1) * zones
-                    let max_a = i * zones
-        
-                    let angle = Math.random() * (max_a - min_a) + min_a
-                    let proj = new SoulShatterProj(this.owner.level)
-                    proj.setStart(this.owner.level.time)
-                    proj.setAngle(angle)
-                    proj.setPoint(t.x, t.y)
-        
-                    this.owner.level.projectiles.push(proj)
+                if(t.is_dead){
+                    let count = 5
+
+                    if(this.soul_fragments){
+                        count += 2
+                    }
+
+                    let zones = 6.28 / count
+            
+                    for(let i = 1; i <= count; i++){
+                        let min_a = (i - 1) * zones
+                        let max_a = i * zones
+            
+                        let angle = Math.random() * (max_a - min_a) + min_a
+                        let proj = new SoulShatterProj(this.owner.level)
+                        proj.setStart(this.owner.level.time)
+                        proj.setAngle(angle)
+                        proj.setPoint(t.x, t.y)
+            
+                        this.owner.level.projectiles.push(proj)
+                    }
                 }
             }
-        }
 
+        }
+       
         this.owner.target = undefined
         this.afterUse()
     }

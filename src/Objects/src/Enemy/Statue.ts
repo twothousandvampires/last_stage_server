@@ -16,7 +16,6 @@ export default class Statue extends Pile{
         this.casted = false
         this.create_chance = 0
         this.count_as_killed = false
-        this.getState()
     }
 
     idleAct(time: number){
@@ -40,7 +39,7 @@ export default class Statue extends Pile{
         if(options?.instant_death){
             unit?.succesefulKill()
             this.is_dead = true
-            this.setDyingAct()
+            this.setdyingAct()
             return
         }
 
@@ -52,9 +51,9 @@ export default class Statue extends Pile{
 
         if(this.life_status <= 0){
             this.is_dead = true
-            this.create_grace_chance += unit?.additional_chance_grace_create ? unit?.additional_chance_grace_create : 0
+            this.create_grace_chance += unit?.chance_to_create_grace ? unit?.chance_to_create_grace : 0
             unit?.succesefulKill()
-            this.setDyingAct()
+            this.setdyingAct()
         }
         else{
             unit?.succesefulHit()

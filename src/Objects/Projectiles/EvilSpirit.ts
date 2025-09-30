@@ -1,15 +1,12 @@
 
 import Func from "../../Func";
 import Level from "../../Level";
-import Cowardice from "../../Status/Cowardice";
 import Curse from "../../Status/Curse";
 import Curse2 from "../../Status/Curse2";
 import Despair from "../../Status/Despair";
-import Exhaustion from "../../Status/Exhaustion";
-import Fear from "../../Status/Fear";
 import Projectiles from "./Projectiles";
 
-export class EvilSpirit extends Projectiles{
+export class EvilSpirit extends Projectiles {
     w: number
     start_x: number | undefined
     start_y: number | undefined
@@ -64,11 +61,6 @@ export class EvilSpirit extends Projectiles{
             }
         })
 
-        if(this.isOutOfMap()){
-            this.impact()
-            return
-        }
-
         let traveled = Math.sqrt(((this.x - this.start_x) ** 2) + ((this.y - this.start_y) ** 2))
 
         if(traveled >= this.max_distance){
@@ -82,28 +74,7 @@ export class EvilSpirit extends Projectiles{
 
         if(this.target){
             this.angle = Func.angle(this.x, this.y, this.target.x, this.target.y)
+            this.moveAct()
         }
-        
-        let l = 1 - Math.abs(0.5 * Math.cos(this.angle))    
-
-        let n_x = Math.sin(this.angle) * l
-        let n_y = Math.cos(this.angle) * l
-
-        n_x *= this.move_speed
-        n_y *= this.move_speed
-
-        if(n_x < 0){
-            this.flipped = true
-        }
-        else{
-            this.flipped = false
-        }
-
-        this.addToPoint(n_x, n_y)
-    }
-
-    impact(){
-        this.level.deleted.push(this.id)
-        this.level.projectiles = this.level.projectiles.filter(elem => elem != this)
     }
 }

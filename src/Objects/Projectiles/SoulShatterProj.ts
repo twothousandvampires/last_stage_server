@@ -37,7 +37,7 @@ export class SoulShatterProj extends Projectiles{
     act(tick: number): void { 
       
         if(tick - this.start >= this.duration){
-            this.delete()
+            this.impact()
             return
         }
 
@@ -54,9 +54,11 @@ export class SoulShatterProj extends Projectiles{
         this.level.enemies.forEach(elem => {
             if(!elem.is_dead && Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
                 elem.takeDamage(this.owner)
-                this.delete()
+                this.impact()
             }
         })
+
+     
 
         let l = 1 - Math.abs(0.5 * Math.cos(this.angle))    
 
@@ -80,11 +82,7 @@ export class SoulShatterProj extends Projectiles{
 
              this.addToPoint(n_x, n_y)
         } 
-    }
-
-    delete(){
-        this.level.deleted.push(this.id)
-        this.level.projectiles = this.level.projectiles.filter(elem => elem != this)
+           this.wasChanged()
     }
 
     reflect(angle: number){

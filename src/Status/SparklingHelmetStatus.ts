@@ -40,7 +40,7 @@ export default class SparklingHelmetStatus extends Status{
     act(tick_time: number){
         if(!this.unit) return
 
-        if(tick_time - this.unit.last_skill_used_time >= this.time_beetween_proc){
+        if(tick_time - this.unit.last_time_the_skill_was_used >= this.time_beetween_proc){
             if(tick_time >= this.last_trigger_time){
                 this.trigger()
                 this.last_trigger_time = tick_time + this.time_beetween_proc

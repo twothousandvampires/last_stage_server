@@ -12,7 +12,7 @@ export default class TimeStoped extends Status{
         this.unit = unit
        
         if(this.unit instanceof Character){
-            this.unit.time_stopped = true
+    
             this.unit.can_regen_life = false
             this.unit.can_regen_resource = false
 
@@ -25,8 +25,6 @@ export default class TimeStoped extends Status{
     }
 
     clear(){
-        this.unit.time_stopped = false
-
         this.unit.can_regen_life = true
         this.unit.can_regen_resource = true
 

@@ -30,13 +30,6 @@ export class ForkedLightningProjectile extends Projectiles{
     }
 
     act(): void { 
-
-        if(this.isOutOfMap()){
-            this.level.projectiles = this.level.projectiles.filter(elem => elem != this)
-            this.level.deleted.push(this.id)
-            return
-        }
-
         let enemies = this.level.enemies
         let players = this.level.players
 
@@ -62,22 +55,7 @@ export class ForkedLightningProjectile extends Projectiles{
             }
         }
 
-        let l = 1 - Math.abs(0.5 * Math.cos(this.angle))
-
-        let n_x = Math.sin(this.angle) * l
-        let n_y = Math.cos(this.angle) * l
-
-        n_x *= this.move_speed
-        n_y *= this.move_speed
-
-        if(n_x < 0){
-            this.flipped = true
-        }
-        else{
-            this.flipped = false
-        }
-
-        this.addToPoint(n_x, n_y)
+        this.moveAct()
     }
 
     impact(){

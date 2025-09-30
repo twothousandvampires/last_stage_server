@@ -37,9 +37,7 @@ export default class BloodSphere extends Effect{
     act(time: number){
         if(time - this.time >= 5000){
             this.explode()
-
-            this.level.deleted.push(this.id)
-            this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
+            this.delete()
             return
         }
 

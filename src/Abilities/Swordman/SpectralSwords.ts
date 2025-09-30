@@ -4,6 +4,8 @@ import SwordmanAbility from "./SwordmanAbility";
 
 export default class SpectralSwords extends SwordmanAbility{
 
+    call: boolean = false
+
     constructor(owner: Swordman){
         super(owner)
         this.name = 'spectral swords'
@@ -52,6 +54,11 @@ export default class SpectralSwords extends SwordmanAbility{
             this.hit = true
         
             let count = 5
+
+            if(this.third_ability.call){
+                count += 2
+            }
+
             let zones = 6.28 / count
     
             for(let i = 1; i <= count; i++){
@@ -65,6 +72,11 @@ export default class SpectralSwords extends SwordmanAbility{
                 let n_y = Math.cos(angle) * l * 5
 
                 let summon = new SpectralSword(this.level, 15000 + this.getSecondResource() * 1000, this)
+
+                if(this.third_ability.call){
+                    summon.move_speed += 0.1
+                    summon.player_check_radius += 10
+                }
                 summon.setPoint(this.x + n_x, this.y + n_y)
                 
                 this.level.enemies.push(summon)

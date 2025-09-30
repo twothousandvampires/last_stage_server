@@ -18,7 +18,7 @@ export default class Fear extends Status {
         if(this.unit instanceof Character){
             this.unit.statusWasApplied()
 
-            this.unit.can_move_by_player = false
+            this.unit.can_be_controlled_by_player = false
 
             this.unit.newStatus({
                 name: 'fear',
@@ -33,16 +33,15 @@ export default class Fear extends Status {
     }
 
     act(tick_time: number){
-        this.unit.can_move_by_player = false
+        this.unit.can_be_controlled_by_player = false
         
         if(tick_time > this.last_checked){
             this.last_checked += 1000
-            
             if(this.fear_target){
-                this.unit.direct_angle_to_move = Func.angle(this.fear_target.x, this.fear_target.y,this.unit.x, this.unit.y)
+                this.unit.angle_for_forced_movement = Func.angle(this.fear_target.x, this.fear_target.y,this.unit.x, this.unit.y)
             }
             else{
-                this.unit.direct_angle_to_move = Math.random() * 6.28
+                this.unit.angle_for_forced_movement = Math.random() * 6.28
             }
         }
     }
@@ -53,8 +52,8 @@ export default class Fear extends Status {
 
     clear(): void {
         if(!this.unit.is_dead){
-            this.unit.can_move_by_player = true 
+            this.unit.can_be_controlled_by_player = true 
         }
-        this.unit.direct_angle_to_move = undefined
+        this.unit.angle_for_forced_movement = undefined
     }
 }

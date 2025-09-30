@@ -23,8 +23,8 @@ export default class BonesWhenBlock extends Forging{
 
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
-            if(!player.when_block_triggers.some(elem => elem instanceof BonesWhenBlock)){
-                player.when_block_triggers.push(this)
+            if(!player.triggers_on_block.some(elem => elem instanceof BonesWhenBlock)){
+                player.triggers_on_block.push(this)
             }
 
             this.payCost()

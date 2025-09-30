@@ -1,4 +1,3 @@
-import AnnihilatorBeam from "../../../Abilities/Flyer/AnnihilatorBeam";
 import Fireball from "../../../Abilities/Flyer/Fireball";
 import FlameWall from "../../../Abilities/Flyer/FlameWall";
 import ForkedLightning from "../../../Abilities/Flyer/ForkedLightning";
@@ -8,8 +7,8 @@ import LightBeacon from "../../../Abilities/Flyer/LightBeacon";
 import LightningBolt from "../../../Abilities/Flyer/LightningBolt";
 import Sparks from "../../../Abilities/Flyer/Sparks";
 import StaticField from "../../../Abilities/Flyer/StaticField";
-import Teeth from "../../../Abilities/Flyer/Teeth";
 import Teleportation from "../../../Abilities/Flyer/Teleportation";
+import Upgrades from "../../../Classes/Upgrades";
 import Func from "../../../Func";
 import Level from "../../../Level";
 import Armour from "../../Effects/Armour";
@@ -37,421 +36,29 @@ export default class Flyer extends Character{
         this.cast_speed = 1500
         this.name = 'flyer'
         this.move_speed = 0.45
-        this.avoid_damaged_state_chance = 0
+        this.chance_to_avoid_damage_state = 0
         this.armour_rate = 0
         this.resource = 0
-        this.max_resource = 7
-        this.base_regen_time = 11000
+        this.maximum_resources = 7
+        this.base_regeneration_time = 11000
         this.takeoff = false
         this.allow_mana_regen_while_def = false
         this.charged_shield = false
         this.mental_shield = false
         this.recent_cast = []
-        this.block_chance = 100
+        this.chance_to_block = 100
     }
 
     getAdditionalRadius(){
         return Math.floor(this.might / 2)
     }
 
-    getAllUpgrades(){
-        return [
-                {
-                    name: 'scorching',
-                    type: '(flame wall)',
-                    canUse: (character: Character) => {
-                        return character.second_ability instanceof FlameWall && !character.second_ability.scorching
-                    },
-                    teach: (character: Character) => {
-                        if(character && character.second_ability instanceof FlameWall){
-                            character.second_ability.scorching = true
-                        }
-                    },
-                    cost: 3,
-                    desc: 'your flamewall burn faster'
-                },
-                {
-                    name: 'frendly flame',
-                    type: '(flame wall)',
-                    canUse: (character: Character) => {
-                        return character.second_ability instanceof FlameWall && !character.second_ability.frendly_flame
-                    },
-                    teach: (character: Character) => {
-                        character.second_ability.frendly_flame = true
-                    },
-                    cost: 1,
-                    desc: 'your flamewall does not damage to players'
-                },
-                {
-                    name: 'takeoff',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && !character.takeoff
-                    },
-                    teach: (character: Character) => {
-                        character.takeoff = true
-                    },
-                    cost: 2,
-                    desc: 'gives your phasing while you are defended'
-                },
-                 {
-                    name: 'teeth',
-                    type: 'new ability',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && !(character.first_ability instanceof Teeth)
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer){
-                            character.first_ability = new Teeth(character)
-                            character.updateClientSkill()
-                        }
-                    },
-                    cost: 5,
-                    desc: 'fires a sereral of teeth'
-                },
-                {
-                    name: 'body melting',
-                    type: 'fireball',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.first_ability instanceof Fireball) && !character.first_ability.body_melting
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && character.first_ability instanceof Fireball){
-                            character.first_ability.body_melting = true
-                        }
-                    },
-                    cost: 2,
-                    desc: 'gives your fireball a chance to pierce the enemy'
-                },
-                {
-                    name: 'ignite',
-                    type: 'fireball',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.first_ability instanceof Fireball) && !character.first_ability.ignite
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && character.first_ability instanceof Fireball){
-                            character.first_ability.ignite = true
-                        }
-                    },
-                    cost: 3,
-                    desc: 'your fireball ignites the floor after explosion'
-                },
-                {
-                    name: 'hand of frost',
-                    type: 'frost sphere',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.first_ability instanceof FrostSphere) && !character.first_ability.frost_rich
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && character.first_ability instanceof FrostSphere){
-                            character.first_ability.frost_rich = true
-                        }
-                    },
-                    cost: 1,
-                    desc: 'increases radius of explosion'
-                },
-                {
-                    name: 'reign of frost',
-                    type: 'frost sphere',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.first_ability instanceof FrostSphere) && !character.first_ability.reign_of_frost
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && character.first_ability instanceof FrostSphere){
-                            character.first_ability.reign_of_frost = true
-                        }
-                    },
-                    cost: 1,
-                    desc: 'increases freeze duration'
-                },
-                {
-                    name: 'high voltage',
-                    type: 'lightning bolt',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.first_ability instanceof LightningBolt) && !character.first_ability.high_voltage
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && character.first_ability instanceof LightningBolt){
-                            character.first_ability.high_voltage = true
-                        }
-                    },
-                    cost: 2,
-                    desc: 'now your lightning bolt does not apply shock and hit up to 3 targets by default also number of hitting enemies is increased by might'
-                },
-                {
-                    name: 'storm',
-                    type: 'lightning bolt',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.first_ability instanceof LightningBolt) && !character.first_ability.storm
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && character.first_ability instanceof LightningBolt){
-                            character.first_ability.storm = true
-                            character.first_ability.cost += 1
-                        }
-                    },
-                    cost: 2,
-                    desc: 'now your lightning bolt also hit 2 additional times in close area but mana cost is increased'
-                },
-                {
-                    name: 'improved chain reaction',
-                    type: 'forking lightning',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.second_ability instanceof ForkedLightning) && !character.second_ability.improved_chain_reaction
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && character.second_ability instanceof ForkedLightning){
-                            character.second_ability.improved_chain_reaction = true
-                        }
-                    },
-                    cost: 2,
-                    desc: 'increases the chain chance'
-                },
-                {
-                    name: 'lightning eye',
-                    type: 'forking lightning',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.second_ability instanceof ForkedLightning) && !character.second_ability.lightning_eye
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && character.second_ability instanceof ForkedLightning){
-                            character.second_ability.lightning_eye = true
-                        }
-                    },
-                    cost: 1,
-                    desc: 'increases the radius of checking targets for chain'
-                },
-                {
-                    name: 'lightning waves',
-                    type: 'light beacon',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.third_ability instanceof LightBeacon) && !character.third_ability.lightning_waves
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && character.third_ability instanceof LightBeacon){
-                            character.third_ability.lightning_waves = true
-                        }
-                    },
-                    cost: 4,
-                    desc: 'now you crates wavas of electricity instead lightnings'
-                },
-                {
-                    name: 'air form',
-                    type: 'light beacon',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.third_ability instanceof LightBeacon) && !character.third_ability.air_form
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && character.third_ability instanceof LightBeacon){
-                            character.third_ability.air_form = true
-                        }
-                    },
-                    cost: 2,
-                    desc: 'after cast you cant take damage for 3 seconds'
-                },
-                {
-                    name: 'ice genesis',
-                    type: 'frostnova',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.third_ability instanceof Frostnova) && !character.third_ability.ice_genesis
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && character.third_ability instanceof Frostnova){
-                            character.third_ability.ice_genesis = true
-                        }
-                    },
-                    cost: 5,
-                    desc: 'if you kill the enemy there is a chance to create frost sphere'
-                },
-                {
-                    name: 'cold spires',
-                    type: 'frostnova',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.third_ability instanceof Frostnova) && !character.third_ability.cold_spires
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && character.third_ability instanceof Frostnova){
-                            character.third_ability.cold_spires = true
-                        }
-                    },
-                    cost: 5,
-                    desc: 'after cast you create a cold spires which freeze enemies and explodes'
-                },
-                {
-                    name: 'hand cuffing',
-                    type: 'static field',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.utility instanceof StaticField) && !character.utility.hand_cuffing
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && character.utility instanceof StaticField){
-                            character.utility.hand_cuffing = true
-                        }
-                    },
-                    cost: 1,
-                    desc: 'targets cant attack'
-                },
-                {
-                    name: 'collapse',
-                    type: 'static field',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.utility instanceof StaticField) && !character.utility.collapse
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && character.utility instanceof StaticField){
-                            character.utility.collapse = true
-                        }
-                    },
-                    cost: 1,
-                    desc: 'targets take damage after duration'
-                },
-                {
-                    name: 'protected teleportation',
-                    type: 'teleportation',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.utility instanceof Teleportation) && !character.utility.protected
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && character.utility instanceof Teleportation){
-                            character.utility.protected = true
-                        }
-                    },
-                    cost: 1,
-                    desc: 'you cannot take damage after you start teleportating'
-                },
-                {
-                    name: 'increased gate',
-                    type: 'teleportation',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && (character.utility instanceof Teleportation) && !character.utility.increased_gate
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && character.utility instanceof Teleportation){
-                            character.utility.increased_gate = true
-                        }
-                    },
-                    cost: 1,
-                    desc: 'increases radius of end point'
-                },
-                {
-                    name: 'mana regen while defend',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && !character.allow_mana_regen_while_def
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && !character.allow_mana_regen_while_def){
-                            character.allow_mana_regen_while_def = true
-                        }
-                    },
-                    cost: 5,
-                    desc: 'you can regen mana while you are defended'
-                },
-                {
-                    name: 'charged shield',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && !character.charged_shield
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && !character.charged_shield){
-                            character.charged_shield = true
-                        }
-                    },
-                    cost: 1,
-                    desc: 'there is a chance to create lightning when you block damage while you are defended'
-                },
-                {
-                    name: 'annihilator beam',
-                    type: 'new ability',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && !(character.second_ability instanceof AnnihilatorBeam)
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer){
-                            character.second_ability = new AnnihilatorBeam(character)
-                            character.updateClientSkill()
-                        }
-                    },
-                    cost: 3,
-                    desc: 'creates a beam of energy which burn enemies'
-                },
-                {
-                    name: 'light stream',
-                    type: 'annihilator beam',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && character.second_ability instanceof AnnihilatorBeam
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && character.second_ability instanceof AnnihilatorBeam){
-                            character.second_ability.cost -= 2
-                        }
-                    },
-                    cost: 1,
-                    desc: 'reduses mana cost'
-                },
-                {
-                    name: 'concentrating energy',
-                    type: 'annihilator beam',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && character.second_ability instanceof AnnihilatorBeam
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer && !character.second_ability.concentrating_energy){
-                            character.second_ability.concentrating_energy = true
-                        }
-                    },
-                    cost: 1,
-                    desc: 'now it ignores armour'
-                },
-                {
-                    name: 'mental shield',
-                    canUse: (character: Character) => {
-                        return character instanceof Flyer && !character.mental_shield
-                    },
-                    teach: (character: Character) => {
-                        if(character instanceof Flyer){
-                            character.mental_shield = true
-                        }
-                    },
-                    cost: 1,
-                    desc: 'courage increase your armour rate'
-                },
-                {
-                    name: 'penetrating lightning',
-                    type: 'sparks',
-                    canUse: (character: Character) => {
-                        return character.third_ability instanceof Sparks && character.third_ability.pierce < 3
-                    },
-                    teach: (character: Character) => {
-                        if(character.third_ability instanceof Sparks){
-                            character.third_ability.pierce ++
-                        }
-                    },
-                    cost: 3,
-                    desc: 'increases the number of enemies your sparks can pass through'
-                },
-                {
-                    name: 'strong sparks',
-                    type: 'sparks',
-                    canUse: (character: Character) => {
-                        return character.third_ability instanceof Sparks && character.third_ability.ttl < 10000
-                    },
-                    teach: (character: Character) => {
-                        if(character.third_ability instanceof Sparks){
-                            character.third_ability.ttl += 2000
-                        }
-                    },
-                    cost: 3,
-                    desc: 'increases the duration'
-                },
-        ]
-    }
-
     generateUpgrades(){
         if(this.upgrades.length) return
 
         //get all upgrades for this class
-        let p = super.getAllUpgrades()
-        let all = this.getAllUpgrades().concat(p)
+        let p = Upgrades.getAllUpgrades()
+        let all = Upgrades.getFlyerUpgrades().concat(p)
         
         //filter by usability
         let filtered = all.filter(elem => {
@@ -493,7 +100,7 @@ export default class Flyer extends Character{
             this[stat] = stats[stat]
         }
 
-        this.max_resource += this.knowledge
+        this.maximum_resources += this.knowledge
     }
 
     createAbilities(abilities: any){
@@ -535,7 +142,7 @@ export default class Flyer extends Character{
         
         let utility_name = abilities.find(elem => elem.type === 4 && elem.selected).name
 
-        if(utility_name === 'teleportaion'){
+        if(utility_name === 'teleportation'){
             this.utility = new Teleportation(this)
         }
         else if(utility_name === 'static field'){
@@ -544,13 +151,13 @@ export default class Flyer extends Character{
     }
 
     getCdRedaction(){
-        return this.cd_reduction + this.might
+        return this.cooldown_redaction + this.might
     }
 
     setDefend(){
         this.state = 'defend'
         this.stateAct = this.defendAct
-        this.when_start_block_triggers.forEach(elem => elem.trigger(this))
+        this.triggers_on_start_block.forEach(elem => elem.trigger(this))
 
         if(!this.allow_mana_regen_while_def){
             this.can_regen_resource = false
@@ -578,7 +185,7 @@ export default class Flyer extends Character{
     }
 
     isBlock(): boolean {
-        return this.state === 'defend' && this.resource > 0 && Func.chance(this.block_chance, this.is_lucky)
+        return this.state === 'defend' && this.resource > 0 && Func.chance(this.chance_to_block, this.is_lucky)
     }
 
     isArmourHit(unit: Unit){
@@ -598,14 +205,14 @@ export default class Flyer extends Character{
             arm = 95
         }
 
-        return !this.no_armour && Func.chance(arm, this.is_lucky)
+        return Func.chance(arm, this.is_lucky)
     }
 
     public succesefulBlock(unit: Unit | undefined): void{
         if(Func.notChance(this.will * 4, this.is_lucky)){
             this.resource --
         }
-        this.when_block_triggers.forEach(elem => elem.trigger(this, unit))
+        this.triggers_on_block.forEach(elem => elem.trigger(this, unit))
     }
     
     takeDamage(unit: any = undefined, options: any){
@@ -699,7 +306,7 @@ export default class Flyer extends Character{
     }
 
     getSkipDamageStateChance(){
-        return this.avoid_damaged_state_chance + this.durability * 7
+        return this.chance_to_avoid_damage_state + this.durability * 7
     }
 
     getRegenTimer(){
@@ -720,13 +327,13 @@ export default class Flyer extends Character{
 
 
     regen(){
-        if(this.time >= this.check_recent_hits_timer){
+        if(this.level.time >= this.check_recent_hits_timer){
             this.check_recent_hits_timer += 1000
 
             for(let i = this.recent_cast.length; i >= 0; i--){
                 let hit_time = this.recent_cast[i]
                 // todo timer
-                if(this.time - hit_time >= 8000){
+                if(this.level.time - hit_time >= 8000){
                     this.recent_cast.splice(i, 1);
                 }
             }
@@ -734,12 +341,12 @@ export default class Flyer extends Character{
             this.sayPhrase()
         }
 
-        if(this.time >= this.next_life_regen_time){
+        if(this.level.time >= this.next_life_regen_time){
             this.next_life_regen_time += this.getRegenTimer()
             
             this.addLife()
         }
-        if(this.time >= this.next_mana_regen_time){
+        if(this.level.time >= this.next_mana_regen_time){
             this.next_mana_regen_time += this.getManaRegenTimer()
 
             if(this.can_regen_resource && !this.is_dead){
@@ -754,11 +361,11 @@ export default class Flyer extends Character{
         
         super.addResourse()
 
-        if(this.resource < this.max_resource || ignore_limit){
+        if(this.resource < this.maximum_resources || ignore_limit){
             this.resource += count
         }
         
-        if(this.resource < this.max_resource && Func.chance(this.will * 5, this.is_lucky)){
+        if(this.resource < this.maximum_resources && Func.chance(this.will * 5, this.is_lucky)){
             this.resource ++
         }
     }
@@ -766,11 +373,11 @@ export default class Flyer extends Character{
     setDamagedAct(){
         this.damaged = true
         this.state = 'damaged'
-        this.can_move_by_player = false
+        this.can_be_controlled_by_player = false
         this.stateAct = this.damagedAct
 
         this.cancelAct = () => {
-            this.can_move_by_player = true
+            this.can_be_controlled_by_player = true
             this.damaged = false
         }
 
@@ -799,7 +406,7 @@ export default class Flyer extends Character{
     addCourage(){
         if(!this.can_get_courage) return
 
-        this.recent_cast.push(this.time)
+        this.recent_cast.push(this.level.time)
 
         if(this.can_be_enlighten && this.recent_cast.length >= 8){
             this.can_be_enlighten = false
@@ -812,7 +419,7 @@ export default class Flyer extends Character{
         }
 
         if(Func.chance(this.speed * 2.5, this.is_lucky)){
-            this.recent_cast.push(this.time)
+            this.recent_cast.push(this.level.time)
         }
     }
 

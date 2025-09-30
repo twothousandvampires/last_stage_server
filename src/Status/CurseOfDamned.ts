@@ -30,11 +30,8 @@ export default class CurseOfDamned extends Status{
 
             let ppl = this.unit.level.players.filter(elem => {
                 let d = Func.distance(elem, this.unit)
-                console.log('d ' + d)
                 return d <= 20
             } )
-
-            console.log('curse ' + ppl.length)
 
             ppl.forEach(elem => {
                 let s = new Curse(elem.time)

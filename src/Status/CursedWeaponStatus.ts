@@ -21,7 +21,7 @@ export default class CursedWeaponStatus extends Status{
             })
 
             if(this.drinker){
-                this.unit.on_kill_triggers.push(this)
+                this.unit.triggers_on_kill.push(this)
             }
         }
     }
@@ -37,12 +37,12 @@ export default class CursedWeaponStatus extends Status{
             this.unit.attack_radius -= 4
             this.unit.attack_speed += 400
             if(!Func.chance(this.unit.getSecondResource() * 10)){
-                this.unit.avoid_damaged_state_chance += 100
+                this.unit.chance_to_avoid_damage_state += 100
                 this.unit.takePureDamage()
-                this.unit.avoid_damaged_state_chance -= 100
+                this.unit.chance_to_avoid_damage_state -= 100
             }
             if(this.drinker){
-                this.unit.on_kill_triggers = this.unit.on_kill_triggers.filter(elem => elem != this)
+                this.unit.triggers_on_kill = this.unit.triggers_on_kill.filter(elem => elem != this)
             }
         }
     }

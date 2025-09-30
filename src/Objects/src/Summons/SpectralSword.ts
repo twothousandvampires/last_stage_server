@@ -28,14 +28,6 @@ export default class SpectralSword extends Enemy{
         this.getState()
     }
 
-    moveAct(){
-        this.state = 'move'
-
-        let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
-
-        this.moveByAngle(a)
-    }
-
     attackAct(){
         if(this.action && !this.hit){
             this.hit = true
@@ -72,7 +64,7 @@ export default class SpectralSword extends Enemy{
 
         if(tick - this.created >= this.ttl){
             this.is_dead = true
-            this.setDyingAct()
+            this.setdyingAct()
             return
         }
 

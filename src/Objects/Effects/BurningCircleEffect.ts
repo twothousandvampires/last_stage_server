@@ -10,18 +10,5 @@ export default class BurningCircleEffect extends Effect{
         this.name = 'burning circle'
         this.x = undefined
         this.y = undefined
-    }
-
-    act(){
-        if(!this.owner){
-             return
-        }  
-        
-        this.x = this.owner.x
-        this.y = this.owner.y
-    }
-
-    setOwner(unit: any){
-        this.owner = unit
-    }
+    } 
 }

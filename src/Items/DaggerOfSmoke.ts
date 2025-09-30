@@ -15,7 +15,7 @@ export default class DaggerOfSmoke extends Item{
     }
 
     equip(character: Character): void {
-        character.on_heal_triggers.push(this)
+        character.triggers_on_heal.push(this)
     }
     
     getSpecialForgings(): string[] {

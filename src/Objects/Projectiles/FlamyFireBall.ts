@@ -5,7 +5,7 @@ import Ignite from "../../Status/Ignite";
 import FireExplosion from "../Effects/FireExplosion";
 import Projectiles from "./Projectiles";
 
-export class FlamyFireBall extends Projectiles{
+export class FlamyFireBall extends Projectiles {
     w: number
     constructor(level: Level){
         super(level)
@@ -16,12 +16,6 @@ export class FlamyFireBall extends Projectiles{
     }
 
     act(): void { 
-
-        if(this.isOutOfMap()){
-            this.impact()
-            return
-        }
-
         for(let i = 0; i < this.level.players.length; i++){
             let p = this.level.players[i]
 
@@ -31,22 +25,7 @@ export class FlamyFireBall extends Projectiles{
             }
         }
 
-        let l = 1 - Math.abs(0.5 * Math.cos(this.angle))
-
-        let n_x = Math.sin(this.angle) * l
-        let n_y = Math.cos(this.angle) * l
-
-        n_x *= this.move_speed
-        n_y *= this.move_speed
-
-        if(n_x < 0){
-            this.flipped = true
-        }
-        else{
-            this.flipped = false
-        }
-
-        this.addToPoint(n_x, n_y)
+        this.moveAct()
     }
 
     impact(){
@@ -54,8 +33,7 @@ export class FlamyFireBall extends Projectiles{
         effect.setPoint(this.x, this.y)
         this.level.addSound('fire explosion', this.x, this.y)
         this.level.effects.push(effect)
-        this.level.deleted.push(this.id)
-
+        
         let explosion = this.getBoxElipse()
         explosion.r = 4
 
@@ -72,6 +50,7 @@ export class FlamyFireBall extends Projectiles{
             }
         })
         
+        this.level.deleted.push(this.id)
         this.level.projectiles = this.level.projectiles.filter(elem => elem != this)
     }
 }

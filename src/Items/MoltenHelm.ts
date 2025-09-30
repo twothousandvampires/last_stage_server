@@ -6,7 +6,7 @@ import Item from "./Item";
 
 export default class MoltenHelm extends Item{
     
-    frequency: number = 15000
+    frequency: number = 3000
     last_trigger_time: number = 0
 
     constructor(){
@@ -17,7 +17,7 @@ export default class MoltenHelm extends Item{
     }
 
     equip(character: Character): void {
-        character.when_start_block_triggers.push(this)
+        character.triggers_on_start_block.push(this)
     }
 
     trigger(character: Character){
@@ -36,7 +36,7 @@ export default class MoltenHelm extends Item{
             let box = character.getBoxElipse()
             box.r = 12
             character.level.enemies.forEach(elem => {
-                if(Func.elipseCollision(box, elem.getBoxElipse())){
+                if(!elem.is_dead && Func.elipseCollision(box, elem.getBoxElipse())){
                     let s = new Ignite(time)
 
                     s.setDuration(6000)

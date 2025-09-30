@@ -1,41 +1,44 @@
 import Func from "../../Func"
 import Level from "../../Level"
-import Status from "../../Status/Status"
 import GameObject from "./GameObject"
 
 export default abstract class Unit extends GameObject {
-    move_speed_penalty: number
-    
-    action_impact: number = 0
-    action_end: number = 0
-     action_is_end: boolean = false
-     
-    flipped: boolean
-    is_attacking: boolean
-    is_moving: boolean
-    attack_angle: number | undefined
-    attack_radius: number
-    state: string
-    move_angle: number | undefined
-    stateAct: Function | undefined
-    cancelAct: Function | undefined
-    getStateTimer: any
-    is_dead: boolean
-    hit: boolean
-    action: boolean
-    attack_speed: number // ms
-    damaged: boolean
-    action_time: number | undefined
-    freezed: boolean
 
-    life_status: number
-    armour_rate: number
-    stunned: boolean
-    shocked: boolean
-    zaped: boolean
-    phasing: boolean
-    can_act: boolean
-    fragility: number
+    move_speed_penalty: number = 0
+    action_impact: number = 0
+    action_end_time: number = 0
+    action_is_end: boolean = false
+       
+    exploded: boolean = false
+    burned: boolean = false
+    
+        is_corpse: boolean = false
+    flipped: boolean = false
+    is_attacking: boolean = false
+    is_moving: boolean = false
+    attack_angle: number | undefined = undefined
+    attack_radius: number = 0
+    state: string = 'none'
+    move_angle: number | undefined = undefined
+    stateAct: Function | undefined = undefined
+    cancelAct: Function | undefined = undefined
+    getStateTimer: any
+    is_dead: boolean = false
+    hit: boolean = false
+    action: boolean = false
+    attack_speed: number = 2000
+    damaged: boolean = false
+    action_time: number | undefined
+    freezed: boolean = false
+    penetrated_rating: number = 0
+
+    life_status: number = 1
+    armour_rate: number = 0
+    stunned: boolean = false
+    shocked: boolean = false
+    zaped: boolean = false
+  
+    fragility: number = 0
     ward: number = 0
     cast_speed: number = 2000
     can_be_damaged: boolean = true
@@ -43,43 +46,22 @@ export default abstract class Unit extends GameObject {
     
     constructor(level: Level){
         super(level)
-        this.move_speed_penalty = 0
-        this.fragility = 0
-        this.flipped = false
-        this.is_attacking = false
-        this.is_moving = false
-        this.attack_radius = 0
-        this.state = 'none'
-        this.is_dead = false
-        this.hit = false
-        this.action = false
-        this.attack_speed = 2000
-        this.damaged = false
-        this.life_status = 1
-        this.armour_rate = 0
-        this.stunned = false
-        this.freezed = false
-        this.shocked = false
-        this.zaped = false
-        this.phasing = false
-        this.can_act = true
     }
 
     abstract getState(): void
-    abstract  toJSON(): object
-    
+    abstract toJSON(): object
+    abstract takeDamage(unit: Unit | undefined, options: object | undefined): void
+
     isStatusResist(){
         return false
     }
 
     setImpactTime(c: number){
+        if(!this.action_time) return
+
         c += Func.chance(50) ? 5 : -5
         this.action_impact = this.level.time + (this.action_time * (c / 100))
-        this.action_end =  this.level.time + this.action_time
-    }
-
-    zapedAct(){
-
+        this.action_end_time =  this.level.time + this.action_time
     }
 
     setZapedAct(){     
@@ -111,7 +93,7 @@ export default abstract class Unit extends GameObject {
 
        let check = Func.chance(arm)
 
-        return check
+       return check
     }
 
     setZap(duration: number = 100){
@@ -126,10 +108,6 @@ export default abstract class Unit extends GameObject {
         this.getStateTimer = setTimeout(() => {
             this.getState()
         }, ms)
-    }
-
-    setStun(duration: number){
-
     }
 
     getMoveSpeed(): number{
@@ -147,26 +125,16 @@ export default abstract class Unit extends GameObject {
         this.move_speed_penalty += value
     }
 
-    succesefulKill(){
-        
-    }
+    setState(newState: Function, with_update = true) {
+        if(this.is_corpse) return
 
-    takeDamage(unit: any = undefined, options: any = {}){
-        
-    }
-
-    public sayPhrase(): void{
-        
-    }
-
-    setState(newState: Function) {
         this.is_moving = false
-        
         if(this.cancelAct){
             this.action_impact = 0
-            this.action_end = 0
+            this.action_end_time = 0
             this.action_is_end = false
             this.cancelAct()
+
             this.cancelAct = undefined
         }
 
@@ -176,6 +144,7 @@ export default abstract class Unit extends GameObject {
         }
 
         newState.apply(this)
+        this.wasChanged()
     }
 
     moveByAngle(angle: number){
@@ -209,55 +178,52 @@ export default abstract class Unit extends GameObject {
         }
 
         if(!this.phasing){
-             for(let i = 0; i < this.level.enemies.length; i++){
-            let enemy = this.level.enemies[i]
+            for(let i = 0; i < this.level.enemies.length; i++){
+                let enemy = this.level.enemies[i]
 
-            if(enemy === this) continue
-            if(enemy.phasing) continue
+                if(enemy === this) continue
+                if(enemy.phasing) continue
+                if(enemy.is_dead) continue
+                
+                if(Func.elipseCollision(this.getBoxElipse(n_x, 0), enemy.getBoxElipse())){
+                    x_coll = true
+                    n_x = 0
+                    coll_e_x = enemy
+                    if(y_coll){
+                        break
+                    }
+                }
 
-            if(Func.elipseCollision(this.getBoxElipse(n_x, 0), enemy.getBoxElipse())){
-                x_coll = true
-                n_x = 0
-                coll_e_x = enemy
-                if(y_coll){
-                    break
+                if(Func.elipseCollision(this.getBoxElipse(0, n_y), enemy.getBoxElipse())){
+                    y_coll = true
+                    n_y = 0
+                    coll_e_y = enemy
+                    if(x_coll){
+                        break
+                    }
                 }
             }
-            if(Func.elipseCollision(this.getBoxElipse(0, n_y), enemy.getBoxElipse())){
-                y_coll = true
-                n_y = 0
-                coll_e_y = enemy
-                if(x_coll){
-                    break
-                }
-            }
-        }
         
-        if(x_coll && n_y === 0){
-                if(this.y <= coll_e_x.y){
-                    n_y = - 0.4
+            if(x_coll && n_y === 0){
+                    if(this.y <= coll_e_x.y){
+                        n_y = - 0.4
+                    }
+                    else{
+                        n_y = 0.4
+                    }
+                }
+
+            if(y_coll && n_x === 0){
+                if(this.x <= coll_e_y.x){
+                    n_x = -0.4
                 }
                 else{
-                    n_y = 0.4
+                    n_x = 0.4
                 }
             }
-
-        if(y_coll && n_x === 0){
-            if(this.x <= coll_e_y.x){
-                n_x = -0.4
-            }
-            else{
-                n_x = 0.4
-            }
-        }
         }
        
-
         this.addToPoint(n_x, n_y)
-    }
-
-    succesefulHit(){
-        
     }
 
     setFreeze(duration: number){
@@ -285,7 +251,24 @@ export default abstract class Unit extends GameObject {
 
     }
 
-    public statusWasResisted(status: Status){
+    setStun(duration: number){
 
+    }
+
+    stunnedAct(){
+
+    }
+
+
+    zapedAct(){
+
+    }
+
+    deadAct(){
+        
+    }
+
+    dyingAct(){
+       
     }
 }

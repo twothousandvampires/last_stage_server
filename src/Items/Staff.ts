@@ -11,20 +11,20 @@ export default class Staff extends Item{
     }
 
     equip(character: Character): void {
-        character.cd_reduction += 12
+        character.cooldown_redaction += 12
     }
 
     disable(): void {
         this.disabled = true
         if(this.player){
-             this.player.cd_reduction -= 12
+             this.player.cooldown_redaction -= 12
         }
     }
 
     enable(): void {
         this.disabled = false
         if(this.player){
-             this.player.cd_reduction += 12
+             this.player.cooldown_redaction += 12
         }
     }
 }

@@ -37,7 +37,6 @@ export default class FlyingBones extends Enemy{
         this.want_to_cast = true
         this.gold_revard = 3
         this.create_item_chance = 3
-        this.getState()
     }
 
      takeDamage(unit: any = undefined, options: any = {}){
@@ -49,17 +48,19 @@ export default class FlyingBones extends Enemy{
     }
 
     setDeadState(){
-        if(!this.freezed && this.state != 'burn_dying' && !Func.chance(this.ressurect_chance)){
+        if(Func.notChance(this.ressurect_chance)){
             this.is_corpse = true
             this.state = 'dead'
             this.stateAct = this.deadAct
             let skull = new Skull(this.level)
             skull.setPoint(this.x, this.y)
+
             this.level.enemies.push(skull)
         }
         else{
             this.state = 'dead_with_skull'
             this.stateAct = this.deadAct
+            this.ressurect_chance -= 10
             setTimeout(() => {
                 this.setState(this.setResurectAct)
             }, 3000)
@@ -96,14 +97,6 @@ export default class FlyingBones extends Enemy{
             this.is_dead = false
             this.getState()
         }, 1500)
-    }
-
-    moveAct(){
-        this.state = 'move'
-
-        let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
-
-        this.moveByAngle(a)
     }
 
     getExplodedSound(){
@@ -185,14 +178,7 @@ export default class FlyingBones extends Enemy{
 
         this.setTimerToGetState(this.attack_speed)
     }
-    retreatAct(){
-            let a = this.retreat_angle
-    
-            if(!a) return
-            
-            this.moveByAngle(a)
-    }
-    
+  
     setRetreatState(){
         this.state = 'move'
         this.retreat_angle = Func.angle(this.target?.x, this.target.y,this.x, this.y)

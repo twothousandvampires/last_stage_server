@@ -27,16 +27,10 @@ export class ThrowedWeaponShard extends Projectiles{
     act(): void { 
 
         if(Math.sqrt(((this.x - this.start_x) ** 2) + ((this.y - this.start_y) ** 2)) >= this.max_distance){
-                this.impact()
-                return
-        }
-        
-        if(this.isOutOfMap()){
             this.impact()
             return
         }
-
-        
+     
         for(let i = 0; i < this.level.players.length; i++){
             let p = this.level.players[i]
 
@@ -55,26 +49,6 @@ export class ThrowedWeaponShard extends Projectiles{
             }
         }
         
-        let l = 1 - Math.abs(0.5 * Math.cos(this.angle))
-
-        let n_x = Math.sin(this.angle) * l
-        let n_y = Math.cos(this.angle) * l
-
-        n_x *= this.move_speed
-        n_y *= this.move_speed
-
-        if(n_x < 0){
-            this.flipped = true
-        }
-        else{
-            this.flipped = false
-        }
-
-        this.addToPoint(n_x, n_y)
-    }
-
-    impact(){
-        this.level.projectiles = this.level.projectiles.filter(elem => elem != this)
-        this.level.deleted.push(this.id)
+        this.moveAct()
     }
 }

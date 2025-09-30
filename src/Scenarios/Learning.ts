@@ -145,7 +145,7 @@ export default class Learning extends Scenario{
             if(options?.instant_death){
                 unit?.succesefulKill()
                 this.is_dead = true
-                this.setDyingAct()
+                this.setdyingAct()
                 return
             }
     
@@ -197,12 +197,12 @@ export default class Learning extends Scenario{
                 }
                 
                 this.is_dead = true
-                this.create_grace_chance += unit?.additional_chance_grace_create ? unit?.additional_chance_grace_create : 0
+                this.create_grace_chance += unit?.chance_to_create_grace ? unit?.chance_to_create_grace : 0
                 unit?.succesefulKill()
                 //todo
                 unit?.addGold(this.gold_revard)
     
-                this.setDyingAct()
+                this.setdyingAct()
             }
         }
 

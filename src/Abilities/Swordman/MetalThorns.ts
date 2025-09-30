@@ -4,6 +4,8 @@ import SwordmanAbility from "./SwordmanAbility";
 
 export default class MetalThorns extends SwordmanAbility{
 
+    pointed: boolean = false
+
     constructor(owner: Swordman){
         super(owner)
         this.name = 'metal thorns'
@@ -50,6 +52,7 @@ export default class MetalThorns extends SwordmanAbility{
         this.owner.hit = true
         
         let status = new MetalThornsStatus(this.owner.time)
+        status.pointed = this.pointed
         status.frequency = this.owner.getAttackSpeed()
 
         status.setDuration(10000)

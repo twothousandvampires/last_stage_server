@@ -11,7 +11,15 @@ export default abstract class Effect extends GameObject{
     }
 
     act(time: number){
-
+        if(!this.owner){
+             return
+        }  
+        
+        if(this.x != this.owner.x || this.y != this.owner.y){
+            this.x = this.owner.x
+            this.y = this.owner.y
+            this.wasChanged()
+        } 
     }
 
     toJSON(){
@@ -28,5 +36,10 @@ export default abstract class Effect extends GameObject{
 
     setOwner(owner: any){
         this.owner = owner
+    }
+
+    delete(){
+        this.level.deleted.push(this.id)
+        this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
     }
 }

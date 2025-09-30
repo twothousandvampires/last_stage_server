@@ -20,7 +20,7 @@ export default class BlockingTechnique {
 
             if(this.blocked >= this.max_blocked){
                 this.activated = false
-                player.block_chance -= 100
+                player.chance_to_block -= 100
                 this.blocked = 0
 
                 player.emitStatusEnd('blocking technique')
@@ -31,7 +31,7 @@ export default class BlockingTechnique {
 
             if(this.proc_count >= this.trashhold){
                 this.proc_count = 0
-                player.block_chance += 100
+                player.chance_to_block += 100
                 this.activated = true
 
                 player.newStatus({

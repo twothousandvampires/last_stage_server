@@ -1,4 +1,3 @@
-import BurningCircle from "../../../Abilities/Cultist/BurningCircle";
 import GhostForm from "../../../Abilities/Cultist/GhostForm";
 import GrimPile from "../../../Abilities/Cultist/GrimPile";
 import PileOfThornCast from "../../../Abilities/Cultist/PileOfThornCast";
@@ -7,13 +6,12 @@ import SelfFlagellation from "../../../Abilities/Cultist/SelfFlagellation";
 import ShieldBash from "../../../Abilities/Cultist/ShieldBash";
 import Slam from "../../../Abilities/Cultist/Slam";
 import Soulrender from "../../../Abilities/Cultist/Soulrender";
-import SoulShatter from "../../../Abilities/Cultist/SoulShatter";
 import UnleashPain from "../../../Abilities/Cultist/UnleashPain";
 import WanderingEvil from "../../../Abilities/Cultist/WanderingEvil";
+import Upgrades from "../../../Classes/Upgrades";
 import Func from "../../../Func";
 import Level from "../../../Level";
 import Immortality from "../../../Status/Immortality";
-import CallWarriorWhenBlock from "../../../Triggers/CallWarriorWhenBlock";
 import Armour from "../../Effects/Armour";
 import Blood from "../../Effects/Blood";
 import ToothExplode from "../../Effects/ToothExplode";
@@ -27,7 +25,7 @@ export default class Cultist extends Character{
     static MAX_ARMOUR = 95
 
     resource: number
-    max_resource: number
+    maximum_resources: number
     next_life_regen_time: any
     attack_point_radius: number
     hit_x: number | undefined
@@ -46,28 +44,27 @@ export default class Cultist extends Character{
         this.attack_point_radius = 4.3
         this.attack_radius = 7
         this.attack_speed = 1550
-        this.might = 100
         this.cast_speed = 1600
         this.name = 'cultist'
         this.move_speed = 0.43
-        this.avoid_damaged_state_chance = 15
+        this.chance_to_avoid_damage_state = 15
         this.armour_rate = 25
         this.resource = 0
-        this.max_resource = 7
+        this.maximum_resources = 7
         this.hit_x = undefined
         this.hit_y = undefined
 
-        this.base_regen_time = 8500
+        this.base_regeneration_time = 8500
         this.service = false
         this.conduct_of_pain = false
         this.pain_extract = false
 
         this.recent_hits = []
-        this.block_chance = 65
+        this.chance_to_block = 65
     }
 
     getSkipDamageStateChance(){
-        return this.avoid_damaged_state_chance + this.agility * 3
+        return this.chance_to_avoid_damage_state + this.agility * 3
     }
 
     getMoveSpeed(): number{
@@ -82,7 +79,6 @@ export default class Cultist extends Character{
     }
 
     createAbilities(abilities: any){
-        
         let main_name = abilities.find(elem => elem.type === 1 && elem.selected).name
 
         if(main_name === 'slam'){
@@ -131,7 +127,7 @@ export default class Cultist extends Character{
         if(!this.can_get_courage) return
 
         for(let i = 0; i < count;i ++){
-            this.recent_hits.push(this.time)
+            this.recent_hits.push(this.level.time)
         }
 
         if(this.can_be_enlighten && this.recent_hits.length >= 8){
@@ -150,12 +146,12 @@ export default class Cultist extends Character{
 
         super.addResourse()
         
-        if(this.resource < this.max_resource || ignore_limit){
+        if(this.resource < this.maximum_resources || ignore_limit){
             this.resource += count
         }
 
         if(Func.chance(this.durability * 3, this.is_lucky)){
-            if(this.resource < this.max_resource){
+            if(this.resource < this.maximum_resources){
                 this.resource ++
             }
         }
@@ -203,7 +199,7 @@ export default class Cultist extends Character{
     }
 
     isBlock(): boolean {
-        let b_chance = this.block_chance + this.durability
+        let b_chance = this.chance_to_block + this.durability
 
         if(b_chance > 90){
             b_chance = 90
@@ -229,7 +225,7 @@ export default class Cultist extends Character{
             arm = Cultist.MAX_ARMOUR
         }
 
-        return !this.no_armour && Func.chance(arm, this.is_lucky)
+        return Func.chance(arm, this.is_lucky)
     }
 
     takeDamage(unit:any = undefined, options: any = {}){      
@@ -324,420 +320,15 @@ export default class Cultist extends Character{
     }
 
     getRegenTimer(){
-        return this.base_regen_time - this.speed * 100
-    }
-
-    getAllUpgrades(){
-        return [
-            {
-                name: 'runefield',
-                type: 'rune',
-                canUse: (character: Character) => {
-                    return character.first_ability instanceof Rune && !character.first_ability.runefield
-                },
-                teach: (character: Character) => {
-                    if(character.first_ability && character.first_ability instanceof Rune){
-                        character.first_ability.runefield = true
-                        character.first_ability.cost += 1
-                    }
-                },
-                cost: 5,
-                desc: 'you will create additional rune for each resourse but now it also increased cost by 1'
-            },
-            {
-                name: 'explosive runes',
-                type: 'rune',
-                canUse: (character: Character) => {
-                    return character.first_ability instanceof Rune && !character.first_ability.explosive
-                },
-                teach: (character: Character) => {
-                    if(character.first_ability && character.first_ability instanceof Rune){
-                        character.first_ability.explosive = true
-                    }
-                },
-                cost: 2,
-                desc: 'increases radius of explosion'
-            },
-            {
-                name: 'fast detonation',
-                type: 'rune',
-                canUse: (character: Character) => {
-                    return character.first_ability instanceof Rune && !character.first_ability.fast_detonation
-                },
-                teach: (character: Character) => {
-                    if(character.first_ability && character.first_ability instanceof Rune){
-                        character.first_ability.fast_detonation = true
-                    }
-                },
-                cost: 3,
-                desc: 'increases detonation rate'
-            },
-            {
-                name: 'second detanation',
-                type: 'rune',
-                canUse: (character: Character) => {
-                    return character.first_ability instanceof Rune && !character.first_ability.second_detanation
-                },
-                teach: (character: Character) => {
-                    if(character.first_ability && character.first_ability instanceof Rune){
-                        character.first_ability.second_detanation = true
-                        character.first_ability.cost ++
-                    }
-                },
-                cost: 1,
-                desc: 'your runes have a chance to explode additional time but now it also increased cost by 1'
-            },
-            {
-                name: 'soul shatter',
-                type: 'new ability',
-                canUse: (character: Character) => {
-                    return !(character.first_ability instanceof SoulShatter)
-                },
-                teach: (character: Character) => {
-                    character.first_ability = new SoulShatter(this)
-                    character.updateClientSkill()
-                },
-                cost: 4,
-                desc: 'hit the single enemy if they died, create a soul projectiles count them based of your resourses'
-            },
-            {
-                name: 'slaming',
-                type: 'slam',
-                canUse: (character: Character) => {
-                    return character.first_ability instanceof Slam && !character.first_ability.slaming
-                },
-                teach: (character: Character) => {
-                    if(character.first_ability && character.first_ability instanceof Slam){
-                        character.first_ability.slaming = true
-                    }
-                },
-                cost: 1,
-                desc: 'increases the radius of slam hit'
-            },
-            {
-                name: 'soul extraction',
-                type: 'slam',
-                canUse: (character: Character) => {
-                    return character.first_ability instanceof Slam && !character.first_ability.soul_extraction
-                },
-                teach: (character: Character) => {
-                    if(character.first_ability && character.first_ability instanceof Slam){
-                        character.first_ability.soul_extraction = true
-                    }
-                },
-                cost: 2,
-                desc: 'increases the chance to get grace from killing enemies'
-            },
-            {
-                name: 'deafening wave',
-                type: "shield bash",
-                canUse: (character: Character) => {
-                    return character.second_ability instanceof ShieldBash &&
-                    !character.second_ability.deafening_wave &&
-                    !character.second_ability.hate
-
-                },
-                teach: (character: Character) => {
-                    if(character.second_ability && character.second_ability instanceof ShieldBash){
-                        character.second_ability.deafening_wave = true
-                    }
-                },
-                cost: 2,
-                desc: 'increases duration and radius of stuning'
-            },
-            {
-                name: 'hate',
-                type: "shield bash",
-                canUse: (character: Character) => {
-                     return character.second_ability instanceof ShieldBash &&
-                    !character.second_ability.deafening_wave &&
-                    !character.second_ability.hate
-                },
-                teach: (character: Character) => {
-                    if(character.second_ability && character.second_ability instanceof ShieldBash){
-                        character.second_ability.hate = true
-                    }
-                },
-                cost: 2,
-                desc: 'now your shield bash does not stun instead it has a chance to shatter enemy and to realise they bones that also can damage enemy'
-            },
-            {
-                name: 'coordination',
-                type: 'shield bash',
-                canUse: (character: Character) => {
-                     return character.second_ability instanceof ShieldBash &&
-                    !character.second_ability.coordination
-                },
-                teach: (character: Character) => {
-                    if(character.second_ability && character.second_ability instanceof ShieldBash){
-                        character.second_ability.coordination = true
-                    }
-                },
-                cost: 3,
-                desc: 'now your shield bash has a chance to reduce attack speed by 50% and now it has chance not to be used after using'
-            },
-            {
-                name: 'increase grim pile effect',
-                type: 'grim pile',
-                canUse: (character: Character) => {
-                     return character.second_ability instanceof GrimPile &&
-                    !character.second_ability.increased_effect
-                },
-                teach: (character: Character) => {
-                    if(character.second_ability && character.second_ability instanceof GrimPile){
-                        character.second_ability.increased_effect = true
-                    }
-                },
-                cost: 1,
-                desc: 'increases armour rate and move speed which it gives'
-            },
-            {
-                name: 'grim pile of will',
-                type: 'grim pile',
-                canUse: (character: Character) => {
-                     return character.second_ability instanceof GrimPile &&
-                    !character.second_ability.resistance
-                },
-                teach: (character: Character) => {
-                    if(character.second_ability && character.second_ability instanceof GrimPile){
-                        character.second_ability.resistance = true
-                    }
-                },
-                cost: 1,
-                desc: 'now it also increase status resist'
-            },
-            {
-                name: 'reign of pain',
-                type: "unleash pain",
-                canUse: (character: Character) => {
-                     return character.third_ability instanceof UnleashPain &&
-                    !character.third_ability.reign_of_pain
-                },
-                teach: (character: Character) => {
-                    if(character.third_ability && character.third_ability instanceof UnleashPain){
-                        character.third_ability.reign_of_pain = true
-                    }
-                },
-                cost: 1,
-                desc: 'increases radius for searching enemies and count of ghost warriors for each resourse'
-            },
-            {
-                name: 'restless warriors',
-                type: "unleash pain",
-                canUse: (character: Character) => {
-                     return character.third_ability instanceof UnleashPain &&
-                    !character.third_ability.restless_warriors
-                },
-                teach: (character: Character) => {
-                    if(character.third_ability && character.third_ability instanceof UnleashPain){
-                        character.third_ability.restless_warriors = true
-                    }
-                },
-                cost: 3,
-                desc: 'your ghost warriors from unleash pain ability deal 2 hits'
-            },
-            {
-                name: 'ring of pain',
-                type: 'pile of thorns',
-                canUse: (character: Character) => {
-                     return character.third_ability instanceof PileOfThornCast &&
-                    !character.third_ability.ring_of_pain
-                },
-                teach: (character: Character) => {
-                    if(character.third_ability && character.third_ability instanceof PileOfThornCast){
-                        character.third_ability.ring_of_pain = true
-                    }
-                },
-                cost: 3,
-                desc: 'increases radius and frequency'
-            },
-            {
-                name: 'collection of bones',
-                type: 'pile of thorns',
-                canUse: (character: Character) => {
-                     return character.third_ability instanceof PileOfThornCast &&
-                    !character.third_ability.collection_of_bones
-                },
-                teach: (character: Character) => {
-                    if(character.third_ability && character.third_ability instanceof PileOfThornCast){
-                        character.third_ability.collection_of_bones = true
-                    }
-                },
-                cost: 1,
-                desc: 'after duration realise bones for each killed enemy'
-            },
-            {
-                name: 'pack with dead',
-                type: 'self flagellation',
-                canUse: (character: Character) => {
-                     return character.utility instanceof SelfFlagellation &&
-                    !character.utility.pack
-                },
-                teach: (character: Character) => {
-                    if(character.utility && character.utility instanceof SelfFlagellation){
-                        character.utility.pack = true
-                    }
-                },
-                cost: 1,
-                desc: 'you cannot die by ability'
-            },
-            {
-                name: 'lesson of pain' ,
-                type: 'self flagellation',
-                canUse: (character: Character) => {
-                     return character.utility instanceof SelfFlagellation &&
-                    !character.utility.lesson
-                },
-                teach: (character: Character) => {
-                    if(character.utility && character.utility instanceof SelfFlagellation){
-                        character.utility.lesson = true
-                    }
-                },
-                cost: 1,
-                desc: 'increases move speed for short period after use'
-            },
-            {
-                name: 'leaded by shost',
-                type: 'ghost form',
-                canUse: (character: Character) => {
-                     return character.utility instanceof GhostForm &&
-                    !character.utility.lead
-                },
-                teach: (character: Character) => {
-                    if(character.utility && character.utility instanceof GhostForm){
-                        character.utility.lead = true
-                    }
-                },
-                cost: 1,
-                desc: 'your teammates also give buff'
-            },
-            {
-                name: 'afterlife cold',
-                type: 'ghost form',
-                canUse: (character: Character) => {
-                     return character.utility instanceof GhostForm &&
-                    !character.utility.afterlife_cold
-                },
-                teach: (character: Character) => {
-                    if(character.utility && character.utility instanceof GhostForm){
-                        character.utility.afterlife_cold = true
-                    }
-                },
-                cost: 1,
-                desc: 'freeze enemies on the way'
-            },
-            {
-                name: 'service',
-                canUse: (character: Character) => {
-                    return !character.service
-                },
-                teach: (character: Character) => {
-                    character.service = true
-                },
-                cost: 2,
-                desc: 'you have a chance to get resourse when you regen life'
-            },
-            {
-                name: 'conduct of pain',
-                canUse: (character: Character) => {
-                    return !character.conduct_of_pain
-                },
-                teach: (character: Character) => {
-                    character.conduct_of_pain = true
-                },
-                cost: 2,
-                desc: 'you have a chance to get resourse when you block hit'
-            },
-            {
-                name: 'pain extract',
-                canUse: (character: Character) => {
-                    return !character.pain_extract
-                },
-                teach: (character: Character) => {
-                    character.pain_extract = true
-                },
-                cost: 3,
-                desc: 'you have a chance to get resourse when you kill enemies'
-            },
-            {
-                name: 'burning circle',
-                type: 'new ability',
-                canUse: (character: Character) => {
-                    return character instanceof Cultist && !(character.second_ability instanceof BurningCircle)
-                },
-                teach: (character: Character) => {
-                    if(character instanceof Cultist){
-                       character.second_ability = new BurningCircle(character)
-                       character.updateClientSkill()
-                    }  
-                },
-                cost: 5,
-                desc: 'creates a circle of fire by damaging youself in which enemies take damage, the frequency of receiving damage depends on courage'
-            },
-            {
-                name: 'all-consuming flame',
-                type: 'burning circle',
-                canUse: (character: Character) => {
-                    return character instanceof Cultist && character.second_ability instanceof BurningCircle && !character.second_ability.consuming
-                },
-                teach: (character: Character) => {
-                    if(character instanceof Cultist){
-                       character.second_ability.consuming = true
-                    }  
-                },
-                cost: 2,
-                desc: 'increases radius'
-            },
-            {
-                name: 'fire hatred',
-                type: 'burning circle',
-                canUse: (character: Character) => {
-                    return character instanceof Cultist && character.second_ability instanceof BurningCircle && !character.second_ability.hatred
-                },
-                teach: (character: Character) => {
-                    if(character instanceof Cultist){
-                       character.second_ability.hatred = true
-                    }  
-                },
-                cost: 1,
-                desc: 'gives a chance to create explode when your kill enemy'
-            },
-            {
-                name: 'devouring flame',
-                type: 'burning circle',
-                canUse: (character: Character) => {
-                    return character instanceof Cultist && character.second_ability instanceof BurningCircle && !character.second_ability.devouring
-                },
-                teach: (character: Character) => {
-                    if(character instanceof Cultist){
-                       character.second_ability.devouring = true
-                    }  
-                },
-                cost: 1,
-                desc: 'gives a chance to increase duration when you kill enemy'
-            },
-            {
-                name: 'spiritual call',
-                canUse: (character: Character) => {
-                    return !character.when_block_triggers.some(elem => elem instanceof CallWarriorWhenBlock)
-                },
-                teach: (character: Character) => {
-                    if(character instanceof Cultist){
-                       character.when_block_triggers.push(new CallWarriorWhenBlock())
-                    }  
-                },
-                cost: 1,
-                desc: 'when you block you can summon spirit warrior'
-            },
-        ]
+        return this.base_regeneration_time - this.speed * 100
     }
 
     generateUpgrades(){
         if(this.upgrades.length) return
 
         //get all upgrades for this class
-        let p = super.getAllUpgrades()
-        let all = this.getAllUpgrades().concat(p)
+        let p = Upgrades.getAllUpgrades()
+        let all = Upgrades.getCultistUpgrades().concat(p)
        
         //filter by usability
         let filtered = all.filter(elem => {
@@ -768,13 +359,13 @@ export default class Cultist extends Character{
     regen(){
         let second_resouce_timer = this.getSecondResourceTimer()
 
-        if(this.time >= this.check_recent_hits_timer){
+        if(this.level.time >= this.check_recent_hits_timer){
             this.check_recent_hits_timer += 1000
 
             for(let i = this.recent_hits.length; i >= 0; i--){
                 let hit_time = this.recent_hits[i]
 
-                if(this.time - hit_time >= second_resouce_timer){
+                if(this.level.time - hit_time >= second_resouce_timer){
                     this.recent_hits.splice(i, 1);
                 }
             }
@@ -782,7 +373,7 @@ export default class Cultist extends Character{
             this.sayPhrase()
         }
 
-        if(this.time >= this.next_life_regen_time){
+        if(this.level.time >= this.next_life_regen_time){
             this.next_life_regen_time += this.getRegenTimer()
             
             this.addLife()
@@ -796,7 +387,7 @@ export default class Cultist extends Character{
     }
 
     succesefulKill(enemy){
-        this.on_kill_triggers.forEach(elem => {
+        this.triggers_on_kill.forEach(elem => {
             elem.trigger(this, enemy)
         })
 
@@ -808,11 +399,11 @@ export default class Cultist extends Character{
     setDamagedAct(){
         this.damaged = true
         this.state = 'damaged'
-        this.can_move_by_player = false
+        this.can_be_controlled_by_player = false
         this.stateAct = this.damagedAct
 
         this.cancelAct = () => {
-            this.can_move_by_player = true
+            this.can_be_controlled_by_player = true
             this.damaged = false
         }
 

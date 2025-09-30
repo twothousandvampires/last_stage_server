@@ -38,16 +38,10 @@ export class WeaponFragment extends Projectiles{
             if(Math.sqrt(((this.x - this.start_x) ** 2) + ((this.y - this.start_y) ** 2)) >= this.max_distance){
                  this.level.projectiles = this.level.projectiles.filter(elem => elem != this)
                  this.level.deleted.push(this.id)
-
                  return
             }
         }
-        
-        if(this.isOutOfMap() && !this.hited){
-            this.impact()
-            return
-        }
-
+  
         if(!this.hited){
             for(let i = 0; i < this.level.players.length; i++){
                 let p = this.level.players[i]
@@ -58,10 +52,8 @@ export class WeaponFragment extends Projectiles{
 
                     if(!this.point_added){
                         if(this.owner){
-                            this.owner.addResourse()
                             this.point_added = true
                         }
-                       
                     }
                     
                     this.impact()
@@ -72,11 +64,9 @@ export class WeaponFragment extends Projectiles{
                 let e = this.level.enemies[i]
 
                 if(Func.elipseCollision(this.getBoxElipse(), e.getBoxElipse())){
-                  
                     e.takeDamage(this.owner)
         
                     if(!this.point_added){
-                        this.owner?.addPoint()
                         this.point_added = true
                     }
 
@@ -85,22 +75,7 @@ export class WeaponFragment extends Projectiles{
             }
         }
 
-        let l = 1 - Math.abs(0.5 * Math.cos(this.angle))
-
-        let n_x = Math.sin(this.angle) * l
-        let n_y = Math.cos(this.angle) * l
-
-        n_x *= this.move_speed
-        n_y *= this.move_speed
-
-        if(n_x < 0){
-            this.flipped = true
-        }
-        else{
-            this.flipped = false
-        }
-
-        this.addToPoint(n_x, n_y)
+        this.moveAct()
     }
 
     impact(){

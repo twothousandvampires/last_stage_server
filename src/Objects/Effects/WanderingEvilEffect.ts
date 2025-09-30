@@ -19,11 +19,6 @@ export default class WanderingEvilEffect extends Effect {
         this.move_speed = 0.4
     }
 
-    delete(){
-        this.level.deleted.push(this.id)
-        this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
-    }
-
     act(time: number){
         if(this.inside){
             if(time - this.inside_start >= 4000){
@@ -85,6 +80,7 @@ export default class WanderingEvilEffect extends Effect {
             this.inside_start = this.level.time
         }
         else{
+          
             let angle = Func.angle(this.x, this.y, this.target.x, this.target.y)
 
             let l = 1 - Math.abs(0.5 * Math.cos(angle))    
@@ -96,6 +92,7 @@ export default class WanderingEvilEffect extends Effect {
             n_y *= this.move_speed
 
             this.addToPoint(n_x, n_y)
+              this.wasChanged()
         }
     }
 }

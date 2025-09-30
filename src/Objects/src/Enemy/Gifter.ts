@@ -20,7 +20,6 @@ export default class Gifter extends Pile{
         this.spawn_time = 1600
         this.armour_rate = 0
         this.create_chance = 0
-        this.getState()
     }
 
     getState(): void {
@@ -30,9 +29,7 @@ export default class Gifter extends Pile{
 
     idleAct(tick: number){
         if(tick - this.start_time >= 20000){
-            this.is_dead = true
-            this.is_corpse = true
-            this.state = 'dead'
+            this.setState(this.setdyingAct)
         }
     }
 
@@ -93,11 +90,12 @@ export default class Gifter extends Pile{
         if(this.life_status <= 0){
             this.is_dead = true
             unit?.succesefulKill(this)
-            this.setDyingAct()
+            this.setdyingAct()
         }
     }
 
-    setDyingAct(){
+    setdyingAct(){
+        this.is_dead = true
         this.is_corpse = true
         this.state = 'dead'
     }

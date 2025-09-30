@@ -19,11 +19,9 @@ export default class Skull extends Enemy{
         this.create_energy_chance = 0
         this.gold_revard = 0
         this.create_chance = 0
-        this.getState()
     }
 
-    setDyingAct(){
-        this.is_corpse = true
+    setdyingAct(){
         if(this.freezed){
             this.state = 'freeze_dying'
             this.level.sounds.push({
@@ -35,16 +33,8 @@ export default class Skull extends Enemy{
         else{
             this.state = 'dying'
         }
-        this.stateAct = this.DyingAct
+        this.stateAct = this.dyingAct
         this.setTimerToGetState(this.dying_time)
-    }
-
-    moveAct(){
-        this.state = 'move'
-
-        let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
-
-        this.moveByAngle(a)
     }
 
     getExplodedSound(){

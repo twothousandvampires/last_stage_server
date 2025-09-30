@@ -38,7 +38,7 @@ export default class Boss extends Enemy{
             // if(options?.instant_death){
             //     unit?.succesefulKill()
             //     this.is_dead = true
-            //     this.setDyingAct()
+            //     this.setdyingAct()
             //     return
             // }
     
@@ -75,15 +75,15 @@ export default class Boss extends Enemy{
             if(this.life_status <= 0){
                 this.is_dead = true
                 unit?.succesefulKill()
-                this.setDyingAct()
+                this.setdyingAct()
             }
     }
 
-    setDyingAct(){
+    setdyingAct(){
         this.state = 'dying'
         this.is_corpse = true
         this.level.deleted.push(this.id)
-        this.stateAct = this.DyingAct
+        this.stateAct = this.dyingAct
         this.setTimerToGetState(this.dying_time)
 
         setTimeout(() => {
@@ -102,14 +102,6 @@ export default class Boss extends Enemy{
             x:this.x,
             y:this.y
         }
-    }
-
-    moveAct(){
-        this.state = 'move'
-
-        let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
-
-        this.moveByAngle(a)
     }
 
     attackAct(){

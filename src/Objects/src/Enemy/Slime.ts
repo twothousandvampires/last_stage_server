@@ -22,7 +22,6 @@ export default class Slime extends Enemy{
         this.spawn_time = 1400
         this.say_z = 8
         this.weapon_angle = 1
-        this.getState()
     }
 
     setDeadState(){
@@ -32,7 +31,7 @@ export default class Slime extends Enemy{
 
     }
 
-    setDyingAct(){
+    setdyingAct(){
         if(this.freezed){
             this.state = 'freeze_dying'
             this.is_corpse = true
@@ -53,16 +52,8 @@ export default class Slime extends Enemy{
             this.level.binded_effects.push(e)
         }
 
-        this.stateAct = this.DyingAct
+        this.stateAct = this.dyingAct
         this.setTimerToGetState(this.dying_time)
-    }
-
-    moveAct(){
-        this.state = 'move'
-
-        let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
-
-        this.moveByAngle(a)
     }
 
     attackAct(){

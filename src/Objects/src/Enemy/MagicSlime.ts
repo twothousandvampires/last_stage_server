@@ -27,7 +27,6 @@ export default class MagicSlime extends Enemy{
         this.create_chance = 25
         this.player_check_radius = 25
         this.create_item_chance = 1
-        this.getState()
     }
 
     setDeadState(){
@@ -36,7 +35,7 @@ export default class MagicSlime extends Enemy{
         this.stateAct = this.deadAct
     }
 
-    setDyingAct(){
+    setdyingAct(){
         if(this.freezed){
             this.state = 'freeze_dying'
             this.is_corpse = true
@@ -57,7 +56,7 @@ export default class MagicSlime extends Enemy{
             this.level.binded_effects.push(e)
         }
 
-        this.stateAct = this.DyingAct
+        this.stateAct = this.dyingAct
         this.setTimerToGetState(this.dying_time)
     }
 
@@ -120,14 +119,6 @@ export default class MagicSlime extends Enemy{
         }
 
         this.setTimerToGetState(this.attack_speed)
-    }
-
-    retreatAct(){
-        let a = this.retreat_angle
-
-        if(!a) return
-        
-        this.moveByAngle(a)
     }
 
     setRetreatState(){

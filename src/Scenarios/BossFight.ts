@@ -59,7 +59,7 @@ export default class BossFight extends Scenario {
             time: 4000,
             action: (level: Level) => {
                 level.players.forEach(elem => {
-                    elem.can_move_by_player = false
+                    elem.can_be_controlled_by_player = false
                     let effect = new CureseOfDamnedArea(level)
                     effect.x = elem.x
                     effect.y = elem.y
@@ -97,7 +97,7 @@ export default class BossFight extends Scenario {
             time: 9000,
             action: (level: Level) => {
                 level.players.forEach(elem => {
-                    elem.can_move_by_player = true
+                    elem.can_be_controlled_by_player = true
                 })
 
                 let p = level.players[0]
@@ -159,7 +159,7 @@ export default class BossFight extends Scenario {
 
         statues.forEach(elem => {
             elem.is_corpse = true
-            elem.setDyingAct()
+            elem.setdyingAct()
         })
 
         level.boss_kills_trashold *= 2.5

@@ -28,11 +28,11 @@ export default class Quake extends SwordmanAbility{
     use(){
         this.owner.is_attacking = true
         this.owner.state = 'jump'
-        this.owner.can_move_by_player = false
+        this.owner.can_be_controlled_by_player = false
 
         this.owner.stateAct = this.getAct()  
         this.owner.pay_to_cost = this.cost
-        this.owner.avoid_damaged_state_chance += 100
+        this.owner.chance_to_avoid_damage_state += 100
      
 
         this.owner.cancelAct = () => {
@@ -41,8 +41,8 @@ export default class Quake extends SwordmanAbility{
            
             this.direction = false
             this.impact = false
-            this.owner.avoid_damaged_state_chance -= 100
-            this.owner.can_move_by_player = true
+            this.owner.chance_to_avoid_damage_state -= 100
+            this.owner.can_be_controlled_by_player = true
         }
     }
 

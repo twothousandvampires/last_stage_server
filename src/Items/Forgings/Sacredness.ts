@@ -16,7 +16,7 @@ export default class Sacredness extends Forging{
     forge(){
         if(this.canBeForged() && this.costEnough()){
             this.value += 1
-            this.item.player.additional_chance_grace_create += 1
+            this.item.player.chance_to_create_grace += 1
              this.payCost()
         }
     }

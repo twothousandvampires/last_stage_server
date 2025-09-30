@@ -21,7 +21,6 @@ export class Flamy extends Enemy{
         this.spawn_time = 1400
         this.player_check_radius = 25
         this.say_z = 8
-        this.getState()
     }
 
     idleAct(tick: number){
@@ -57,14 +56,6 @@ export class Flamy extends Enemy{
         else if(this.enemyCanAtack(tick)){
             this.setState(this.setAttackState)
         }
-    }
-
-    retreatAct(){
-        let a = this.retreat_angle
-
-        if(!a) return
-        
-        this.moveByAngle(a)
     }
 
     setRetreatState(){

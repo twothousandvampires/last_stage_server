@@ -6,7 +6,6 @@ import GraceShard from "./Objects/Effects/GraceShard"
 import Func from "./Func"
 import Split from "./Objects/Effects/Split"
 import ChargedSphere from "./Objects/Effects/ChargedSphere"
-import Grace from "./Objects/Effects/Grace"
 import Intervention from "./Objects/Effects/Intervention"
 import Default from "./Scenarios/Default"
 import Scenario from "./Scenarios/Scenario"
@@ -67,7 +66,7 @@ export default class Level{
     ]
 
     public boss_kills_trashold: number = 300
-    public enemies: Enemy[] = []
+    public enemies: (Enemy | Unit)[] = []
     public players: Character[] = []
     public projectiles: Projectiles[] = []
     public effects: Effect[] = []
@@ -76,6 +75,7 @@ export default class Level{
     public sounds: Sound[] = []
     public socket: Server
     public last_update_time: number = 0
+    changed_actors: any = new Map()
  
     public time: number = Date.now()
     public started: number
@@ -88,7 +88,6 @@ export default class Level{
     private status_pull: Status[] = []
     private last_id: number = 0
     public kill_count: number = 0
-    private grace_trashold: number = 5
     public previuos_script: Scenario | undefined 
     
     constructor(private server: GameServer){
@@ -156,22 +155,26 @@ export default class Level{
         let time = Date.now()
         if(time - this.last_update_time >= 30){
             this.last_update_time = time
+            
             this.tick(time)
            
             this.socket.emit('tick_data', this, Date.now())
             
-            this.collectTheDead()
             this.effects.length = 0
             this.deleted.length = 0
             this.sounds.length = 0
+            this.changed_actors.clear()
+            
+            this.collectTheDead()
         }
         
         this.game_loop = setImmediate(this.loop.bind(this))
     }
 
     public toJSON(): any{
+        let changed = Array.from(this.changed_actors.values())
         return {
-            actors: [...this.players, ...this.enemies, ...this.projectiles, ...this.effects, ...this.binded_effects],
+            actors: [...this.players, ...changed],
             deleted: this.deleted,
             sounds: this.sounds,
             meta: {

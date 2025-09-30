@@ -23,7 +23,7 @@ export default class SoulBlade extends Item{
     }
 
     equip(character: Character): void {
-        character.on_kill_triggers.push(this)
+        character.triggers_on_kill.push(this)
     }
 
     trigger(player: Character, enemy: Enemy){

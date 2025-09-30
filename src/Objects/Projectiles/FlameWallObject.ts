@@ -3,7 +3,7 @@ import Level from "../../Level";
 import Unit from "../src/Unit";
 import Projectiles from "./Projectiles";
 
-export class FlameWallObject extends Projectiles{
+export class FlameWallObject extends Projectiles {
 
     interval: any
     hitted: any
@@ -40,7 +40,6 @@ export class FlameWallObject extends Projectiles{
         
     }
     act(): void { 
-
         let enemies = this.level.enemies
         let players = this.level.players
 

@@ -70,7 +70,7 @@ export default class Default extends Scenario{
         level.binded_effects.push(gate)
         level.players.forEach(elem => {
             elem.invisible = true
-            elem.can_move_by_player = false
+            elem.can_be_controlled_by_player = false
         })
 
         setTimeout(() => {
@@ -87,7 +87,7 @@ export default class Default extends Scenario{
             setTimeout(() => {
                 level.players.forEach(elem => {
                     elem.invisible = false
-                    elem.can_move_by_player = true
+                    elem.can_be_controlled_by_player = true
                 })
             },400)
         }, 2000)
@@ -121,6 +121,7 @@ export default class Default extends Scenario{
         let count = Func.random(1 + Math.floor(add_count / 2), 2 + Math.floor(add_count))
         
         count += (level.players.length - 1)
+
 
         for(let i = 0; i < count; i++){
 
@@ -254,8 +255,7 @@ export default class Default extends Scenario{
             level.enemies.push(enemy) 
         }
 
-        console.log(this.waves_created)
-      
+    
         this.checkUpgrade(level)
         this.checkPortal(level) 
     }
@@ -272,7 +272,7 @@ export default class Default extends Scenario{
         if(this.waves_created < this.grace_trashold) return
 
         let delta = this.waves_created - this.grace_trashold
-        console.log('delta ' + delta)
+
         let chance = 20 + delta * 3
 
         if(Func.chance(chance)){

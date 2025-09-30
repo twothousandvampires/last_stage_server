@@ -56,7 +56,7 @@ export default class Sparks extends FlyerAbility{
 
                 let proj = new Spark(this.level, this.pierce, this.ttl)
                 
-                proj.setStart(this.time)
+                proj.setStart(this.level.time)
                 proj.setAngle(angle)
                 proj.setPoint(this.x, this.y)
                 proj.setOwner(this)

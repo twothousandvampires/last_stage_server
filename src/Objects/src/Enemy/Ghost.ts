@@ -33,8 +33,6 @@ export default class Ghost extends Enemy{
         this.dying_time = 1200
         this.phasing = true
         this.create_item_chance = 3
-       
-        this.getState()
     }
 
     setResurectAct(){
@@ -76,7 +74,7 @@ export default class Ghost extends Enemy{
     }
 
     setDeadState(){
-        if(!this.freezed && this.state != 'burn_dying' && !Func.chance(this.ressurect_chance)){
+        if(Func.notChance(this.ressurect_chance)){
             this.is_corpse = true
             this.state = 'dead'
             this.stateAct = this.deadAct
@@ -84,6 +82,7 @@ export default class Ghost extends Enemy{
         else{
             this.state = 'fake_dead'
             this.stateAct = this.deadAct
+            this.ressurect_chance -= 10
             setTimeout(() => {
                 this.setState(this.setResurectAct)
             }, 3000)
@@ -110,14 +109,6 @@ export default class Ghost extends Enemy{
 
     ressurectAct(){
 
-    }
-
-    moveAct(){
-        this.state = 'move'
-
-        let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
-
-        this.moveByAngle(a)
     }
 
     getExplodedSound(){
@@ -179,6 +170,7 @@ export default class Ghost extends Enemy{
             })
 
             if(this.spell_name === 'frost bolts'){
+                console.log('frost bolts')
                 let angle = Func.angle(this.x, this.y, this.target.x, this.target.y)
 
                 let proj = new FrostBolt(this.level)
@@ -213,7 +205,7 @@ export default class Ghost extends Enemy{
         }
     }
 
-     setDyingAct(){
+     setdyingAct(){
         if(this.freezed){
             this.state = 'freeze_dying'
             this.is_corpse = true
@@ -227,7 +219,7 @@ export default class Ghost extends Enemy{
             this.state = this.dead_type ? this.dead_type : 'dying'
         }
 
-        this.stateAct = this.DyingAct
+        this.stateAct = this.dyingAct
         this.invisible = false
         this.setTimerToGetState(this.dying_time)
     }
@@ -248,13 +240,6 @@ export default class Ghost extends Enemy{
         }
 
         this.setTimerToGetState(this.attack_speed)
-    }
-    retreatAct(){
-            let a = this.retreat_angle
-    
-            if(!a) return
-            
-            this.moveByAngle(a)
     }
     
     setRetreatState(){

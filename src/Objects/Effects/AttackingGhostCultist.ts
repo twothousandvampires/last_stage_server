@@ -3,7 +3,7 @@ import Level from "../../Level";
 import Effect from "./Effects";
 import WalkingGhostCultist from "./WalkingGhostCultist";
 
-export default class AttackingGhostCultist extends Effect{
+export default class AttackingGhostCultist extends Effect {
 
     target: any
     flipped: boolean
@@ -36,11 +36,6 @@ export default class AttackingGhostCultist extends Effect{
         }
     }
 
-    delete(){
-        this.level.deleted.push(this.id)
-        this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
-    }
-
     explode(){
         if(this.restless){
             let ghost = new WalkingGhostCultist(this.level)
@@ -67,7 +62,6 @@ export default class AttackingGhostCultist extends Effect{
         else{
             this.delete()    
         }
-        this.delete()
     }
 
     act(time: number){

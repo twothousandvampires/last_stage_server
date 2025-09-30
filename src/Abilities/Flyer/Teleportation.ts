@@ -20,7 +20,7 @@ export default class Teleportation extends FlyerAbility{
     constructor(owner: Flyer){
         super(owner)
         this.cd = 15000
-        this.name = 'teleportaion'
+        this.name = 'teleportation'
     }
 
     canUse(){
@@ -42,7 +42,7 @@ export default class Teleportation extends FlyerAbility{
         }
 
         this.owner.using_ability = this
-        this.owner.can_move_by_player = false
+        this.owner.can_be_controlled_by_player = false
 
         this.owner.state = 'teleport start'
         this.owner.level.addSound('cast', this.owner.x, this.owner.y)
@@ -58,7 +58,7 @@ export default class Teleportation extends FlyerAbility{
         
         this.owner.cancelAct = () => {
             this.owner.action = false
-            this.owner.can_move_by_player = true
+            this.owner.can_be_controlled_by_player = true
             this.teleport_x = undefined
             this.teleport_y = undefined
             this.afterUse()

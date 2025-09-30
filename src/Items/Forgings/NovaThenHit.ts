@@ -21,8 +21,8 @@ export default class NovaThenHit extends Forging{
 
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
-            if(!player.on_hit_triggers.some(elem => elem instanceof NovaThenHit)){
-                player.on_hit_triggers.push(this)
+            if(!player.triggers_on_hit.some(elem => elem instanceof NovaThenHit)){
+                player.triggers_on_hit.push(this)
             }
 
             this.payCost()

@@ -18,7 +18,6 @@ export default class Solid extends Enemy{
         this.attack_speed = 1800
         this.explode = false
         this.spawn_time = 1200
-        this.getState()
         this.life_status = 4
         this.hit_x = 0
         this.hit_y = 0
@@ -33,11 +32,17 @@ export default class Solid extends Enemy{
     }
 
     setDeadState(){
-        this.state = 'dead'
-        this.stateAct = this.deadAct
-        
-        this.action_time = 1200
-        this.setImpactTime(100)
+        if(this.freezed || this.burned || this.exploded){
+            this.level.removeEnemy(this)
+            return
+        }
+        else{
+            this.state = 'dead'
+            this.stateAct = this.deadAct
+            
+            this.action_time = 1200
+            this.setImpactTime(100)      
+        } 
     }
 
     deadAct(){
@@ -46,30 +51,23 @@ export default class Solid extends Enemy{
             this.action = false
             this.state = 'dead_explode'
             
-            this.level.enemies.forEach( elem => {
+            this.level.enemies.forEach(elem => {
                 if(elem != this && Func.distance(this, elem) <= 12){
-                    elem.takeDamage()
+                    elem.takeDamage(undefined, {
+                        burn: true
+                    })
                 }
             })
 
             this.level.players.forEach( elem => {
                 if(Func.distance(this, elem) <= 12){
-                    elem.takeDamage(undefined, {})
+                    elem.takeDamage()
                 }
             })
 
-            setTimeout(()=> {
-                this.is_corpse = true
-            }, 800)
+            this.wasChanged()
+            this.is_corpse = true
         }
-    }
-
-    moveAct(){
-        this.state = 'move'
-
-        let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
-
-        this.moveByAngle(a)
     }
 
     attackAct(){

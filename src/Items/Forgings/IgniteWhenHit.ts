@@ -22,8 +22,8 @@ export default class IgniteWhenHit extends Forging{
 
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
-            if(!player.on_hit_triggers.some(elem => elem instanceof IgniteWhenHit)){
-                player.on_hit_triggers.push(this)
+            if(!player.triggers_on_hit.some(elem => elem instanceof IgniteWhenHit)){
+                player.triggers_on_hit.push(this)
             }
 
             this.payCost()

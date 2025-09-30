@@ -83,15 +83,10 @@ export default class GameServer{
     }
 
     suggetRecord(player: Character){
-        this.socket.to(player.id).emit('suggers_record', this.level?.kill_count)
+        this.socket.to(player.id).emit('suggers_record', this.level?.kill_count, player)
     }
 
-    addRecord(name, socket_id){
-        if(!this.level) return
-        let p = this.level.players[0]
-
-        if(p.id != socket_id) return
-
+    addRecord(record_data){
         this.db.query( 'INSERT INTO game_stats (name, kills, time, class) VALUES (?, ?, ?, ?)',
         [name, this.level.kill_count, this.level.time - this.level.started, p.name],
         (err, results) => {
@@ -99,9 +94,6 @@ export default class GameServer{
                 return;
             }
         })
-
-        p.closeSuggest()
-        this.removeLevel()
     }
 
     public endOfLevel(): void{
@@ -119,9 +111,6 @@ export default class GameServer{
                 }
                 
                 if(more){
-                    this.remove_level_timeout = setTimeout(() => {
-                        this.removeLevel()
-                    }, 20000)
                     this.suggetRecord(this.level?.players[0])
                 }
                 else{
