@@ -1,9 +1,10 @@
 import Func from "../../Func";
 import { ThrowedWeapon } from "../../Objects/Projectiles/ThrowedWeapon";
 import Swordman from "../../Objects/src/PlayerClasses/Swordman";
+import Ability from "../Ability";
 import SwordmanAbility from "./SwordmanAbility";
 
-export default class WeaponThrow extends SwordmanAbility{
+export default class WeaponThrow extends SwordmanAbility {
    
     light_grip: boolean
     returning: boolean
@@ -18,60 +19,24 @@ export default class WeaponThrow extends SwordmanAbility{
         this.shattering = false
         this.name = 'weapon throw'
         this.multiple = false
+        this.type = Ability.TYPE_ATTACK
     }
 
-    canUse(): boolean {
-        return this.isEnergyEnough() && !this.used && !this.owner.is_attacking
-    }
-
-    use(){
-        if(this.used || this.owner.is_attacking) return
-
-        this.owner.using_ability = this
-        let cd_time = this.getCd()
+    getCdValue(){
+        let cd_time = this.cd
        
         if(this.light_grip && Func.chance(50)){
             cd_time = Math.round(cd_time / 2)
         }
 
-        let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
-        let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
-        
-        if(rel_x < this.owner.x){
-            this.owner.flipped = true
-        }
-        else{
-            this.owner.flipped = false    
-        }
-        
-        if(!this.owner.attack_angle){
-            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
-        }
-
-        this.owner.is_attacking = true
-        this.owner.state = 'attack'
-        let attack_move_speed_penalty = this.owner.getAttackMoveSpeedPenalty()
-        this.owner.addMoveSpeedPenalty(-attack_move_speed_penalty)
-
-        this.owner.stateAct = this.act
-        let attack_speed = this.owner.getAttackSpeed()
-
-        this.owner.action_time = attack_speed
-        this.owner.setImpactTime(80)
-
-        this.owner.cancelAct = () => {
-            this.owner.action = false
-            this.owner.addMoveSpeedPenalty(attack_move_speed_penalty)
-            this.afterUse(cd_time)
-            this.owner.hit = false
-            this.owner.is_attacking = false
-        }
+        return cd_time
     }
+
     impact(){
         this.owner.level.sounds.push({
             name: 'sword swing',
-            x:this.x,
-            y:this.y
+            x: this.owner.x,
+            y: this.owner.y
         })
 
         this.used = true
@@ -120,18 +85,6 @@ export default class WeaponThrow extends SwordmanAbility{
                 add_proj2.setPoint(this.owner.x, this.owner.y)
                 this.owner.level.projectiles.push(add_proj2)
             }
-        }
-
-        this.owner.target = undefined
-    }
-    act(){
-        if(this.action && !this.hit){
-            this.hit = true
-            this.using_ability.impact()
-        }
-        else if(this.action_is_end){
-            this.action_is_end = false
-            this.getState()
         }
     }
 }

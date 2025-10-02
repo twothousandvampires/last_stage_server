@@ -1,6 +1,7 @@
 import Func from "../../Func";
 import Blood from "../../Objects/Effects/Blood";
 import Cultist from "../../Objects/src/PlayerClasses/Cultist";
+import Ability from "../Ability";
 import CultistAbility from "./CultistAbility";
 
 export default class SelfFlagellation extends CultistAbility{
@@ -14,21 +15,10 @@ export default class SelfFlagellation extends CultistAbility{
         this.pack = false
         this.lesson = false
         this.name = 'self-flagellation'
-    }
-
-    canUse(): boolean {
-        return !this.used
-    }
-
-    afterUse(): void {
-        setTimeout(() => {
-            this.used = false
-        }, this.getCd() - this.owner.getSecondResource() * 300)
+        this.type = Ability.TYPE_INSTANT
     }
 
     use(): void {
-        if(this.used) return 
-
         this.used = true
 
         let e = new Blood(this.owner.level)
@@ -44,8 +34,6 @@ export default class SelfFlagellation extends CultistAbility{
         this.owner.takeDamage()
         this.owner.chance_to_avoid_damage_state -= 100
 
-        this.afterUse()
-
         if(this.pack){
             this.owner.can_be_lethaled = true
         }
@@ -56,5 +44,7 @@ export default class SelfFlagellation extends CultistAbility{
                 this.owner.move_speed_penalty -= 20
             }, 3000)
         }
+
+        this.afterUse()
     }
 }

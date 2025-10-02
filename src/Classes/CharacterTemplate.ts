@@ -20,23 +20,23 @@ export default class characterTemplate{
             this.name = 'swordman'
             this.stats = {
                 might: 1,
-                speed: 0,
+                agility: 0,
                 knowledge: 0, 
                 will: 0,
-                agility: 0,
+                perception: 0,
                 durability: 1,
             }
             this.stats_description = {
                 might: `- affects the number of targets hit by your abilities
                         - affects the chance of not losing courage when receiving damage`,
-                speed: `- increases your attack speed
-                        - reduses penalty of speed when you defend`,
+                agility: `- increases your attack speed
+                          - reduses penalty of speed when you attacking`,
                 knowledge: `- gives a chance to get additional resource and courage
                             - increases status resistance`,
                 will: `- increases your life regeneration rate
                        - increases the chance to skip damage state`,
-                agility: `- increases a block chance
-                          - reduces penalty of speed when your attcking`,
+                perception: `- increases a block chance
+                             - reduces penalty of speed when your defend`,
                 durability: `- gives a chance to get a additional life while regen
                              - increases your armour rate`
             }
@@ -146,23 +146,23 @@ export default class characterTemplate{
             this.stat_count = 5
             this.stats = {
                 might: 1,
-                speed: 0,
+                agility: 0,
                 knowledge: 2,
                 will: 0,
-                agility: 0,
+                perception: 0,
                 durability: 0,
             }
             this.stats_description = {
                 might: `- affects the your abilities(increases AOE, number of projectiles etc.)
                         - reduces cooldowns`,
-                speed: `- increases your move speed
-                        - gives a chance to get additional courage`,
+                agility: `- increases your armour rate
+                          - increases your move speed`,
                 knowledge: `- gives a chance not to pay mana when cast
                             - affect to start maximum mana pool`,
                 will: `- gives a chance not to lose mana when block
                        - gives a chance to get additional mana`,
-                agility: `- increases your armour rate
-                          - reduces penalty of speed when your cast`,
+                perception: `- reduces penalty of speed when your cast
+                             - gives a chance to get additional courage`,
                 durability: `- gives a chance to avoid damage state
                              - increases life regen rate`
             }
@@ -244,24 +244,24 @@ export default class characterTemplate{
             this.stat_count = 5
             this.stats = {
                 might: 0,
-                speed: 0,
+                agility: 0,
                 knowledge: 0,
                 will: 1,
-                agility: 0,
+                perception: 0,
                 durability: 2,
             }
             this.stats_description = {
-                 might: `- increases attack speed
-                         - increases armour rate`,
-                speed: `- increases your cast speed
-                        - increases life regen rate`,
+                might: `- increases attack speed
+                        - increases armour rate`,
+                agility: `- increases your move speed
+                          - increases block chance`,
                 knowledge: `- gives a chance not to pay resource when cast
-                            - reduces courage lose rate`,
+                            - increases your cast speed`,
                 will: `- gives a chance to avoid damage
                        - increases status resist`,
-                agility: `- increases move speed
-                          - increases chance to avoid damage state`,
-                durability: `- increases block chance
+                perception: `- increases chance to avoid damage state
+                             - reduses cooldowns`,
+                durability: `- increases spirit
                              - gives a chance to get additional resourse`
             }
             this.abilities = [

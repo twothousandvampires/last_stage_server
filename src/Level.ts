@@ -16,6 +16,7 @@ import Sound from "./Types/Sound"
 import { Enemy } from "./Objects/src/Enemy/Enemy"
 import Learning from "./Scenarios/Learning"
 import ItemDrop from "./Objects/Effects/ItemDrop"
+import SorcerersSkull from "./Objects/Effects/SorcerersSkull"
 
 export default class Level{
     static enemy_list = [
@@ -298,6 +299,9 @@ export default class Level{
             }
             else if(drop_name === 'item'){
                 drop_name = new ItemDrop(this)
+            }
+            else if(drop_name === 'skull'){
+                drop_name = new SorcerersSkull(this)
             }
 
             if(drop_name instanceof Effect){

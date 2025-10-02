@@ -1,32 +1,32 @@
 import Character from "../../Objects/src/Character";
-import IgniteWhenHitTrigger from "../../Triggers/IgniteWhenHitTrigger";
+import LightningWhenUseAbilityTrigger from "../../Triggers/LightningWhenUseAbilityTrigger";
 import Item from "../Item";
 import Forging from "./Forging";
 
-export default class IgniteWhenHit extends Forging {
+export default class LightningWhenUseSkill extends Forging {
 
     value: number = 0
    
     constructor(item: Item){
         super(item)
         this.max_value = 20
-        this.name = 'ignite on hit'
-        this.description = 'chance to ignite in radius when hitting'
+        this.name = 'lightnings when use skill'
+        this.description = 'chance to realise lightnings when use skill'
         this.gold_cost = 12
     }
 
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
-            let trigger = player.triggers_on_hit.find(elem => elem instanceof IgniteWhenHitTrigger)
+            let trigger = player.triggers_on_use_not_utility.find(elem => elem instanceof LightningWhenUseAbilityTrigger)
 
             if(trigger){
-                trigger.chance += 5
+                trigger.chance += 3
             }
             else{
-                let t = new IgniteWhenHitTrigger()
-                t.chance = 5
+                let t = new LightningWhenUseAbilityTrigger()
+                t.chance = 3
 
-                player.triggers_on_hit.push(t)
+                player.triggers_on_use_not_utility.push(t)
             }
            
             this.payCost()

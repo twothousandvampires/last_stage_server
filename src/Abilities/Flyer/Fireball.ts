@@ -3,7 +3,7 @@ import { FireballProjectile } from "../../Objects/Projectiles/FireballProjectile
 import Flyer from "../../Objects/src/PlayerClasses/Flyer";
 import FlyerAbility from "./FlyerAbility";
 
-export default class Fireball extends FlyerAbility{
+export default class Fireball extends FlyerAbility {
     cost: number
     body_melting: boolean
     ignite: boolean
@@ -16,70 +16,22 @@ export default class Fireball extends FlyerAbility{
         this.ignite = false
     }
 
-    canUse(){
-        return this.isEnergyEnough() && this.owner.resource >= this.cost && !this.owner.is_attacking
-    }
+    impact(){
+        this.owner.level.addSound('fire cast', this.owner.x, this.owner.y)
 
-    use(){
-        let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
-        let rel_y =  Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
+        let a = undefined                    
+        let target = this.owner.getTarget()
         
-        if(rel_x < this.owner.x){
-            this.owner.flipped = true
-        }
-        else{
-            this.owner.flipped = false    
-        }
-        
-        if(!this.owner.attack_angle){
-            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        if(target){
+            a = Func.angle(this.owner.x, this.owner.y, target.x, target.y)
         }
 
-        let v =  this.owner.getMoveSpeedPenaltyValue()      
-        this.owner.is_attacking = true
-        this.owner.state = 'cast'
-        this.owner.addMoveSpeedPenalty(-v)
+        let proj = new FireballProjectile(this.owner.level, this.body_melting)
+        proj.ignite = this.ignite
+        proj.setOwner(this.owner)
+        proj.setAngle(a ? a : this.owner.attack_angle)
+        proj.setPoint(this.owner.x, this.owner.y)
 
-        this.owner.stateAct = this.act
-        let cast_speed = this.owner.getCastSpeed()
-
-        this.owner.action_time = cast_speed
-        this.owner.setImpactTime(85)
-        
-        this.owner.cancelAct = () => {
-            this.owner.action = false
-            this.owner.addMoveSpeedPenalty(v)
-            this.owner.hit = false
-            this.owner.is_attacking = false
-        }
-    }
-
-    act(){
-        if(this.action && !this.hit){
-            this.addCourage()
-            
-            this.hit = true
-            this.level.addSound('fire cast', this.x, this.y)
-
-            let a = undefined                    
-            let target = this.getTarget()
-            
-            if(target){
-                a = Func.angle(this.x, this.y, target.x, target.y)
-            }
-
-            let proj = new FireballProjectile(this.level, this.first_ability.body_melting)
-            proj.ignite = this.first_ability.ignite
-            proj.setOwner(this)
-            proj.setAngle(a ? a : this.attack_angle)
-            proj.setPoint(this.x, this.y)
-
-            this.level.projectiles.push(proj)
-            this.attack_angle = undefined
-        }
-        else if(this.action_is_end){
-            this.action_is_end = false
-            this.getState()
-        }
+        this.owner.level.projectiles.push(proj)
     }
 }

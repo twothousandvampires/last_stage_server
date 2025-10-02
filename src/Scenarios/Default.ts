@@ -23,6 +23,7 @@ import PileOfStorm from "../Objects/src/Piles/PileOfStorm";
 import PileOfSummoning from "../Objects/src/Piles/PileOfSummoning";
 import PileOfVeil from "../Objects/src/Piles/PileOfVeil";
 import BannerOfArmour from "../Status/BannerOfArmour";
+import Bless from "../Status/Bless";
 import ElementalEnchanted from "../Status/ElementalEnchanted";
 import UnholyPower from "../Status/UnholyPower";
 import UnholySpirit from "../Status/UnholySpirit";
@@ -216,7 +217,7 @@ export default class Default extends Scenario{
             }
 
             if(Func.chance(5) && (enemy instanceof Solid) || (enemy instanceof FlyingBones) || (enemy instanceof Specter)){
-                let r = Func.random(1, 4)
+                let r = Func.random(1, 5)
 
                 if(r === 1){
                     let status = new BannerOfArmour(level.time)
@@ -232,6 +233,10 @@ export default class Default extends Scenario{
                 }
                 else if(r === 4){
                     let status = new UnholySpirit(level.time)
+                    level.setStatus(enemy, status)
+                }
+                else if(r === 5){
+                    let status = new Bless(level.time)
                     level.setStatus(enemy, status)
                 }
             }
@@ -276,7 +281,7 @@ export default class Default extends Scenario{
         let chance = 20 + delta * 3
 
         if(Func.chance(chance)){
-            this.grace_trashold += 20 + Math.floor(this.waves_created / 5)
+            this.grace_trashold += 20 + Math.floor(this.waves_created / 10)
             let portal: Grace = new Grace(level)
             while(portal.isOutOfMap()){
                 let random_player: Character = level.players[Math.floor(Math.random() * level.players.length)]

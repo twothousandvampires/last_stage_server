@@ -162,25 +162,27 @@ export default abstract class Item {
         'gold find',
         'charisma',
         'impact',
-        'penetrating'
+        'penetrating',
+        'spirit'
     ]
 
     static forging_list_type_1 = [
         'attack speed',
         'might',
         'durability',
-        'cast speed',
         'instant kill',
-        'when critical'
+        'when critical',
+        'ignite when hit'
     ]
 
     static forging_list_type_2 = [
         'armour rate',
-        'speed',
+        'perception',
         'agility',
         'regen time',
         'block chance',
-        'when hit'
+        'when hit',
+        'freeze when hited'
     ]
     
     static forging_list_type_3 = [
@@ -189,7 +191,9 @@ export default abstract class Item {
         'knowledge',
         'max resources',
         'cooldown reduction',
-        'blessed life'
+        'blessed life',
+        'cast speed',
+        'lightning when use skill'
     ]
 
 

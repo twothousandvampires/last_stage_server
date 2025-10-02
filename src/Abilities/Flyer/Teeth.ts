@@ -11,14 +11,7 @@ export default class Teeth extends FlyerAbility{
         this.name = 'teeth'
         this.cd = 2000
     }
-
-    canUse(){
-        return !this.used && this.owner.resource >= this.cost && !this.owner.is_attacking
-    }
-
     impact(){
-        this.owner.addCourage()
-        this.owner.hit = true
         this.used = true
 
         this.owner.level.addSound('cast', this.x, this.y)
@@ -52,55 +45,6 @@ export default class Teeth extends FlyerAbility{
             proj.setPoint(this.owner.x, this.owner.y)
 
             this.owner.level.projectiles.push(proj)
-        }
-    }
-
-    use(){
-        if(this.used || this.owner.is_attacking) return
-
-        this.owner.using_ability = this
-
-        let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
-        let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
-        
-        if(rel_x < this.owner.x){
-            this.owner.flipped = true
-        }
-        else{
-            this.owner.flipped = false    
-        }
-
-        if(!this.owner.attack_angle){
-            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
-        }
-
-        this.owner.is_attacking = true
-        this.owner.state = 'cast'
-        let v = this.owner.getMoveSpeedPenaltyValue()
-        this.owner.addMoveSpeedPenalty(-v)
-
-        this.owner.stateAct = this.act
-        let cast_speed = this.owner.getCastSpeed()
-
-        this.owner.action_time = cast_speed
-        this.owner.setImpactTime(85)
-
-        this.owner.cancelAct = () => {
-            this.owner.action = false
-            this.owner.addMoveSpeedPenalty(v)
-            this.afterUse()
-            this.owner.hit = false
-            this.owner.is_attacking = false
-        }
-    }
-
-    act(){
-        if(this.action && !this.hit){
-            this.using_ability.impact()
-        }
-         else if(this.action_is_end){
-            this.action_is_end = false
-            this.getState()
         }
     }
 }

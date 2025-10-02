@@ -54,6 +54,7 @@ export default class WanderingEvilEffect extends Effect {
             else{
                 this.x = this.target.x
                 this.y = this.target.y
+                this.wasChanged()
             }
             return
         }
@@ -66,7 +67,7 @@ export default class WanderingEvilEffect extends Effect {
         if(!this.target){
             let b = this.getBoxElipse()
             b.r = 20
-            let targets = this.level.enemies.filter(elem => Func.elipseCollision(elem.getBoxElipse(), b))
+            let targets = this.level.enemies.filter(elem => !elem.is_dead && Func.elipseCollision(elem.getBoxElipse(), b))
             this.target = targets[Math.floor(Math.random() * targets.length)]
         }
 
@@ -92,7 +93,8 @@ export default class WanderingEvilEffect extends Effect {
             n_y *= this.move_speed
 
             this.addToPoint(n_x, n_y)
-              this.wasChanged()
+            
         }
+        this.wasChanged()
     }
 }

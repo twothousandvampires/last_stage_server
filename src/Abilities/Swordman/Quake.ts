@@ -3,9 +3,10 @@ import QuakeEffect from "../../Objects/Effects/Quake";
 import RocksFromCeil from "../../Objects/Effects/RocksFromCeil";
 import Swordman from "../../Objects/src/PlayerClasses/Swordman";
 import Weakness from "../../Status/Weakness";
+import Ability from "../Ability";
 import SwordmanAbility from "./SwordmanAbility";
 
-export default class Quake extends SwordmanAbility{
+export default class Quake extends SwordmanAbility {
     direction: boolean
     impact: boolean
     consequences: boolean
@@ -19,10 +20,8 @@ export default class Quake extends SwordmanAbility{
         this.consequences = false
         this.selfcare = false
         this.name = 'quake'
-    }
-
-    canUse(){
-        return this.owner.resource >= this.cost && !this.owner.is_attacking
+        this.need_to_pay = true
+        this.type = Ability.TYPE_CUSTOM
     }
 
     use(){
@@ -34,7 +33,6 @@ export default class Quake extends SwordmanAbility{
         this.owner.pay_to_cost = this.cost
         this.owner.chance_to_avoid_damage_state += 100
      
-
         this.owner.cancelAct = () => {
             this.owner.z = 0
             this.owner.is_attacking = false
@@ -53,6 +51,7 @@ export default class Quake extends SwordmanAbility{
 
         return function(){
             if(ability.impact){
+                owner.succefullCast()
                 let second = owner.getSecondResource()
                 let enemies = owner.level.enemies
                 let players = owner.level.players

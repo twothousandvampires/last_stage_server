@@ -2,6 +2,7 @@ import Func from "../../Func";
 import Cultist from "../../Objects/src/PlayerClasses/Cultist";
 import AfterlifeCold from "../../Status/AfterlifeCold";
 import Weakness from "../../Status/Weakness";
+import Ability from "../Ability";
 import CultistAbility from "./CultistAbility";
 
 export default class GhostForm extends CultistAbility{
@@ -16,15 +17,10 @@ export default class GhostForm extends CultistAbility{
         this.afterlife_cold = false
         this.name = 'ghost form'
         this.cd = 15000
-    }
-
-    canUse(): boolean {
-        return !this.used
+        this.type = Ability.TYPE_CUSTOM
     }
 
     use(): void {
-        if(this.used) return 
-
         this.used = true
 
         this.owner.action_time = 500

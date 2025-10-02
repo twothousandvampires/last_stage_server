@@ -9,7 +9,7 @@ import DoomMantia from "../Items/DoomMantia"
 import EmeraldKnife from "../Items/EmeraldKnife"
 import FlameRing from "../Items/FlameRing"
 import FlyingShards from "../Items/FlyingShards"
-import Agility from "../Items/Forgings/Agility"
+import Perception from "../Items/Forgings/Perception"
 import ArmourRate from "../Items/Forgings/ArmourRate"
 import AttackSpeed from "../Items/Forgings/AttackSpeed"
 import BlockChance from "../Items/Forgings/BlockChance"
@@ -41,7 +41,6 @@ import Regen from "../Items/Forgings/Regen"
 import Resist from "../Items/Forgings/Resist"
 import Sacredness from "../Items/Forgings/Sacredness"
 import ShockNovaWhenArmour from "../Items/Forgings/ShockNovaWhenArmour"
-import Speed from "../Items/Forgings/Speed"
 import StunWhenHit from "../Items/Forgings/StunWhenHit"
 import Toughness from "../Items/Forgings/Toughness"
 import Will from "../Items/Forgings/Will"
@@ -72,6 +71,10 @@ import Character from "../Objects/src/Character"
 import Cultist from "../Objects/src/PlayerClasses/Cultist"
 import Flyer from "../Objects/src/PlayerClasses/Flyer"
 import Swordman from "../Objects/src/PlayerClasses/Swordman"
+import Agility from "../Items/Forgings/Agility"
+import Spirit from "../Items/Forgings/Spirit"
+import FreezeWhenHited from "../Items/Forgings/FreezeWhenHited"
+import LightningWhenUseSkill from "../Items/Forgings/LightningWhenUseSkill"
 
 export default class Builder{
     static createCharacter(client: Client, level: Level): Character{
@@ -218,10 +221,10 @@ export default class Builder{
                 return new Will(item)
             case 'knowledge':
                 return new Knowledge(item)
-            case 'speed':
-                return new Speed(item)
             case 'agility':
                 return new Agility(item)
+            case 'Perception':
+                return new Perception(item)
             case 'might':
                 return new Might(item)
             case 'durability':
@@ -272,8 +275,14 @@ export default class Builder{
                 return new MaxLIfe(item)
              case 'impact':
                 return new Impact(item)
-              case 'penetrating':
-                return new Penetrating(item)  
+            case 'penetrating':
+                return new Penetrating(item)
+            case 'spirit':
+                return new Spirit(item)
+            case 'freeze when hited':
+                return new FreezeWhenHited(item)
+            case 'lightning when use skill':
+                return new LightningWhenUseSkill(item)
             default:    
                 return new NovaThenHit(item)
         }

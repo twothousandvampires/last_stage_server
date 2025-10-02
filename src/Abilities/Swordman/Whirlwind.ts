@@ -3,10 +3,11 @@ import Blood from "../../Objects/Effects/Blood";
 import BloodSphere from "../../Objects/Effects/BloodSphere";
 import { ThrowedWeapon } from "../../Objects/Projectiles/ThrowedWeapon";
 import Swordman from "../../Objects/src/PlayerClasses/Swordman";
+import Ability from "../Ability";
 import SwordmanAbility from "./SwordmanAbility";
 import WeaponThrow from "./WeaponThrow";
 
-export default class Whirlwind extends SwordmanAbility{
+export default class Whirlwind extends SwordmanAbility {
     cost: number
     blood_harvest: boolean
     fan_of_swords: boolean
@@ -18,17 +19,92 @@ export default class Whirlwind extends SwordmanAbility{
         this.blood_harvest = false
         this.fan_of_swords = false
         this.name = 'whirlwind'
+        this.type = Ability.TYPE_CUSTOM
     }
 
-    canUse(){
-        return this.owner.resource >= this.cost && !this.owner.is_attacking
+    impact(){
+        let enemies = this.owner.level.enemies
+        let players = this.owner.level.players
+
+        let targets = enemies.concat(players)
+
+        let e = this.owner.getBoxElipse()
+        e.r += this.owner.attack_radius + 1
+
+        let was_hit = false
+
+        let kill_count = 0
+
+        targets.forEach(elem => {
+            if(elem != this.owner && Func.elipseCollision(e, elem.getBoxElipse())){
+                was_hit = true
+                elem.takeDamage(this.owner)
+                if(elem.is_dead){
+                    kill_count ++
+                    for(let i = 0; i < 2; i++){
+                        let e = new Blood(this.owner.level)
+                        e.setPoint(elem.x, elem.y)
+                        this.owner.level.effects.push(e)
+                    }                       
+                }
+            }
+        })
+
+        if(this.blood_harvest && kill_count > 0){
+            let chance = 20 * kill_count
+            if(Func.chance(chance)){
+                let sphere = new BloodSphere(this.owner.level, kill_count)
+                sphere.setPoint(this.owner.x, this.owner.y)
+                this.owner.level.binded_effects.push(sphere)
+            }
+        }
+        
+        if(!was_hit){
+            this.owner.level.sounds.push({
+                name: 'sword swing',
+                x: this.owner.x,
+                y: this.owner.y
+            })
+        }
+
+        if(this.fan_of_swords){
+            let count = this.owner.getTargetsCount()
+            
+            if(count > 15){
+                count = 15
+            }
+            
+            let zones = 6.28 / count
+    
+            for(let i = 1; i <= count; i++){
+                let min_a = (i - 1) * zones
+                let max_a = i * zones
+    
+                let angle = Math.random() * (max_a - min_a) + min_a
+                let proj = new ThrowedWeapon(this.owner.level)
+
+                if(this.owner.first_ability instanceof WeaponThrow){
+                    if(this.owner.first_ability.shattering){
+                        proj.shattered = true
+                    }
+                    else if(this.owner.first_ability.returning){
+                        proj.returned = true
+                    }
+                }
+
+                proj.setAngle(angle)
+                proj.setPoint(this.owner.x, this.owner.y)
+                proj.setOwner(this.owner)
+    
+                this.owner.level.projectiles.push(proj)
+            }
+        }
     }
 
     use(echo = false){
         if(this.owner.is_attacking && !echo) return
 
-        let action_time = this.owner.attack_speed / 2
-
+        let action_time = this.owner.getAttackSpeed() / 2
 
         if(!echo){
             this.owner.pay_to_cost = this.cost
@@ -56,88 +132,7 @@ export default class Whirlwind extends SwordmanAbility{
 
     act(){
         if(this.action && !this.hit){
-            this.hit = true
-
-            let enemies = this.level.enemies
-            let players = this.level.players
-
-            let targets = enemies.concat(players)
-
-            let e = this.getBoxElipse()
-            e.r += this.attack_radius + 2
-
-            let was_hit = false
-
-            let kill_count = 0
-    
-            targets.forEach(elem => {
-                if(elem != this && Func.elipseCollision(e, elem.getBoxElipse())){
-                    was_hit = true
-                    elem.takeDamage(this)
-                    if(elem.is_dead){
-                        kill_count ++
-
-                        for(let i = 0; i < 2;i++){
-                            let e = new Blood(this.level)
-                            e.setPoint(elem.x, elem)
-                            this.level.effects.push(e)
-                        }                       
-                    }
-                }
-            })
-
-            if(this.third_ability.blood_harvest && kill_count > 0){
-                let chance = 20 * kill_count
-                if(Func.chance(chance)){
-                    let sphere = new BloodSphere(this.level, kill_count)
-                    sphere.setPoint(this.x, this.y)
-                    this.level.binded_effects.push(sphere)
-                }
-            }
-            
-            if(!was_hit){
-                this.level.sounds.push({
-                    name: 'sword swing',
-                    x:this.x,
-                    y:this.y
-                })
-            }
-
-            if(this.third_ability.fan_of_swords){
-                let count = this.getTargetsCount()
-                
-                if(count > 15){
-                    count = 15
-                }
-                
-                let zones = 6.28 / count
-        
-                for(let i = 1; i <= count; i++){
-                    let min_a = (i - 1) * zones
-                    let max_a = i * zones
-        
-                    let angle = Math.random() * (max_a - min_a) + min_a
-                    let proj = new ThrowedWeapon(this.level)
-
-                    if(this.first_ability instanceof WeaponThrow){
-                        if(this.first_ability.shattering){
-                            proj.shattered = true
-                        }
-                        else if(this.first_ability.returning){
-                            proj.returned = true
-                        }
-                    }
-
-                    proj.point_added = true
-                    proj.setAngle(angle)
-                    proj.setPoint(this.x, this.y)
-                    proj.setOwner(this)
-        
-                    this.level.projectiles.push(proj)
-                }
-            }
-
-            this.payCost()
+            this.third_ability.impact()
         }
         else if(this.action_is_end){
             this.action_is_end = false
@@ -151,7 +146,9 @@ export default class Whirlwind extends SwordmanAbility{
                 this.third_ability.use(true)
              }
              else{
-                this.getState()
+                this.succefullCast()
+                this.payCost()
+                this.getState() 
              }
         }
     }

@@ -13,52 +13,24 @@ export default class CursedWeapon extends SwordmanAbility{
         this.cd = 12000
     }
 
-    canUse(): boolean {
-        return !this.used
+    use(){
+        this.owner.using_ability = this
+        this.owner.pay_to_cost = this.cost
+        this.owner.setState(this.owner.setCastAct)
     }
 
-    use(): void {
-        if(this.used) return
-
+    impact(){
+        let second = this.owner.getSecondResource()
         this.used = true
+        let status = new CursedWeaponStatus(this.owner.level.time, this.drinker)
+        status.setDuration(8000 + second * 200)
+        
+        this.owner.level.setStatus(this.owner, status)
 
-        this.owner.state = 'cast'
-
-        this.owner.action_time = this.owner.cast_speed
-        this.owner.setImpactTime(80)
-
-        this.owner.stateAct = this.getAct()
-
-        this.owner.cancelAct = () => {
-            this.owner.action = false
-            this.owner.action_time = undefined
-            this.afterUse()
-        }
-    }
-
-    getAct(){
-        let ability = this
-        let owner = this.owner
-
-        return function(){
-            if(owner.action){
-                let second = this.getSecondResource()
-
-                let status = new CursedWeaponStatus(this.level.time, ability.drinker)
-                status.setDuration(8000 + second * 200)
-                
-                this.level.setStatus(this, status)
-
-                this.level.sounds.push({
-                    name:'dark cast',
-                    x: this.x,
-                    y: this.y
-                })
-            }
-            else if(owner.action_is_end){
-                owner.action_is_end = false
-                owner.getState()
-            }
-        }
+        this.owner.level.sounds.push({
+            name:'dark cast',
+            x: this.owner.x,
+            y: this.owner.y
+        })
     }
 }

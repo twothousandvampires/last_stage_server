@@ -17,12 +17,16 @@ export abstract class Enemy extends Unit {
     spawn_time: number = 1200
     dead_type: string | undefined
     cooldown_attack: number = 2000
+    retreat_distance: number = 0
+    retreat_angle: number | undefined
+    ranged: boolean = false
 
     create_grace_chance: number = 15
     create_energy_chance: number = 5
     create_entity_chance: number = 5
     create_intervention_chance: number = 2
     create_item_chance: number = 0
+    create_sorcerers_skull_chance: number = 0
 
     create_chance: number = 15
     last_action: number = 0
@@ -40,13 +44,74 @@ export abstract class Enemy extends Unit {
     abstract idleAct(server_tick: number): void
     abstract attackAct(server_tick: number): void
 
+    setAttackState(){
+        this.state = 'attack'
+        this.is_attacking = true
+        this.stateAct = this.attackAct
+        this.action_time = this.attack_speed
+        this.setImpactTime(80)
+        
+        this.attack_angle = Func.angle(this.x, this.y, this.target.x, this.target.y)
+
+        this.cancelAct = () => {
+            this.action = false
+            this.hit = false
+            this.is_attacking = false
+            this.attack_angle = undefined
+        }
+
+        this.setTimerToGetState(this.attack_speed)
+    }
+
+     setRetreatState(){
+        if(!this.target) return
+
+        this.state = 'move'
+        this.retreat_angle = Func.angle(this.target.x, this.target.y, this.x, this.y)
+        this.retreat_angle += Math.random() * 1.57 * (Func.random(50) ? -1 : 1)
+
+        this.stateAct = this.retreatAct
+
+        this.cancelAct = () => {
+            this.retreat_angle = undefined
+        }
+
+        this.setTimerToGetState(2000)
+    }
+
+    checkPlayer(){
+        if(this.can_check_player){
+           if(!this.target){
+                this.can_check_player = false
+            
+                let p = this.level.players.filter(elem => Func.distance(this, elem) <= this.player_check_radius && !elem.is_dead && elem.z < 5)
+
+                p.sort((a, b) => {
+                    return Func.distance(a, this) - Func.distance(b, this)
+                })
+
+                this.target = p[0]
+            }
+            else{
+                if(Func.distance(this, this.target) > this.player_check_radius || this.target.is_dead){
+                    this.target = undefined
+                }
+            }
+            
+            setTimeout(() => {
+                this.can_check_player = true
+            }, 2000)
+        }
+    }
+
     getTotalWeights(){
         return [
             ['grace', this.create_grace_chance],
             ['energy', this.create_energy_chance],
             ['entity', this.create_entity_chance],
             ['intervention', this.create_intervention_chance],
-            ['item', this.create_item_chance]
+            ['item', this.create_item_chance],
+            ['skull', this.create_sorcerers_skull_chance], 
         ]
     }
 
@@ -80,11 +145,10 @@ export abstract class Enemy extends Unit {
         if(!a) return
         
         this.moveByAngle(a)
-         this.wasChanged()
+        this.wasChanged()
     }
 
     act(time: number){
-
         if(!this.stateAct){
             this.getState()
         }
@@ -123,8 +187,14 @@ export abstract class Enemy extends Unit {
         this.setTimerToGetState(duration)
     }
 
+    afterDead(){
+
+    }
+
     setdyingAct(){
         let to_delete = true
+        this.invisible = false
+
         if(this.freezed){
             this.state = 'freeze_dying'
             this.level.sounds.push({
@@ -145,11 +215,12 @@ export abstract class Enemy extends Unit {
         }
 
         if(to_delete){
-            this.is_corpse = true
+            this.level.removeEnemy(this)
         }
         else{
             this.stateAct = this.dyingAct
             this.setTimerToGetState(this.dying_time)
+            this.afterDead()
         }
     }
 
@@ -333,20 +404,4 @@ export abstract class Enemy extends Unit {
 
         this.level.effects.push(phrase)
     }
-
-    setAttackState(){
-        this.state = 'attack'
-        this.is_attacking = true
-        this.stateAct = this.attackAct
-        this.action_time = this.attack_speed
-        this.setImpactTime(80)
-
-        this.cancelAct = () => {
-            this.action = false
-            this.hit = false
-            this.is_attacking = false
-        }
-
-        this.setTimerToGetState(this.attack_speed)
-    }   
 }

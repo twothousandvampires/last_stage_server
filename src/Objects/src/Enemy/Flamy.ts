@@ -3,10 +3,8 @@ import Level from "../../../Level";
 import { FlamyFireBall } from "../../Projectiles/FlamyFireBall";
 import { Enemy } from "./Enemy";
 
-export class Flamy extends Enemy{
+export class Flamy extends Enemy {
 
-    retreat_distance: number
-    retreat_angle: number | undefined
     cooldown_attack: number = 4000
 
     constructor(level: Level){
@@ -17,40 +15,22 @@ export class Flamy extends Enemy{
         this.attack_radius = 5
         this.attack_speed = 2000
         this.retreat_distance = 8
-        this.retreat_angle = undefined
         this.spawn_time = 1400
         this.player_check_radius = 25
         this.say_z = 8
     }
 
     idleAct(tick: number){
-        if(this.can_check_player){
-            if(!this.target){
-                this.can_check_player = false
-            
-                let p = this.level.players.filter(elem => Func.distance(this, elem) <= this.player_check_radius && !elem.is_dead)
-                p.sort((a, b) => {
-                    return Func.distance(a, this) - Func.distance(b, this)
-                })
-                this.target = p[0]
-            }
-            else{
-                if(Func.distance(this, this.target) >= this.player_check_radius || this.target.is_dead){
-                    this.target = undefined
-                }
-            }
-            
-            setTimeout(() => {
-                this.can_check_player = true
-            }, 2000)
-
-        }
+        this.checkPlayer()
         
         if(!this.target){
             return
         } 
 
-        if(Func.distance(this, this.target) <= this.retreat_distance && Math.random() > 0.5){
+        if(Func.distance(this, this.target) <= 12 && Func.chance(70)){
+            this.setState(this.setIdleAct)
+        }
+        else if(Func.distance(this, this.target) <= this.retreat_distance && Func.chance(50)){
             this.setState(this.setRetreatState)
         }
         else if(this.enemyCanAtack(tick)){
@@ -58,25 +38,12 @@ export class Flamy extends Enemy{
         }
     }
 
-    setRetreatState(){
-        this.state = 'move'
-        this.retreat_angle = Func.angle(this.target?.x, this.target.y,this.x, this.y)
-        this.retreat_angle += Math.random() * 1.57 * (Func.random(50) ? -1 : 1)
-
-        this.stateAct = this.retreatAct
-
-        this.cancelAct = () => {
-            this.retreat_angle = undefined
-        }
-
-        this.setTimerToGetState(2000)
-    }
-    
     attackAct(){
-        if(this.action && !this.hit){
+        if(this.action && !this.hit && this.target){
             this.hit = true
     
-            let fb = new FlamyFireBall(this.level, this.x, this.y)
+            let fb = new FlamyFireBall(this.level)
+            fb.setPoint(this.x, this.y)
 
             fb.setAngle(Func.angle(this.x, this.y, this.target.x, this.target.y))
             fb.setOwner(this)

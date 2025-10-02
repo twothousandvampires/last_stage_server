@@ -74,7 +74,8 @@ export class EvilSpirit extends Projectiles {
 
         if(this.target){
             this.angle = Func.angle(this.x, this.y, this.target.x, this.target.y)
-            this.moveAct()
         }
+        
+        this.moveAct()
     }
 }

@@ -1,5 +1,4 @@
 import Func from "../../../Func";
-import Distance from "../../../Items/Forgings/Distance";
 import Level from "../../../Level";
 import Corrosion from "../../../Status/Corrosion";
 import PuddleOfPoison from "../../Effects/PuddleOfPoison";
@@ -24,40 +23,15 @@ export default class Slime extends Enemy{
         this.weapon_angle = 1
     }
 
-    setDeadState(){
-        this.is_corpse = true
-        this.state = 'dead'
-        this.stateAct = this.deadAct
+    afterDead(): void {
+        let e = new PuddleOfPoison(this.level)
+        e.setPoint(this.x, this.y)
 
-    }
-
-    setdyingAct(){
-        if(this.freezed){
-            this.state = 'freeze_dying'
-            this.is_corpse = true
-            this.level.sounds.push({
-                name: 'shatter',
-                x: this.x,
-                y: this.y
-            })
-        }
-        else{
-            this.state = this.dead_type ? this.dead_type : 'dying'
-        }
-
-        if(!this.freezed && this.dead_type != 'burn_dying'){
-            let e = new PuddleOfPoison(this.level)
-            e.setPoint(this.x, this.y)
-
-            this.level.binded_effects.push(e)
-        }
-
-        this.stateAct = this.dyingAct
-        this.setTimerToGetState(this.dying_time)
+        this.level.binded_effects.push(e)
     }
 
     attackAct(){
-        if(this.action && !this.hit){
+        if(this.action && !this.hit && this.target && this.attack_angle){
             this.hit = true
             if(this.mucus){
                 this.mucus = false
@@ -73,7 +47,7 @@ export default class Slime extends Enemy{
                 e.r = this.attack_radius
 
                 if(this.target?.z < 5 && Func.elipseCollision(e, this.target?.getBoxElipse()) && Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle)){
-                    this.target?.takeDamage(this)
+                    this.target.takeDamage(this, {})
                     if(Func.chance(50)){
                         let status = new Corrosion(this.level.time)
                         status.setDuration(6000)
@@ -93,48 +67,8 @@ export default class Slime extends Enemy{
         }
     }
 
-    setAttackState(){
-        this.state = 'attack'
-        this.is_attacking = true
-        this.stateAct = this.attackAct
-        this.action_time = this.attack_speed
-        this.setImpactTime(80)
-
-        this.attack_angle = Func.angle(this.x, this.y, this.target?.x, this.target.y)
-
-        this.cancelAct = () => {
-            this.action = false
-            this.hit = false
-            this.is_attacking = false
-            this.attack_angle = undefined
-        }
-
-        this.setTimerToGetState(this.attack_speed)
-    }
-
     idleAct(tick: number){
-        if(this.can_check_player){
-           if(!this.target){
-                this.can_check_player = false
-            
-                let p = this.level.players.filter(elem => Func.distance(this, elem) <= this.player_check_radius && !elem.is_dead && elem.z < 5)
-
-                p.sort((a, b) => {
-                    return Func.distance(a, this) - Func.distance(b, this)
-                })
-
-                this.target = p[0]
-           }
-           else{
-                if(Func.distance(this, this.target) > this.player_check_radius || this.target.is_dead){
-                    this.target = undefined
-                }
-           }
-           
-           setTimeout(() => {
-                this.can_check_player = true
-           }, 2000)
-        }
+        this.checkPlayer()
        
         if(!this.target){
             return
@@ -151,6 +85,9 @@ export default class Slime extends Enemy{
         else if(Func.elipseCollision(a_e, this.target.getBoxElipse())){
             if (this.enemyCanAtack(tick)){
                 this.setState(this.setAttackState)
+            }
+            else{
+                this.setState(this.setIdleAct)
             }
         }
         else{

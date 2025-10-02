@@ -19,175 +19,123 @@ export default class LightningBolt extends FlyerAbility{
         this.storm = false
     }
 
-    canUse(){
-        return this.isEnergyEnough() && this.owner.resource >= this.cost && !this.owner.is_attacking
-    }
+    async impact(){
+        if(this.owner.target){
+            let t = this.owner.level.enemies.find(elem => elem.id === this.owner.target)
+            
+            if(!t){
+                t = this.owner.level.players.find(elem => elem.id === this.owner.target)
+            }
 
-    use(){
-        let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
-        let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
-        
-        this.owner.c_x = rel_x
-        this.owner.c_y = rel_y
-
-        if(rel_x < this.owner.x){
-            this.owner.flipped = true
-        }
-        else{
-            this.owner.flipped = false    
+            if(t){
+                this.owner.c_x = Math.floor(t.x)
+                this.owner.c_y = Math.floor(t.y)
+            }
         }
         
-        if(!this.owner.attack_angle){
-            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+        let enemies = this.owner.level.enemies
+        let players = this.owner.level.players
+
+        let targets = enemies.concat(players)
+
+        let hiting_box = {
+            x: this.owner.c_x,
+            y: this.owner.c_y,
+            r: 4 + Math.round(this.owner.getAdditionalRadius())
         }
 
-        this.owner.is_attacking = true
-        this.owner.state = 'cast'
+        let high_voltage = this.high_voltage
 
-        let move_speed_reduce = this.owner.getMoveSpeedPenaltyValue()
-        this.owner.addMoveSpeedPenalty(-move_speed_reduce)
+        let max_targets = high_voltage ? 3 : 1
+        let time = Date.now()
 
-        this.owner.stateAct = this.act
-        let cast_speed = this.owner.getCastSpeed()
+        for(let i = 0; i < targets.length; i++){
+            let elem = targets[i]
+            if(elem != this.owner && Func.elipseCollision(hiting_box, elem.getBoxElipse())){
+                if(!high_voltage && max_targets === 0){
+                    let status = new ShockStatus(time)
+                    status.setDuration(5000)
+                    status.setPower(20)
 
-        this.owner.action_time = cast_speed
-        this.owner.setImpactTime(85)
-
-        this.owner.cancelAct = () => {
-            this.owner.action = false
-            this.owner.addMoveSpeedPenalty(move_speed_reduce)
-            this.owner.hit = false
-            this.owner.is_attacking = false
+                    this.owner.level.setStatus(elem, status)
+                }
+                else if(max_targets > 0){
+                    max_targets--
+                    elem.takeDamage(this.owner, {
+                        burn: true
+                    })
+                }
+            }
         }
-    }
 
-    async act(){
-        if(this.action && !this.hit){
-            this.addCourage()
-            this.hit = true
-          
-            if(this.target){
-                let t = this.level.enemies.find(elem => elem.id === this.target)
-                
-                if(!t){
-                    t = this.level.players.find(elem => elem.id === this.target)
+        let l_effect = new LightningBoltEffect(this.owner.level)
+        l_effect.setPoint(this.owner.c_x, this.owner.c_y)
+
+        this.owner.level.addSound('lightning bolt', this.owner.c_x, this.owner.c_y)
+        this.owner.level.effects.push(l_effect)
+        
+        this.owner.target = undefined
+
+        setTimeout(() => {
+            let r_effect = new RocksFromCeil(this.owner.level)
+            r_effect.setPoint(this.owner.c_x, this.owner.c_y)
+            r_effect.setOwner(this)
+            this.owner.level.effects.push(r_effect)
+        }, 400)
+
+        let storm = this.storm
+
+        if(storm){
+            for(let i = 0; i < 2; i++){
+                await Func.sleep(200)
+
+                let distance_x = Func.random(5, 10)
+                let distance_y = Func.random(5, 10)
+                let angle = Math.random() * 6.28
+
+                let x = this.owner.c_x + (Math.sin(angle) * distance_x)
+                let y = this.owner.c_y + (Math.cos(angle) * distance_y)
+
+                let hiting_box = {
+                    x: x,
+                    y: y,
+                    r: 4 + Math.round(this.owner.getAdditionalRadius())
                 }
 
-                if(t){
-                    this.c_x = Math.floor(t.x)
-                    this.c_y = Math.floor(t.y)
+                let max_targets = high_voltage ? 3 : 1
+
+                for(let i = 0; i < targets.length; i++){
+                    let elem = targets[i]
+                    if(elem != this.owner && Func.elipseCollision(hiting_box, elem.getBoxElipse())){
+                        if(!high_voltage && max_targets === 0){
+                            let status = new ShockStatus(time)
+                            status.setDuration(5000)
+                            status.setPower(20)
+                            
+                            this.owner.level.setStatus(elem, status)
+                        }
+                        else if(max_targets > 0){
+                            max_targets--
+                            elem.takeDamage(this.owner, {
+                                burn: true
+                            })
+                        }
+                    }   
                 }
-            }
-           
-            let enemies = this.level.enemies
-            let players = this.level.players
 
-            let targets = enemies.concat(players)
+                let l_effect = new LightningBoltEffect(this.owner.level)
+                l_effect.setPoint(x, y)
 
-            let hiting_box = {
-                x: this.c_x,
-                y: this.c_y,
-                r: 4 + Math.round(this.getAdditionalRadius())
-            }
-
-            let high_voltage = this.first_ability.high_voltage
-
-            let max_targets = high_voltage ? 3 : 1
-            let time = Date.now()
-
-            for(let i = 0; i < targets.length; i++){
-                let elem = targets[i]
-                if(elem != this && Func.elipseCollision(hiting_box, elem.getBoxElipse())){
-                    if(!high_voltage && max_targets === 0){
-                        let status = new ShockStatus(time)
-                        status.setDuration(5000)
-                        status.setPower(20)
-
-                        this.level.setStatus(elem, status)
-                    }
-                    else if(max_targets > 0){
-                        max_targets--
-                        elem.takeDamage(this, {
-                            burn: true
-                        })
-                    }
-                }
-            }
-
-            let l_effect = new LightningBoltEffect(this.level)
-            l_effect.setPoint(this.c_x, this.c_y)
-
-            this.level.addSound('lightning bolt', this.c_x, this.c_y)
-            this.level.effects.push(l_effect)
-            
-            this.target = undefined
-
-            setTimeout(() => {
-                let r_effect = new RocksFromCeil(this.level)
-                r_effect.setPoint(this.c_x, this.c_y)
-                r_effect.setOwner(this)
-                this.level.effects.push(r_effect)
-            }, 400)
-
-            let storm = this.first_ability.storm
-
-            if(storm){
-                for(let i = 0; i < 2; i++){
-                    await Func.sleep(200)
-
-                    let distance_x = Func.random(5, 10)
-                    let distance_y = Func.random(5, 10)
-                    let angle = Math.random() * 6.28
-
-                    let x = this.c_x + (Math.sin(angle) * distance_x)
-                    let y = this.c_y + (Math.cos(angle) * distance_y)
-
-                    let hiting_box = {
-                        x: x,
-                        y: y,
-                        r: 4 + Math.round(this.getAdditionalRadius())
-                    }
-
-                    let max_targets = high_voltage ? 3 : 1
-
-                    for(let i = 0; i < targets.length; i++){
-                        let elem = targets[i]
-                        if(elem != this && Func.elipseCollision(hiting_box, elem.getBoxElipse())){
-                            if(!high_voltage && max_targets === 0){
-                                let status = new ShockStatus(time, 5000, 20)
-                                status.setDuration(5000)
-                                status.setPower(20)
-                                
-                                this.level.setStatus(elem, status)
-                            }
-                            else if(max_targets > 0){
-                                max_targets--
-                                elem.takeDamage(this, {
-                                    burn: true
-                                })
-                            }
-                        }   
-                    }
-
-                    let l_effect = new LightningBoltEffect(this.level)
-                    l_effect.setPoint(x, y)
-
-                    this.level.addSound('lightning bolt', x, y)
-                    this.level.effects.push(l_effect)
-            
-                    setTimeout(() => {
-                        let r_effect = new RocksFromCeil(this.level)
-                        r_effect.setPoint(x, y)
-                        r_effect.setOwner(this)
-                        this.level.effects.push(r_effect)
-                    }, 400)
-                }               
-            }
-            this.attack_angle = undefined
-        }
-         else if(this.action_is_end){
-            this.action_is_end = false
-            this.getState()
+                this.owner.level.addSound('lightning bolt', x, y)
+                this.owner.level.effects.push(l_effect)
+        
+                setTimeout(() => {
+                    let r_effect = new RocksFromCeil(this.owner.level)
+                    r_effect.setPoint(x, y)
+                    r_effect.setOwner(this)
+                    this.owner.level.effects.push(r_effect)
+                }, 400)
+            }               
         }
     }
 }

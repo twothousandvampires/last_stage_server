@@ -64,7 +64,11 @@ export default class Cultist extends Character{
     }
 
     getSkipDamageStateChance(){
-        return this.chance_to_avoid_damage_state + this.agility * 3
+        return this.chance_to_avoid_damage_state + this.perception * 3
+    }
+
+    getCdRedaction(){
+        return this.cooldown_redaction + this.perception
     }
 
     getMoveSpeed(): number{
@@ -199,7 +203,7 @@ export default class Cultist extends Character{
     }
 
     isBlock(): boolean {
-        let b_chance = this.chance_to_block + this.durability
+        let b_chance = this.chance_to_block + this.agility
 
         if(b_chance > 90){
             b_chance = 90
@@ -226,6 +230,12 @@ export default class Cultist extends Character{
         }
 
         return Func.chance(arm, this.is_lucky)
+    }
+
+     isSpiritBlock(){
+        if(this.resource <= 0) return false
+
+        return Func.chance(this.spirit + this.durability, this.is_lucky)
     }
 
     takeDamage(unit:any = undefined, options: any = {}){      
@@ -258,7 +268,14 @@ export default class Cultist extends Character{
             return
         }
 
+       
+
         this.playerWasHited(unit)
+
+         if(this.isSpiritBlock()){
+            this.resource --
+            return
+        }
         
         if(this.isBlock()){
             this.level.sounds.push({
@@ -320,7 +337,7 @@ export default class Cultist extends Character{
     }
 
     getRegenTimer(){
-        return this.base_regeneration_time - this.speed * 100
+        return this.base_regeneration_time
     }
 
     generateUpgrades(){
@@ -410,10 +427,6 @@ export default class Cultist extends Character{
         this.setTimerToGetState(300)
     }
 
-    useUtility(){
-        this.utility?.use()
-    }
-
     getAttackSpeed() {
         let value = this.attack_speed - (this.might * 50)
         
@@ -424,8 +437,12 @@ export default class Cultist extends Character{
         return value
     }
 
+    getMoveSpeedPenaltyValue(){
+         return 70
+    }
+
     getCastSpeed(){
-        let value = this.cast_speed - (this.speed * 50)
+        let value = this.cast_speed - (this.knowledge * 50)
 
         if(value < Cultist.MIN_CAST_SPEED){
             value = Cultist.MIN_CAST_SPEED
@@ -435,6 +452,11 @@ export default class Cultist extends Character{
     }
 
     payCost(){
+        if(this.free_cast){
+            this.pay_to_cost = 0
+            this.free_cast = false
+            return
+        }
         if(Func.notChance(this.knowledge * 4, this.is_lucky)){
             this.resource -= this.pay_to_cost
         }

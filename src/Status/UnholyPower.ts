@@ -21,6 +21,10 @@ export default class UnholyPower extends Status{
         this.unit.level.binded_effects = this.unit.level.binded_effects.filter(elem => elem != this.effect)
     }
 
+    isExpired(tick_time: number){
+        return this.unit.is_dead
+    }
+
     apply(unit: any){
         this.unit = unit
         unit.life_status += 4
@@ -46,7 +50,7 @@ export default class UnholyPower extends Status{
 
                 if(t){
                     let proj = new UnholySkull(this.unit.level)
-                    proj.setAngle(Func.angle(this.unit.x, this.unit.y, t.x, t.y))
+                    proj.setOwner(t)
                     proj.setPoint(this.unit.x, this.unit.y)
 
                     this.unit.level.projectiles.push(proj)

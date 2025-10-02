@@ -41,8 +41,8 @@ export default abstract class Character extends Unit {
     last_hit_time: number = 0
 
     knowledge: number = 0
+    perception: number = 0
     agility: number = 0
-    speed: number = 0
     will: number = 0
     durability: number = 0
     might: number = 0
@@ -61,6 +61,7 @@ export default abstract class Character extends Unit {
     cast_speed: number = 2000
     critical: number = 0
     status_resistance: number = 5
+    spirit: number = 0
 
     is_lucky: boolean = false
     steps: boolean = true
@@ -105,13 +106,13 @@ export default abstract class Character extends Unit {
     can_attack: boolean = true
     can_cast: boolean = true
     can_block: boolean = true
-    can_move: boolean = true
 
     spend_grace: boolean = false
     target: string | undefined
     a: number = 0.2
   
     upgrades: any[] = []
+    free_cast: boolean = false
     
     pay_to_cost: number = 0
     after_grace_statuses: Status[] = []
@@ -131,12 +132,13 @@ export default abstract class Character extends Unit {
     abstract createAbilities(abilities: any): void
     abstract takeDamage(unut: Unit | undefined, options: object): void
     abstract getSkipDamageStateChance(): number
-    abstract useUtility(): void
     abstract regen(): void
     abstract getSecondResource(): number
     abstract isBlock(): boolean
     abstract getPenaltyByLifeStatus(): number
     abstract getTotalArmour(): number
+    abstract getMoveSpeedPenaltyValue(): number
+    abstract addCourage(): void
     
     succesefulPierce(enemy: Unit): void {
         this.triggers_on_pierce.forEach(elem => elem.trigger(this, enemy))
@@ -197,6 +199,12 @@ export default abstract class Character extends Unit {
             ward: this.ward,
             invisible: this.invisible
         }
+    }
+
+    isSpiritBlock(){
+        if(this.resource <= 0) return false
+
+        return Func.chance(this.spirit, this.is_lucky)
     }
 
     succesefulCritical(enemy: Enemy): void{
@@ -673,11 +681,11 @@ export default abstract class Character extends Unit {
                     case 'will':
                         this.will = stat_value
                         break;
+                    case 'perception':
+                        this.perception = stat_value
+                        break;
                     case 'agility':
                         this.agility = stat_value
-                        break;
-                    case 'speed':
-                        this.speed = stat_value
                         break;
                     case 'durability':
                         this.durability = stat_value
@@ -724,14 +732,12 @@ export default abstract class Character extends Unit {
         this.damaged = true
         this.state = 'damaged'
         this.can_be_controlled_by_player = false
-        this.can_move = false
 
         this.stateAct = this.damagedAct
 
         this.cancelAct = () => {
             this.can_be_controlled_by_player = true
             this.damaged = false
-            this.can_move = true
         }
 
         this.setTimerToGetState(300)
@@ -785,7 +791,7 @@ export default abstract class Character extends Unit {
     }
     
     protected canMove(): boolean{
-        return this.can_move && !this.freezed && !this.zaped
+        return !this.freezed && !this.zaped
     }
 
     enemyDeadNearby(enemy: Enemy){
@@ -795,6 +801,7 @@ export default abstract class Character extends Unit {
     }
 
     private directMove(): void{
+        console.log(this.angle_for_forced_movement)
         if(this.canMove()){
             this.incA()
             this.is_moving = true
@@ -810,9 +817,13 @@ export default abstract class Character extends Unit {
             }
             return
         }
-
-        let a: number = this.angle_for_forced_movement
         
+        let a = this.angle_for_forced_movement
+
+        if(!a) {
+            return
+        }
+
         let l: number = 1 - Math.abs(0.5 * Math.cos(a))
 
         let next_step_x = Math.sin(a) * l
@@ -843,7 +854,6 @@ export default abstract class Character extends Unit {
             for(let i = 0; i < this.level.enemies.length; i++){
 
                 let enemy = this.level.enemies[i]
-
                 if(enemy.phasing) continue
 
                 if(Func.elipseCollision(this.getBoxElipse(next_step_x, 0), enemy.getBoxElipse())){
@@ -1022,19 +1032,20 @@ export default abstract class Character extends Unit {
     useSecond(){
         if(!this.can_use_skills) return
 
-        let was_used = false
         if(this.third_ability?.canUse()){
-            this.third_ability?.use()
-            was_used = true
+            this.third_ability.use()
         }
         else if(this.second_ability?.canUse()){
             this.second_ability.use()
-            was_used = true
         }
 
-        if(was_used){
-            this.useNotUtility()  
-        }
+        this.useNotUtility()  
+    }
+
+    useUtility(){
+        if(this.utility?.canUse()){
+            this.utility.use()
+        }     
     }
 
     private idleAct(): void{
@@ -1049,6 +1060,101 @@ export default abstract class Character extends Unit {
         }
         else if(this.pressed[69] && this.can_use_skills){
             this.useUtility()
+        }
+    }
+
+    succefullCast(){
+        
+    }
+
+    castAct(){
+        if(this.action && !this.hit){
+            this.hit = true
+            this.using_ability.impact()
+            if(this.using_ability){
+                this.using_ability.afterUse()
+            }
+            if(this.using_ability.need_to_pay){
+                this.payCost()
+            }
+            this.succefullCast()
+        }
+        else if(this.action_is_end){
+            this.action_is_end = false
+            this.attack_angle = undefined
+            this.using_ability = undefined
+            this.getState()
+        }
+    }
+
+    prepareToAction(){
+        this.is_attacking = true
+
+        let rel_x =  Math.round(this.pressed.canvas_x + this.x - 40)
+        let rel_y =  Math.round(this.pressed.canvas_y + this.y - 40)
+
+        
+        this.c_x = rel_x
+        this.c_y = rel_y  
+        
+        if(!this.c_x || this.c_y){
+            this.c_x = Math.round(this.pressed.over_x + this.x - 40)
+            this.c_y = Math.round(this.pressed.over_y + this.y - 40)
+        }
+
+        if(rel_x < this.x){
+            this.flipped = true
+        }
+        else{
+            this.flipped = false    
+        }
+
+        if(!this.attack_angle){
+            this.attack_angle = Func.angle(this.x, this.y, rel_x, rel_y)
+        }
+    }
+
+    public setAttackAct(){
+        this.prepareToAction()
+        this.state = 'attack'
+
+        let v = this.getMoveSpeedPenaltyValue()      
+        this.addMoveSpeedPenalty(-v)
+
+        this.action_time = this.getAttackSpeed()
+        this.setImpactTime(85)
+
+        this.stateAct = this.castAct
+
+        this.cancelAct = () => {
+            this.using_ability = undefined
+            this.hit = false
+            this.is_attacking = false
+            this.action = false
+            this.target = undefined
+            this.addMoveSpeedPenalty(v)    
+        }
+    }
+
+    public setCastAct(): void{
+        this.prepareToAction()
+        this.state = 'cast'
+
+        let v = this.getMoveSpeedPenaltyValue()      
+        this.addMoveSpeedPenalty(-v)
+
+        this.action_time = this.getCastSpeed()
+        this.setImpactTime(85)
+
+        this.stateAct = this.castAct
+
+        this.cancelAct = () => {
+            this.using_ability = undefined
+            this.hit = false
+            this.is_attacking = false
+            this.action = false
+            this.target = undefined
+            this.addMoveSpeedPenalty(v)    
         }
     }
 

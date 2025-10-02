@@ -3,7 +3,7 @@ import Level from "../../Level";
 import AttackingGhostCultist from "./AttackingGhostCultist";
 import Effect from "./Effects";
 
-export default class WalkingGhostCultist extends Effect{
+export default class WalkingGhostCultist extends Effect {
 
     target: any
     flipped: boolean
@@ -73,6 +73,7 @@ export default class WalkingGhostCultist extends Effect{
             }
 
             this.addToPoint(n_x, n_y)
+            this.wasChanged()
         }
     }
 }

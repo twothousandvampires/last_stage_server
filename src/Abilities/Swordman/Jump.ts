@@ -1,5 +1,6 @@
 import Func from "../../Func";
 import Swordman from "../../Objects/src/PlayerClasses/Swordman";
+import Ability from "../Ability";
 import SwordmanAbility from "./SwordmanAbility";
 
 export default class Jump extends SwordmanAbility{
@@ -25,15 +26,10 @@ export default class Jump extends SwordmanAbility{
         this.heavy_landing = false
         this.stomp = false
         this.name = 'jump'
+        this.type = Ability.TYPE_CUSTOM
     }
 
-    canUse(){
-        return !this.used && this.owner.resource >= this.cost && !this.owner.is_attacking
-    }
-    
     use(){        
-        if(this.used) return
-
         this.used = true
 
         let rel_x =  this.owner.pressed.canvas_x + this.owner.x - 40
@@ -87,10 +83,10 @@ export default class Jump extends SwordmanAbility{
         let ability = this
         let owner = this.owner
         let add_z = 0.7
-        let point_added = false
-      
+ 
         return function(){
             if(ability.impact){
+                owner.succefullCast()
                 let second = owner.getSecondResource()
                 let enemies = owner.level.enemies
     
@@ -100,25 +96,19 @@ export default class Jump extends SwordmanAbility{
                 let filtered_by_attack_radius = enemies.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
                 let count = filtered_by_attack_radius.length
 
-                if(filtered_by_attack_radius.length){
-                    owner.addPoint()
-                    point_added = true
-                }
-
                 filtered_by_attack_radius.forEach(elem => {
+                    owner.addPoint()
                     elem.takeDamage(owner)
                 })
 
                 filtered_by_attack_radius = owner.level.players.filter(elem => elem != owner && Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
             
                 filtered_by_attack_radius.forEach(elem => {
+                    owner.addPoint()
                     elem.takeDamage(owner)
                 })
 
-                if(filtered_by_attack_radius.length && !point_added){
-                    owner.addPoint()
-                }
-
+        
                 if(ability.heavy_landing){
                     owner.armour_rate += count * 4
                     setTimeout(() => {
@@ -131,9 +121,7 @@ export default class Jump extends SwordmanAbility{
                 return
             }
             
-            
             owner.z += ability.direction ? -add_z : add_z
-
 
             if(ability.direction && add_z < 0.7){
                 add_z += 0.02

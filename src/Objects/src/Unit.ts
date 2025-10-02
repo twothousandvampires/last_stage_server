@@ -12,7 +12,8 @@ export default abstract class Unit extends GameObject {
     exploded: boolean = false
     burned: boolean = false
     
-        is_corpse: boolean = false
+    weapon_angle: number = 0
+    is_corpse: boolean = false
     flipped: boolean = false
     is_attacking: boolean = false
     is_moving: boolean = false
@@ -125,9 +126,7 @@ export default abstract class Unit extends GameObject {
         this.move_speed_penalty += value
     }
 
-    setState(newState: Function, with_update = true) {
-        if(this.is_corpse) return
-
+    setState(newState: Function) {
         this.is_moving = false
         if(this.cancelAct){
             this.action_impact = 0

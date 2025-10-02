@@ -16,90 +16,34 @@ export default class PileOfThornCast extends CultistAbility{
         this.ring_of_pain = false
         this.collection_of_bones = false
         this.cost = 6
+        this.need_to_pay = true
     }
 
-    canUse(): boolean {
-        return this.owner.resource >= this.cost && this.owner.can_cast && !this.owner.is_attacking
-    }
+    impact(){
+         this.owner.level.sounds.push({
+                name:'dark cast',
+                x: this.owner.x,
+                y: this.owner.y
+        })
 
-    use(){
-        let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
-        let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
+        let rel_distance = Math.sqrt(((this.owner.x - this.owner.c_x) ** 2) + ((this.owner.y - this.owner.c_y) ** 2))
 
-        this.owner.pay_to_cost = this.cost
+        let distance = rel_distance > this.distance ? this.distance : rel_distance
+        
+        let hit_x = this.owner.x + (Math.sin(this.owner.attack_angle) * distance)
+        let hit_y = this.owner.y + (Math.cos(this.owner.attack_angle) * distance)
 
-        this.owner.c_x = rel_x
-        this.owner.c_y = rel_y  
-
-        if(rel_x < this.owner.x){
-            this.owner.flipped = true
+        let totem_power = this.owner.getSecondResource()
+        let pile = new PileOfThorns(this.owner.level, totem_power)
+        pile.collection_of_bones = this.collection_of_bones
+        
+        if(this.ring_of_pain){
+            pile.frequency = 2000
+            pile.radius += 4
         }
-        else{
-            this.owner.flipped = false    
-        } 
-      
-        if(!this.owner.attack_angle){
-            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
-        }
-
-        this.owner.is_attacking = true
-        this.owner.state = 'cast'
-        this.owner.addMoveSpeedPenalty(-70)
-
-        this.owner.stateAct = this.act
-        let cast_speed = this.owner.getCastSpeed()
-
-        this.owner.action_time = cast_speed
-        this.owner.setImpactTime(85)
-
-        this.owner.cancelAct = () => {
-            this.owner.action = false
-            this.owner.addMoveSpeedPenalty(70)
-
-            this.owner.hit = false
-            this.owner.is_attacking = false
-            this.owner.hit_x = undefined
-            this.owner.hit_y = undefined
-          
-        }
-    }
-
-    act(){
-        if(this.action && !this.hit){
-            this.hit = true
-
-             this.level.sounds.push({
-                    name:'dark cast',
-                    x: this.x,
-                    y: this.y
-            })
-
-            let rel_distance = Math.sqrt(((this.x - this.c_x) ** 2) + ((this.y - this.c_y) ** 2))
-
-            let distance = rel_distance > this.first_ability.distance ? this.first_ability.distance : rel_distance
-            
-            let hit_x = this.x + (Math.sin(this.attack_angle) * distance)
-            let hit_y = this.y + (Math.cos(this.attack_angle) * distance)
-
-            let totem_power = this.getSecondResource()
-            let pile = new PileOfThorns(this.level, totem_power)
-            pile.collection_of_bones = this.third_ability.collection_of_bones
-            
-            if(this.third_ability.ring_of_pain){
-                pile.frequency = 2000
-                pile.radius += 4
-            }
-            
-            pile.setPoint(hit_x, hit_y)
-          
-            this.level.enemies.push(pile)
-            
-            this.payCost()
-            this.attack_angle = undefined
-        }
-        else if(this.action_is_end){
-            this.action_is_end = false
-            this.getState()
-        }
+        
+        pile.setPoint(hit_x, hit_y)
+        
+        this.owner.level.enemies.push(pile)
     }
 }
