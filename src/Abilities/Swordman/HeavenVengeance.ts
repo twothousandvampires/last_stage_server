@@ -1,6 +1,7 @@
 import Func from "../../Func";
 import LightningBoltEffect from "../../Objects/Effects/LightningBoltEffect";
 import Swordman from "../../Objects/src/PlayerClasses/Swordman";
+import Ability from "../Ability";
 import SwordmanAbility from "./SwordmanAbility";
 
 export default class HeavenVengeance extends SwordmanAbility{
@@ -12,10 +13,7 @@ export default class HeavenVengeance extends SwordmanAbility{
         super(owner)
         this.name = 'heaven vengeance'
         this.cd = 3300
-    }
-
-    canUse(): boolean {
-        return this.isEnergyEnough() && !this.used && this.owner.can_attack && !this.owner.is_attacking
+        this.type = Ability.TYPE_ATTACK
     }
 
     trigger(){
@@ -71,7 +69,7 @@ export default class HeavenVengeance extends SwordmanAbility{
 
         if(target_to_hit != undefined){
             target_to_hit.takeDamage(this.owner)
-            this.owner.addResourse()
+            this.owner.addPoint()
             point_added = true
         }
 
@@ -120,53 +118,5 @@ export default class HeavenVengeance extends SwordmanAbility{
                     y: this.owner.y
                 })
             }
-    }
-
-    use(){
-        if(this.used || this.owner.is_attacking) return
-
-        let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
-        let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
-
-        if(rel_x < this.owner.x){
-            this.owner.flipped = true
-        }
-        else{
-            this.owner.flipped = false    
-        } 
-      
-        if(!this.owner.attack_angle){
-            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
-        }
-        
-        this.owner.using_ability = this
-        this.owner.is_attacking = true
-        this.owner.state = 'attack'
-        let attack_move_speed_penalty = this.owner.getAttackMoveSpeedPenalty()
-        this.owner.addMoveSpeedPenalty(-attack_move_speed_penalty)
-
-        this.owner.stateAct = this.act
-        let attack_speed = this.owner.getAttackSpeed()
-
-        this.owner.action_time = attack_speed
-        this.owner.setImpactTime(80)
-
-        this.owner.cancelAct = () => {
-            this.owner.action = false
-            this.owner.addMoveSpeedPenalty(attack_move_speed_penalty)
-            this.afterUse()
-            this.owner.hit = false
-            this.owner.is_attacking = false
-        }
-    }
-
-    act(){
-        if(this.action && !this.hit){
-            this.using_ability.impact()
-        }
-        else if(this.action_is_end){
-            this.action_is_end = false
-            this.getState()
-        }
     }
 }

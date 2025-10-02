@@ -1,8 +1,9 @@
 import Func from "../../Func";
+import Character from "../../Objects/src/Character";
 import Flyer from "../../Objects/src/PlayerClasses/Flyer";
 import FlyerAbility from "./FlyerAbility";
 
-export default class Teleportation extends FlyerAbility{
+export default class Teleportation extends FlyerAbility {
     
     static TELEPOR_START_STATE: number = 1
     static TELEPOR_OUT_STATE: number = 2
@@ -23,82 +24,79 @@ export default class Teleportation extends FlyerAbility{
         this.name = 'teleportation'
     }
 
-    canUse(){
-        return !this.used
-    }
-
     use(){
-        if(this.used) return
-        
-        if(!this.owner.pressed.over_x  || !this.owner.pressed.over_y) return
-
-        this.teleport_x = Math.round(this.owner.pressed.over_x + this.owner.x - 40)
-        this.teleport_y = Math.round(this.owner.pressed.over_y + this.owner.y - 40)
-
-        if(this.owner.isOutOfMap(this.teleport_x, this.teleport_y)){
-            this.teleport_x = undefined
-            this.teleport_y = undefined
-            return
-        }
-
-        this.owner.using_ability = this
-        this.owner.can_be_controlled_by_player = false
-
-        this.owner.state = 'teleport start'
-        this.owner.level.addSound('cast', this.owner.x, this.owner.y)
-
-        this.owner.stateAct = this.act()
-
-        if(this.protected){
-            this.owner.can_be_damaged = false
-        }
-
-        this.owner.action_time = this.owner.getCastSpeed()
-        this.owner.setImpactTime(85)
-        
-        this.owner.cancelAct = () => {
-            this.owner.action = false
-            this.owner.can_be_controlled_by_player = true
-            this.teleport_x = undefined
-            this.teleport_y = undefined
-            this.afterUse()
-            this.state = Teleportation.TELEPOR_START_STATE
-            this.owner.can_be_damaged = true
-        }
+        this.owner.setState(this.act)
     }
 
     act(){
-        let ability = this
-        let owner = this.owner
+        if(!(this instanceof Character)) return
+        let ability = this.utility
+        if(!(ability instanceof Teleportation)) return
 
-        return (tick: number) => {
-            if(owner.action_is_end){
+        this.is_attacking = true
+
+        if(!this.pressed.over_x  || !this.pressed.over_y) return
+
+        ability.teleport_x = Math.round(this.pressed.over_x + this.x - 40)
+        ability.teleport_y = Math.round(this.pressed.over_y + this.y - 40)
+
+        if(this.isOutOfMap(ability.teleport_x, ability.teleport_y)){
+            ability.teleport_x = undefined
+            ability.teleport_y = undefined
+            this.is_attacking = false
+            return
+        }
+
+        this.using_ability = ability
+
+        this.state = 'teleport start'
+        this.level.addSound('cast', this.x, this.y)
+
+        if(ability.protected){
+            this.can_be_damaged = false
+        }
+
+        this.action_time = this.getCastSpeed()
+        this.setImpactTime(85)
+        
+        this.cancelAct = () => {
+            this.action = false
+            ability.teleport_x = undefined
+            ability.teleport_y = undefined
+            ability.state = Teleportation.TELEPOR_START_STATE
+            this.can_be_damaged = true
+            this.is_attacking = false
+            ability.afterUse()
+        }
+
+        this.stateAct = (tick: number) => {
+            if(this.action_is_end){
                 if(ability.state === Teleportation.TELEPOR_START_STATE){
-                    owner.x = 666
-                    owner.y = 666
-                    owner.can_be_damaged = false
+                    this.x = 666
+                    this.y = 666
+                    this.can_be_damaged = false
                     ability.state = Teleportation.TELEPOR_OUT_STATE
-                    ability.out_of_map_start = owner.level.time
+                    ability.out_of_map_start = this.level.time
                 }
                 else if(ability.state === Teleportation.TELEPOR_END_STATE){
-                    let box = owner.getBoxElipse()
+                    let box = this.getBoxElipse()
                     box.r += 2
                     
                     if(ability.increased_gate){
                         box.r += 8
                     }
-                    owner.can_be_damaged = true
+                    this.can_be_damaged = true
 
-                    owner.level.enemies.forEach((e) => {
+                    this.level.enemies.forEach((e) => {
                         if(!e.is_dead && Func.elipseCollision(box, e.getBoxElipse())){
-                            e.takeDamage(owner, {
+                            e.takeDamage(this, {
                                 explode: true
                             })
                         }
                     })
-                    owner.level.players.forEach((p) => {
-                        if(p != owner && !p.is_dead && Func.elipseCollision(box, p.getBoxElipse())){
-                            p.takeDamage(owner, {
+                    this.level.players.forEach((p) => {
+                        if(p != this && !p.is_dead && Func.elipseCollision(box, p.getBoxElipse())){
+                            p.takeDamage(this, {
                                 explode: true
                             })
                         }
@@ -108,17 +106,17 @@ export default class Teleportation extends FlyerAbility{
                     ability.teleport_x = undefined
                     ability.teleport_y = undefined
                     ability.used = true
-                    owner.addCourage()
-                    owner.getState()
+                    this.addCourage()
+                    this.getState()
                 }
             }
             else if(ability.state === Teleportation.TELEPOR_OUT_STATE){
-                if(owner.level.time - ability.out_of_map_start >= ability.out_of_map_duration){
-                    owner.x = ability.teleport_x
-                    owner.y = ability.teleport_y
-                    owner.state = 'teleport end'
+                if(this.level.time - ability.out_of_map_start >= ability.out_of_map_duration){
+                    this.x = ability.teleport_x
+                    this.y = ability.teleport_y
+                    this.state = 'teleport end'
                     ability.state = Teleportation.TELEPOR_END_STATE
-                    owner.setImpactTime(100)
+                    this.setImpactTime(100)
                 }
             }
         }

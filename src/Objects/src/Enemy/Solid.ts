@@ -119,29 +119,8 @@ export default class Solid extends Enemy{
         this.setTimerToGetState(this.attack_speed)
     }
 
-    idleAct(tick){
-        if(this.can_check_player){
-           if(!this.target){
-                this.can_check_player = false
-            
-                let p = this.level.players.filter(elem => Func.distance(this, elem) <= this.player_check_radius && !elem.is_dead)
-
-                p.sort((a, b) => {
-                    return Func.distance(a, this) - Func.distance(b, this)
-                })
-
-                this.target = p[0]
-           }
-           else{
-                if(Func.distance(this, this.target) > this.player_check_radius || this.target.is_dead){
-                    this.target = undefined
-                }
-           }
-           
-           setTimeout(() => {
-                this.can_check_player = true
-           }, 2000)
-        }
+    idleAct(tick: number){
+        this.checkPlayer()
        
         if(!this.target){
             return
@@ -153,6 +132,9 @@ export default class Solid extends Enemy{
         if(Func.elipseCollision(a_e, this.target.getBoxElipse())){
             if (this.enemyCanAtack(tick)){
                 this.setState(this.setAttackState)
+            }
+            else{
+                this.setState(this.setIdleAct)
             }
         }
         else{

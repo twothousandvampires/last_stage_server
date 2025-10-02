@@ -16,10 +16,6 @@ export default class Soulrender extends CultistAbility{
         this.distance = 25
     }
 
-    canUse(): boolean {
-        return this.isEnergyEnough() && !this.used && this.owner.can_cast && !this.owner.is_attacking
-    }
-
     impact(){
         let rel_distance = Math.sqrt(((this.owner.x - this.owner.c_x) ** 2) + ((this.owner.y - this.owner.c_y) ** 2))
 
@@ -88,60 +84,6 @@ export default class Soulrender extends CultistAbility{
                 }
             }
 
-        }
-       
-        this.owner.target = undefined
-        this.afterUse()
-    }
-
-    use(){
-        let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
-        let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
-
-        this.owner.c_x = rel_x
-        this.owner.c_y = rel_y  
-
-        if(rel_x < this.owner.x){
-            this.owner.flipped = true
-        }
-        else{
-            this.owner.flipped = false    
-        } 
-      
-        if(!this.owner.attack_angle){
-            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
-        }
-
-        this.owner.using_ability = this
-        
-        this.owner.is_attacking = true
-        this.owner.state = 'cast'
-        this.owner.addMoveSpeedPenalty(-70)
-
-        this.owner.stateAct = this.act
-       
-        this.owner.action_time = this.owner.getCastSpeed()
-        this.owner.setImpactTime(85)
-
-        this.owner.cancelAct = () => {
-            this.owner.action = false
-            this.owner.addMoveSpeedPenalty(70)
-            this.owner.hit = false
-            this.owner.is_attacking = false
-            this.owner.hit_x = undefined
-            this.owner.hit_y = undefined
-        }
-    }
-
-    async act(){
-        if(this.action && !this.hit){
-            this.hit = true
-            
-            this.using_ability.impact()
-        }
-        else if(this.action_is_end){
-            this.action_is_end = false
-            this.getState()
         }
     }
 }

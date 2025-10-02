@@ -1,32 +1,32 @@
 import Character from "../../Objects/src/Character";
-import IgniteWhenHitTrigger from "../../Triggers/IgniteWhenHitTrigger";
+import FreezeWhetHitedTrigger from "../../Triggers/FreezeWhetHitedTrigger";
 import Item from "../Item";
 import Forging from "./Forging";
 
-export default class IgniteWhenHit extends Forging {
+export default class FreezeWhenHited extends Forging {
 
     value: number = 0
    
     constructor(item: Item){
         super(item)
         this.max_value = 20
-        this.name = 'ignite on hit'
-        this.description = 'chance to ignite in radius when hitting'
+        this.name = 'freeze when hited'
+        this.description = 'chance to freeze enemies in radius when getting hit'
         this.gold_cost = 12
     }
 
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
-            let trigger = player.triggers_on_hit.find(elem => elem instanceof IgniteWhenHitTrigger)
+            let trigger = player.triggers_on_get_hit.find(elem => elem instanceof FreezeWhetHitedTrigger)
 
             if(trigger){
                 trigger.chance += 5
             }
             else{
-                let t = new IgniteWhenHitTrigger()
+                let t = new FreezeWhetHitedTrigger()
                 t.chance = 5
 
-                player.triggers_on_hit.push(t)
+                player.triggers_on_get_hit.push(t)
             }
            
             this.payCost()

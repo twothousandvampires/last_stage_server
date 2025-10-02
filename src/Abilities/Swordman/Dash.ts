@@ -1,6 +1,7 @@
 import Func from "../../Func";
 import { Lightning } from "../../Objects/Projectiles/Lightning";
 import Swordman from "../../Objects/src/PlayerClasses/Swordman";
+import Ability from "../Ability";
 import SwordmanAbility from "./SwordmanAbility";
 
 export default class Dash extends SwordmanAbility{
@@ -25,15 +26,10 @@ export default class Dash extends SwordmanAbility{
         this.end = false
         this.name = 'dash'
         this.cd = 3000
-    }
-
-    canUse(){
-        return !this.used && this.owner.resource >= this.cost && !this.owner.is_attacking
+        this.type = Ability.TYPE_CUSTOM
     }
 
     use(){
-        if(this.used || this.owner.is_attacking) return
-        
         this.owner.is_attacking = true
       
         this.start_x = this.owner.x
@@ -63,12 +59,12 @@ export default class Dash extends SwordmanAbility{
             this.owner.is_attacking = false
             this.afterUse()
             this.owner.action = false
-            this.point_added = false
             this.start_x = undefined
             this.start_y = undefined
             this.end = false
             this.owner.chance_to_avoid_damage_state -= 100
             this.start_time = 0
+            this.owner.succefullCast()
             this.hited = []
         }
 
@@ -140,11 +136,7 @@ export default class Dash extends SwordmanAbility{
                         if(count > 0){
                             elem.takeDamage(owner)
                             count--
-                        }
-                   
-                        if(!ability.point_added){
-                            ability.point_added = true
-                            owner.addResourse()
+                            owner.addPoint()
                         }
                     }
                 })
@@ -153,14 +145,10 @@ export default class Dash extends SwordmanAbility{
                     if(elem != owner && !ability.hited.includes(elem) && Func.elipseCollision(owner.getBoxElipse(), elem.getBoxElipse())){
                         ability.hited.push(elem)
 
-                        if(!ability.point_added){
-                            ability.point_added = true
-                            owner.addResourse()
-                        }
-
                         if(count > 0){
                             elem.takeDamage(owner)
                             count--
+                            owner.addPoint()
                         }
                     }
                 })

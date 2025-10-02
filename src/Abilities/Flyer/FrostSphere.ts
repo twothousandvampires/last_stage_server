@@ -17,71 +17,24 @@ export default class FrostSphere extends FlyerAbility{
         this.reign_of_frost = false
     }
 
-    canUse(){
-        return this.isEnergyEnough() && this.owner.resource >= this.cost && !this.owner.is_attacking
-    }
-
-    use(){
-        let rel_x =  Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
-        let rel_y =   Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
+    impact(){
+        this.owner.level.addSound('cold cast', this.owner.x, this.owner.y)
+        let a = undefined
         
-        if(rel_x < this.owner.x){
-            this.owner.flipped = true
+        let target = this.owner.getTarget()
+        if(target){
+            a = Func.angle(this.owner.x, this.owner.y, target.x, target.y)
         }
-        else{
-            this.owner.flipped = false    
-        }
+        
+        this.owner.target = undefined
 
-        if(!this.owner.attack_angle){
-            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
-        }
+        let proj = new FrostSphereProjectile(this.owner.level)
+        proj.frost_rich = this.frost_rich
+        proj.reign_of_frost = this.reign_of_frost
+        proj.setOwner(this.owner)
+        proj.setAngle(a ? a : this.owner.attack_angle)
+        proj.setPoint(this.owner.x, this.owner.y)
 
-        this.owner.is_attacking = true
-        this.owner.state = 'cast'
-
-        let move_speed_reduce = this.owner.getMoveSpeedPenaltyValue()
-        this.owner.addMoveSpeedPenalty(-move_speed_reduce)
-
-        this.owner.stateAct = this.act
-        let cast_speed = this.owner.getCastSpeed()
-
-        this.owner.action_time = cast_speed
-        this.owner.setImpactTime(85)
-
-        this.owner.cancelAct = () => {
-            this.owner.action = false
-            this.owner.addMoveSpeedPenalty(move_speed_reduce)
-            this.owner.hit = false
-            this.owner.is_attacking = false
-        }
-    }
-
-    act(){
-        if(this.action && !this.hit){
-            this.addCourage()
-            this.hit = true
-            this.level.addSound('cold cast', this.x, this.y)
-            let a = undefined
-            
-            let target = this.getTarget()
-            if(target){
-                a = Func.angle(this.x, this.y, target.x, target.y)
-            }
-            
-            this.target = undefined
-            let proj = new FrostSphereProjectile(this.level)
-            proj.frost_rich = this.frost_rich
-            proj.reign_of_frost = this.reign_of_frost
-            proj.setOwner(this)
-            proj.setAngle(a ? a : this.attack_angle)
-            proj.setPoint(this.x, this.y)
-
-            this.level.projectiles.push(proj)
-            this.attack_angle = undefined
-        }
-         else if(this.action_is_end){
-            this.action_is_end = false
-            this.getState()
-        }
+        this.owner.level.projectiles.push(proj)
     }
 }

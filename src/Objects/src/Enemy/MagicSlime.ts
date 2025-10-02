@@ -27,45 +27,14 @@ export default class MagicSlime extends Enemy{
         this.create_chance = 25
         this.player_check_radius = 25
         this.create_item_chance = 1
+        this.create_sorcerers_skull_chance = 10
     }
 
-    setDeadState(){
-        this.is_corpse = true
-        this.state = 'dead'
-        this.stateAct = this.deadAct
-    }
+    afterDead(){
+        let e = new PuddleOfStream(this.level)
+        e.setPoint(this.x, this.y)
 
-    setdyingAct(){
-        if(this.freezed){
-            this.state = 'freeze_dying'
-            this.is_corpse = true
-            this.level.sounds.push({
-                name: 'shatter',
-                x: this.x,
-                y: this.y
-            })
-        }
-        else{
-            this.state = this.dead_type ? this.dead_type : 'dying'
-        }
-
-        if(!this.freezed && this.dead_type != 'burn_dying'){
-            let e = new PuddleOfStream(this.level)
-            e.setPoint(this.x, this.y)
-
-            this.level.binded_effects.push(e)
-        }
-
-        this.stateAct = this.dyingAct
-        this.setTimerToGetState(this.dying_time)
-    }
-
-    moveAct(){
-        this.state = 'move'
-
-        let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
-
-        this.moveByAngle(a)
+        this.level.binded_effects.push(e)
     }
 
     takeDamage(unit?: any, options?: any): void {
@@ -79,7 +48,7 @@ export default class MagicSlime extends Enemy{
     }
 
     attackAct(){
-        if(this.action && !this.hit){
+        if(this.action && !this.hit && this.target){
             this.hit = true
                 
             let l = new EnemyLightning(this.level)
@@ -92,7 +61,7 @@ export default class MagicSlime extends Enemy{
         }
     }
 
-     getWeaponHitedSound(){
+    getWeaponHitedSound(){
         return  {
             name: 'goo',
             x:this.x,
@@ -100,70 +69,18 @@ export default class MagicSlime extends Enemy{
         }
     }
 
-    setAttackState(){
-        this.state = 'attack'
-        this.is_attacking = true
-        this.stateAct = this.attackAct
-        this.action_time = this.attack_speed
-        this.setImpactTime(80)
-
-        this.attack_angle = Func.angle(this.x, this.y, this.target?.x, this.target.y)
-
-        this.cancelAct = () => {
-            this.action = false
-            this.hit = false
-            setTimeout(() => {
-                this.is_attacking = false
-            }, this.attack_cd)
-            this.attack_angle = undefined
-        }
-
-        this.setTimerToGetState(this.attack_speed)
-    }
-
-    setRetreatState(){
-        this.state = 'move'
-        this.retreat_angle = Func.angle(this.target?.x, this.target.y,this.x, this.y)
-        this.retreat_angle += Math.random() * 1.57 * (Func.random(50) ? -1 : 1)
-
-        this.stateAct = this.retreatAct
-
-        this.cancelAct = () => {
-            this.retreat_angle = undefined
-        }
-
-        this.setTimerToGetState(2000)
-    }
-
-    idleAct(tick){
-        if(this.can_check_player){
-        
-            if(!this.target){
-                this.can_check_player = false
-            
-                let p = this.level.players.filter(elem => Func.distance(this, elem) <= this.player_check_radius && !elem.is_dead)
-                p.sort((a, b) => {
-                    return Func.distance(a, this) - Func.distance(b, this)
-                })
-                this.target = p[0]
-            }
-            else{
-                if(Func.distance(this, this.target) >= this.player_check_radius || this.target.is_dead){
-                    this.target = undefined
-                }
-            }
-            
-            setTimeout(() => {
-                this.can_check_player = true
-            }, 2000)
-
-        }
+    idleAct(tick: number){
+        this.checkPlayer()
         
         if(!this.target){
             return
         } 
 
-        if(Func.distance(this, this.target) <= 8 && Func.chance(70)){
+        if(Func.distance(this, this.target) <= 12 && Func.chance(70)){
+            this.setState(this.setIdleAct)
+        }
+
+        else if(Func.distance(this, this.target) <= 8 && Func.chance(50)){
             this.setState(this.setRetreatState)
         }
 

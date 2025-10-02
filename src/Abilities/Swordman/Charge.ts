@@ -1,5 +1,6 @@
 import Func from "../../Func";
 import Swordman from "../../Objects/src/PlayerClasses/Swordman";
+import Ability from "../Ability";
 import SwordmanAbility from "./SwordmanAbility";
 
 export default class Charge extends SwordmanAbility{
@@ -28,16 +29,11 @@ export default class Charge extends SwordmanAbility{
         this.end_timeout = undefined
         this.possibilities = false
         this.name = 'charge'
-        this.cd = 10000
-    }
-
-    canUse(){
-        return !this.used && this.owner.resource >= this.cost && !this.owner.is_attacking
+        this.cd = 8500
+        this.type = Ability.TYPE_CUSTOM
     }
 
     use(){
-        if(this.used || this.owner.is_attacking) return
-        
         this.owner.is_attacking = true
       
         this.start_x = this.owner.x
@@ -66,7 +62,7 @@ export default class Charge extends SwordmanAbility{
 
         this.end_timeout = setTimeout(() => {
             this.end = true
-        } ,this.distance)
+        }, this.distance)
 
         this.owner.cancelAct = () => {
             clearTimeout(this.end_timeout)
@@ -78,12 +74,11 @@ export default class Charge extends SwordmanAbility{
             this.start_y = undefined
             this.start = false
             this.end = false
-            
+            this.owner.succefullCast()
             this.owner.chance_to_avoid_damage_state -= 100
             if(this.possibilities && this.hited.length >= 3){
                 this.owner.addResourse()
             }
-
             this.hited = []
         }
 
@@ -115,8 +110,8 @@ export default class Charge extends SwordmanAbility{
                 let stun_power = 2000
 
                 owner.level.enemies.forEach((elem) => {
-                    if(!ability.hited.includes(elem) && Func.elipseCollision(owner.getBoxElipse(), elem.getBoxElipse())){
-                        ability.hited.push(elem)
+                    if(!ability.hited.includes(elem.id) && Func.elipseCollision(owner.getBoxElipse(), elem.getBoxElipse())){
+                        ability.hited.push(elem.id)
 
                         if(count > 0 && ability.destroyer && Func.chance(35 + second)){
                             elem.takeDamage(owner, {
@@ -129,21 +124,15 @@ export default class Charge extends SwordmanAbility{
                             elem.setStun(stun_power)
                         }
                         
-                        if(!ability.point_added){
-                            ability.point_added = true
-                            owner.addResourse()
-                        }
+                        owner.addPoint()
                     }
                 })
 
                 owner.level.players.forEach((elem) => {
-                    if(elem != owner && !ability.hited.includes(elem) && Func.elipseCollision(owner.getBoxElipse(), elem.getBoxElipse())){
-                        ability.hited.push(elem)
+                    if(elem != owner && !ability.hited.includes(elem.id) && Func.elipseCollision(owner.getBoxElipse(), elem.getBoxElipse())){
+                        ability.hited.push(elem.id)
                         elem.setStun(stun_power)
-                        if(!ability.point_added){
-                            ability.point_added = true
-                            owner.addResourse()
-                        }
+                        owner.addPoint()
                     }
                 })
             }

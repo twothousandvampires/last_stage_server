@@ -14,75 +14,39 @@ export default class UnleashPain extends CultistAbility{
         this.reign_of_pain = false
         this.restless_warriors = false
         this.cost = 7
+        this.need_to_pay = true
     }
 
-    canUse(): boolean {
-        return this.owner.resource >= this.cost && this.owner.can_attack && !this.owner.is_attacking
-    }
+    impact(){
+        this.owner.level.addSound({
+                name:'cast',
+                x: this.owner.x,
+                y: this.owner.y
+        })
 
-    use(){
-        this.owner.pay_to_cost = this.cost
+        let e = this.owner.getBoxElipse()
 
-        this.owner.is_attacking = true
-        this.owner.state = 'attack'
-        let move_speed_reduce = this.owner.getMoveSpeedReduceWhenUseSkill()
-        this.owner.addMoveSpeedPenalty(-move_speed_reduce)
-     
-        this.owner.stateAct = this.act
-        let attack_speed = this.owner.getAttackSpeed()
+        e.r = 18 + this.owner.getSecondResource()
 
-        this.owner.action_time = attack_speed
-        this.owner.setImpactTime(85)
+        let enemy = this.owner.level.enemies.filter((elem) => {
+            return Func.elipseCollision(elem.getBoxElipse(), e)
+        })
 
-        this.owner.cancelAct = () => {
-            this.owner.action = false
-    
-            this.owner.hit = false
-            this.owner.is_attacking = false
-            this.owner.addMoveSpeedPenalty(move_speed_reduce)
+        let count = 7
+
+        if(this.reign_of_pain){
+            count += this.owner.getSecondResource() * 3
         }
-    }
 
-    act(){
-        if(this.action && !this.hit){
-            this.hit = true
-            
-             this.level.addSound({
-                    name:'cast',
-                    x: this.x,
-                    y: this.y
-            })
+        let enemyw = enemy.slice(0, 30)
+        
+        enemyw.forEach((elem) => {
+            let ghost = new WalkingGhostCultist(this.owner.level)
+            ghost.target = elem
+            ghost.restless = this.restless_warriors
+            ghost.setPoint(this.owner.x, this.owner.y)
 
-            let e = this.getBoxElipse()
-
-            e.r = 18 + this.getSecondResource()
-
-            let enemy = this.level.enemies.filter((elem) => {
-                return Func.elipseCollision(elem.getBoxElipse(), e)
-            })
-
-            let count = 7
-
-            if(this.third_ability.reign_of_pain){
-                count += this.getSecondResource() * 3
-            }
-
-            let enemyw = enemy.slice(0, 30)
-         
-            enemyw.forEach((elem) => {
-                let ghost = new WalkingGhostCultist(this.level)
-                ghost.target = elem
-                ghost.restless = this.third_ability.restless_warriors
-                ghost.setPoint(this.x, this.y)
-
-                this.level.binded_effects.push(ghost)
-            })
-
-            this.payCost()
-        }
-        else if(this.action_is_end){
-            this.action_is_end = false
-            this.getState()
-        }
+            this.owner.level.binded_effects.push(ghost)
+        })
     }
 }

@@ -1,6 +1,7 @@
 import Func from "../../Func";
 import { SoulShatterProj } from "../../Objects/Projectiles/SoulShatterProj";
 import Cultist from "../../Objects/src/PlayerClasses/Cultist";
+import Ability from "../Ability";
 import CultistAbility from "./CultistAbility";
 
 export default class SoulShatter extends CultistAbility{
@@ -8,122 +9,69 @@ export default class SoulShatter extends CultistAbility{
     constructor(owner: Cultist){
         super(owner)
         this.name = 'soul shatter'
+        this.type = Ability.TYPE_ATTACK
     }
 
-    canUse(): boolean {
-        return this.isEnergyEnough() && !this.owner.is_attacking && this.owner.can_attack
-    } 
+    impact(){
+        let enemies = this.owner.level.enemies
+   
+        let rel_distance = Math.sqrt(((this.owner.x - this.owner.c_x) ** 2) + ((this.owner.y - this.owner.c_y) ** 2))
 
-    use(){
-
-        let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
-        let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
-
-        this.owner.c_x = rel_x
-        this.owner.c_y = rel_y  
-
-        if(rel_x < this.owner.x){
-            this.owner.flipped = true
-        }
-        else{
-            this.owner.flipped = false    
-        } 
-
-        if(!this.owner.attack_angle){
-            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
-        }
-
-        this.owner.is_attacking = true
-        this.owner.state = 'attack'
-        this.owner.addMoveSpeedPenalty(-70)
-
-        this.owner.stateAct = this.act
-        let attack_speed = this.owner.getAttackSpeed()
-
-        this.owner.action_time = attack_speed
-        this.owner.setImpactTime(85)
-
-        this.owner.cancelAct = () => {
-            this.owner.action = false
-            this.owner.addMoveSpeedPenalty(70)
-
-            this.owner.hit = false
-            this.owner.is_attacking = false
-            this.owner.hit_x = undefined
-            this.owner.hit_y = undefined
-        
-        }
-    }
-
-    act(){
-        if(this.action && !this.hit){
-            this.hit = true
-        
-            let enemies = this.level.enemies
-            let players = this.level.players 
-
-            let rel_distance = Math.sqrt(((this.x - this.c_x) ** 2) + ((this.y - this.c_y) ** 2))
-
-            let distance = rel_distance > this.attack_radius ? this.attack_radius : rel_distance
+        let distance = rel_distance > this.owner.attack_radius ? this.owner.attack_radius : rel_distance
             
-            let hit_x = this.x + (Math.sin(this.attack_angle) * distance)
-            let hit_y = this.y + (Math.cos(this.attack_angle) * distance)
+        let hit_x = this.owner.x + (Math.sin(this.owner.attack_angle) * distance)
+        let hit_y = this.owner.y + (Math.cos(this.owner.attack_angle) * distance)
 
-            let r = this.getBoxElipse()
-            r.r = this.attack_point_radius
-            r.x = hit_x
-            r.y = hit_y
+        let r = this.owner.getBoxElipse()
+        r.r = this.owner.attack_point_radius
+        r.x = hit_x
+        r.y = hit_y
 
-            this.level.sounds.push({
-                name:'blow',
-                x: this.x,
-                y: this.y
-            })
+        this.owner.level.sounds.push({
+            name:'blow',
+            x: this.owner.x,
+            y: this.owner.y
+        })
 
-            let f = enemies.filter(elem => Func.elipseCollision(r, elem.getBoxElipse()))
+        let targer = this.owner.getTarget()
 
-            f.sort((a, b) => Func.distance(this, a) - Func.distance(this, b))
+        if(!targer){
+             let f = enemies.filter(elem => Func.elipseCollision(r, elem.getBoxElipse()))
 
-            let t = f[0]
-           
-            if(t){
-                if(Func.chance(50 + this.getSecondResource() * 5)){
-                    t.takeDamage(this, {
-                        explode: true
-                    })
+            f.sort((a, b) => Func.distance(this.owner, a) - Func.distance(this.owner, b))
 
-                    if(t.is_dead){
-                        let count = 3 + this.getSecondResource()
-                        let zones = 6.28 / count
-                
-                        for(let i = 1; i <= count; i++){
-                            let min_a = (i - 1) * zones
-                            let max_a = i * zones
-                
-                            let angle = Math.random() * (max_a - min_a) + min_a
+            targer = f[0]
+        }
+          
+        if(targer){
+            if(Func.chance(50 + this.owner.getSecondResource() * 5)){
+                targer.takeDamage(this.owner, {
+                    explode: true
+                })
 
-                            let proj = new SoulShatterProj(this.level)
-                            proj.setStart(this.level.time)
-                            proj.setAngle(angle)
-                            proj.setPoint(t.x, t.y)
-                            proj.setOwner(this)
-                
-                            this.level.projectiles.push(proj)
-                        }
+                if(targer.is_dead){
+                    let count = 3 + this.owner.getSecondResource()
+                    let zones = 6.28 / count
+            
+                    for(let i = 1; i <= count; i++){
+                        let min_a = (i - 1) * zones
+                        let max_a = i * zones
+            
+                        let angle = Math.random() * (max_a - min_a) + min_a
+
+                        let proj = new SoulShatterProj(this.owner.level)
+                        proj.setStart(this.owner.level.time)
+                        proj.setAngle(angle)
+                        proj.setPoint(targer.x, targer.y)
+                        proj.setOwner(this.owner)
+            
+                        this.owner.level.projectiles.push(proj)
                     }
                 }
-                else{
-                    t.takeDamage(this)
-                }
-             
             }
-          
-            this.target = undefined
-            this.attack_angle = undefined
-        }
-        else if(this.action_is_end){
-            this.action_is_end = false
-            this.getState()
+            else{
+                targer.takeDamage(this.owner)
+            }
         }
     }
 }

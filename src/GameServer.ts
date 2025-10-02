@@ -256,6 +256,19 @@ export default class GameServer{
                     client.character.buyNewItem()
                 })
 
+                socket.on('load_template', (data) => {
+                    console.log(data.item)   
+                    client.template.abilities = data.abilities
+                    data.item.forEach(elem => {
+                        let item = Builder.createItem(elem.name)
+                        client.template.item.push(item)
+                    })
+                    client.template.stats = data.stats
+                    client.template.stat_count = data.stat_count
+
+                    this.updateLobby()
+                })
+
                 socket.on('buy_item', (id) => {   
                     if(!client.character) return
 

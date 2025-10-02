@@ -24,9 +24,9 @@ import Item from "./Item";
             if(!character.life_status) return
 
             character.might += this.count
-            character.agility += this.count
+            character.perception += this.count
             character.knowledge += this.count
-            character.speed += this.count
+            character.agility += this.count
             character.will += this.count
             character.durability += this.count
         }

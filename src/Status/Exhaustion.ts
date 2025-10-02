@@ -19,10 +19,14 @@ export default class Exhaustion extends Status{
             this.unit.second_ability.cost += 1
             this.unit.third_ability.cost += 1
 
+            this.unit.first_ability.cd += 1500
+            this.unit.second_ability.cd += 1500
+            this.unit.third_ability.cd += 1500
+
             this.unit.newStatus({
                 name: 'exhaustion',
                 duration: this.duration,
-                desc: 'abilities cost are increased'
+                desc: 'abilities cost are increased and has longer cooldown'
             })
         }
     }
@@ -32,6 +36,10 @@ export default class Exhaustion extends Status{
             this.unit.first_ability.cost -= 1
             this.unit.second_ability.cost -= 1
             this.unit.third_ability.cost -= 1
+
+            this.unit.first_ability.cd -= 1500
+            this.unit.second_ability.cd -= 1500
+            this.unit.third_ability.cd -= 1500
         }
     }
 
@@ -42,7 +50,7 @@ export default class Exhaustion extends Status{
             this.unit.newStatus({
                 name: 'exhaustion',
                 duration: this.duration,
-                desc: 'abilities cost are increased'
+                desc: 'abilities cost are increased and has longer cooldown'
             })
         }  
     }

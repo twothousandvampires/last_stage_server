@@ -98,10 +98,10 @@ export default class Upgrades{
                 {
                     name: 'increase agility',
                     canUse: (character: Character) => {
-                        return character.agility != undefined
+                        return character.perception != undefined
                     },
                     teach: (character: Character) => {
-                        character.agility ++
+                        character.perception ++
                     },
                     cost: 1,
                     desc: 'increases your agility'
@@ -153,13 +153,13 @@ export default class Upgrades{
                 {
                     name: 'increase speed',
                     canUse: (character: Character) => {
-                        return character.speed != undefined
+                        return character.agility != undefined
                     },
                     teach: (character: Character) => {
-                        character.speed ++
+                        character.agility ++
                     },
                     cost: 1,
-                    desc: 'increases your speed'
+                    desc: 'increases your agility'
                 },
                 {
                     name: 'heal',
@@ -386,6 +386,19 @@ export default class Upgrades{
                 },
                 cost: 2,
                 desc: 'increases penetrate rating'
+                },
+                {
+                name: 'spirit',
+                canUse: (character: Character) => {
+                    return character.spirit < 100
+                },
+                teach: (character: Character) => {
+                    if(character instanceof Character){
+                        character.spirit ++
+                    }
+                },
+                cost: 2,
+                desc: 'increases chance lose energy instead life when get damage'
                 },
         ]
     }

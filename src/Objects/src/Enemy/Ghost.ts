@@ -21,7 +21,6 @@ export default class Ghost extends Enemy{
         this.move_speed = 0.2
         this.attack_radius = 6
         this.attack_speed = 1600
-        this.cast_speed = 1600
         this.life_status = 2
         this.spawn_time = 1400
         this.create_grace_chance = 30
@@ -61,7 +60,7 @@ export default class Ghost extends Enemy{
         }
     }
 
-     takeDamage(unit: any = undefined, options: any = {}){
+    takeDamage(unit: any = undefined, options: any = {}){
         super.takeDamage(unit, options)
 
         if(this.life_status <= 0 && unit?.blessed){
@@ -205,80 +204,8 @@ export default class Ghost extends Enemy{
         }
     }
 
-     setdyingAct(){
-        if(this.freezed){
-            this.state = 'freeze_dying'
-            this.is_corpse = true
-            this.level.sounds.push({
-                name: 'shatter',
-                x: this.x,
-                y: this.y
-            })
-        }
-        else{
-            this.state = this.dead_type ? this.dead_type : 'dying'
-        }
-
-        this.stateAct = this.dyingAct
-        this.invisible = false
-        this.setTimerToGetState(this.dying_time)
-    }
-
-    setAttackState(){
-        this.state = 'attack'
-        this.is_attacking = true
-        this.stateAct = this.attackAct
-        this.action_time = this.cast_speed
-        this.invisible = false
-        this.setImpactTime(80)
-
-        this.cancelAct = () => {
-            this.action = false
-            this.hit = false
-            this.is_attacking = false
-            this.invisible = true
-        }
-
-        this.setTimerToGetState(this.attack_speed)
-    }
-    
-    setRetreatState(){
-        this.state = 'move'
-        this.retreat_angle = Func.angle(this.target?.x, this.target.y,this.x, this.y)
-        this.retreat_angle += Math.random() * 1.57 * (Func.random(50) ? -1 : 1)
-
-        this.stateAct = this.retreatAct
-
-        this.cancelAct = () => {
-            this.retreat_angle = undefined
-        }
-
-        this.setTimerToGetState(2000)
-    }
-
-    idleAct(tick){
-        if(this.can_check_player){
-           if(!this.target){
-                this.can_check_player = false
-            
-                let p = this.level.players.filter(elem => Func.distance(this, elem) <= this.player_check_radius && !elem.is_dead && elem.z < 5)
-
-                p.sort((a, b) => {
-                    return Func.distance(a, this) - Func.distance(b, this)
-                })
-
-                this.target = p[0]
-           }
-           else{
-                if(Func.distance(this, this.target) > this.player_check_radius || this.target.is_dead){
-                    this.target = undefined
-                }
-           }
-           
-           setTimeout(() => {
-                this.can_check_player = true
-           }, 2000)
-        }
+    idleAct(tick: number){
+        this.checkPlayer()
        
         if(!this.target){
             return
@@ -314,7 +241,9 @@ export default class Ghost extends Enemy{
             }, Func.random(3000, 6000))
         }
        
-        //todo can cast
+        if(this.spell_name){
+            this.setState(this.setAttackState)
+        }
         else if(Func.distance(this, this.target) <= 8 && Func.chance(70)){
             this.setState(this.setRetreatState)
         }

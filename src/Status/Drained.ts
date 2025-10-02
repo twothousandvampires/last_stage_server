@@ -4,7 +4,7 @@ import Status from "./Status"
 export default class Drained extends Status{
     
     might_drained: number
-    speed_drained: number
+    perception_drained: number
     will_drained: number
     knowledge_drained: number
     agility_drained: number
@@ -14,7 +14,7 @@ export default class Drained extends Status{
     constructor(public time: number){
       super(time)
       this.might_drained = 0
-      this.speed_drained = 0
+      this.perception_drained = 0
       this.will_drained = 0
       this.knowledge_drained = 0
       this.agility_drained = 0
@@ -28,9 +28,9 @@ export default class Drained extends Status{
             this.unit.might --
             this.might_drained ++
         }
-        if(this.unit.speed > 0 ){
-            this.unit.speed --
-            this.speed_drained ++
+        if(this.unit.perception > 0 ){
+            this.unit.perception --
+            this.perception_drained ++
         }
         if(this.unit.will > 0 ){
             this.unit.will --
@@ -67,7 +67,7 @@ export default class Drained extends Status{
     clear(){
         if(this.unit instanceof Character){
             this.unit.might += this.might_drained
-            this.unit.speed += this.speed_drained
+            this.unit.perception += this.perception_drained
             this.unit.durability += this.durability_drained
             this.unit.agility += this.agility_drained
             this.unit.will += this.will_drained

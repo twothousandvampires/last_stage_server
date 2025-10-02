@@ -34,6 +34,7 @@ export default class Swordman extends Character{
     next_life_regen_time: any
     recent_kills: any[]
     check_recent_hits_timer: any
+    energy_by_hit_added: boolean = false
 
     constructor(level: Level){
         super(level)
@@ -53,6 +54,10 @@ export default class Swordman extends Character{
         this.base_regeneration_time = 9000
         this.recent_kills = []
         this.chance_to_block = 50
+    }
+
+    succefullCast(){
+        this.energy_by_hit_added = false
     }
 
     getTargetsCount(){
@@ -109,10 +114,6 @@ export default class Swordman extends Character{
         },3000)
 
         this.level.addSound('enlight', this.x, this.y)
-    }
-
-    getAttackMoveSpeedPenalty(){
-        return 70 - (this.agility * 3)
     }
 
     createAbilities(abilities: any){
@@ -178,7 +179,7 @@ export default class Swordman extends Character{
     }
 
     isBlock(crush: number = 0): boolean {
-        let b_chance = this.chance_to_block + this.agility * 3
+        let b_chance = this.chance_to_block + this.perception * 3
 
         if(b_chance > 90){
             b_chance = 90
@@ -239,10 +240,9 @@ export default class Swordman extends Character{
 
         this.playerWasHited(unit)
 
-        let b_chance = this.chance_to_block + this.agility * 3
-
-        if(b_chance > 90){
-            b_chance = 90
+        if(this.isSpiritBlock()){
+            this.resource --
+            return
         }
 
         if(this.isBlock()){
@@ -256,7 +256,6 @@ export default class Swordman extends Character{
 
             return
         } 
-
         
         if(this.isArmourHit(unit)){
             this.level.sounds.push({
@@ -392,16 +391,16 @@ export default class Swordman extends Character{
         return result
     }
 
-    useUtility(){
-        this.utility?.use()
-    }
-
     getSecondResource(){
         return this.recent_kills.length
     }
 
+    getMoveSpeedPenaltyValue(){
+        return 70 - (this.agility * 3)
+    }
+
     getAttackSpeed() {
-        let value = this.attack_speed - (this.speed * 50)
+        let value = this.attack_speed - (this.agility * 50)
         
         if(value < Swordman.MIN_ATTACK_SPEED){
             value = Swordman.MIN_ATTACK_SPEED
@@ -411,6 +410,11 @@ export default class Swordman extends Character{
     }
 
     payCost(){
+        if(this.free_cast){
+            this.pay_to_cost = 0
+            this.free_cast = false
+            return
+        }
         this.resource -= this.pay_to_cost
         this.pay_to_cost = 0 
     }
@@ -419,21 +423,34 @@ export default class Swordman extends Character{
         if(!this.can_regen_resource) return
         super.addResourse()
 
-        this.addPoint(count, ignore_limit)
+        if(!this.can_regen_resource) return
+
+        if(this.resource >= this.maximum_resources && !ignore_limit){
+            return
+        }
+    
+        this.resource += count
     }
 
     addPoint(count: number = 1, ignore_limit = false){
-       if(!this.can_regen_resource) return
+        if(this.energy_by_hit_added) return
 
-       if(this.resource >= this.maximum_resources && !ignore_limit){
-          return
-       }
-       
-       if(Func.chance(this.knowledge * 4, this.is_lucky)){
-          count++
-       }
+        if(this.resource >= this.maximum_resources){
+            return
+        }
 
-       this.resource += count
+        super.addResourse()
+
+        if(Func.chance(this.knowledge * 4, this.is_lucky)){
+            count ++
+        }
+
+        this.resource += count
+        if(this.resource > this.maximum_resources){
+            this.resource = this.maximum_resources
+        }
+
+        this.energy_by_hit_added = true
     }
 
     setDefend(){
@@ -442,7 +459,7 @@ export default class Swordman extends Character{
 
         this.triggers_on_start_block.forEach(elem => elem.trigger(this))
     
-        let reduce = 80 - this.speed * 5
+        let reduce = 80 - this.perception * 5
         if(reduce < 0){
             reduce = 0
         }

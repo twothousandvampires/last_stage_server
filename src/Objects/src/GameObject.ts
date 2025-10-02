@@ -2,7 +2,7 @@ import Level from "../../Level"
 
 export default abstract class GameObject {
     
-    name: string
+    name: string = 'object'
     move_speed: number = 0
     box_r: number = 0
     z: number = 0
@@ -14,9 +14,10 @@ export default abstract class GameObject {
 
     constructor(public level: Level, public x: number = 0, public y: number = 0){
         this.id = level.getId()
-        this.name = 'object'
         this.wasChanged()
     }
+
+    abstract act(time: number): void
 
     wasChanged(){
         this.level.changed_actors.set(this.id, this)
@@ -60,6 +61,4 @@ export default abstract class GameObject {
         this.x += x
         this.y += y
     }
-
-    abstract act(time: number): void
 }

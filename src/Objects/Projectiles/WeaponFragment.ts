@@ -47,15 +47,8 @@ export class WeaponFragment extends Projectiles{
                 let p = this.level.players[i]
 
                 if(p != this.owner && Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
-                
                     p.takeDamage(this.owner)
-
-                    if(!this.point_added){
-                        if(this.owner){
-                            this.point_added = true
-                        }
-                    }
-                    
+                    this.owner.addPoint()
                     this.impact()
                 }
             }
@@ -65,11 +58,7 @@ export class WeaponFragment extends Projectiles{
 
                 if(Func.elipseCollision(this.getBoxElipse(), e.getBoxElipse())){
                     e.takeDamage(this.owner)
-        
-                    if(!this.point_added){
-                        this.point_added = true
-                    }
-
+                    this.owner.addPoint()
                     this.impact()
                 }
             }

@@ -21,118 +21,65 @@ export default class Rune extends CultistAbility{
         this.second_detanation = false
     }
 
-    canUse(): boolean {
-        return this.isEnergyEnough() && !this.used && this.owner.can_cast && !this.owner.is_attacking
-    }
+    async impact(){
+        let rel_distance = Math.sqrt(((this.owner.x - this.owner.c_x) ** 2) + ((this.owner.y - this.owner.c_y) ** 2))
 
-    use(){
-        let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
-        let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
+        let distance = rel_distance > this.distance ? this.distance : rel_distance
+        
+            this.owner.level.sounds.push({
+                name:'cast',
+                x: this.owner.x,
+                y: this.owner.y
+        })
 
-        this.owner.c_x = rel_x
-        this.owner.c_y = rel_y  
+        let hit_x = this.owner.x + (Math.sin(this.owner.attack_angle) * distance)
+        let hit_y = this.owner.y + (Math.cos(this.owner.attack_angle) * distance)
 
-        if(rel_x < this.owner.x){
-            this.owner.flipped = true
+        let rune = new RuneEffect(this.owner.level)
+        rune.fast_detonation = this.fast_detonation
+        rune.explosive = this.explosive
+        rune.second_detanation = this.second_detanation
+
+        let t = this.owner.getTarget()
+
+        rune.setOwner(this.owner)
+        
+        if(t){
+            rune.setPoint(t.x, t.y)
         }
         else{
-            this.owner.flipped = false    
-        } 
-      
-        if(!this.owner.attack_angle){
-            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
+            rune.setPoint(hit_x, hit_y)
         }
         
-        this.owner.is_attacking = true
-        this.owner.state = 'cast'
-        this.owner.addMoveSpeedPenalty(-70)
-
-        this.owner.stateAct = this.act
-       
-        this.owner.action_time = this.owner.getCastSpeed()
-        this.owner.setImpactTime(85)
-
-        this.owner.cancelAct = () => {
-            this.owner.action = false
-            this.owner.addMoveSpeedPenalty(70)
-            this.owner.hit = false
-            this.owner.is_attacking = false
-            this.owner.hit_x = undefined
-            this.owner.hit_y = undefined
-        }
-    }
-
-    async act(){
-        if(this.action && !this.hit){
-            this.hit = true
+        this.owner.level.binded_effects.push(rune)
         
-            let rel_distance = Math.sqrt(((this.x - this.c_x) ** 2) + ((this.y - this.c_y) ** 2))
+        if(this.runefield){
+            let count = this.owner.getSecondResource()
+            let zones = 6.28 / count
+    
+            for(let i = 1; i <= count; i++){
+                await Func.sleep(300)
+                let distance_x = Func.random(5, 9)
+                let distance_y = Func.random(5, 9)
 
-            let distance = rel_distance > this.first_ability.distance ? this.first_ability.distance : rel_distance
-            
-             this.level.sounds.push({
-                    name:'cast',
-                    x: this.x,
-                    y: this.y
-            })
+                let min_a = (i - 1) * zones
+                let max_a = i * zones
 
-            let hit_x = this.x + (Math.sin(this.attack_angle) * distance)
-            let hit_y = this.y + (Math.cos(this.attack_angle) * distance)
+                let angle = Math.random() * (max_a - min_a) + min_a
 
-            let rune = new RuneEffect(this.level)
-            rune.fast_detonation = this.first_ability.fast_detonation
-            rune.explosive = this.first_ability.explosive
-            rune.second_detanation = this.first_ability.second_detanation
+                let x = hit_x + (Math.sin(angle) * distance_x)
+                let y = hit_y + (Math.cos(angle) * distance_y)
 
-            let t = this.getTarget()
+                let rune = new RuneEffect(this.owner.level)
+                rune.fast_detonation = this.fast_detonation
+                rune.explosive = this.explosive
+                rune.second_detanation = this.second_detanation
 
-            rune.setOwner(this)
-            if(t){
-                rune.setPoint(t.x, t.y)
+                rune.setOwner(this.owner)
+                rune.setPoint(x, y)
+
+                this.owner.level.binded_effects.push(rune)
             }
-            else{
-                rune.setPoint(hit_x, hit_y)
-            }
-            
-
-            this.level.binded_effects.push(rune)
-            
-            if(this.first_ability.runefield){
-                
-                let count = this.getSecondResource()
-                
-                let zones = 6.28 / count
-        
-                for(let i = 1; i <= count; i++){
-                    await Func.sleep(300)
-                    let distance_x = Func.random(5, 9)
-                    let distance_y = Func.random(5, 9)
-
-                    let min_a = (i - 1) * zones
-                    let max_a = i * zones
-
-                    let angle = Math.random() * (max_a - min_a) + min_a
-
-                    let x = hit_x + (Math.sin(angle) * distance_x)
-                    let y = hit_y + (Math.cos(angle) * distance_y)
-
-                    let rune = new RuneEffect(this.level)
-                    rune.fast_detonation = this.first_ability.fast_detonation
-                    rune.explosive = this.first_ability.explosive
-                    rune.second_detanation = this.first_ability.second_detanation
-
-                    rune.setOwner(this)
-                    rune.setPoint(x, y)
-
-                    this.level.binded_effects.push(rune)
-                }
-            }
-
-            this.attack_angle = undefined
-        }
-        else if(this.action_is_end){
-            this.action_is_end = false
-            this.getState()
         }
     }
 }

@@ -37,6 +37,7 @@ export default class FlyingBones extends Enemy{
         this.want_to_cast = true
         this.gold_revard = 3
         this.create_item_chance = 3
+        this.create_sorcerers_skull_chance = 15
     }
 
      takeDamage(unit: any = undefined, options: any = {}){
@@ -163,22 +164,6 @@ export default class FlyingBones extends Enemy{
         }
     }
 
-    setAttackState(){
-        this.state = 'attack'
-        this.is_attacking = true
-        this.stateAct = this.attackAct
-        this.action_time = this.attack_speed
-        this.setImpactTime(75)
-
-        this.cancelAct = () => {
-            this.action = false
-            this.hit = false
-            this.is_attacking = false
-        }
-
-        this.setTimerToGetState(this.attack_speed)
-    }
-  
     setRetreatState(){
         this.state = 'move'
         this.retreat_angle = Func.angle(this.target?.x, this.target.y,this.x, this.y)
@@ -193,29 +178,8 @@ export default class FlyingBones extends Enemy{
         this.setTimerToGetState(2000)
     }
 
-    idleAct(tick){
-        if(this.can_check_player){
-           if(!this.target){
-                this.can_check_player = false
-            
-                let p = this.level.players.filter(elem => Func.distance(this, elem) <= this.player_check_radius && !elem.is_dead && elem.z < 5)
-
-                p.sort((a, b) => {
-                    return Func.distance(a, this) - Func.distance(b, this)
-                })
-
-                this.target = p[0]
-           }
-           else{
-                if(Func.distance(this, this.target) > this.player_check_radius || this.target.is_dead){
-                    this.target = undefined
-                }
-           }
-           
-           setTimeout(() => {
-                this.can_check_player = true
-           }, 2000)
-        }
+    idleAct(tick: number){
+        this.checkPlayer()
        
         if(!this.target){
             return
@@ -256,9 +220,7 @@ export default class FlyingBones extends Enemy{
         //todo can cast
         if(this.spell_name){
             this.setState(this.setAttackState)
-            return
         }
-
         else if(Func.distance(this, this.target) <= 8 && Func.chance(70)){
             this.setState(this.setRetreatState)
         }

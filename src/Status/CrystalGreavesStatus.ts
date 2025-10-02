@@ -31,7 +31,7 @@ export default class CrystalGreavesStatus extends Status{
                 else{
                     let s = new Fragility(tick_time)
                     s.setPower(15)
-                    s.setDuration(1000)
+                    s.setDuration(1500)
                     this.unit.level.setStatus(this.unit, s, true)
                 }      
             }

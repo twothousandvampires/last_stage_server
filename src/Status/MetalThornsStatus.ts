@@ -54,13 +54,15 @@ export default class MetalThornsStatus extends Status{
 
     act(tick_time: number){
         if(tick_time > this.last_checked){
+            
             this.last_checked += this.frequency
             if(!this.unit) return
-            if(Func.notChance(this.unit?.armour_rate, this.unit.is_lucky)) return
-
+            
+            if(Func.notChance(this.unit.armour_rate, this.unit.is_lucky)) return
+             
             let box = this.unit.getBoxElipse()
             box.r = this.radius
-
+           
             this.drained ++
             this.unit.armour_rate --
 

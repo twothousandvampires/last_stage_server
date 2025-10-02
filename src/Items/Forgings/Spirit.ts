@@ -1,24 +1,23 @@
-import Character from "../../Objects/src/Character";
 import Item from "../Item";
 import Forging from "./Forging";
 
-export default class Speed extends Forging{
+export default class Spirit extends Forging {
 
     value: number = 0
 
     constructor(item: Item){
         super(item)
         this.max_value = 5
-        this.name = 'speed'
-        this.description = 'increases your speed'
+        this.name = 'spirit'
+        this.description = 'increases your spirit'
         this.gold_cost = 5
     }
 
     forge(){
         if(this.canBeForged() && this.costEnough()){
             this.value += 1
-            this.item.player.speed += 1
-             this.payCost()
+            this.item.player.spirit += 1
+            this.payCost()
         }
     }
 
@@ -26,7 +25,7 @@ export default class Speed extends Forging{
         return this.value
     }
 
-     canBeForged(): boolean {
+    canBeForged(): boolean {
         if(!this.item || !this.item.player) return false
 
         return this.value < this.max_value

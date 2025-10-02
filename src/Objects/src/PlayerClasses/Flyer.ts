@@ -85,7 +85,7 @@ export default class Flyer extends Character{
     }
 
     getMoveSpeed(): number{
-        let total_inc = this.move_speed_penalty + this.speed
+        let total_inc = this.move_speed_penalty + this.agility
 
         if(total_inc === 0) return this.move_speed
 
@@ -174,7 +174,7 @@ export default class Flyer extends Character{
     }
 
     getMoveSpeedPenaltyValue(){
-        return 70 - (this.agility * 5);
+        return 70 - (this.perception * 5);
     }
 
     defendAct(){
@@ -245,7 +245,14 @@ export default class Flyer extends Character{
             return
         }
 
+        
+
         this.playerWasHited(unit)
+
+        if(this.isSpiritBlock()){
+            this.resource --
+            return
+        }
 
         if(this.isBlock()){
             if(this.charged_shield && Func.chance(75, this.is_lucky)){
@@ -384,11 +391,19 @@ export default class Flyer extends Character{
         this.setTimerToGetState(300)
     }
 
-    useUtility(){
-        this.utility?.use()
+    succefullCast(){
+        this.addCourage()
     }
 
     payCost(){
+        if(this.pay_to_cost === 0) return
+
+        if(this.free_cast){
+            this.pay_to_cost = 0
+            this.free_cast = false
+            return
+        }
+        
         let chance = this.knowledge * 2
 
         if(chance > 70){
@@ -418,7 +433,7 @@ export default class Flyer extends Character{
             }, this.getEnlightenTimer())
         }
 
-        if(Func.chance(this.speed * 2.5, this.is_lucky)){
+        if(Func.chance(this.perception * 2.5, this.is_lucky)){
             this.recent_cast.push(this.level.time)
         }
     }

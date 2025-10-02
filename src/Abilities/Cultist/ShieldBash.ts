@@ -1,9 +1,10 @@
 import Func from "../../Func";
 import { Bone } from "../../Objects/Projectiles/Bone";
 import Cultist from "../../Objects/src/PlayerClasses/Cultist";
+import Ability from "../Ability";
 import CultistAbility from "./CultistAbility";
 
-export default class ShieldBash extends CultistAbility{
+export default class ShieldBash extends CultistAbility {
 
     deafening_wave: boolean
     hate: boolean
@@ -17,139 +18,98 @@ export default class ShieldBash extends CultistAbility{
         this.coordination = false
         this.cost = 4
         this.cd = 5000
-    }
-
-    canUse(): boolean {
-        return this.owner.resource >= this.cost && this.owner.can_attack && !this.used && !this.owner.is_attacking
+        this.type = Ability.TYPE_ATTACK
     }
 
     use(){
-        this.used = true
-        
-        let rel_x = Math.round(this.owner.pressed.canvas_x + this.owner.x - 40)
-        let rel_y = Math.round(this.owner.pressed.canvas_y + this.owner.y - 40)
-        
-        this.owner.c_x = rel_x
-        this.owner.c_y = rel_y  
+        this.owner.using_ability = this
+        this.owner.pay_to_cost = this.cost
 
-        if(rel_x < this.owner.x){
-            this.owner.flipped = true
-        }
-        else{
-            this.owner.flipped = false    
-        } 
-        
-        if(!this.owner.attack_angle){
-            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
-        }
-
-        this.owner.is_attacking = true
+        this.owner.setState(this.owner.setAttackAct)
         this.owner.state = 'shield hit'
-        let move_speed_reduce = this.owner.getMoveSpeedReduceWhenUseSkill()
-        this.owner.addMoveSpeedPenalty(-move_speed_reduce)
-
-        this.owner.stateAct = this.act
-        let attack_speed = this.owner.getAttackSpeed()
-
-        if(this.coordination){
-            attack_speed = attack_speed / 1.5
-        }
-
-        this.owner.action_time = attack_speed
-        this.owner.setImpactTime(85)
-
-        this.owner.cancelAct = () => {
-            this.owner.action = false
-            this.owner.addMoveSpeedPenalty(move_speed_reduce)
-            this.afterUse()
-            this.owner.hit = false
-            this.owner.is_attacking = false
-            this.owner.hit_x = undefined
-            this.owner.hit_y = undefined
-         
-        }
     }
 
-    act(){
-        if(this.action && !this.hit){
-            this.hit = true
-            let second_resource = this.getSecondResource()
+    afterUse(forced_cd: number | undefined = undefined) {
+        if(this.cd === 0) return
         
-            let enemies = this.level.enemies
-            let players = this.level.players 
-            let attack_elipse = this.getBoxElipse()
+        this.used = true
+        
+        let cd = forced_cd ? forced_cd : this.getCd()
 
-            attack_elipse.r = 8
+        if(this.coordination && Func.chance(30)){
+            cd = Math.floor(cd / 2)
+        }
 
-            let f = enemies.filter(elem => Func.checkAngle(this, elem, this.attack_angle, this.weapon_angle))
-            let p = players.filter(elem => Func.checkAngle(this, elem, this.attack_angle, this.weapon_angle))
-            let filtered_to_damage = f.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
-            let filtered_to_damage_players = p.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
+        setTimeout(() => {
+            this.used = false
+        }, cd)
+    }
 
-            this.target = undefined
-         
-            filtered_to_damage.concat(filtered_to_damage_players).forEach(elem => {
-                if(this.second_ability.hate && Func.chance(40)){
+    impact(){
+        let second_resource = this.owner.getSecondResource()
+        
+        let enemies = this.owner.level.enemies
+        let players = this.owner.level.players 
+        let attack_elipse = this.owner.getBoxElipse()
 
-                    elem.takeDamage(this, {
-                        explode: true
-                    })
+        attack_elipse.r = 8
 
-                    if(elem.is_dead){
-                        let count = Func.random(1, 1 + second_resource)
-                        
-                        let zones = 6.28 / count
-                
-                        for(let i = 1; i <= count; i++){
-                            let min_a = (i - 1) * zones
-                            let max_a = i * zones
-                
-                            let angle = Math.random() * (max_a - min_a) + min_a
-                            let proj = new Bone(this.level)
-                            proj.setOwner(this)
-                            proj.setAngle(angle)
-                            proj.setPoint(elem.x, elem.y)
-                
-                            this.level.projectiles.push(proj)
-                        }
-                    }
-                }
-                else{
-                    elem.takeDamage(this)
-                }   
+        let f = enemies.filter(elem => Func.checkAngle(this.owner, elem, this.owner.attack_angle, this.owner.weapon_angle))
+        let p = players.filter(elem => Func.checkAngle(this.owner, elem, this.owner.attack_angle, this.owner.weapon_angle))
+        let filtered_to_damage = f.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
+        let filtered_to_damage_players = p.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
+
+        filtered_to_damage.concat(filtered_to_damage_players).forEach(elem => {
+            if(this.hate && Func.chance(40)){
+
+            elem.takeDamage(this.owner, {
+                explode: true
             })
 
-            if(!this.second_ability.hate){
-                let stan_duration = this.second_ability.deafening_wave ? 3000 : 2000
-                stan_duration += second_resource * 100
-                attack_elipse.r = 12
-
-                if(this.second_ability.deafening_wave){
-                    attack_elipse.r += 8
+            if(elem.is_dead){
+                let count = Func.random(1, 1 + second_resource)
+                
+                let zones = 6.28 / count
+        
+                for(let i = 1; i <= count; i++){
+                    let min_a = (i - 1) * zones
+                    let max_a = i * zones
+        
+                    let angle = Math.random() * (max_a - min_a) + min_a
+                    let proj = new Bone(this.owner.level)
+                    proj.setOwner(this.owner)
+                    proj.setAngle(angle)
+                    proj.setPoint(elem.x, elem.y)
+        
+                    this.owner.level.projectiles.push(proj)
                 }
-                let filtered_to_stun = f.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
-                filtered_to_stun.forEach(elem => {
-                    if(!elem.is_dead){
-                        elem.setStun(stan_duration)
-                    }
-                })
             }
+            }
+            else{
+                elem.takeDamage(this.owner)
+            }   
+        })
 
-            this.level.sounds.push({
-                name:'ground hit',
-                x: this.x,
-                y: this.y
+        if(!this.hate){
+            let stan_duration = this.deafening_wave ? 3500 : 2000
+            stan_duration += second_resource * 100
+            attack_elipse.r = 12
+
+            if(this.deafening_wave){
+                attack_elipse.r += 8
+            }
+            let filtered_to_stun = f.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
+            filtered_to_stun.forEach(elem => {
+                if(!elem.is_dead){
+                    elem.setStun(stan_duration)
+                }
             })
+        }
 
-            this.attack_angle = undefined
-            
-            if(this.second_ability.used === true && this.second_ability.coordination && Func.chance(30)){
-                this.second_ability.used = false
-            }
-        }
-        else if(this.action_is_end){
-            this.action_is_end = false
-            this.getState()
-        }
+        this.owner.level.sounds.push({
+            name:'ground hit',
+            x: this.owner.x,
+            y: this.owner.y
+        })
     }
 }

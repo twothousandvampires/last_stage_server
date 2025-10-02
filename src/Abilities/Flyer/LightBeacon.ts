@@ -1,6 +1,7 @@
 import Func from "../../Func";
 import SmallShockNova from "../../Objects/Effects/SmallShockNova";
 import { Lightning } from "../../Objects/Projectiles/Lightning";
+import Character from "../../Objects/src/Character";
 import Flyer from "../../Objects/src/PlayerClasses/Flyer";
 import FlyerAbility from "./FlyerAbility";
 
@@ -22,79 +23,80 @@ export default class LightBeacon extends FlyerAbility{
         this.name = 'light beacon'
         this.lightning_waves = false
         this.air_form = false
+        this.need_to_pay = true
     }
 
-    canUse(){
-        return this.owner.resource >= this.cost && !this.owner.is_attacking
-    }
-
-    use(){    
-        this.owner.can_be_controlled_by_player = false
-
-        this.state = 0
-        this.owner.pay_to_cost = this.cost
-
-        this.owner.is_attacking = true
-        this.owner.state = 'fly up'
-        this.owner.action_time = 800
-        this.owner.setImpactTime(90)
-
-        this.owner.stateAct = this.act()
-        let cast_speed = this.owner.getCastSpeed()
-        this.owner.level.addSound('lightning cast', this.owner.x, this.owner.y)
-        this.owner.action_time = cast_speed
-        this.owner.can_be_damaged = false
-
-        this.owner.cancelAct = () => {
-            this.owner.action = false
-            this.owner.can_be_controlled_by_player = true
-            this.owner.hit = false
-            this.owner.is_attacking = false
-            this.owner.can_regen_resource = true
-            this.owner.z = 0
-            this.owner.light_r -= 5
-            if(this.air_form){
-                setTimeout(() => {
-                    this.owner.can_be_damaged = true
-                }, 3000)
-            }
-            else{
-                this.owner.can_be_damaged = true
-            }
-        }
+    use(){
+        this.owner.setState(this.act)    
     }
 
     act(){
-        let ability = this
-        let timer: any = undefined
-        let owner = this.owner
-        return () => {
+        if(!(this instanceof Character)) return
+        let ability = this.third_ability
+        if(!(ability instanceof LightBeacon)) return
+
+        this.can_be_controlled_by_player = false
+
+        ability.state = 0
+        this.pay_to_cost = ability.cost
+
+        this.is_attacking = true
+        this.state = 'fly up'
+        this.action_time = 800
+        this.setImpactTime(90)
+
+        let cast_speed = this.getCastSpeed()
+        this.level.addSound('lightning cast', this.x, this.y)
+        this.action_time = cast_speed
+        this.can_be_damaged = false
+
+        this.cancelAct = () => {
+            this.action = false
+            this.can_be_controlled_by_player = true
+            this.hit = false
+            this.is_attacking = false
+            this.can_regen_resource = true
+            this.z = 0
+            this.light_r -= 5
+
+            if(ability.air_form){
+                setTimeout(() => {
+                    this.can_be_damaged = true
+                }, 3000)
+            }
+            else{
+                this.can_be_damaged = true
+            }
+        }
+       
+        this.stateAct = (tick: number) => {
+            let timer = undefined
             if(ability.state === 0){
-                if(owner.action){
-                    owner.payCost()
-                    owner.action = false
+                if(this.action){
+                    this.payCost()
+                    this.action = false
                     ability.state = 1
-                    owner.state = 'light beacon'
-                    owner.z += 2
-                    owner.light_r += 5
-                    owner.can_regen_resource = false
-                    let box = owner.getBoxElipse()
-                    box.r = 17 + owner.getAdditionalRadius()
+                    this.state = 'light beacon'
+                    this.z += 2
+                    this.light_r += 5
+                    this.can_regen_resource = false
+                    let box = this.getBoxElipse()
+                    box.r = 17 + this.getAdditionalRadius()
 
                     if(this.lightning_waves){
-                        let timer_freq = 600 - (owner.getAdditionalRadius() * 50)
+                        let timer_freq = 600 - (this.getAdditionalRadius() * 50)
 
                         if(timer_freq < 150){
                             timer_freq = 150
                         }
 
                         timer = setInterval(() => {
-                            let e = new SmallShockNova(owner.level)
-                            e.setPoint(owner.x, owner.y)
+                            let e = new SmallShockNova(this.level)
+                            e.setPoint(this.x, this.y)
         
-                            owner.level.effects.push(e)
+                            this.level.effects.push(e)
 
-                            owner.level.enemies.forEach((elem) => {
+                            this.level.enemies.forEach((elem) => {
                             if(Func.elipseCollision(elem.getBoxElipse(), box)){
                                 elem.takeDamage()
                             }
@@ -102,46 +104,45 @@ export default class LightBeacon extends FlyerAbility{
                         }, timer_freq)
                     }
                     else{
-                        let timer_freq = 150 - (owner.getAdditionalRadius() * 10)
+                        let timer_freq = 150 - (this.getAdditionalRadius() * 10)
 
                         if(timer_freq < 30){
                             timer_freq = 30
                         }
 
                         timer = setInterval(() => {
-                            let e = new Lightning(owner.level)
-                            e.setOwner(owner)
+                            let e = new Lightning(this.level)
+                            e.setOwner(this)
                             e.setAngle(Math.random() * 6.28)
-                            e.setPoint(owner.x, owner.y)
+                            e.setPoint(this.x, this.y)
         
-                            owner.level.projectiles.push(e)
+                            this.level.projectiles.push(e)
                         }, timer_freq)
                     }
 
-                    
-
                     setTimeout(() => {
                         ability.state = 2
-                        owner.state = 'fly down'
-                        owner.action_time = 800
-                        owner.setImpactTime(100)
+                        this.state = 'fly down'
+                        this.action_time = 800
+                        this.setImpactTime(100)
                         clearInterval(timer)
                     }, 6000)
                 }
                 else{
-                    owner.z += 0.1
+                    this.z += 0.1
                 }
             }
             else if(ability.state === 1){
                 
             }
             else if(ability.state === 2){
-                owner.z -= 0.1
-                if(owner.action){                 
+                this.z -= 0.1
+                if(this.action){                 
                     ability.state = 0
-                    owner.action = false
-                    owner.z = 0
-                    owner.getState()
+                    this.action = false
+                    this.z = 0
+                    ability.afterUse()
+                    this.getState()
                 }
             }
         }
