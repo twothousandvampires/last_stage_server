@@ -76,6 +76,7 @@ export default class Jump extends SwordmanAbility{
             this.direction = false
             this.impact = false
             this.owner.can_be_controlled_by_player = true
+            this.owner.attack_angle = undefined
         }
     }
 
@@ -117,7 +118,6 @@ export default class Jump extends SwordmanAbility{
                 }
 
                 owner.getState()
-                owner.attack_angle = undefined
                 return
             }
             

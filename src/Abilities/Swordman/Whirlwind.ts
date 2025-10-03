@@ -20,6 +20,7 @@ export default class Whirlwind extends SwordmanAbility {
         this.fan_of_swords = false
         this.name = 'whirlwind'
         this.type = Ability.TYPE_CUSTOM
+        this.need_to_pay = true
     }
 
     impact(){

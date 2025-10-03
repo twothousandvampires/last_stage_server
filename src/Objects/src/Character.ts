@@ -106,6 +106,7 @@ export default abstract class Character extends Unit {
     can_attack: boolean = true
     can_cast: boolean = true
     can_block: boolean = true
+    can_ressurect: boolean = false
 
     spend_grace: boolean = false
     target: string | undefined
@@ -270,7 +271,7 @@ export default abstract class Character extends Unit {
         return 20000
     }
 
-    protected payCost(): void{
+    protected payCost(): void {
         this.resource -= this.pay_to_cost
         this.pay_to_cost = 0
     }
@@ -728,6 +729,10 @@ export default abstract class Character extends Unit {
         this.stateAct = this.deadAct
     }
 
+    deadAct(){
+        
+    }
+
     protected setDamagedAct(): void{
         this.damaged = true
         this.state = 'damaged'
@@ -801,7 +806,6 @@ export default abstract class Character extends Unit {
     }
 
     private directMove(): void{
-        console.log(this.angle_for_forced_movement)
         if(this.canMove()){
             this.incA()
             this.is_moving = true
@@ -1216,9 +1220,12 @@ export default abstract class Character extends Unit {
         }
        
         this.stateAct(time)
-        this.moveAct(time)
-        this.regen()
 
+        if(!this.is_dead){
+            this.moveAct(time)
+            this.regen()
+        }
+       
         if(this.action_impact && time >= this.action_impact){
             if(!this.action){
                 this.action = true
@@ -1246,7 +1253,7 @@ export default abstract class Character extends Unit {
 
     public getState(): void {
         if(this.is_dead){
-            return
+            this.setState(this.setDeadState)
         }
         else{
             this.setState(this.setIdleState)

@@ -169,7 +169,6 @@ export default class Ghost extends Enemy{
             })
 
             if(this.spell_name === 'frost bolts'){
-                console.log('frost bolts')
                 let angle = Func.angle(this.x, this.y, this.target.x, this.target.y)
 
                 let proj = new FrostBolt(this.level)

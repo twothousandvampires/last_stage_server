@@ -10,7 +10,7 @@ export default class LightningWhenUseSkill extends Forging {
     constructor(item: Item){
         super(item)
         this.max_value = 20
-        this.name = 'lightnings when use skill'
+        this.name = 'electrification'
         this.description = 'chance to realise lightnings when use skill'
         this.gold_cost = 12
     }

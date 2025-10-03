@@ -55,7 +55,6 @@ export default class Dash extends SwordmanAbility{
         
         this.owner.chance_to_avoid_damage_state += 100
         this.owner.cancelAct = () => {
-            clearTimeout(this.end_timeout)
             this.owner.is_attacking = false
             this.afterUse()
             this.owner.action = false
@@ -65,6 +64,25 @@ export default class Dash extends SwordmanAbility{
             this.owner.chance_to_avoid_damage_state -= 100
             this.start_time = 0
             this.owner.succefullCast()
+            this.owner.attack_angle = undefined
+            if(this.electrified){
+                    let count = this.hited.length
+                    
+                    let zones = 6.28 / count
+            
+                    for(let i = 1; i <= count; i++){
+                        let min_a = (i - 1) * zones
+                        let max_a = i * zones
+            
+                        let angle = Math.random() * (max_a - min_a) + min_a
+                        let proj = new Lightning(this.owner.level)
+                        proj.setAngle(angle)
+                        proj.setPoint(this.owner.x, this.owner.y)
+                        proj.setOwner(this.owner)
+            
+                        this.owner.level.projectiles.push(proj)
+                    }
+                }
             this.hited = []
         }
 
@@ -84,26 +102,7 @@ export default class Dash extends SwordmanAbility{
 
         return (tick: number) => {
             if(ability.end){
-                if(ability.electrified){
-                    let count = ability.hited.length
-                    
-                    let zones = 6.28 / count
-            
-                    for(let i = 1; i <= count; i++){
-                        let min_a = (i - 1) * zones
-                        let max_a = i * zones
-            
-                        let angle = Math.random() * (max_a - min_a) + min_a
-                        let proj = new Lightning(owner.level)
-                        proj.setAngle(angle)
-                        proj.setPoint(owner.x, owner.y)
-                        proj.setOwner(owner)
-            
-                        owner.level.projectiles.push(proj)
-                    }
-                }
                 owner.getState()
-                owner.attack_angle = undefined
             }
             else if(owner.action || ability.start_time){
                 if(!ability.start_time){

@@ -75,6 +75,7 @@ export default class Charge extends SwordmanAbility{
             this.start = false
             this.end = false
             this.owner.succefullCast()
+            this.owner.attack_angle = undefined
             this.owner.chance_to_avoid_damage_state -= 100
             if(this.possibilities && this.hited.length >= 3){
                 this.owner.addResourse()
@@ -94,7 +95,6 @@ export default class Charge extends SwordmanAbility{
         return () => {
             if(ability.end){
                 owner.getState()
-                owner.attack_angle = undefined
             }
             else if(owner.action || ability.start){
                 ability.start = true

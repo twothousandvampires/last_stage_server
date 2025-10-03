@@ -105,7 +105,7 @@ export default class Default extends Scenario{
            
             this.createWave(level)
             
-            if(this.time_between_wave_ms < 12000){
+            if(this.time_between_wave_ms < 10000){
                 this.time_between_wave_ms += 40
             }
         }
@@ -117,7 +117,7 @@ export default class Default extends Scenario{
 
         this.waves_created ++
 
-        let add_count = Math.floor(this.waves_created / 20)
+        let add_count = Math.floor(this.waves_created / 15)
 
         let count = Func.random(1 + Math.floor(add_count / 2), 2 + Math.floor(add_count))
         

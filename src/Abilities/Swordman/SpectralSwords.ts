@@ -10,6 +10,7 @@ export default class SpectralSwords extends SwordmanAbility {
         super(owner)
         this.name = 'spectral swords'
         this.cost = 8
+        this.need_to_pay = true
     }
 
     impact(){

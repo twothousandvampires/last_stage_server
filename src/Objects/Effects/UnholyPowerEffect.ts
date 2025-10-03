@@ -1,7 +1,7 @@
 import Level from "../../Level";
 import Effect from "./Effects";
 
-export default class UnholyPowerEffect extends Effect{
+export default class UnholyPowerEffect extends Effect {
     x: any
     y: any
   
