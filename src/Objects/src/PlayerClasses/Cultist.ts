@@ -148,7 +148,7 @@ export default class Cultist extends Character{
     addResourse(count: number = 1, ignore_limit = false){
         if(!this.can_regen_resource) return
 
-        super.addResourse()
+        this.playerGetResourse()
         
         if(this.resource < this.maximum_resources || ignore_limit){
             this.resource += count

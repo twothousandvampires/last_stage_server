@@ -1,0 +1,40 @@
+import Func from "../Func";
+import IUnitState from "../Interfaces/IUnitState";
+import Enemy from "../Objects/src/Enemy/Enemy";
+
+export default class EnemyCastState implements IUnitState<Enemy>{
+
+    enter(enemy: Enemy){
+        enemy.state = 'attack'
+        enemy.is_attacking = true
+        enemy.action_time = enemy.attack_speed
+
+        if(enemy.target){
+            enemy.hit_x = enemy.target.x
+            enemy.hit_y = enemy.target.y
+            enemy.attack_angle = Func.angle(enemy.x, enemy.y, enemy.target.x, enemy.target.y)
+        }
+        
+        enemy.setImpactTime(80)
+    }
+
+    update(enemy: Enemy){
+        if(enemy.action && !enemy.hit){
+            enemy.hit = true
+            let ability = enemy.abilities.filter(elem => elem.canUse(enemy))[0]
+            if(ability){
+                ability.use(enemy)
+            }
+        }
+        else if(enemy.action_is_end){
+            enemy.getState()
+        }
+    }
+
+    exit(enemy: Enemy){
+        enemy.action = false
+        enemy.hit = false
+        enemy.is_attacking = false
+        enemy.attack_angle = undefined
+    }
+}

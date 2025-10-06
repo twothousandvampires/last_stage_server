@@ -13,57 +13,58 @@ import { Server, Socket } from "socket.io"
 import Status from "./Status/Status"
 import GameServer from "./GameServer"
 import Sound from "./Types/Sound"
-import { Enemy } from "./Objects/src/Enemy/Enemy"
+import Enemy from "./Objects/src/Enemy/Enemy"
 import Learning from "./Scenarios/Learning"
 import ItemDrop from "./Objects/Effects/ItemDrop"
 import SorcerersSkull from "./Objects/Effects/SorcerersSkull"
+import UpgradeManager from "./Classes/UpgradeManager"
 
 export default class Level{
     static enemy_list = [
-       {
-         'name': 'impy',
-         'weight': 110
-       },
-       {
-         'name': 'bones',
-         'weight': 35
-       },
-       {
-         'name': 'flamy',
-         'weight': 14
-       },
-       {
-         'name': 'solid',
-         'weight': 12
-       },  
+    //    {
+    //      'name': 'impy',
+    //      'weight': 110
+    //    },
+    //    {
+    //      'name': 'bones',
+    //      'weight': 35
+    //    },
+    //    {
+    //      'name': 'flamy',
+    //      'weight': 14
+    //    },
+    //    {
+    //      'name': 'solid',
+    //      'weight': 12
+    //    },  
        {
          'name': 'slime',
          'weight': 20
        },
-       {
-         'name': 'flying bones',
-         'weight': 10
-       },
-       {
-         'name': 'ghost',
-         'weight': 5
-       },
-        {
-         'name': 'pile',
-         'weight': 12
-       },  
-       {
-         'name': 'magic slime',
-         'weight': 4
-       },
-        {
-         'name': 'specter',
-         'weight': 2
-       },      
-        {
-         'name': 'gifter',
-         'weight': 3
-       },
+    //    {
+    //      'name': 'flying bones',
+    //      'weight': 10
+    //    },
+    //    {
+    //      'name': 'ghost',
+    //      'weight': 5
+    //    },
+    //     {
+    //      'name': 'pile',
+    //      'weight': 12
+    //    },  
+    //    {
+    //      'name': 'magic slime',
+    //      'weight': 4
+    //    },
+    //     {
+    //      'name': 'specter',
+    //      'weight': 2
+    //    },      
+    //     {
+    //      'name': 'gifter',
+    //      'weight': 3
+    //    },
     ]
 
     public boss_kills_trashold: number = 300
@@ -136,8 +137,8 @@ export default class Level{
         player.startGame()
         player.setPoint(88 + this.players.length * 4, 22)
         this.players.push(player)
-        player.closeUpgrades()
-        player.closeSuggest()
+        UpgradeManager.closeUpgrades(player)
+        UpgradeManager.closeSuggest(player)
     }
 
     public start(forced_scenario_name: string | undefined): void{

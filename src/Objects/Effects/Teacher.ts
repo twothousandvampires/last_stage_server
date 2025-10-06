@@ -1,3 +1,4 @@
+import UpgradeManager from "../../Classes/UpgradeManager";
 import Func from "../../Func";
 import Level from "../../Level";
 import Effect from "./Effects";
@@ -25,11 +26,11 @@ export default class Teacher extends Effect{
                 }
             
                 elem.generateUpgrades()
-                elem.showUpgrades()
+                UpgradeManager.showUpgrades(elem)
             } 
             else if(!this.closed.includes(elem.id)){
                 this.closed.push(elem.id)
-                elem.closeUpgrades()
+                UpgradeManager.closeUpgrades(elem)
             }
         })
     }

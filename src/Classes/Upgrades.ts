@@ -53,6 +53,17 @@ import Soulrender from "../Abilities/Cultist/Soulrender"
 export default class Upgrades{
     static getAllUpgrades(): Upgrade[]{
         return [
+            {
+                    name: 'ressurection',
+                    canUse: (character: Character) => {
+                        return !character.can_ressurect
+                    },
+                    teach: (character: Character): void => {
+                        character.can_ressurect = true
+                    },
+                    cost: 15,
+                    desc: 'returns you after dead'
+                },
                 {
                     name: 'with storm',
                     type: 'status',

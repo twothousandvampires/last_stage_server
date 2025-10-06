@@ -11,6 +11,7 @@ import Teleportation from "../../../Abilities/Flyer/Teleportation";
 import Upgrades from "../../../Classes/Upgrades";
 import Func from "../../../Func";
 import Level from "../../../Level";
+import FlyerDefendState from "../../../State/FlyerDefendState";
 import Armour from "../../Effects/Armour";
 import Blood from "../../Effects/Blood";
 import ToothExplode from "../../Effects/ToothExplode";
@@ -51,6 +52,10 @@ export default class Flyer extends Character{
 
     getAdditionalRadius(){
         return Math.floor(this.might / 2)
+    }
+
+    getDefendState(){
+        return new FlyerDefendState()
     }
 
     generateUpgrades(){
@@ -366,7 +371,7 @@ export default class Flyer extends Character{
         
         if(!this.can_regen_resource) return
         
-        super.addResourse()
+        this.playerGetResourse()
 
         if(this.resource < this.maximum_resources || ignore_limit){
             this.resource += count

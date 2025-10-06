@@ -1,11 +1,9 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
-import Poison from "../../../Status/Poison";
-import Armour from "../../Effects/Armour";
 import SmallTextLanguage3 from "../../Effects/SmallTextLanguage3";
 import SpecterVortex from "../../Effects/SpecterVortex";
 import { SpecterSoulSeeker } from "../../Projectiles/SpecterSoulSeeker";
-import { Enemy } from "./Enemy";
+import Enemy from "./Enemy";
 import Skull from "./Skull";
 
 export default class Specter extends Enemy{

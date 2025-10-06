@@ -3,9 +3,9 @@ import Level from "../../../Level";
 import MentalCorrosion from "../../../Status/MentalCorrosion";
 import PuddleOfStream from "../../Effects/PuddleOfStream";
 import { EnemyLightning } from "../../Projectiles/EnemyLightning";
-import { Enemy } from "./Enemy";
+import Enemy from "./Enemy";
 
-export default class MagicSlime extends Enemy{
+export default class MagicSlime extends Enemy {
 
     weapon_angle: number
     retreat_angle: number | undefined = undefined

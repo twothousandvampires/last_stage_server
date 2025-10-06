@@ -6,8 +6,7 @@ import GhostGripArea from "../../Effects/GhostGripArea";
 import SmallTextLanguage3 from "../../Effects/SmallTextLanguage3";
 import { SharpedBone } from "../../Projectiles/SharpedBone";
 import Bones from "./Bones";
-import { Enemy } from "./Enemy";
-import Skull from "./Skull";
+import Enemy from "./Enemy";
 
 export default class FlyingBones extends Enemy{
     spell_name: string | undefined

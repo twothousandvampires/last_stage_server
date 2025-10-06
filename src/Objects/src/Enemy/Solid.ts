@@ -1,14 +1,14 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
+import SolidDeadState from "../../../State/SolidDeadState";
 import Crushed from "../../../Status/Crashed";
 import GroundHit from "../../Effects/GroundHit";
-import { Enemy } from "./Enemy";
+import Enemy from "./Enemy";
 
 export default class Solid extends Enemy{
+
     explode: boolean
-    hit_x: number
-    hit_y: number
-    
+ 
     constructor(level: Level){
         super(level)
         this.name = 'solid'
@@ -19,8 +19,6 @@ export default class Solid extends Enemy{
         this.explode = false
         this.spawn_time = 1200
         this.life_status = 4
-        this.hit_x = 0
-        this.hit_y = 0
         this.armour_rate = 15
         this.create_grace_chance = 50
         this.cooldown_attack = 3000
@@ -29,116 +27,35 @@ export default class Solid extends Enemy{
         this.say_z = 18
         this.gold_revard = 4
         this.create_item_chance = 2
+        this.dying_time = 1200
     }
 
-    setDeadState(){
-        if(this.freezed || this.burned || this.exploded){
-            this.level.removeEnemy(this)
-            return
-        }
-        else{
-            this.state = 'dead'
-            this.stateAct = this.deadAct
-            
-            this.action_time = 1200
-            this.setImpactTime(100)      
-        } 
+    getDeadStateInstance() {
+        return new SolidDeadState()
     }
 
-    deadAct(){
-        if(!this.explode && this.action){
-            this.explode = true
-            this.action = false
-            this.state = 'dead_explode'
-            
-            this.level.enemies.forEach(elem => {
-                if(elem != this && Func.distance(this, elem) <= 12){
-                    elem.takeDamage(undefined, {
-                        burn: true
-                    })
-                }
-            })
+    hitImpact(){
+        let e = this.getBoxElipse()
+        e.x = this.hit_x
+        e.y = this.hit_y
+        e.r = 3
 
-            this.level.players.forEach( elem => {
-                if(Func.distance(this, elem) <= 12){
-                    elem.takeDamage()
-                }
-            })
-
-            this.wasChanged()
-            this.is_corpse = true
-        }
-    }
-
-    attackAct(){
-        if(this.action && !this.hit){
-            this.hit = true
-    
-            let e = this.getBoxElipse()
-            e.x = this.hit_x
-            e.y = this.hit_y
-            e.r = 3
-
-            let effect = new GroundHit(this.level)
-            effect.setPoint(e.x, e.y)
-          
-            this.level.effects.push(effect)
-
-            this.level.addSound('ground hit', e.x, e.y)
-            this.level.players.forEach(p => {
-                if(p?.z < 5 && Func.elipseCollision(e, p?.getBoxElipse())){
-                    p.takeDamage()
-                    if(Func.chance(50)){
-                        let s = new Crushed(this.level.time)
-                        s.setDuration(6000)
-
-                        this.level.setStatus(p, s, true)
-                    }
-                }
-            })
-        }
-    }
-
-    setAttackState(){
-        this.state = 'attack'
-        this.is_attacking = true
-        this.stateAct = this.attackAct
-        this.action_time = this.attack_speed
-        this.setImpactTime(85)
-
-        this.hit_x = this.target.x
-        this.hit_y = this.target.y
-        this.level.addSound('demon roar', this.x, this.y)
+        let effect = new GroundHit(this.level)
+        effect.setPoint(e.x, e.y)
         
-        this.cancelAct = () => {
-            this.action = false
-            this.hit = false
-            this.is_attacking = false
-        }
+        this.level.effects.push(effect)
 
-        this.setTimerToGetState(this.attack_speed)
-    }
+        this.level.addSound('ground hit', e.x, e.y)
+        this.level.players.forEach(p => {
+            if(p?.z < 5 && Func.elipseCollision(e, p?.getBoxElipse())){
+                p.takeDamage()
+                if(Func.chance(50)){
+                    let s = new Crushed(this.level.time)
+                    s.setDuration(6000)
 
-    idleAct(tick: number){
-        this.checkPlayer()
-       
-        if(!this.target){
-            return
-        } 
-
-        let a_e = this.getBoxElipse()
-        a_e.r = this.attack_radius
-
-        if(Func.elipseCollision(a_e, this.target.getBoxElipse())){
-            if (this.enemyCanAtack(tick)){
-                this.setState(this.setAttackState)
+                    this.level.setStatus(p, s, true)
+                }
             }
-            else{
-                this.setState(this.setIdleAct)
-            }
-        }
-        else{
-            this.moveAct()
-        }
+        })
     }
 }

@@ -1,5 +1,11 @@
 import Func from "../../Func"
+import IUnitState from "../../Interfaces/IUnitState"
 import Level from "../../Level"
+import FreezeState from "../../State/FreezeState"
+import PlayerIdleState from "../../State/PlayerIdleState"
+import StunnedState from "../../State/StunnedState"
+import ZapState from "../../State/ZapState"
+import Character from "./Character"
 import GameObject from "./GameObject"
 
 export default abstract class Unit extends GameObject {
@@ -44,6 +50,8 @@ export default abstract class Unit extends GameObject {
     cast_speed: number = 2000
     can_be_damaged: boolean = true
     pierce: number = 0
+
+    current_state: IUnitState<Unit> | undefined
     
     constructor(level: Level){
         super(level)
@@ -63,16 +71,6 @@ export default abstract class Unit extends GameObject {
         c += Func.chance(50) ? 5 : -5
         this.action_impact = this.level.time + (this.action_time * (c / 100))
         this.action_end_time =  this.level.time + this.action_time
-    }
-
-    setZapedAct(){     
-        this.state = 'zaped'     
-        this.zaped = true
-        this.stateAct = this.zapedAct
-
-        this.cancelAct = () => {
-            this.zaped = false
-        }
     }
 
     checkArmour(unit: any){
@@ -97,20 +95,6 @@ export default abstract class Unit extends GameObject {
        return check
     }
 
-    setZap(duration: number = 100){
-        if(this.is_dead) return
-        if(!this.can_be_damaged) return
-
-        this.setState(this.setZapedAct)
-        this.setTimerToGetState(duration)
-    }
-
-    setTimerToGetState(ms: number){
-        this.getStateTimer = setTimeout(() => {
-            this.getState()
-        }, ms)
-    }
-
     getMoveSpeed(): number{
         let total_inc = this.move_speed_penalty
         
@@ -126,24 +110,15 @@ export default abstract class Unit extends GameObject {
         this.move_speed_penalty += value
     }
 
-    setState(newState: Function) {
-        this.is_moving = false
-        if(this.cancelAct){
-            this.action_impact = 0
-            this.action_end_time = 0
-            this.action_is_end = false
-            this.cancelAct()
-
-            this.cancelAct = undefined
+    setState(newState: IUnitState<Unit>): void {
+        if(this.current_state){
+            this.current_state.exit(this)
         }
-
-        if(this.getStateTimer){
-            clearTimeout(this.getStateTimer)
-            this.getStateTimer = undefined
+        if(newState){
+            this.current_state = newState
+            this.current_state.enter(this)
+            this.wasChanged()
         }
-
-        newState.apply(this)
-        this.wasChanged()
     }
 
     moveByAngle(angle: number){
@@ -225,49 +200,36 @@ export default abstract class Unit extends GameObject {
         this.addToPoint(n_x, n_y)
     }
 
+    setZap(duration: number = 0){
+        if(!duration) return
+        if(this.is_dead) return
+        if(!this.can_be_damaged) return
+
+        this.setState(new ZapState(duration))
+    }
+
+    setStun(duration: number): void{
+        if(this.is_dead) return
+        if(!this.can_be_damaged) return
+
+        this.setState(new StunnedState(duration))
+    }
+
     setFreeze(duration: number){
         if(this.is_dead) return
-        
-        this.setState(this.setFreezeState)
+        if(!this.can_be_damaged) return
 
-        this.setTimerToGetState(duration)
-    }
-
-    setFreezeState(){
-        this.freezed = true
-        this.state = 'freezed'     
-
-        this.stateAct = this.freezedAct
-
-        this.cancelAct = () => {
-            if(!this.is_dead){
-                this.freezed = false
+        if(this instanceof Character){
+            if(this.isStatusResist()){
+                this.statusWasResisted(undefined)
+                return
             }
         }
+
+        this.setState(new FreezeState(duration))
     }
 
-    freezedAct(){
-
-    }
-
-    setStun(duration: number){
-
-    }
-
-    stunnedAct(){
-
-    }
-
-
-    zapedAct(){
-
-    }
-
-    deadAct(){
-        
-    }
-
-    dyingAct(){
-       
+    getIdleState(){
+        return new PlayerIdleState()
     }
 }

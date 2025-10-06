@@ -1,10 +1,16 @@
 import Ability from "../../Abilities/Ability"
-import Builder from "../../Classes/Builder"
+import UpgradeManager from "../../Classes/UpgradeManager"
 import Func from "../../Func"
-import Forging from "../../Items/Forgings/Forging"
+import IUnitState from "../../Interfaces/IUnitState"
 import Item from "../../Items/Item"
 import item from "../../Items/Item"
 import Level from "../../Level"
+import PlayerDamagedState from "../../State/PlayerDamagedState"
+import PlayerDeadState from "../../State/PlayerDeadState"
+import PlayerDefendState from "../../State/PlayerDefendState"
+import PlayerDyingState from "../../State/PlayerDyingState"
+import PlayerIdleState from "../../State/PlayerIdleState"
+import StunnedState from "../../State/StunnedState"
 import Status from "../../Status/Status"
 import Sound from "../../Types/Sound"
 import Upgrade from "../../Types/Upgrade"
@@ -39,6 +45,7 @@ export default abstract class Character extends Unit {
     last_steps_time: number = 0
     last_impact_time: number = 0
     last_hit_time: number = 0
+    dead_time: number = 0
 
     knowledge: number = 0
     perception: number = 0
@@ -108,6 +115,8 @@ export default abstract class Character extends Unit {
     can_block: boolean = true
     can_ressurect: boolean = false
 
+    current_state: IUnitState<Character> | undefined
+
     spend_grace: boolean = false
     target: string | undefined
     a: number = 0.2
@@ -145,7 +154,7 @@ export default abstract class Character extends Unit {
         this.triggers_on_pierce.forEach(elem => elem.trigger(this, enemy))
     }
 
-    addResourse(){
+    playerGetResourse(){
         this.triggers_on_get_energy.forEach(elem => elem.trigger(this))
     }
 
@@ -153,31 +162,17 @@ export default abstract class Character extends Unit {
         return this.cast_speed
     }
 
-    succesefulArmourBlock(target){
-        this.triggers_on_armour_hit.forEach(elem => {
-            elem.trigger(this, target)
-        })
+    succesefulArmourBlock(target: Unit){
+        this.triggers_on_armour_hit.forEach(elem => elem.trigger(this, target))
     }
 
-    protected useNotUtility(): void{
+    useNotUtility(): void{
         this.triggers_on_use_not_utility.forEach(elem => {
             elem.trigger(this)
         })
 
         this.last_time_the_skill_was_used = this.level.time
         this.sayPhrase()
-    }
-
-    closeForgings(){
-        this.level.socket.to(this.id).emit('close_forgings')
-    }
-
-    showForgings(){
-        this.level.socket.to(this.id).emit('show_forgings', {
-            items: this.item,
-            gold: this.gold,
-            can_buy: this.purchased_items < 2
-        })
     }
 
     toJSON(){
@@ -212,46 +207,11 @@ export default abstract class Character extends Unit {
         this.triggers_on_critical.forEach(elem => elem.trigger(this, enemy))
     }
 
-    setStun(duration: number): void{
-        if(this.is_dead) return
-        if(!this.can_be_damaged) return
-
-        if(this.isStatusResist()){
-            this.statusWasResisted(undefined)
-            return
-        }
-        
-        this.setState(this.setStunState)
-
-        this.setTimerToGetState(duration)
+    getIdleState(){
+        return new PlayerIdleState()
     }
 
-    setStunState(){
-        this.can_be_controlled_by_player = false     
-        this.state = 'stunned'
-        this.stateAct = this.stunnedAct
 
-        this.cancelAct = () => {
-            if(!this.is_dead){
-                this.can_be_controlled_by_player = true
-            }
-        }
-    }
-
-    setFreeze(duration: number){
-        if(this.is_dead) return
-        if(!this.can_be_damaged) return
-
-        if(this.isStatusResist()){
-            this.statusWasResisted(undefined)
-            return
-        }
-        
-        this.setState(this.setFreezeState)
-
-        this.setTimerToGetState(duration)
-    }
-    
     protected equipItems(){
         this.item.forEach(elem => {
             elem.setPlayer(this)
@@ -357,15 +317,7 @@ export default abstract class Character extends Unit {
         this.level.addSound('upgrade', this.x, this.y)
         
         this.removeUpgrades()
-        this.closeUpgrades()
-    }
-
-    public showUpgrades(): void{
-        this.level.socket.to(this.id).emit('show_upgrades', {
-            upgrades: this.upgrades,
-            grace: this.grace,
-            can_hold: !this.spend_grace
-        })
+        UpgradeManager.closeUpgrades(this)
     }
 
     public exitGrace(): void{
@@ -375,65 +327,6 @@ export default abstract class Character extends Unit {
         if(portal instanceof Grace){
             portal.playerLeave(this)
         }
-    }
-
-    pickForging(item_id: number, id: number){
-        let item = this.item[item_id]
-
-        item.pick(id)
-        item.suggested_forgings = []
-
-        this.closeForgings()
-        this.closeSuggest()
-    }
-
-    buyItem(id: number){
-        this.gold -= 30
-
-        let item = this.items_to_buy[id]
-
-        item.setPlayer(this)
-        
-        this.item.push(item)
-
-        this.items_to_buy = []
-
-        this.purchased_items ++
-
-        this.closeForgings()
-        this.closeSuggest()
-    }
-
-    closeSuggest(){
-        this.level.socket.to(this.id).emit('close_suggest')
-    }
-
-    public buyNewItem(){
-        if(this.gold < 30) return
-        if(this.purchased_items >= 2) return
-
-        if(this.items_to_buy.length === 0){
-            for(let i = 0; i < Character.MAX_ITEMS_TO_PURCHASE; i++){
-                let item_name = Item.list[Math.floor(Math.random() * Item.list.length)].name
-                let item = Builder.createItem(item_name)
-
-                if(this.item.some(elem => elem.name === item.name)){
-                    i--
-                }
-                else{
-                    this.items_to_buy.push(item)
-                }
-            }
-        }
-
-        this.createSuggest(this.items_to_buy)
-    }
-
-    createSuggest(data: any){
-        this.level.socket.to(this.id).emit('suggest_items', data)
-    }
-    createSuggestForge(data: any, item_id){
-        this.level.socket.to(this.id).emit('suggest_forgings', data , item_id)
     }
 
     updateClientSkill(): void{
@@ -456,49 +349,6 @@ export default abstract class Character extends Unit {
             }
         ]
         this.level.socket.to(this.id).emit('update_skill', data)
-    }
-
-    public forgeItem(data: any): void{
-        let item = this.item.find(elem => elem.name === data.item_name)
-
-        if(!item) return
-
-        let forging: Forging = item.forge[data.forge]
-
-        if(!forging) return
-
-        forging.forge(this)
-
-        this.level.addSound('gold spending', this.x, this.y)
-
-        this.closeForgings()
-    }
-
-    public unlockForging(item_name: string): void{
-        let item = this.item.find(elem => elem.name === item_name)
-
-        if(!item) return
-
-        let cost = (item.forge.length * 5) + 5
-
-        if(this.gold < cost) return
-
-        if(item.unlockForgings()){
-            this.level.addSound('gold spending', this.x, this.y)
-            this.gold -= cost
-        }
-          
-        this.createSuggestForge(item.suggested_forgings, this.item.indexOf(item))
-    }
-
-    public holdGrace(): void{
-        this.can_generate_upgrades = false
-        this.grace += 4
-        this.closeUpgrades()
-    }
-
-    public closeUpgrades(): void{
-        this.level.socket.to(this.id).emit('close_upgrades')
     }
 
     public setZone(zone_id: number, x: number, y: number): void{
@@ -600,8 +450,7 @@ export default abstract class Character extends Unit {
                         unit.succesefulKill(this)
                     }
                     this.is_dead = true
-                    this.setState(this.setDyingState)
-                    this.level.playerDead()
+                    this.setState(new PlayerDyingState())
                 }
             }
            
@@ -621,7 +470,7 @@ export default abstract class Character extends Unit {
         }
 
         if(!this.freezed && Func.notChance(this.getSkipDamageStateChance(), this.is_lucky)){
-            this.setState(this.setDamagedAct)
+            this.setState(new PlayerDamagedState())
         }
     }
 
@@ -697,55 +546,6 @@ export default abstract class Character extends Unit {
                 }
             }
         }
-    }
-
-    protected damagedAct(): void{
-        
-    }
-    
-    public setDyingState(): void{
-        this.can_be_controlled_by_player = false
-
-        if(this.freezed){
-            this.state = 'freezed_dying'
-            this.level.addSound({
-                name: 'shatter',
-                x: this.x,
-                y: this.y
-            })
-        }
-        else if(this.exploded){
-            this.state = 'explode'
-        }
-        else{
-            this.state = 'dying'    
-            this.setTimerToGetState(1500)
-        }
-        this.stateAct = this.dyingAct
-    }
-
-    protected setDeadState(): void{
-        this.state = 'dead'
-        this.stateAct = this.deadAct
-    }
-
-    deadAct(){
-        
-    }
-
-    protected setDamagedAct(): void{
-        this.damaged = true
-        this.state = 'damaged'
-        this.can_be_controlled_by_player = false
-
-        this.stateAct = this.damagedAct
-
-        this.cancelAct = () => {
-            this.can_be_controlled_by_player = true
-            this.damaged = false
-        }
-
-        this.setTimerToGetState(300)
     }
 
     public setTarget(id: string): void{
@@ -1033,62 +833,8 @@ export default abstract class Character extends Unit {
         return this.pressed[87] || this.pressed[83] || this.pressed[65] || this.pressed[68]
     }
 
-    useSecond(){
-        if(!this.can_use_skills) return
-
-        if(this.third_ability?.canUse()){
-            this.third_ability.use()
-        }
-        else if(this.second_ability?.canUse()){
-            this.second_ability.use()
-        }
-
-        this.useNotUtility()  
-    }
-
-    useUtility(){
-        if(this.utility?.canUse()){
-            this.utility.use()
-        }     
-    }
-
-    private idleAct(): void{
-        if(this.pressed.l_click){
-            if(this.can_use_skills && this.first_ability?.canUse()){
-                this.first_ability?.use()
-                this.useNotUtility()
-            }
-        }
-        else if(this.pressed.r_click){
-            this.useSecond()
-        }
-        else if(this.pressed[69] && this.can_use_skills){
-            this.useUtility()
-        }
-    }
-
     succefullCast(){
         
-    }
-
-    castAct(){
-        if(this.action && !this.hit){
-            this.hit = true
-            this.using_ability.impact()
-            if(this.using_ability){
-                this.using_ability.afterUse()
-            }
-            if(this.using_ability.need_to_pay){
-                this.payCost()
-            }
-            this.succefullCast()
-        }
-        else if(this.action_is_end){
-            this.action_is_end = false
-            this.attack_angle = undefined
-            this.using_ability = undefined
-            this.getState()
-        }
     }
 
     prepareToAction(){
@@ -1118,109 +864,27 @@ export default abstract class Character extends Unit {
         }
     }
 
-    public setAttackAct(){
-        this.prepareToAction()
-        this.state = 'attack'
-
-        let v = this.getMoveSpeedPenaltyValue()      
-        this.addMoveSpeedPenalty(-v)
-
-        this.action_time = this.getAttackSpeed()
-        this.setImpactTime(85)
-
-        this.stateAct = this.castAct
-
-        this.cancelAct = () => {
-            this.using_ability = undefined
-            this.hit = false
-            this.is_attacking = false
-            this.action = false
-            this.target = undefined
-            this.addMoveSpeedPenalty(v)    
-        }
-    }
-
-    public setCastAct(): void{
-        this.prepareToAction()
-        this.state = 'cast'
-
-        let v = this.getMoveSpeedPenaltyValue()      
-        this.addMoveSpeedPenalty(-v)
-
-        this.action_time = this.getCastSpeed()
-        this.setImpactTime(85)
-
-        this.stateAct = this.castAct
-
-        this.cancelAct = () => {
-            this.using_ability = undefined
-            this.hit = false
-            this.is_attacking = false
-            this.action = false
-            this.target = undefined
-            this.addMoveSpeedPenalty(v)    
-        }
-    }
-
-    public setDefend(): void{
-        this.state = 'defend'
-        this.stateAct = this.defendAct
-        this.triggers_on_start_block.forEach(elem => elem.trigger(this))
-
-        let reduce = 80
-        this.addMoveSpeedPenalty(-reduce)
-
-        this.cancelAct = () => {
-            this.addMoveSpeedPenalty(reduce)
-        }
-    }
-
-    public defendAct(): void{
-        if(!this.pressed[32]){
-            this.getState()
-        }
-    }
-
-    setZapedAct(){     
-        this.state = 'zaped'     
-        this.zaped = true
-        this.stateAct = this.zapedAct
-        this.can_be_controlled_by_player = false
-
-        this.cancelAct = () => {
-            this.zaped = false
-            this.can_be_controlled_by_player = true
-        }
-    }
-
     getCdRedaction(){
         return this.cooldown_redaction
     }
 
-    setFreezeState(){
-        this.freezed = true
-        this.state = 'freezed'
-        this.can_be_controlled_by_player = false     
+    getMoveSpeedReduceWhenBlock(){
+        return 80
+    }
 
-        this.stateAct = this.freezedAct
-
-        this.cancelAct = () => {
-            if(!this.is_dead){
-                this.freezed = false
-                this.can_be_controlled_by_player = true
-            }
-        }
+    getDefendState(){
+        return new PlayerDefendState()
     }
 
     public act(time: number): void {
-        if(!this.stateAct) return
-        
         if(this.can_block && this.can_be_controlled_by_player && this.pressed[32]){
-            this.setState(this.setDefend)
+            this.setState(this.getDefendState())
         }
-       
-        this.stateAct(time)
-
+        
+        if(this.current_state){
+            this.current_state.update(this)
+        }
+      
         if(!this.is_dead){
             this.moveAct(time)
             this.regen()
@@ -1246,17 +910,22 @@ export default abstract class Character extends Unit {
         }
     }
 
-    private setIdleState(): void {
-        this.state = 'idle'
-        this.stateAct = this.idleAct
+    setState(newState: IUnitState<Character>): void {
+        if(this.current_state){
+            this.current_state.exit(this)
+        }
+        if(newState){
+            this.current_state = newState
+            this.current_state.enter(this)
+        }
     }
 
     public getState(): void {
         if(this.is_dead){
-            this.setState(this.setDeadState)
+            this.setState(new PlayerDeadState())
         }
         else{
-            this.setState(this.setIdleState)
+            this.setState(new PlayerIdleState())
         }
     }
 

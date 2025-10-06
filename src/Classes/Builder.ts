@@ -75,6 +75,7 @@ import Agility from "../Items/Forgings/Agility"
 import Spirit from "../Items/Forgings/Spirit"
 import FreezeWhenHited from "../Items/Forgings/FreezeWhenHited"
 import LightningWhenUseSkill from "../Items/Forgings/LightningWhenUseSkill"
+import DevouringAxe from "../Items/DevouringAxe"
 
 export default class Builder{
     static createCharacter(client: Client, level: Level): Character{
@@ -199,8 +200,12 @@ export default class Builder{
         else if(item_name === 'crossbow'){
             return new Crossbow()
         }
-        else if(item_name === 'royal mace') 
+        else if(item_name === 'royal mace'){
             return new RoyalMace()
+        } 
+        else if(item_name === 'devouring axe'){
+            return new DevouringAxe()
+        }  
     }    
         
     static createForging(name: string, item: Item){

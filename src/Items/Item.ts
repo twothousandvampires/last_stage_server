@@ -152,6 +152,10 @@ export default abstract class Item {
             name: "royal mace",
             description: 'increases impact, penetrate and critical rating'
         },
+        {
+            name: "devouring axe",
+            description: 'give you a chance to get devouring after kill'
+        },
     ]
 
     static forging_list_all = [

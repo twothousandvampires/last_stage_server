@@ -5,6 +5,7 @@ import item from './Items/Item'
 import Level from './Level'
 import TemplateAbility from './Types/TemplateAbility'
 import Character from './Objects/src/Character'
+import UpgradeManager from './Classes/UpgradeManager'
 const mysql = require('mysql2');
 
 export default class GameServer{
@@ -20,6 +21,7 @@ export default class GameServer{
     private realise_name: string | undefined = undefined
     private start_scenario_name: string | undefined = undefined
     private remove_level_timeout: any
+
     db: any
     public db_is_connected: boolean = false
 
@@ -200,7 +202,7 @@ export default class GameServer{
                 socket.on('forge_item', (data) => {
                     if(!client.character) return
 
-                    client.character.forgeItem(data)
+                    UpgradeManager.forgeItem(data, client.character)
             
                 })
 
@@ -227,7 +229,8 @@ export default class GameServer{
 
                 socket.on('unlock_forging', (item_name: string) => {
                     if(!client.character) return
-                    client.character.unlockForging(item_name) 
+
+                    UpgradeManager.unlockForging(item_name, client.character) 
                 })
 
                 socket.on('select_skill', (skill_name: string) => {
@@ -253,11 +256,10 @@ export default class GameServer{
                 socket.on('buy', () => {   
                     if(!client.character) return
 
-                    client.character.buyNewItem()
+                    UpgradeManager.buyNewItem(client.character)
                 })
 
                 socket.on('load_template', (data) => { 
-                    console.log(data)
                     client.template.abilities = data.abilities
                     data.item.forEach(elem => {
                         if(elem.name != ''){
@@ -275,13 +277,13 @@ export default class GameServer{
                 socket.on('buy_item', (id) => {   
                     if(!client.character) return
 
-                    client.character.buyItem(id)
+                    UpgradeManager.buyItem(id, client.character)
                 })
 
                 socket.on('pick_forging', (item_id, id) => {   
                     if(!client.character) return
 
-                    client.character.pickForging(item_id, id)
+                    UpgradeManager.pickForging(item_id, id, client.character)
                 })
 
                 socket.on('donate', () => {   
@@ -290,7 +292,7 @@ export default class GameServer{
                     client.character.gold -= 20
                     client.character.grace ++
                    
-                    client.character.closeForgings()
+                    UpgradeManager.closeForgings(client.character)
                 })
 
                 socket.on('player_ready', () => {
@@ -347,7 +349,8 @@ export default class GameServer{
 
                 socket.on('hold_grace', () => {
                     if(!client.character) return
-                    client.character.holdGrace()
+
+                    UpgradeManager.holdGrace(client.character)
                 })
 
                 socket.on('exit_grace', () => {

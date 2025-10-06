@@ -1,3 +1,4 @@
+import UpgradeManager from "../../Classes/UpgradeManager";
 import Func from "../../Func";
 import Level from "../../Level";
 import TimeStoped from "../../Status/TimeStoped";
@@ -77,7 +78,7 @@ export default class Grace extends Effect{
 
         player.light_r = 16
         player.removeUpgrades()
-        player.closeUpgrades()
+        UpgradeManager.closeUpgrades(player)
         player.setZone(0, player_data.x, player_data.y)
         player.can_generate_upgrades = true
         player.spend_grace = false
@@ -103,7 +104,7 @@ export default class Grace extends Effect{
             if(!this.leaved.includes(player_data.player.id)){
                 player_data.player.light_r = 16
                 player_data.player.removeUpgrades()
-                player_data.player.closeUpgrades()
+                UpgradeManager.closeUpgrades(player_data.player)
                 player_data.player.setZone(0, player_data.x, player_data.y)
                 player_data.player.can_generate_upgrades = true
                 player_data.player.spend_grace = false

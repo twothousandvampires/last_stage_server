@@ -1,7 +1,7 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
 import Character from "../Character";
-import { Enemy } from "../Enemy/Enemy";
+import Enemy from "../Enemy/Enemy";
 
 export default class SpectralSword extends Enemy{
 

@@ -5,9 +5,8 @@ import Fear from "../../../Status/Fear";
 import Madness from "../../../Status/Madness";
 import Poison from "../../../Status/Poison";
 import Armour from "../../Effects/Armour";
-import CureseOfDamnedArea from "../../Effects/CureseOfDamnedArea";
 import SkullCloud from "../../Effects/SkullCloud";
-import { Enemy } from "../Enemy/Enemy";
+import Enemy from "../Enemy/Enemy";
 
 export default class Boss extends Enemy{
 

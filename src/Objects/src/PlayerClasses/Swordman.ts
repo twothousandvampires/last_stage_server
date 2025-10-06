@@ -64,6 +64,10 @@ export default class Swordman extends Character{
         return this.might + 1
     }
 
+    getMoveSpeedReduceWhenBlock(){
+        return 80 - this.perception * 5
+    }
+
     addCourage(){
         if(!this.can_get_courage) return
 
@@ -421,7 +425,7 @@ export default class Swordman extends Character{
 
     addResourse(count: number = 1, ignore_limit = false){
         if(!this.can_regen_resource) return
-        super.addResourse()
+        this.playerGetResourse()
 
         if(!this.can_regen_resource) return
 
@@ -439,7 +443,7 @@ export default class Swordman extends Character{
             return
         }
 
-        super.addResourse()
+        this.playerGetResourse()
 
         if(Func.chance(this.knowledge * 4, this.is_lucky)){
             count ++

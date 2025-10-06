@@ -4,7 +4,7 @@ import Despair from "../../../Status/Despair";
 import SkullCloud from "../../Effects/SkullCloud";
 import SmallTextLanguage3 from "../../Effects/SmallTextLanguage3";
 import { FrostBolt } from "../../Projectiles/FrostBolt";
-import { Enemy } from "./Enemy";
+import Enemy from "./Enemy";
 
 export default class Ghost extends Enemy{
     spell_name: string | undefined

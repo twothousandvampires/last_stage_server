@@ -1,6 +1,6 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
-import { Enemy } from "../Enemy/Enemy";
+import Enemy from "../Enemy/Enemy";
 
 export default class Pile extends Enemy{
 

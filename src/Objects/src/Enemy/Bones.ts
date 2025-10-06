@@ -1,12 +1,10 @@
+import EnemyBuilder from "../../../Classes/EnemyBuilder";
 import Func from "../../../Func";
 import Level from "../../../Level";
 import Poison from "../../../Status/Poison";
-import { Enemy } from "./Enemy";
-import Skull from "./Skull";
+import Undead from "./Undead";
 
-export default class Bones extends Enemy{
-
-    ressurect_chance: number
+export default class Bones extends Undead {
 
     constructor(level: Level){
         super(level)
@@ -24,108 +22,33 @@ export default class Bones extends Enemy{
         this.weapon_angle = 0.8
     }
 
-    takeDamage(unit: any = undefined, options: any = {}){
-        super.takeDamage(unit, options)
+    whenDead(): void {
+        let skull = EnemyBuilder.createEnemy('skull', this.level)
+        skull.setPoint(this.x, this.y)
 
-        if(this.life_status <= 0 && unit?.blessed){
-            this.ressurect_chance = Math.round(this.ressurect_chance / 2)
-        }
+        this.level.enemies.push(skull)
     }
 
-    setDeadState(){
-        if(Func.notChance(this.ressurect_chance)){
-            this.is_corpse = true
-            this.state = 'dead'
-            this.stateAct = this.deadAct
-            let skull = new Skull(this.level)
-            skull.setPoint(this.x, this.y)
-
-            this.level.enemies.push(skull)
-        }
-        else{
-            this.state = 'dead_with_skull'
-            this.stateAct = this.deadAct
-            this.ressurect_chance -= 10
-            setTimeout(() => {
-                this.setState(this.setResurectAct)
-            }, 3000)
-        }
-    }
-
-    getWeaponHitedSound(){
-        return  {
-            name: 'hit bones',
-            x:this.x,
-            y:this.y
-        }
-    }
-
-    ressurectAct(){
-
-    }
-
-    setResurectAct(){
-        this.state = 'ressurect'
-        this.stateAct = this.ressurectAct
-
-        setTimeout(() => {
-            this.is_dead = false
-            this.getState()
-        }, 1500)
-    }
-
-    getExplodedSound(){
-        return {
-            name: 'bones explode',
+    hitImpact(){
+        if(!this.target || !this.attack_angle) return
+     
+        this.level.sounds.push({
             x: this.x,
-            y: this.y
-        }
-    }
+            y: this.y,
+            name: 'short sword swing'
+        })
 
-    attackAct(){
-        if(this.action && !this.hit && this.target && this.attack_angle){
-            this.hit = true
-            
-            this.level.sounds.push({
-                x: this.x,
-                y: this.y,
-                name: 'short sword swing'
-            })
+        let e = this.getBoxElipse()
+        e.r = this.attack_radius
 
-            let e = this.getBoxElipse()
-            e.r = this.attack_radius
+        if(this.target?.z < 5 && Func.elipseCollision(e, this.target?.getBoxElipse()) && Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle)){
+            this.target.takeDamage(this, {})
 
-            if(this.target?.z < 5 && Func.elipseCollision(e, this.target?.getBoxElipse()) && Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle)){
-                this.target.takeDamage(this, {})
-                if(Func.chance(25)){
-                    let status = new Poison(Date.now())
-                    status.setDuration(6000)
-                    this.level.setStatus(this.target, status)
-                }
+            if(Func.chance(25)){
+                let status = new Poison(Date.now())
+                status.setDuration(6000)
+                this.level.setStatus(this.target, status)
             }
-        }
-    }
-
-    idleAct(tick: number){
-        this.checkPlayer()
-
-        if(!this.target){
-            return
-        } 
-
-        let a_e = this.getBoxElipse()
-        a_e.r = this.attack_radius
-
-        if(Func.elipseCollision(a_e, this.target.getBoxElipse())){
-            if (this.enemyCanAtack(tick)){
-                this.setState(this.setAttackState)
-            }
-            else{
-                this.setState(this.setIdleAct)
-            }
-        }
-        else{
-            this.moveAct()
         }
     }
 }
