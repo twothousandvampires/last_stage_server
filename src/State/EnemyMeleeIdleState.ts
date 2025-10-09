@@ -16,24 +16,20 @@ export default class EnemyMeleeIdleState implements IUnitState<Enemy>{
                
         if(!enemy.target){
             return
-        } 
+        }
 
         let a_e = enemy.getBoxElipse()
         a_e.r = enemy.attack_radius
-        
-        if(enemy.isAbilityToUse()){
+
+        let is_collision = Func.elipseCollision(a_e, enemy.target.getBoxElipse())
+
+        if(enemy.enemyCanAtack() && is_collision){
+            enemy.setState(new EnemyAttackState())
+        }   
+        else if(enemy.enemyCanAtack() && enemy.isAbilityToUse()){
             enemy.setState(new EnemyCastState())
         }
-        else if(Func.elipseCollision(a_e, enemy.target.getBoxElipse())){
-            if (enemy.enemyCanAtack()){
-                enemy.setState(new EnemyAttackState())
-            }
-
-            else{
-                enemy.getState()
-            }
-        }
-        else{
+        else if(!is_collision){
             enemy.setState(new EnemyMoveAct())
         }
     }

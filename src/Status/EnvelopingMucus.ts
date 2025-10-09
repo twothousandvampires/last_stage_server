@@ -3,7 +3,6 @@ import Status from "./Status"
 
 export default class EnvelopingMucus extends Status{
    
-    effect: any
     name: string
     stack: number = 1
     effect_per_stack: number = 20
@@ -24,7 +23,7 @@ export default class EnvelopingMucus extends Status{
             this.unit.newStatus({
                 name: 'enveloping mucus',
                 duration: this.duration,
-                desc: 'movement is slightly reduced'
+                desc: 'movement is reduced'
             })
         }
     }
@@ -38,12 +37,13 @@ export default class EnvelopingMucus extends Status{
     update(status: any){
         this.time = Date.now()
         this.stack ++
+       
         this.unit.addMoveSpeedPenalty(-this.effect_per_stack)
         
         this.unit.newStatus({
             name: 'enveloping mucus',
             duration: this.duration,
-            desc: 'movement is slightly reduced'
+            desc: 'movement is reduced'
         })
     }
 }

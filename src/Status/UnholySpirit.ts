@@ -52,7 +52,7 @@ export default class UnholySpirit extends Status {
 
                 if(t){
                     let proj = new EvilSpirit(this.unit.level)
-                     proj.setOwner(t)
+                    proj.setOwner(t)
                     proj.setPoint(this.unit.x, this.unit.y)
 
                     this.unit.level.projectiles.push(proj)

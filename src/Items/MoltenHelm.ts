@@ -1,12 +1,11 @@
 import Func from "../Func";
 import Character from "../Objects/src/Character";
-import Exhaustion from "../Status/Exhaustion";
 import Ignite from "../Status/Ignite";
 import Item from "./Item";
 
 export default class MoltenHelm extends Item{
     
-    frequency: number = 3000
+    frequency: number = 10000
     last_trigger_time: number = 0
 
     constructor(){
@@ -22,7 +21,7 @@ export default class MoltenHelm extends Item{
 
     trigger(character: Character){
         if(this.disabled) return
-
+       
         let time = character.level.time
 
         if(time - this.last_trigger_time >= this.frequency){

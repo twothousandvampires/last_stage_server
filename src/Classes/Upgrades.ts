@@ -4,7 +4,6 @@ import Touch from "../Status/Touch"
 import WithColdStatus from "../Status/WithColdStatus"
 import WithFireStatus from "../Status/WithFireStatus"
 import WithStormStatus from "../Status/WithStormStatus"
-import Redemption from "../Triggers/Redemption"
 import BlessedArmour from "../Status/BlessedArmour"
 import Func from "../Func"
 import CallWarriorWhenBlock from "../Triggers/CallWarriorWhenBlock";
@@ -49,11 +48,53 @@ import MetalThorns from "../Abilities/Swordman/MetalThorns"
 import Dash from "../Abilities/Swordman/Dash"
 import SpectralSwords from "../Abilities/Swordman/SpectralSwords"
 import Soulrender from "../Abilities/Cultist/Soulrender"
+import Redemption from "../Status/Redemption"
+import FleshHarvest from "../Status/FleshHarvest"
+import WardAfterEnlightTrigger from "../Triggers/WardAfterEnlightTrigger"
+import DivineWeaponTrigger from "../Triggers/DivineWeaponTrigger"
+import UnhumanFortitudeTrigger from "../Triggers/UnhumanFortitudeTrigger"
+import MassiveImpactTrigger from "../Triggers/MassiveImpactTrigger"
 
 export default class Upgrades{
     static getAllUpgrades(): Upgrade[]{
         return [
-            {
+                {
+                    name: 'massive impact',
+                    canUse: (character: Character) => {
+                        return character.impact >= 20 && !character.triggers_on_impact.some(elem => elem instanceof MassiveImpactTrigger)
+                    },
+                    teach: (character: Character): void => {
+                        character.triggers_on_impact.push(new MassiveImpactTrigger())
+                    },
+                    cost: 6,
+                    ascend: 14,
+                    desc: 'gives a chance, depending on your might to create additional impacts'
+                },
+                {
+                    name: 'divine weapon',
+                    canUse: (character: Character) => {
+                        return character.will >= 5 && !character.triggers_on_hit.some(elem => elem instanceof DivineWeaponTrigger)
+                    },
+                    teach: (character: Character): void => {
+                        character.triggers_on_hit.push(new DivineWeaponTrigger())
+                    },
+                    cost: 8,
+                    ascend: 20,
+                    desc: 'gives a chance, depending on your will to rain down pillars of light on enemies when you hit'
+                },
+                {
+                    name: 'unhuman fortitude',
+                    canUse: (character: Character) => {
+                        return character.durability >= 5 &&  !character.triggers_on_get_hit.some(elem => elem instanceof UnhumanFortitudeTrigger)
+                    },
+                    teach: (character: Character): void => {
+                        character.triggers_on_get_hit.push(new UnhumanFortitudeTrigger())
+                    },
+                    cost: 8,
+                    ascend: 14,
+                    desc: 'gives a 30% chance when you get damage add fortify equals your durability'
+                },
+                {
                     name: 'ressurection',
                     canUse: (character: Character) => {
                         return !character.can_ressurect
@@ -61,49 +102,149 @@ export default class Upgrades{
                     teach: (character: Character): void => {
                         character.can_ressurect = true
                     },
-                    cost: 15,
+                    cost: 10,
+                    ascend: 30,
                     desc: 'returns you after dead'
                 },
                 {
                     name: 'with storm',
                     type: 'status',
                     canUse: (character: Character) => {
-                        return true
+                        return !character.level.status_pull.find(elem => elem.unit === character && elem instanceof WithStormStatus)
                     },
                     teach: (character: Character): void => {
                         let status = new WithStormStatus(character.level.time)
                         status.setPower(0)
                         character.level.setStatus(character, status, true)
                     },
-                    cost: 2,
+                    cost: 3,
+                    ascend: 5,
                     desc: 'creates lightning periodically which shocks enemies, upgrade increases frequency and radius of searching enemies'
+                },
+                {
+                    name: 'move speed',
+                    canUse: (character: Character) => {
+                        return true
+                    },
+                    teach: (character: Character): void => {
+                        character.move_speed_penalty += 2
+                    },
+                    cost: 5,
+                    ascend: 15,
+                    desc: 'increases move speed'
+                },
+                 {
+                    name: 'lightning reflexes',
+                    canUse: (character: Character) => {
+                        return character.agility >= 10 && character.armour_rate < 100
+                    },
+                    teach: (character: Character): void => {
+                        character.armour_rate += 20
+                    },
+                    cost: 5,
+                    ascend: 20,
+                    desc: 'increases your impact rating by 20'
+                },
+                {
+                    name: 'titanic strikes',
+                    canUse: (character: Character) => {
+                        return character.might >= 10 && character.impact < 100
+                    },
+                    teach: (character: Character): void => {
+                        character.impact += 20
+                    },
+                    cost: 5,
+                    ascend: 20,
+                    desc: 'increases your impact rating by 20'
+                },
+                {
+                    name: 'clear mind',
+                    canUse: (character: Character) => {
+                        return character.will >= 12
+                    },
+                    teach: (character: Character): void => {
+                        character.cooldown_redaction += 15
+                    },
+                    cost: 7,
+                    ascend: 22,
+                    desc: 'increases your cooldown redaction by 15'
+                },
+                {
+                    name: 'afterlight',
+                    canUse: (character: Character) => {
+                        return !character.triggers_on_enlight.some(elem => elem instanceof WardAfterEnlightTrigger)
+                    },
+                    teach: (character: Character): void => {
+                        character.triggers_on_enlight.push(new WardAfterEnlightTrigger())
+                    },
+                    cost: 5,
+                    ascend: 18,
+                    desc: 'you are getting 5 ward when you enlight'
+                },
+                 {
+                    name: 'spirit strikes',
+                    canUse: (character: Character) => {
+                        return !character.spirit_strikes
+                    },
+                    teach: (character: Character): void => {
+                        character.spirit_strikes = true
+                    },
+                    cost: 8,
+                    ascend: 16,
+                    desc: 'impact rating increased by you ward count'
+                },
+                {
+                    name: 'immune to freeze',
+                    canUse: (character: Character) => {
+                        return !character.immune_to_freeze
+                    },
+                    teach: (character: Character): void => {
+                        character.immune_to_freeze = true
+                    },
+                    cost: 20,
+                    ascend: 50,
+                    desc: 'immune to freeze'
+                },
+                {
+                    name: 'ascending',
+                    canUse: (character: Character) => {
+                        return character.ascend_level <= 25
+                    },
+                    teach: (character: Character): void => {
+                        character.ascend_level += 4
+                    },
+                    cost: 5,
+                    ascend:5,
+                    desc: 'icreases ascend level by 5'
                 },
                 {
                     name: 'with fire',
                     type: 'status',
                     canUse: (character: Character) => {
-                        return true
+                        return !character.level.status_pull.find(elem => elem.unit === character && elem instanceof WithFireStatus)
                     },
                     teach: (character: Character) => {
                         let status = new WithFireStatus(character.level.time)
                         status.setPower(0)
                         character.level.setStatus(character, status, true)
                     },
-                    cost: 2,
+                    cost: 3,
+                    ascend: 5,
                     desc: 'creates flames periodically which burn enemies and players, upgrade increases size of flames and stop damaging players'
                 },
                 {
                     name: 'with cold',
                     type: 'status',
                     canUse: (character: Character) => {
-                        return true
+                        return !character.level.status_pull.find(elem => elem.unit === character && elem instanceof WithColdStatus)
                     },
                     teach: (character: Character) => {
                         let status = new WithColdStatus(character.level.time)
                         status.setPower(0)
                         character.level.setStatus(character, status, true)
                     },
-                    cost: 2,
+                    cost: 3,
+                    ascend: 5,
                     desc: 'creates cold explosion periodically which freeze enemies and players, upgrade increases radius and frequency'
                 },
                 {
@@ -175,7 +316,7 @@ export default class Upgrades{
                 {
                     name: 'heal',
                     canUse: (character: Character) => {
-                        return character.life_status < 3
+                        return character.life_status < 4
                     },
                     teach: (character: Character) => {
                         character.addLife(3, true, true)
@@ -191,7 +332,8 @@ export default class Upgrades{
                     teach: (character: Character) => {
                         character.chance_to_create_grace += 5
                     },
-                    cost: 1,
+                    cost: 6,
+                    ascend: 16,
                     desc: 'increases your chance to get grace after enemy dead'
                 },
                 {
@@ -202,7 +344,8 @@ export default class Upgrades{
                     teach: (character: Character) => {
                         character.blessed = true
                     },
-                    cost: 2,
+                    cost: 4,
+                    ascend: 12,
                     desc: 'bones killed by your have reduced chance to ressurect'
                 },
                  {
@@ -214,7 +357,7 @@ export default class Upgrades{
                         character.pierce += 3
                     },
                     cost: 2,
-                    desc: 'increases a pierce rating'
+                    desc: 'increases a pierce rating by 3'
                 },
                 {
                     name: 'critical hit',
@@ -244,7 +387,7 @@ export default class Upgrades{
                         return character.grace > 1
                     },
                     teach: (character: Character) => {
-                        if(Func.chance(45, character.is_lucky)){
+                        if(Func.chance(50, character.is_lucky)){
                             character.grace *= 2
                         }
                         else{
@@ -257,10 +400,10 @@ export default class Upgrades{
                 {
                     name: 'resist',
                     canUse: (character: Character) => {
-                        return character.status_resistance < 50
+                        return character.status_resistance < 80
                     },
                     teach: (character: Character) => {
-                        character.status_resistance += 10
+                        character.status_resistance += 3
                     },
                     cost: 2,
                     desc: 'increases chance to resist status'
@@ -274,6 +417,7 @@ export default class Upgrades{
                         character.lust_for_life = true
                     },
                     cost: 4,
+                    ascend: 10,
                     desc: 'you have a chance based of your courage to regen more than life status limit("good")'
                 },
                 {
@@ -295,10 +439,11 @@ export default class Upgrades{
                     },
                     teach: (character: Character) => {
                         let status = new Touch(character.level.time)
-                        status.setDuration(30000)
+                        status.setDuration(40000)
                         character.after_grace_statuses.push(status)
                     },
-                    cost: 1,
+                    cost: 3,
+                    ascend: 20,
                     desc: 'gives a buff after living grace which increases all stats by 10'
                 },
                 {
@@ -312,7 +457,8 @@ export default class Upgrades{
                         status.setDuration(30000)
                         character.after_grace_statuses.push(status)
                     },
-                    cost: 1,
+                    cost: 3,
+                    ascend: 10,
                     desc: 'gives a buff after living grace which increases all stats by 10'
                 },
                 {
@@ -323,7 +469,7 @@ export default class Upgrades{
                     teach: (character: Character) => {
                         character.chance_to_say_phrase ++
                     },
-                    cost: 3,
+                    cost: 2,
                     desc: 'increases a chance to say something'
                 },
                 {
@@ -334,30 +480,60 @@ export default class Upgrades{
                     teach: (character: Character) => {
                         character.cooldown_redaction += 2
                     },
-                    cost: 2,
+                    cost: 4,
                     desc: 'reduces cooldowns'
+                },
+                {
+                    name: 'small ward',
+                    canUse: (character: Character) => {
+                        return character.ward === 0
+                    },
+                    teach: (character: Character) => {
+                        character.addWard(3)
+                    },
+                    cost: 1,
+                    ascend: 6,
+                    desc: 'gives you 3 ward'
                 },
                 {
                     name: 'strong ward',
                     canUse: (character: Character) => {
-                        return true
+                        return character.ward <= 5
                     },
                     teach: (character: Character) => {
                         character.addWard(10)
                     },
                     cost: 4,
+                    ascend: 25,
                     desc: 'gives you 10 ward'
                 },
                 {
                     name: 'redemption',
                     canUse: (character: Character) => {
-                        return !character.triggers_on_enemy_die.some(elem => elem instanceof Redemption)
+                        return !character.level.status_pull.find(elem => elem.unit === character && elem instanceof Redemption)
                     },
                     teach: (character: Character) => {
-                        character.triggers_on_enemy_die.push(new Redemption())
+                        let s = new Redemption(character.level.time)
+                        
+                        character.level.setStatus(character, s)
                     },
                     cost: 10,
-                    desc: 'when enemy dies there is a chance to restore life'
+                    ascend: 40,
+                    desc: 'may consumes a corpse to create sphere'
+                },
+                {
+                    name: 'flesh harvest',
+                    canUse: (character: Character) => {
+                        return !character.level.status_pull.find(elem => elem.unit === character && elem instanceof FleshHarvest)
+                    },
+                    teach: (character: Character) => {
+                        let s = new FleshHarvest(character.level.time)
+                        
+                        character.level.setStatus(character, s)
+                    },
+                    cost: 10,
+                    ascend: 30,
+                    desc: 'may consumes a corpse to heal you'
                 },
                 {
                 name: 'discipline',
@@ -369,7 +545,8 @@ export default class Upgrades{
                         character.maximum_resources ++
                     }
                 },
-                cost: 5,
+                cost: 6,
+                ascend: 16,
                 desc: 'increases maximum of energy'
                 },
                 {
@@ -383,6 +560,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 2,
+                ascend: 6,
                 desc: 'increases impact rating'
                 },
                 {
@@ -428,6 +606,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 5,
+                ascend: 15,
                 desc: 'you will create additional rune for each resourse but now it also increased cost by 1'
             },
             {
@@ -442,6 +621,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 2,
+                ascend: 8,
                 desc: 'increases radius of explosion'
             },
             {
@@ -456,6 +636,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 3,
+                ascend: 20,
                 desc: 'increases detonation rate'
             },
             {
@@ -471,6 +652,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 1,
+                ascend: 25,
                 desc: 'your runes have a chance to explode additional time but now it also increased cost by 1'
             },
             {
@@ -500,6 +682,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 1,
+                ascend: 6,
                 desc: 'increases the radius of slam hit'
             },
             {
@@ -514,6 +697,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 2,
+                ascend: 20,
                 desc: 'increases the chance to get grace from killing enemies'
             },
             {
@@ -543,10 +727,11 @@ export default class Upgrades{
                 },
                 teach: (character: Character) => {
                     if(character.second_ability && character.second_ability instanceof ShieldBash){
-                        character.second_ability.hate = true
+                        character.second_ability.deafening_wave = true
                     }
                 },
                 cost: 2,
+                ascend: 12,
                 desc: 'now your shield bash does not stun instead it has a chance to shatter enemy and to realise they bones that also can damage enemy'
             },
             {
@@ -562,6 +747,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 3,
+                ascend: 8,
                 desc: 'now your shield bash has a chance to reduce attack speed by 50% and now it has chance not to be used after using'
             },
             {
@@ -592,6 +778,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 1,
+                ascend: 18,
                 desc: 'now it also increase status resist'
             },
             {
@@ -607,6 +794,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 1,
+                ascend: 25,
                 desc: 'increases radius for searching enemies and count of ghost warriors for each resourse'
             },
             {
@@ -622,6 +810,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 3,
+                ascend: 12,
                 desc: 'your ghost warriors from unleash pain ability deal 2 hits'
             },
             {
@@ -637,6 +826,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 3,
+                ascend: 12,
                 desc: 'increases radius and frequency'
             },
             {
@@ -652,6 +842,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 1,
+                ascend: 9,
                 desc: 'after duration realise bones for each killed enemy'
             },
             {
@@ -682,6 +873,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 1,
+                ascend: 20,
                 desc: 'increases move speed for short period after use'
             },
             {
@@ -697,6 +889,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 1,
+                ascend: 15,
                 desc: 'your teammates also give buff'
             },
             {
@@ -712,6 +905,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 1,
+                ascend: 12,
                 desc: 'freeze enemies on the way'
             },
             {
@@ -723,6 +917,7 @@ export default class Upgrades{
                     character.service = true
                 },
                 cost: 2,
+                ascend: 20,
                 desc: 'you have a chance to get resourse when you regen life'
             },
             {
@@ -734,6 +929,7 @@ export default class Upgrades{
                     character.conduct_of_pain = true
                 },
                 cost: 2,
+                ascend: 15,
                 desc: 'you have a chance to get resourse when you block hit'
             },
             {
@@ -745,6 +941,7 @@ export default class Upgrades{
                     character.pain_extract = true
                 },
                 cost: 3,
+                ascend: 35,
                 desc: 'you have a chance to get resourse when you kill enemies'
             },
             {
@@ -760,6 +957,7 @@ export default class Upgrades{
                     }  
                 },
                 cost: 5,
+                ascend: 15,
                 desc: 'creates a circle of fire by damaging youself in which enemies take damage, the frequency of receiving damage depends on courage'
             },
             {
@@ -774,6 +972,7 @@ export default class Upgrades{
                     }  
                 },
                 cost: 2,
+                ascend: 20,
                 desc: 'increases radius'
             },
             {
@@ -788,6 +987,7 @@ export default class Upgrades{
                     }  
                 },
                 cost: 1,
+                ascend: 15,
                 desc: 'gives a chance to create explode when your kill enemy'
             },
             {
@@ -802,6 +1002,7 @@ export default class Upgrades{
                     }  
                 },
                 cost: 1,
+                ascend: 15,
                 desc: 'gives a chance to increase duration when you kill enemy'
             },
             {
@@ -815,6 +1016,7 @@ export default class Upgrades{
                     }  
                 },
                 cost: 1,
+                ascend: 12,
                 desc: 'when you block you can summon spirit warrior'
             },
             {
@@ -828,6 +1030,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 1,
+                ascend: 10,
                 desc: 'increases the count of shards after tear enemy'
             },
         ]
@@ -846,6 +1049,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 3,
+                        ascend: 5,
                         desc: 'your flamewall burn faster'
                     },
                     {
@@ -860,6 +1064,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 1,
+                        ascend: 10,
                         desc: 'your flamewall does not damage to players'
                     },
                     {
@@ -873,6 +1078,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 2,
+                        ascend: 8,
                         desc: 'gives your phasing while you are defended'
                     },
                      {
@@ -888,6 +1094,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 5,
+                        ascend: 10,
                         desc: 'fires a sereral of teeth'
                     },
                     {
@@ -902,6 +1109,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 2,
+                        ascend: 7,
                         desc: 'gives your fireball a chance to pierce the enemy'
                     },
                     {
@@ -916,6 +1124,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 3,
+                        ascend: 10,
                         desc: 'your fireball ignites the floor after explosion'
                     },
                     {
@@ -930,6 +1139,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 1,
+                        ascend: 5,
                         desc: 'increases radius of explosion'
                     },
                     {
@@ -944,6 +1154,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 1,
+                        ascend: 5,
                         desc: 'increases freeze duration'
                     },
                     {
@@ -958,6 +1169,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 2,
+                        ascend: 3,
                         desc: 'now your lightning bolt does not apply shock and hit up to 3 targets by default also number of hitting enemies is increased by might'
                     },
                     {
@@ -973,6 +1185,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 2,
+                        ascend: 10,
                         desc: 'now your lightning bolt also hit 2 additional times in close area but mana cost is increased'
                     },
                     {
@@ -987,6 +1200,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 2,
+                        ascend: 5,
                         desc: 'increases the chain chance'
                     },
                     {
@@ -1001,6 +1215,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 1,
+                        ascend: 3,
                         desc: 'increases the radius of checking targets for chain'
                     },
                     {
@@ -1015,6 +1230,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 4,
+                        ascend: 12,
                         desc: 'now you crates wavas of electricity instead lightnings'
                     },
                     {
@@ -1029,6 +1245,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 2,
+                        ascend: 8,
                         desc: 'after cast you cant take damage for 3 seconds'
                     },
                     {
@@ -1043,6 +1260,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 5,
+                        ascend: 12,
                         desc: 'if you kill the enemy there is a chance to create frost sphere'
                     },
                     {
@@ -1057,6 +1275,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 5,
+                        ascend: 10,
                         desc: 'after cast you create a cold spires which freeze enemies and explodes'
                     },
                     {
@@ -1071,6 +1290,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 1,
+                        ascend: 6,
                         desc: 'targets cant attack'
                     },
                     {
@@ -1085,6 +1305,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 1,
+                        ascend: 15,
                         desc: 'targets take damage after duration'
                     },
                     {
@@ -1099,6 +1320,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 1,
+                        ascend: 6,
                         desc: 'you cannot take damage after you start teleportating'
                     },
                     {
@@ -1113,6 +1335,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 1,
+                        ascend: 3,
                         desc: 'increases radius of end point'
                     },
                     {
@@ -1126,6 +1349,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 5,
+                        ascend: 12,
                         desc: 'you can regen mana while you are defended'
                     },
                     {
@@ -1139,6 +1363,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 1,
+                        ascend: 4,
                         desc: 'there is a chance to create lightning when you block damage while you are defended'
                     },
                     {
@@ -1154,6 +1379,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 3,
+                        ascend: 5,
                         desc: 'creates a beam of energy which burn enemies'
                     },
                     {
@@ -1168,6 +1394,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 1,
+                        ascend: 6,
                         desc: 'reduses mana cost'
                     },
                     {
@@ -1182,6 +1409,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 1,
+                        ascend: 8,
                         desc: 'now it ignores armour'
                     },
                     {
@@ -1195,6 +1423,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 1,
+                        ascend: 10,
                         desc: 'courage increase your armour rate'
                     },
                     {
@@ -1209,6 +1438,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 3,
+                        ascend: 8,
                         desc: 'increases the number of enemies your sparks can pass through'
                     },
                     {
@@ -1223,6 +1453,7 @@ export default class Upgrades{
                             }
                         },
                         cost: 3,
+                        ascend: 9,
                         desc: 'increases the duration'
                     },
             ]
@@ -1240,7 +1471,8 @@ export default class Upgrades{
                         character.first_ability.echo_swing = true
                     }
                 },
-                cost: 3,
+                cost: 4,
+                ascend: 8,
                 desc: 'gives your weapon swing chance to land an additional swing after a short time'
             },
             {
@@ -1254,7 +1486,8 @@ export default class Upgrades{
                         character.first_ability.improved_swing_technology = true
                     }
                 },
-                cost: 2,
+                cost: 4,
+                ascend: 12,
                 desc: 'gives your weapon swing chance to increase move and attack speed for a short period'
             },
             {
@@ -1268,7 +1501,8 @@ export default class Upgrades{
                         character.first_ability.light_grip = true
                     }
                 },
-                cost: 2,
+                cost: 5,
+                ascend: 16,
                 desc: 'gives your weapon throw ability a chance to reduce cd time between uses by 50%'
             },
             {
@@ -1282,7 +1516,8 @@ export default class Upgrades{
                         character.first_ability.multiple = true
                     }
                 },
-                cost: 5,
+                cost: 8,
+                ascend: 20,
                 desc: 'can create additional copies your throwed weapon'
             },
             {
@@ -1296,7 +1531,8 @@ export default class Upgrades{
                         character.first_ability.returning = true
                     }
                 },
-                cost: 3,
+                cost: 6,
+                ascend: 26,
                 desc: 'gives your weapon throw ability a chance to return'
             },
             {
@@ -1310,7 +1546,8 @@ export default class Upgrades{
                         character.first_ability.shattering = true
                     }
                 },
-                cost: 3,
+                cost: 6,
+                ascend: 26,
                 desc: 'gives your weapon throw ability a chance to shatter up to 3 shards'
             },
             {
@@ -1324,7 +1561,8 @@ export default class Upgrades{
                         character.second_ability.heavy_landing = true
                     }
                 },
-                cost: 2,
+                cost: 4,
+                ascend: 12,
                 desc: 'after landing by jump ability your will get armour by each hited enemy'
             },
              {
@@ -1339,6 +1577,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 5,
+                ascend: 26,
                 desc: 'increases the radius in which enemies will take damage'
             },
             {
@@ -1352,7 +1591,8 @@ export default class Upgrades{
                         character.second_ability.destroyer = true
                     }
                 },
-                cost: 2,
+                cost: 4,
+                ascend: 12,
                 desc: 'gives a chance to deal damage by charge ability'
             },
             {
@@ -1366,7 +1606,8 @@ export default class Upgrades{
                         character.second_ability.possibilities = true
                     }
                 },
-                cost: 1,
+                cost: 3,
+                ascend: 16,
                 desc: 'if you hit 3 or more enemies by charge ability you have a chance to get resourse'
             },
             {
@@ -1380,7 +1621,8 @@ export default class Upgrades{
                         character.third_ability.blood_harvest = true
                     }
                 },
-                cost: 3,
+                cost: 8,
+                ascend: 30,
                 desc: 'after using whirlwind you have a chance to create blood sphere'
             },
             {
@@ -1394,7 +1636,8 @@ export default class Upgrades{
                         character.third_ability.fan_of_swords = true
                     }
                 },
-                cost: 8,
+                cost: 10,
+                ascend: 40,
                 desc: 'your whirlwind now fires fan of swords, inproves of weapon throw ability also works'
             },
             {
@@ -1408,8 +1651,24 @@ export default class Upgrades{
                         character.third_ability.consequences = true
                     }
                 },
-                cost: 3,
+                cost: 8,
+                ascend: 26,
                 desc: 'quake has a biger radius but incresed weakness duration'
+            },
+            {
+                name: 'blast',
+                type: 'quake',
+                canUse: (character: Character) => {
+                    return character.third_ability instanceof Quake && !character.third_ability.blasted
+                },
+                teach: (character: Character) => {
+                    if(character.third_ability && character.third_ability instanceof Quake){
+                        character.third_ability.blasted = true
+                    }
+                },
+                cost: 8,
+                ascend: 35,
+                desc: 'gives a chance to instant kill'
             },
             {
                 name: 'selfcare',
@@ -1422,8 +1681,9 @@ export default class Upgrades{
                         character.third_ability.selfcare = true
                     }
                 },
-                cost: 1,
-                desc: 'your quake ability dont deals damage to you'
+                cost: 4,
+                ascend: 10,
+                desc: 'your quake ability does not deal damage to you'
             },
         
             {
@@ -1437,7 +1697,8 @@ export default class Upgrades{
                         character.utility.drinker = true
                     }
                 },
-                cost: 1,
+                cost: 4,
+                ascend: 10,
                 desc: 'while you are affected by cursed weapon you have a chance to restore life after killing enemy'
             },
             {
@@ -1451,7 +1712,8 @@ export default class Upgrades{
                         character.utility.fast_commands = true
                     }
                 },
-                cost: 1,
+                cost: 3,
+                ascend: 16,
                 desc: 'buff becomes shorter but stronger'
             },
             {
@@ -1466,7 +1728,8 @@ export default class Upgrades{
                         character.updateClientSkill()
                     }
                 },
-                cost: 3,
+                cost: 6,
+                ascend: 12,
                 desc: 'fires a magic fragments of your weapon when it hits walls or enemies it will returns and increases your armour rate'
             },
             {
@@ -1479,7 +1742,8 @@ export default class Upgrades{
                         character.attack_radius ++
                     }
                 },
-                cost: 2,
+                cost: 4,
+                ascend: 8,
                 desc: 'increases attack range'
             },
             {
@@ -1489,10 +1753,10 @@ export default class Upgrades{
                 },
                 teach: (character: Character) => {
                     if(character instanceof Swordman){
-                        character.attack_speed -= 80
+                        character.attack_speed -= 40
                     }
                 },
-                cost: 2,
+                cost: 4,
                 desc: 'increases attack speed'
             },
             {
@@ -1507,7 +1771,8 @@ export default class Upgrades{
                         character.updateClientSkill()
                     }
                 },
-                cost: 3,
+                cost: 6,
+                ascend: 10,
                 desc: 'hits one enemy and strikes nearby enemies with lightning'
             },
             {
@@ -1521,7 +1786,8 @@ export default class Upgrades{
                         character.first_ability.eye = true
                     }
                 },
-                cost: 3,
+                cost: 5,
+                ascend: 12,
                 desc: 'increases radius of serching targets by your courage'
             },
             {
@@ -1536,7 +1802,8 @@ export default class Upgrades{
                         character.triggers_on_get_hit.push(character.first_ability)
                     }
                 },
-                cost: 1,
+                cost: 5,
+                ascend: 8,
                 desc: 'gives a chance when hit to clear skill cd'
             },
             {
@@ -1548,6 +1815,7 @@ export default class Upgrades{
                     character.triggers_on_say.push(new EmergencyOrdersTrigger())
                 },
                 cost: 3,
+                ascend: 16,
                 desc: 'when you speak can apply command ability buff'
             },
             {
@@ -1558,7 +1826,8 @@ export default class Upgrades{
                 teach: (character: Character) => {
                     character.triggers_on_block.push(new BlockingTechnique())
                 },
-                cost: 3,
+                cost: 5,
+                ascend: 20,
                 desc: 'when you block 5 hits the next three will be successfully blocked'
             },
             {
@@ -1572,7 +1841,8 @@ export default class Upgrades{
                         character.first_ability.electrified = true
                     }
                 },
-                cost: 6,
+                cost: 8,
+                ascend: 25,
                 desc: 'dash now realises lightning when travel end number of which depends on hitted targets'
             },
             {
@@ -1586,7 +1856,8 @@ export default class Upgrades{
                         character.second_ability.pointed = true
                     }
                 },
-                cost: 4,
+                cost: 6,
+                ascend: 15,
                 desc: 'metal thorns penetrates enemies when hit'
             },
             {
@@ -1600,7 +1871,8 @@ export default class Upgrades{
                         character.third_ability.call = true
                     }
                 },
-                cost: 4,
+                cost: 8,
+                ascend: 30,
                 desc: 'increases number of swords and their speed'
             },
         ]

@@ -4,13 +4,14 @@ import Flyer from "../../Objects/src/PlayerClasses/Flyer";
 import FlyerAbility from "./FlyerAbility";
 
 export default class Teeth extends FlyerAbility{
-    cost: number
+    
     constructor(owner: Flyer){
         super(owner)
         this.cost = 1
         this.name = 'teeth'
         this.cd = 2000
     }
+    
     impact(){
         this.used = true
 

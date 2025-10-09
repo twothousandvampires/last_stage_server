@@ -44,6 +44,7 @@ export default class FortifyWhenHit extends Forging{
             
             let s = new Fortify(player.level.time)
             s.setDuration(5000)
+            s.setPower(15)
 
             player.level.setStatus(player, s, true)
         }

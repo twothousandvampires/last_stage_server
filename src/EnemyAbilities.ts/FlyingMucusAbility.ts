@@ -1,11 +1,11 @@
 import Func from "../Func"
 import { FlyingMucus } from "../Objects/Projectiles/FlyingMucus"
 import Enemy from "../Objects/src/Enemy/Enemy"
+import EnemyAbility from "./EnemyAbility"
 
-export default class FlyingMucusAbility{
+export default class FlyingMucusAbility extends EnemyAbility{
 
-    last_used_time = 0
-    cooldown = 10000
+     cooldown: number = 10000
 
     canUse(enemy: Enemy){
         return enemy.level.time - this.last_used_time >= this.cooldown && enemy.target && Func.distance(enemy, enemy.target) >= 12

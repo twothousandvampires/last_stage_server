@@ -18,53 +18,54 @@ import Learning from "./Scenarios/Learning"
 import ItemDrop from "./Objects/Effects/ItemDrop"
 import SorcerersSkull from "./Objects/Effects/SorcerersSkull"
 import UpgradeManager from "./Classes/UpgradeManager"
+import Helm from "./Objects/Effects/Helm"
 
 export default class Level{
     static enemy_list = [
-    //    {
-    //      'name': 'impy',
-    //      'weight': 110
-    //    },
-    //    {
-    //      'name': 'bones',
-    //      'weight': 35
-    //    },
-    //    {
-    //      'name': 'flamy',
-    //      'weight': 14
-    //    },
-    //    {
-    //      'name': 'solid',
-    //      'weight': 12
-    //    },  
+       {
+         'name': 'impy',
+         'weight': 110
+       },
+       {
+         'name': 'bones',
+         'weight': 35
+       },
+       {
+         'name': 'flamy',
+         'weight': 14
+       },
+       {
+         'name': 'solid',
+         'weight': 12
+       },  
        {
          'name': 'slime',
          'weight': 20
        },
-    //    {
-    //      'name': 'flying bones',
-    //      'weight': 10
-    //    },
-    //    {
-    //      'name': 'ghost',
-    //      'weight': 5
-    //    },
-    //     {
-    //      'name': 'pile',
-    //      'weight': 12
-    //    },  
-    //    {
-    //      'name': 'magic slime',
-    //      'weight': 4
-    //    },
-    //     {
-    //      'name': 'specter',
-    //      'weight': 2
-    //    },      
-    //     {
-    //      'name': 'gifter',
-    //      'weight': 3
-    //    },
+       {
+         'name': 'flying bones',
+         'weight': 10
+       },
+       {
+         'name': 'ghost',
+         'weight': 5
+       },
+        {
+         'name': 'pile',
+         'weight': 12
+       },  
+       {
+         'name': 'magic slime',
+         'weight': 4
+       },
+        {
+         'name': 'specter',
+         'weight': 2
+       },      
+        {
+         'name': 'gifter',
+         'weight': 2
+       },
     ]
 
     public boss_kills_trashold: number = 300
@@ -87,7 +88,7 @@ export default class Level{
 
     private game_loop: any
     public script: Scenario = new Default()
-    private status_pull: Status[] = []
+    status_pull: Status[] = []
     private last_id: number = 0
     public kill_count: number = 0
     public previuos_script: Scenario | undefined 
@@ -166,8 +167,6 @@ export default class Level{
             this.deleted.length = 0
             this.sounds.length = 0
             this.changed_actors.clear()
-            
-            this.collectTheDead()
         }
         
         this.game_loop = setImmediate(this.loop.bind(this))
@@ -182,6 +181,7 @@ export default class Level{
             meta: {
                 ms: this.time - this.started,       
                 killed: this.kill_count,
+                scenario: this.script.getInfo()
             }
         }
     }
@@ -197,7 +197,7 @@ export default class Level{
         }
     
         if(with_check){
-            let exist: Status | undefined = this.status_pull.find(elem => elem.unit === unit && elem.name === status.name)
+            let exist: Status | undefined = this.status_pull.find(elem => elem.unit === unit && elem instanceof status.constructor)
             if(exist){
                 exist.update(status)
             }
@@ -235,14 +235,7 @@ export default class Level{
         for(let i = 0; i < this.enemies.length; i ++){
             let e = this.enemies[i]
             if(e){
-               e.act(this.time) 
-               if(e.is_corpse){
-                    this.players.forEach(elem => {
-                        if(Func.distance(e, elem) <= 20){
-                            elem.enemyDeadNearby(e)
-                        }
-                    })
-               }
+               e.act(this.time)
             }
         }
         this.binded_effects.forEach(effect => {
@@ -253,7 +246,7 @@ export default class Level{
                 status.clear()
                 this.status_pull = this.status_pull.filter(elem => elem != status)
             }
-            else if(status.unit && status.unit.is_dead){
+            else if(!status.unit || status.unit.is_dead){
                 status?.unitDead()
                 status.clear()
                 this.status_pull = this.status_pull.filter(elem => elem != status)
@@ -264,13 +257,7 @@ export default class Level{
         })
     }
 
-    removeEnemy(enemy: Enemy | undefined){
-        if(!enemy) return
-
-        if(enemy.count_as_killed){
-            this.kill_count ++
-        }
-
+    check(enemy: Enemy){
         if(Func.chance(enemy.create_chance)){
             let drop_name: Effect | undefined | string = undefined
 
@@ -304,23 +291,25 @@ export default class Level{
             else if(drop_name === 'skull'){
                 drop_name = new SorcerersSkull(this)
             }
+            else if(drop_name === 'helm'){
+                drop_name = new Helm(this)
+            }
 
             if(drop_name instanceof Effect){
                 drop_name.setPoint(enemy.x, enemy.y)
                 this.binded_effects.push(drop_name)
             }
         }
+    }
+
+    removeEnemy(enemy: Enemy | undefined){
+        if(!enemy) return   
+
+        if(enemy.count_as_killed){
+            this.kill_count ++
+        }
 
         let index = this.enemies.indexOf(enemy)
         this.enemies.splice(index, 1)
-    }
-
-    private collectTheDead(): void{
-        for(let i = 0; i < this.enemies.length; i++){
-            let enemy: Enemy = this.enemies[i]
-            if(enemy.is_corpse){
-                this.removeEnemy(enemy)
-            }
-        }
     }
 }

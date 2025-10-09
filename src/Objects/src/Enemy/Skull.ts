@@ -18,6 +18,7 @@ export default class Skull extends Undead {
         this.create_energy_chance = 0
         this.gold_revard = 0
         this.create_chance = 0
+        this.has_boby = false
     }
 
     hitImpact(){

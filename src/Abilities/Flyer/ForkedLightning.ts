@@ -4,8 +4,7 @@ import Flyer from "../../Objects/src/PlayerClasses/Flyer";
 import FlyerAbility from "./FlyerAbility";
 
 export default class ForkedLightning extends FlyerAbility{
-
-    cost: number
+    
     improved_chain_reaction: boolean
     lightning_eye: boolean
 

@@ -4,6 +4,7 @@ import Level from "../../Level";
 import Cowardice from "../../Status/Cowardice";
 import Exhaustion from "../../Status/Exhaustion";
 import Fear from "../../Status/Fear";
+import Fragility from "../../Status/Fragility";
 import Projectiles from "./Projectiles";
 
 export class UnholySkull extends Projectiles{
@@ -37,22 +38,22 @@ export class UnholySkull extends Projectiles{
                 }
                 else{
                     let r = Func.random(1, 3)
+    
                     if(r === 1){
-                        let status = new Cowardice(elem.time)
-                        status.setDuration(10000)
-
-                        this.level.setStatus(elem, status)
-                    }
-                    else if(r === 2){
                         let status = new Exhaustion(elem.time)
                         status.setDuration(10000)
 
                         this.level.setStatus(elem, status, true)
                     }
-
-                    else if(r === 3){
+                    else if(r === 2){
                         let status = new Fear(elem.time)
                         status.setDuration(3000)
+
+                        this.level.setStatus(elem, status, true)
+                    }
+                    else if(r === 3){
+                        let status = new Fragility(elem.time)
+                        status.setDuration(8000)
 
                         this.level.setStatus(elem, status, true)
                     }

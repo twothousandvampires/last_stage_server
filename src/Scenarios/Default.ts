@@ -1,12 +1,9 @@
 import Func from "../Func";
-import Pierce from "../Items/Forgings/Pierce";
 import Level from "../Level";
-import Armour from "../Objects/Effects/Armour";
 import ClosedGate from "../Objects/Effects/ClosedGate";
 import Grace from "../Objects/Effects/Grace";
 import Character from "../Objects/src/Character";
 import Bones from "../Objects/src/Enemy/Bones";
-import { Enemy } from "../Objects/src/Enemy/Enemy";
 import { Flamy } from "../Objects/src/Enemy/Flamy";
 import FlyingBones from "../Objects/src/Enemy/FlyingBones";
 import Ghost from "../Objects/src/Enemy/Ghost";
@@ -16,15 +13,12 @@ import MagicSlime from "../Objects/src/Enemy/MagicSlime";
 import Slime from "../Objects/src/Enemy/Slime";
 import Solid from "../Objects/src/Enemy/Solid";
 import Specter from "../Objects/src/Enemy/Specter";
-import PileOfDead from "../Objects/src/Piles/PileOfDead";
-import PileOfEvil from "../Objects/src/Piles/PileOfEvil";
-import PileOfFrost from "../Objects/src/Piles/PileOfFrost";
-import PileOfStorm from "../Objects/src/Piles/PileOfStorm";
-import PileOfSummoning from "../Objects/src/Piles/PileOfSummoning";
-import PileOfVeil from "../Objects/src/Piles/PileOfVeil";
+import Pile from "../Objects/src/Piles/Pile";
 import BannerOfArmour from "../Status/BannerOfArmour";
 import Bless from "../Status/Bless";
 import ElementalEnchanted from "../Status/ElementalEnchanted";
+import Reanimator from "../Status/Reanimator";
+import SorceryHalo from "../Status/SorceryHalo";
 import UnholyPower from "../Status/UnholyPower";
 import UnholySpirit from "../Status/UnholySpirit";
 import BossFight from "./BossFight";
@@ -32,6 +26,10 @@ import Scenario from "./Scenario";
 
 export default class Default extends Scenario{ 
 
+    static TIMES_NORMAL = 0
+    static TIMES_GOOD = 1
+    static TIMES_BAD = 2
+   
     last_checked: number
     time_between_wave_ms: number
     waves_created: number = 0
@@ -44,10 +42,12 @@ export default class Default extends Scenario{
     monster_upgrades: any
     private need_to_check_grace: boolean = true
     grace_trashold: number = 10
+    times: number
 
     constructor(){
         super()
         this.last_checked = 0
+        this.times = Default.TIMES_NORMAL
         this.time_between_wave_ms = 4500
         this.monster_upgrades = {
             minor:{
@@ -61,6 +61,10 @@ export default class Default extends Scenario{
                 move_speed: 0
             }
         }
+    }
+
+    getInfo(){
+        return 'waves: ' + this.waves_created
     }
 
     start(level: Level){
@@ -100,22 +104,48 @@ export default class Default extends Scenario{
             level.setScript(new BossFight())
             return
         }
-        if(level.time - this.last_checked >= this.time_between_wave_ms){
+        let wave_time = this.time_between_wave_ms
+        
+        if(this.times === Default.TIMES_BAD){
+            wave_time = Math.round(wave_time * 0.7)
+        }
+        else if(this.times === Default.TIMES_GOOD){
+            wave_time = Math.round(wave_time * 1.4)
+        }
+       
+        if(level.time - this.last_checked >= wave_time){
+            console.log(wave_time)
             this.last_checked = level.time
            
             this.createWave(level)
-            
-            if(this.time_between_wave_ms < 10000){
-                this.time_between_wave_ms += 40
+               
+            if(this.times === Default.TIMES_NORMAL && Func.chance(15)){
+                this.times = Default.TIMES_BAD
+                console.log('bad times comes...')
+                setTimeout(() => {
+                    this.times = Default.TIMES_GOOD
+                    console.log('good times comes!')
+                    setTimeout(() => {
+                        this.times = Default.TIMES_NORMAL
+                        console.log('normal times.')
+                    }, Func.random(20000, 30000))
+
+                }, Func.random(20000, 30000))
             }
+
+            
         }
     }
 
-    createWave(level: Level){
+    async createWave(level: Level){
         let player_in_zone = level.players.some(elem =>  elem.zone_id === 0)
         if(!player_in_zone) return
 
         this.waves_created ++
+
+        if(this.times === Default.TIMES_NORMAL && this.time_between_wave_ms < 10000){
+            this.time_between_wave_ms += 40
+        }
 
         let add_count = Math.floor(this.waves_created / 15)
 
@@ -123,9 +153,8 @@ export default class Default extends Scenario{
         
         count += (level.players.length - 1)
 
-
         for(let i = 0; i < count; i++){
-
+            await Func.sleep(Func.random(100, 300))
             let enemy_name = undefined
 
             let w = Math.random() * Level.enemy_list.reduce((acc, elem) => acc + elem.weight, 0)
@@ -176,29 +205,7 @@ export default class Default extends Scenario{
                 enemy = new MagicSlime(level)
             }
             else if(enemy_name === 'pile'){
-                let variants = ['evil', 'frost', 'blind', 'shock', 'summon', 'dead']
-                let name = variants[Math.floor(Math.random() * variants.length)]
-
-                switch(name){
-                    case 'evil':
-                        enemy = new PileOfEvil(level)
-                        break;
-                    case 'frost':
-                        enemy = new PileOfFrost(level)
-                        break;
-                    case 'blind':
-                        enemy = new PileOfVeil(level)
-                        break;
-                    case 'shock':
-                        enemy =  new PileOfStorm(level)
-                        break;
-                    case 'summon':
-                        enemy =  new PileOfSummoning(level)
-                        break;
-                    case 'dead':
-                        enemy =  new PileOfDead(level)
-                        break;
-                }
+                enemy = new Pile(level)
             }
 
             if(!enemy){
@@ -208,7 +215,9 @@ export default class Default extends Scenario{
             while(enemy.isOutOfMap()){
                 let players_in_zone = level.players.filter(elem => elem.zone_id === 0)
                 let random_player = players_in_zone[Math.floor(Math.random() * players_in_zone.length)]
-
+                if(!random_player){
+                    return
+                }
                 let angle = Math.random() * 6.28
                 let distance_x = Func.random(14, 30)
                 let distance_y = Func.random(14, 30)
@@ -216,8 +225,10 @@ export default class Default extends Scenario{
                 enemy.setPoint(random_player.x + Math.sin(angle) * distance_x, random_player.y + Math.cos(angle) * distance_y)
             }
 
-            if(Func.chance(5) && (enemy instanceof Solid) || (enemy instanceof FlyingBones) || (enemy instanceof Specter)){
-                let r = Func.random(1, 5)
+            let elite_chance = 5 + Math.floor(this.waves_created / 5)
+
+            if(Func.chance(elite_chance) && ((enemy instanceof Solid) || (enemy instanceof FlyingBones) || (enemy instanceof Specter))){
+                let r = Func.random(1, 7)
 
                 if(r === 1){
                     let status = new BannerOfArmour(level.time)
@@ -239,12 +250,20 @@ export default class Default extends Scenario{
                     let status = new Bless(level.time)
                     level.setStatus(enemy, status)
                 }
+                else if(r === 6){
+                    let status = new SorceryHalo(level.time)
+                    level.setStatus(enemy, status)
+                }
+                else if(r === 7){
+                    let status = new Reanimator(level.time)
+                    level.setStatus(enemy, status)
+                }
             }
 
             enemy.life_status += this.add_e_life
             enemy.armour_rate += this.add_e_armour
             enemy.pierce += this.add_e_pierce
-            enemy.move_speed += this.add_e_speed
+            enemy.move_speed_penalty += this.add_e_speed
             enemy.attack_speed -= this.add_attack_speed
 
             if(enemy.attack_speed < 200){
@@ -340,7 +359,7 @@ export default class Default extends Scenario{
                     this.add_e_life += 1
                     break;
                 case 'move_speed':
-                    this.add_e_speed += 0.1
+                    this.add_e_speed += 5
                     break;
                 case 'attack_speed':
                     this.add_attack_speed += 50

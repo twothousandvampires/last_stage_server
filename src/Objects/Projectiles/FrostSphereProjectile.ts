@@ -3,6 +3,7 @@ import Level from "../../Level";
 import FrostExplosionBig from "../Effects/FrostExplosionBig";
 import FrostExplosionMedium from "../Effects/FrostExplosionMedium";
 import FrostExplosionSmall from "../Effects/FrostExplosionSmall";
+import Flyer from "../src/PlayerClasses/Flyer";
 import Projectiles from "./Projectiles";
 
 export class FrostSphereProjectile extends Projectiles{
@@ -83,8 +84,12 @@ export class FrostSphereProjectile extends Projectiles{
     impact(){
         let effect = undefined
         let explosion_radius = 0
-        let add_radius = this?.owner ? this?.owner.getAdditionalRadius() : 0
-
+        let add_radius = 0
+        
+        if(this.owner instanceof Flyer){
+            add_radius = this.owner.getAdditionalRadius()
+        }
+    
         if(this.size === 3){
             effect = new FrostExplosionBig(this.level)
             explosion_radius = 6 + add_radius

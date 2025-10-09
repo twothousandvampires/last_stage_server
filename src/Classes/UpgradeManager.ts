@@ -32,7 +32,7 @@ export default class UpgradeManager {
     }
 
     static  buyItem(id: number, player: Character){
-        player.gold -= 30
+        player.gold -= 100
 
         let item = player.items_to_buy[id]
 
@@ -86,7 +86,7 @@ export default class UpgradeManager {
     }
 
     static buyNewItem(player: Character){
-        if(player.gold < 30) return
+        if(player.gold < 100) return
         if(player.purchased_items >= 2) return
 
         if(player.items_to_buy.length === 0){
@@ -114,7 +114,9 @@ export default class UpgradeManager {
         player.level.socket.to(player.id).emit('show_upgrades', {
             upgrades: player.upgrades,
             grace: player.grace,
-            can_hold: !player.spend_grace
+            can_hold: !player.spend_grace,
+            ascend: player.ascend_level,
+            life: player.life_status
         })
     }
 
@@ -122,10 +124,29 @@ export default class UpgradeManager {
         player.level.socket.to(player.id).emit('close_upgrades')
     }
 
+    static holdAscend(player: Character): void{
+        player.ascend_level -= 1
+
+        player.upgrades = []
+        player.spend_grace = true
+        UpgradeManager.closeUpgrades(player)
+    }
+
     static holdGrace(player: Character): void{
         player.can_generate_upgrades = false
-        player.grace += 4
 
+        player.grace = Math.round(player.grace * 1.2)
+        player.removeUpgrades()
+        player.spend_grace = true
+
+        UpgradeManager.closeUpgrades(player)
+    }
+
+    static sacrifice(player: Character): void{
+        player.takePureDamage(3)
+
+        player.grace ++
+    
         UpgradeManager.closeUpgrades(player)
     }
 }

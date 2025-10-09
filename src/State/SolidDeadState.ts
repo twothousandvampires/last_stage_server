@@ -4,17 +4,20 @@ import Enemy from "../Objects/src/Enemy/Enemy";
 
 export default class SolidDeadState implements IUnitState<Enemy>{
 
+    start = 0
+
     enter(enemy: Enemy){
         enemy.state = 'dead'
-    
-        enemy.action_time = 1200
-        enemy.setImpactTime(100)  
+        enemy.level.check(enemy)
+
+        enemy.is_corpse = true
+        enemy.action_time = enemy.dead_time
+        
+        this.start = enemy.level.time
     }   
 
     update(enemy: Enemy){
-       if(!enemy.explode && enemy.action){
-            enemy.explode = true
-            enemy.action = false
+        if(enemy.level.time - this.start >= enemy.action_time){
             enemy.state = 'dead_explode'
             
             enemy.level.enemies.forEach(elem => {
@@ -32,9 +35,9 @@ export default class SolidDeadState implements IUnitState<Enemy>{
             })
 
             enemy.wasChanged()
-            enemy.is_corpse = true
+            enemy.level.removeEnemy(enemy)
         }
-}
+    }
 
     exit(player: Enemy){
 

@@ -21,8 +21,6 @@ export default class ElementalEnchanted extends Status{
     }
 
     clear(){
-        if(!this.unit) return
-
         let r = Func.random(1, 3)
 
         if(r === 1){

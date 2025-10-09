@@ -40,7 +40,7 @@ export default class SkullOfFirstWarrior extends Item {
 
             character.newStatus({
                 name: 'skull of first warrior',
-                duration: + this.duration,
+                duration: 6000 + this.duration,
                 desc: 'might increased'
             })
 

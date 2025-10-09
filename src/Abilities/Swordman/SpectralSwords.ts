@@ -49,10 +49,4 @@ export default class SpectralSwords extends SwordmanAbility {
             this.owner.level.enemies.push(summon)
         }
     }
-
-    use(){
-        this.owner.using_ability = this
-        this.owner.pay_to_cost = this.cost
-        this.owner.setState(this.owner.setCastAct)
-    }
 }

@@ -7,7 +7,6 @@ import FlyerAbility from "./FlyerAbility";
 
 export default class LightningBolt extends FlyerAbility{
 
-    cost: number
     high_voltage: boolean
     storm: boolean
 

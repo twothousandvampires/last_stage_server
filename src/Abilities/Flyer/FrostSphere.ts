@@ -5,7 +5,6 @@ import FlyerAbility from "./FlyerAbility";
 
 export default class FrostSphere extends FlyerAbility{
 
-    cost: number
     frost_rich: boolean
     reign_of_frost: boolean
 

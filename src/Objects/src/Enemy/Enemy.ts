@@ -12,6 +12,7 @@ import Unit from "../Unit";
 
 export default abstract class Enemy extends Unit {
 
+    
     is_spawning: boolean = true
     target: Character | undefined
     check_timer: any
@@ -33,6 +34,7 @@ export default abstract class Enemy extends Unit {
     create_intervention_chance: number = 2
     create_item_chance: number = 0
     create_sorcerers_skull_chance: number = 0
+    create_helm_of_ascendence_chance: number = 1
 
     create_chance: number = 15
     last_action: number = 0
@@ -42,6 +44,8 @@ export default abstract class Enemy extends Unit {
     gold_revard: number = 1
     can_be_burned: boolean = true
     abilities: any[] = []
+    dead_time: number = 5000
+    
     
     constructor(level: Level){
         super(level)
@@ -54,6 +58,10 @@ export default abstract class Enemy extends Unit {
 
     whenDead(){
 
+    }
+
+    getCastStateString(){
+        return 'attack'
     }
 
     isAbilityToUse(){
@@ -98,7 +106,8 @@ export default abstract class Enemy extends Unit {
             ['entity', this.create_entity_chance],
             ['intervention', this.create_intervention_chance],
             ['item', this.create_item_chance],
-            ['skull', this.create_sorcerers_skull_chance], 
+            ['skull', this.create_sorcerers_skull_chance],
+            ['helm', this.create_helm_of_ascendence_chance],  
         ]
     }
 
@@ -168,15 +177,17 @@ export default abstract class Enemy extends Unit {
             z: this.z,
             action: this.action,
             action_time: this.action_time,
+            invisible: this.invisible
         }
     }
     
     takeDamage(unit: any = undefined, options: any = {}){
         if(this.is_dead) return
-
+        if(!this.can_be_damaged) return
+        
         let is_player_deal_hit = unit instanceof Character
 
-        let instantly = options?.instant_death || (unit && unit.chance_to_instant_kill && Func.chance(unit.chance_to_instant_kill))
+        let instantly = options?.instant_death || (unit && unit.chance_to_instant_kill && Func.chance(unit.chance_to_instant_kill)) && this.can_be_instant_killed
 
         if(instantly){
             this.life_status = 1
@@ -203,15 +214,16 @@ export default abstract class Enemy extends Unit {
            damage_value = options.damage_value
         }
 
-        let is_pierce = unit && unit?.pierce > this.armour_rate && Func.chance(unit.pierce - this.armour_rate)
+        if(is_player_deal_hit){
+            let pierce = unit.getPierce()
+            let is_pierce = Func.chance(pierce - this.armour_rate)
 
-        if(is_pierce){
-            damage_value ++
-            if(is_player_deal_hit){
+            if(is_pierce){
+                damage_value ++
                 unit.succesefulPierce(this)
             }
         }
-
+        
         if(this.penetrated_rating > 0 && Func.chance(this.penetrated_rating)){
             damage_value ++
         }
@@ -227,12 +239,18 @@ export default abstract class Enemy extends Unit {
             }
         }
 
-        if(Func.chance(this.fragility)){
+        if(this.fragility){
+            console.log('enemy was fragle')
             damage_value *= 2
         }
 
-        this.life_status -= damage_value
+        if(this.fortify && Func.chance(this.fortify)){
+            console.log('enemy was fortified')
+            damage_value --
+        }
 
+        this.life_status -= damage_value
+ 
         if(is_player_deal_hit){
             unit.succesefulHit(this)
         }
@@ -257,17 +275,20 @@ export default abstract class Enemy extends Unit {
             this.setState(new EnemyDyingState)
         }
         
-        if(is_player_deal_hit && unit.impact > 0 && unit.level.time - unit.last_impact_time >= unit.impact_cooldown){
-            if(Func.chance(unit.impact)){
+        if(is_player_deal_hit && unit.level.time - unit.last_impact_time >= unit.impact_cooldown){
+            let impact_rating = unit.getImpactRating() 
+            if(Func.chance(impact_rating)){
                 unit.last_impact_time = unit.level.time
                 let e = new QuakeEffect(this.level)
                 e.setPoint(this.x, this.y)
 
                 this.level.effects.push(e)
-
+                unit.impactHit(this, damage_value)
                 this.level.enemies.forEach(elem => {
                     if(Func.distance(this, elem) <= 10 && !elem.is_dead && elem != this){
-                        elem.takeDamage(undefined)
+                        elem.takeDamage(undefined, {
+                            damage_value: damage_value
+                        })
                     }
                 })
             }

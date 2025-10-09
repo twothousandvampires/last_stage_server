@@ -5,8 +5,6 @@ import Item from "./Item";
 
 export default class DevouringAxe extends Item {
 
-    status: any
-
     constructor(){
         super()
         this.chance = 100
@@ -23,19 +21,21 @@ export default class DevouringAxe extends Item {
         character.triggers_on_kill.push(this)
     }
     
-    trigger(character: Character){
+    trigger(character: Character, target = undefined){
         if(this.disabled) return
-        
-        if(this.status != undefined){
-            return
-        }
-        else if(Func.chance(this.chance)){
+        if(!target) return
+
+        if(Func.chance(this.chance)){
+            let exist = character.level.status_pull.find(elem => elem instanceof Devouring && elem.unit === character)
+            
+            if(exist){
+                return
+            }
+
             let s = new Devouring(character.level.time)
             s.setDuration(5000)
-            s.provider = this
-            this.status = s
-
-            character.level.setStatus(character, this.status, true)
+        
+            character.level.setStatus(character, s)
         }
     }
 }

@@ -1,15 +1,16 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
+import EnemyDyingState from "../../../State/EnemyDyingState";
 import Character from "../Character";
 import Enemy from "../Enemy/Enemy";
 
-export default class SpectralSword extends Enemy{
+export default class SpectralSword extends Enemy {
 
     weapon_angle: number
     target: any
     created: number = Date.now()
 
-    constructor(level: Level, private ttl: number = 12000, creator: Character){
+    constructor(level: Level, private ttl: number = 12000, creator: Character) {
         super(level)
         this.name = 'spectral sword'
         this.box_r = 2
@@ -24,50 +25,26 @@ export default class SpectralSword extends Enemy{
         this.phasing = true
         this.player_check_radius = 25
         this.life_status = creator.life_status
-
-        this.getState()
+        this.has_boby = false
     }
 
-    attackAct(){
-        if(this.action && !this.hit){
-            this.hit = true
-    
-            let e = this.getBoxElipse()
-            e.r = this.attack_radius
+    hitImpact(){
+        if(!this.target || !this.attack_angle) return
 
-            if(this.target?.z < 5 && Func.elipseCollision(e, this.target?.getBoxElipse()) && Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle)){
-                this.target?.takeDamage(undefined)
-            }
+        let e = this.getBoxElipse()
+        e.r = this.attack_radius
+
+        if(this.target?.z < 5 && Func.elipseCollision(e, this.target?.getBoxElipse()) && Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle)){
+            this.target?.takeDamage(undefined)
         }
     }
 
-    setAttackState(){
-        this.state = 'attack'
-        this.is_attacking = true
-        this.stateAct = this.attackAct
-        this.action_time = this.attack_speed
-
-        this.attack_angle = Func.angle(this.x, this.y, this.target?.x, this.target.y)
-        this.setImpactTime(85)
-
-        this.cancelAct = () => {
-            this.action = false
-            this.hit = false
-            this.is_attacking = false
-            this.attack_angle = undefined
-        }
-
-        this.setTimerToGetState(this.attack_speed)
-    }
-
-    idleAct(tick: number){
-
-        if(tick - this.created >= this.ttl){
+    checkPlayer(): void {
+        if(this.level.time - this.created >= this.ttl){
             this.is_dead = true
-            this.setdyingAct()
+            this.setState(new EnemyDyingState())
             return
         }
-
         if(this.can_check_player){
            if(!this.target){
                 this.can_check_player = false
@@ -91,31 +68,5 @@ export default class SpectralSword extends Enemy{
                 this.can_check_player = true
            }, 2000)
         }
-       
-        if(!this.target){
-            return
-        } 
-
-        let a_e = this.getBoxElipse()
-        a_e.r = this.attack_radius
-
-        if(Func.elipseCollision(a_e, this.target.getBoxElipse())){
-            this.setState(this.setAttackState)
-        }
-        else{
-            this.moveAct()
-        }
-    }
-
-    setStun(){
-        // immune
-    }
-
-    setZap(){
-        // immune
-    }
-
-    setFreeze(){
-         // immune
     }
 }

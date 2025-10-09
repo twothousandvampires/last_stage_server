@@ -1,6 +1,7 @@
-import EnemyBuilder from "../../../Classes/EnemyBuilder";
+import Func from "../../../Func";
 import Level from "../../../Level";
 import UndeadDeadState from "../../../State/UndeadDeadState";
+import SmallTextLanguage3 from "../../Effects/SmallTextLanguage3";
 import Enemy from "./Enemy";
 
 export default class Undead extends Enemy {
@@ -38,5 +39,15 @@ export default class Undead extends Enemy {
             x: this.x,
             y: this.y
         }
+    }
+
+    public sayPhrase(): void{
+        if(!Func.chance(1)) return
+
+        let phrase = new SmallTextLanguage3(this.level)
+        phrase.z = this.say_z
+        phrase.setPoint(this.x, this.y)
+
+        this.level.effects.push(phrase)
     }
 }

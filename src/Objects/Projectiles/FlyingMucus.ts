@@ -31,7 +31,7 @@ export class FlyingMucus extends Projectiles{
                 if(!p.isBlock()){
                     let s = new EnvelopingMucus(this.level.time)
                     s.setDuration(5500)
-                    this.level.setStatus(p, s)
+                    this.level.setStatus(p, s, true)
                 }
                 else{
                     p.succesefulBlock(this.owner)

@@ -6,6 +6,7 @@ import Effect from "./Effects";
 export default class Teacher extends Effect{
 
     closed: any[] = []
+    ascends: any
     
     constructor(level: Level){
         super(level)
@@ -19,8 +20,7 @@ export default class Teacher extends Effect{
 
     act(time: number){
         this.level.players.forEach(elem => {
-            if(elem.can_generate_upgrades && Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
-
+            if(Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
                 if(this.closed.includes(elem.id)){
                     this.closed = this.closed.filter(elem2 => elem2 != elem.id)
                 }

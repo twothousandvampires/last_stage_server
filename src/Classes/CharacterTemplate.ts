@@ -28,15 +28,17 @@ export default class characterTemplate{
             }
             this.stats_description = {
                 might: `- affects the number of targets hit by your abilities
-                        - affects the chance of not losing courage when receiving damage`,
+                        - affects the chance of not losing courage when receiving damage
+                        - increases pierce rating`,
                 agility: `- increases your attack speed
-                          - reduses penalty of speed when you attacking`,
+                          - reduces penalty of speed when your defend`,
                 knowledge: `- gives a chance to get additional resource and courage
                             - increases status resistance`,
                 will: `- increases your life regeneration rate
                        - increases the chance to skip damage state`,
                 perception: `- increases a block chance
-                             - reduces penalty of speed when your defend`,
+                             - reduses penalty of speed when you attacking
+                             - increases maximum of energy`,
                 durability: `- gives a chance to get a additional life while regen
                              - increases your armour rate`
             }

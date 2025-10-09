@@ -1,9 +1,9 @@
 import Func from "../../Func";
-import Character from "../../Objects/src/Character";
+import IUnitState from "../../Interfaces/IUnitState";
 import Flyer from "../../Objects/src/PlayerClasses/Flyer";
 import FlyerAbility from "./FlyerAbility";
 
-export default class Teleportation extends FlyerAbility {
+export default class Teleportation extends FlyerAbility implements IUnitState{
     
     static TELEPOR_START_STATE: number = 1
     static TELEPOR_OUT_STATE: number = 2
@@ -25,99 +25,98 @@ export default class Teleportation extends FlyerAbility {
     }
 
     use(){
-        this.owner.setState(this.act)
+        this.owner.using_ability = this
+        this.owner.pay_to_cost = this.cost
+        this.owner.setState(this)   
     }
 
-    act(){
-        if(!(this instanceof Character)) return
-        let ability = this.utility
-        if(!(ability instanceof Teleportation)) return
+    enter(unit: Flyer){
+        unit.is_attacking = true
 
-        this.is_attacking = true
-
-        if(!this.pressed.over_x  || !this.pressed.over_y) return
-
-        ability.teleport_x = Math.round(this.pressed.over_x + this.x - 40)
-        ability.teleport_y = Math.round(this.pressed.over_y + this.y - 40)
-
-        if(this.isOutOfMap(ability.teleport_x, ability.teleport_y)){
-            ability.teleport_x = undefined
-            ability.teleport_y = undefined
-            this.is_attacking = false
+        if(!unit.pressed.over_x  || !unit.pressed.over_y){
+            unit.getState()
             return
         }
 
-        this.using_ability = ability
+        this.teleport_x = Math.round(unit.pressed.over_x + unit.x - 40)
+        this.teleport_y = Math.round(unit.pressed.over_y + unit.y - 40)
 
-        this.state = 'teleport start'
-        this.level.addSound('cast', this.x, this.y)
-
-        if(ability.protected){
-            this.can_be_damaged = false
+        if(unit.isOutOfMap(this.teleport_x, this.teleport_y)){
+            unit.getState()
+            return
         }
 
-        this.action_time = this.getCastSpeed()
-        this.setImpactTime(85)
-        
-        this.cancelAct = () => {
-            this.action = false
-            ability.teleport_x = undefined
-            ability.teleport_y = undefined
-            ability.state = Teleportation.TELEPOR_START_STATE
-            this.can_be_damaged = true
-            this.is_attacking = false
-            ability.afterUse()
+        unit.state = 'teleport start'
+        unit.level.addSound('cast', unit.x, unit.y)
+
+        if(this.protected){
+            unit.can_be_damaged = false
         }
 
-        this.stateAct = (tick: number) => {
-            if(this.action_is_end){
-                if(ability.state === Teleportation.TELEPOR_START_STATE){
-                    this.x = 666
-                    this.y = 666
-                    this.can_be_damaged = false
-                    ability.state = Teleportation.TELEPOR_OUT_STATE
-                    ability.out_of_map_start = this.level.time
-                }
-                else if(ability.state === Teleportation.TELEPOR_END_STATE){
-                    let box = this.getBoxElipse()
-                    box.r += 2
-                    
-                    if(ability.increased_gate){
-                        box.r += 8
-                    }
-                    this.can_be_damaged = true
+        unit.action_time = unit.getCastSpeed()
+        unit.setImpactTime(85)
+    }
 
-                    this.level.enemies.forEach((e) => {
-                        if(!e.is_dead && Func.elipseCollision(box, e.getBoxElipse())){
-                            e.takeDamage(this, {
-                                explode: true
-                            })
-                        }
-                    })
-                    this.level.players.forEach((p) => {
-                        if(p != this && !p.is_dead && Func.elipseCollision(box, p.getBoxElipse())){
-                            p.takeDamage(this, {
-                                explode: true
-                            })
-                        }
-                    })
+    exit(unit: Flyer){
+        this.teleport_x = undefined
+        this.teleport_y = undefined
+        this.afterUse()
 
-                    ability.state = 0
-                    ability.teleport_x = undefined
-                    ability.teleport_y = undefined
-                    ability.used = true
-                    this.addCourage()
-                    this.getState()
-                }
+        this.state = Teleportation.TELEPOR_START_STATE
+        unit.can_be_damaged = true
+        unit.is_attacking = false
+        unit.action = false
+        unit.x = 50
+        unit.y = 50
+    }
+
+    update(unit: Flyer){
+        if(unit.action_is_end){
+            if(this.state === Teleportation.TELEPOR_START_STATE){
+                unit.x = 666
+                unit.y = 666
+                unit.can_be_damaged = false
+                this.state = Teleportation.TELEPOR_OUT_STATE
+                this.out_of_map_start = unit.level.time
             }
-            else if(ability.state === Teleportation.TELEPOR_OUT_STATE){
-                if(this.level.time - ability.out_of_map_start >= ability.out_of_map_duration){
-                    this.x = ability.teleport_x
-                    this.y = ability.teleport_y
-                    this.state = 'teleport end'
-                    ability.state = Teleportation.TELEPOR_END_STATE
-                    this.setImpactTime(100)
+            else if(this.state === Teleportation.TELEPOR_END_STATE){
+                let box = unit.getBoxElipse()
+                box.r += 2
+                
+                if(this.increased_gate){
+                    box.r += 8
                 }
+                unit.can_be_damaged = true
+
+                unit.level.enemies.forEach((e) => {
+                    if(!e.is_dead && Func.elipseCollision(box, e.getBoxElipse())){
+                        e.takeDamage(unit, {
+                            explode: true
+                        })
+                    }
+                })
+                unit.level.players.forEach((p) => {
+                    if(p != unit && !p.is_dead && Func.elipseCollision(box, p.getBoxElipse())){
+                        p.takeDamage(unit, {
+                            explode: true
+                        })
+                    }
+                })
+
+                this.state = 0
+                this.used = true
+
+                unit.addCourage()
+                unit.getState()
+            }
+        }
+        else if(this.state === Teleportation.TELEPOR_OUT_STATE){
+            if(unit.level.time - this.out_of_map_start >= this.out_of_map_duration){
+                unit.x = this.teleport_x
+                unit.y = this.teleport_y
+                unit.state = 'teleport end'
+                this.state = Teleportation.TELEPOR_END_STATE
+                unit.setImpactTime(100)
             }
         }
     }

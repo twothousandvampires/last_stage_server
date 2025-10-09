@@ -353,9 +353,21 @@ export default class GameServer{
                     UpgradeManager.holdGrace(client.character)
                 })
 
+                socket.on('hold_ascend', () => {
+                    if(!client.character) return
+
+                    UpgradeManager.holdAscend(client.character)
+                })
+
                 socket.on('exit_grace', () => {
                     if(!client.character) return
                     client.character.exitGrace()
+                })
+
+                socket.on('sacrifice', () => {
+                    if(!client.character) return
+
+                    UpgradeManager.sacrifice(client.character)
                 })
             }
         })

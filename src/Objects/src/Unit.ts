@@ -14,9 +14,11 @@ export default abstract class Unit extends GameObject {
     action_impact: number = 0
     action_end_time: number = 0
     action_is_end: boolean = false
-       
+    has_boby: boolean = true
+    destroyed: boolean = false
     exploded: boolean = false
     burned: boolean = false
+    can_be_instant_killed: boolean = true
     
     weapon_angle: number = 0
     is_corpse: boolean = false
@@ -44,12 +46,17 @@ export default abstract class Unit extends GameObject {
     stunned: boolean = false
     shocked: boolean = false
     zaped: boolean = false
+    critical: number = 0
   
-    fragility: number = 0
+    fragility: boolean = false
     ward: number = 0
     cast_speed: number = 2000
     can_be_damaged: boolean = true
     pierce: number = 0
+    immune_to_freeze = false
+    immune_to_zap = false
+    immune_to_stun = false
+    fortify: number = 0
 
     current_state: IUnitState<Unit> | undefined
     
@@ -204,6 +211,7 @@ export default abstract class Unit extends GameObject {
         if(!duration) return
         if(this.is_dead) return
         if(!this.can_be_damaged) return
+        if(this.immune_to_zap) return
 
         this.setState(new ZapState(duration))
     }
@@ -211,6 +219,7 @@ export default abstract class Unit extends GameObject {
     setStun(duration: number): void{
         if(this.is_dead) return
         if(!this.can_be_damaged) return
+        if(this.immune_to_stun) return
 
         this.setState(new StunnedState(duration))
     }
@@ -218,6 +227,7 @@ export default abstract class Unit extends GameObject {
     setFreeze(duration: number){
         if(this.is_dead) return
         if(!this.can_be_damaged) return
+        if(this.immune_to_freeze) return
 
         if(this instanceof Character){
             if(this.isStatusResist()){
@@ -227,9 +237,5 @@ export default abstract class Unit extends GameObject {
         }
 
         this.setState(new FreezeState(duration))
-    }
-
-    getIdleState(){
-        return new PlayerIdleState()
     }
 }

@@ -4,7 +4,7 @@ import Flyer from "../../Objects/src/PlayerClasses/Flyer";
 import FlyerAbility from "./FlyerAbility";
 
 export default class Fireball extends FlyerAbility {
-    cost: number
+
     body_melting: boolean
     ignite: boolean
 

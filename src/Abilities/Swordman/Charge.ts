@@ -96,17 +96,21 @@ export default class Charge extends SwordmanAbility implements IUnitState<Charac
 
     exit(player: Character){
         clearTimeout(this.end_timeout)
-        player.is_attacking = false
         this.afterUse()
-        player.action = false
         this.start = false
         this.end = false
-        player.succefullCast()
-        player.attack_angle = undefined
-        player.chance_to_avoid_damage_state -= 100
+        
         if(this.possibilities && this.hited.length >= 3){
             player.addResourse()
         }
+
+        player.is_attacking = false
+        player.action = false
+     
+        player.succefullCast()
+        player.attack_angle = undefined
+        player.chance_to_avoid_damage_state -= 100
+        
         this.hited = []
     }
 

@@ -19,7 +19,7 @@ export class SharpedBone extends Projectiles{
             let p = this.level.players[i]
 
             if(!p.is_dead && p.z < this.w && Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
-                p.takeDamage()
+                p.takeDamage(this.owner)
                 this.impact()
                 return
             }

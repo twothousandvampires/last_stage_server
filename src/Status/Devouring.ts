@@ -1,24 +1,23 @@
+import Func from "../Func"
+import Devour from "../Objects/Effects/Devour"
 import Character from "../Objects/src/Character"
 import Exhaustion from "./Exhaustion"
 import Status from "./Status"
 
-export default class Devouring extends Status{
+export default class Devouring extends Status {
    
     name: string
     count: number = 0
-    provider: any
-    
+    last_trigger_time: number = 0
+
     constructor(public time: number){
         super(time)
         this.name = 'devouring'
-        this.need_to_check_resist = true
     }
 
     apply(unit: any){
         this.unit = unit
         if(this.unit instanceof Character){
-            this.unit.triggers_on_kill.push(this)
-
             this.unit.statusWasApplied()
 
             this.unit.newStatus({
@@ -39,31 +38,43 @@ export default class Devouring extends Status{
             s.setDuration(6000)
 
             this.unit.level.setStatus(this.unit, s)
+        }
+    }
 
-            this.provider.status = undefined
+    act(tick_time: number){
+        if(tick_time - this.last_trigger_time >= 1500){
+            this.last_trigger_time = tick_time
+            
+            let targets = this.unit?.level.enemies.filter(elem => elem.is_corpse && Func.distance(this.unit, elem) <= 12)
+            let t = Func.getRandomFromArray(targets)
 
-            this.unit.triggers_on_kill = this.unit.triggers_on_kill.filter(elem => elem != this)
+            if(t){
+                this.unit?.level.deleted.push(t.id)
+                this.unit?.level.removeEnemy(t)
+
+                let e = new Devour(this.unit?.level)
+                e.setPoint(t.x, t.y)
+
+                this.unit?.level.effects.push(e)
+
+                this.update(undefined)
+            }
         }
     }
 
     update(status: any){
+        if(!this.unit) return
         this.time = Date.now()
+    
+        this.count ++
+        this.unit.move_speed_penalty += 1
+        this.unit.attack_speed -= 10
+        this.unit.cast_speed -= 10
 
         this.unit.newStatus({
             name: 'devouring',
             duration: this.duration,
             desc: '?'
         })
-    }
-
-    trigger(){
-        if(!this.unit) return
-
-        this.count ++
-        this.unit.move_speed_penalty += 1
-        this.unit.attack_speed -= 10
-        this.unit.cast_speed -= 10
-
-        this.update(this)
     }
 }

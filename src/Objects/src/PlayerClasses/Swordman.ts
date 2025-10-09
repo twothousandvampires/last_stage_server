@@ -20,6 +20,7 @@ import Upgrades from "../../../Classes/Upgrades";
 import InnerPowerTrigger from "../../../Triggers/InnerPowerTrigger";
 import HeavenIntervention from "../../../Triggers/HeavenIntervention";
 import HeavenWrath from "../../../Abilities/Swordman/HeavenWrath";
+import Upgrade from "../../../Types/Upgrade";
 
 export default class Swordman extends Character{
     
@@ -40,7 +41,7 @@ export default class Swordman extends Character{
         super(level)
 
         this.weapon_angle = 0.8
-        this.attack_radius = 7
+        this.attack_radius = 8
         this.attack_speed = 1400
         this.name = 'swordman'
         this.move_speed = 0.5
@@ -118,6 +119,15 @@ export default class Swordman extends Character{
         },3000)
 
         this.level.addSound('enlight', this.x, this.y)
+        this.playerWasEnlighted()
+    }
+
+    applyStats(stats: any){
+        for(let stat in stats){
+            this[stat] = stats[stat]
+        }
+
+        this.maximum_resources += this.perception
     }
 
     createAbilities(abilities: any){
@@ -315,33 +325,49 @@ export default class Swordman extends Character{
         return this.base_regeneration_time - this.will * 150
     }
 
+    getPierce(){
+        return this.pierce + this.might
+    }
+
     generateUpgrades(){
+        if(!this.can_generate_upgrades) return
         if(this.upgrades.length) return
 
         //get all upgrades for this class
         let p = Upgrades.getAllUpgrades()
-        let all = Upgrades.getSwordmanUpgrades().concat(p)
+        let all: Upgrade[] = Upgrades.getSwordmanUpgrades().concat(p)
        
         //filter by usability
         let filtered = all.filter(elem => {
-           return elem.cost <= this.grace && elem.canUse(this)
+           return (!elem.ascend || this.ascend_level >= elem.ascend) && elem.cost <= this.grace && elem.canUse(this)
         })
-        //get 3 random ones
 
-        filtered.sort((a, b) =>  { return Math.random() > 0.5 ? 1 : -1 })
+        filtered.forEach(elem => {
+            if(elem.ascend === undefined){
+                elem.ascend = 0
+            }
+        })
 
-        filtered = filtered.slice(0, 3)
-        
-        //add to this.upgrades
+        filtered.sort((a, b) =>  { return (b.cost + b.ascend) - (a.cost + a.ascend)})
 
-        this.upgrades = this.upgrades.concat(filtered)
+        let part_size = Math.ceil(filtered.length / 3);
+
+        let part1 = filtered.slice(0, part_size);
+        let part2 = filtered.slice(part_size, part_size * 2);
+        let part3 = filtered.slice(part_size * 2);
+
+        this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part1))
+        this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part2))
+        this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part3))
+
+        this.upgrades = this.upgrades.filter(elem => elem)
     }
 
     startGame(){
         let time = Date.now()
         this.equipItems()
         this.next_life_regen_time = time + this.getRegenTimer()
-        this.check_recent_hits_timer = time + 1000 
+        this.check_recent_hits_timer = time + 1000
     }
 
     getSecondResourceTimer(){
@@ -400,7 +426,7 @@ export default class Swordman extends Character{
     }
 
     getMoveSpeedPenaltyValue(){
-        return 70 - (this.agility * 3)
+        return 70 - (this.perception * 3)
     }
 
     getAttackSpeed() {
@@ -438,12 +464,11 @@ export default class Swordman extends Character{
 
     addPoint(count: number = 1, ignore_limit = false){
         if(this.energy_by_hit_added) return
+        this.playerGetResourse()
 
         if(this.resource >= this.maximum_resources){
             return
         }
-
-        this.playerGetResourse()
 
         if(Func.chance(this.knowledge * 4, this.is_lucky)){
             count ++
@@ -463,7 +488,7 @@ export default class Swordman extends Character{
 
         this.triggers_on_start_block.forEach(elem => elem.trigger(this))
     
-        let reduce = 80 - this.perception * 5
+        let reduce = 80 - this.agility * 5
         if(reduce < 0){
             reduce = 0
         }

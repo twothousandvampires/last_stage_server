@@ -6,6 +6,7 @@ import Forging from "./Forging";
 export default class LightningWhenUseSkill extends Forging {
 
     value: number = 0
+    trigger: any = undefined
    
     constructor(item: Item){
         super(item)
@@ -17,17 +18,11 @@ export default class LightningWhenUseSkill extends Forging {
 
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
-            let trigger = player.triggers_on_use_not_utility.find(elem => elem instanceof LightningWhenUseAbilityTrigger)
-
-            if(trigger){
-                trigger.chance += 3
+            if(!this.trigger){
+                this.trigger = new LightningWhenUseAbilityTrigger()
+                player.triggers_on_use_not_utility.push(this.trigger)
             }
-            else{
-                let t = new LightningWhenUseAbilityTrigger()
-                t.chance = 3
-
-                player.triggers_on_use_not_utility.push(t)
-            }
+            this.trigger.chance += 5
            
             this.payCost()
             this.value += 5

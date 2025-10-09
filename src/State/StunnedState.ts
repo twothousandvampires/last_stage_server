@@ -23,7 +23,7 @@ export default class StunnedState implements IUnitState<Unit>{
 
     update(unit: Unit){
         if(unit.level.time - this.start >= this.duration){
-            unit.setState(unit.getIdleState())
+            unit.getState()
         }
     }
 

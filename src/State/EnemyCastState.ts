@@ -4,10 +4,12 @@ import Enemy from "../Objects/src/Enemy/Enemy";
 
 export default class EnemyCastState implements IUnitState<Enemy>{
 
+    was_invisible = false
+
     enter(enemy: Enemy){
-        enemy.state = 'attack'
+        enemy.state = enemy.getCastStateString()
         enemy.is_attacking = true
-        enemy.action_time = enemy.attack_speed
+        enemy.action_time = enemy.cast_speed
 
         if(enemy.target){
             enemy.hit_x = enemy.target.x
@@ -16,6 +18,10 @@ export default class EnemyCastState implements IUnitState<Enemy>{
         }
         
         enemy.setImpactTime(80)
+
+        this.was_invisible = enemy.invisible
+
+        enemy.invisible = false
     }
 
     update(enemy: Enemy){
@@ -36,5 +42,7 @@ export default class EnemyCastState implements IUnitState<Enemy>{
         enemy.hit = false
         enemy.is_attacking = false
         enemy.attack_angle = undefined
+
+        enemy.invisible = this.was_invisible
     }
 }

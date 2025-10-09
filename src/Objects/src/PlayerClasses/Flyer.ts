@@ -12,6 +12,7 @@ import Upgrades from "../../../Classes/Upgrades";
 import Func from "../../../Func";
 import Level from "../../../Level";
 import FlyerDefendState from "../../../State/FlyerDefendState";
+import Upgrade from "../../../Types/Upgrade";
 import Armour from "../../Effects/Armour";
 import Blood from "../../Effects/Blood";
 import ToothExplode from "../../Effects/ToothExplode";
@@ -58,21 +59,30 @@ export default class Flyer extends Character{
         return new FlyerDefendState()
     }
 
-    generateUpgrades(){
+    generateUpgrades(ascend_level: number){
+        if(!this.can_generate_upgrades) return
         if(this.upgrades.length) return
 
         //get all upgrades for this class
         let p = Upgrades.getAllUpgrades()
-        let all = Upgrades.getFlyerUpgrades().concat(p)
-        
+        let all: Upgrade[] = Upgrades.getFlyerUpgrades().concat(p)
+       
         //filter by usability
         let filtered = all.filter(elem => {
-           return elem.cost <= this.grace && elem.canUse(this)
+            return (!elem.ascend || this.ascend_level >= elem.ascend) && elem.cost <= this.grace && elem.canUse(this)
         })
+
+        filtered.forEach(elem => {
+            if(elem.ascend === undefined){
+                elem.ascend = 0
+            }
+        })
+
+        filtered.sort((a, b) =>  { return (b.cost + b.ascend) - (a.cost + a.ascend)})
 
         //get 3 random ones
 
-        filtered.sort((a, b) =>  { return Math.random() > 0.5 ? 1 : -1 })
+        filtered.sort((a, b) =>  { return Func.chance(60) ? 1 : -1 })
 
         filtered = filtered.slice(0, 3)
 

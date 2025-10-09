@@ -24,6 +24,7 @@ export default class Slime extends Enemy {
         this.abilities = [ 
             new FlyingMucusAbility()
         ]
+        this.has_boby = false
     }
 
     afterDead(): void {
@@ -33,7 +34,7 @@ export default class Slime extends Enemy {
         this.level.binded_effects.push(e)
     }
 
-    attackAct(){
+    hitImpact(){
         if(this.target && this.attack_angle){
             let e = this.getBoxElipse()
             e.r = this.attack_radius

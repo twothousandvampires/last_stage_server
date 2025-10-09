@@ -2,6 +2,7 @@ import Func from "../Func";
 import IUnitState from "../Interfaces/IUnitState";
 import Enemy from "../Objects/src/Enemy/Enemy";
 import EnemyAttackState from "./EnemyAttackState";
+import EnemyCastState from "./EnemyCastState";
 import EnemyRetreatState from "./EnemyRetreatState";
 
 export default class EnemyRangeIdleState implements IUnitState<Enemy>{
@@ -24,14 +25,16 @@ export default class EnemyRangeIdleState implements IUnitState<Enemy>{
             this.last_desicion = enemy.level.time
             let distance = Func.distance(enemy, enemy.target)
 
-            if(distance <= enemy.retreat_distance && Func.chance(25)){
-                
-            }
-            else if(distance <= enemy.retreat_distance && Func.chance(25)){
+            if(distance <= enemy.retreat_distance && Func.chance(35)){
                 enemy.setState(new EnemyRetreatState())
             }
             else if(enemy.enemyCanAtack()){
-                enemy.setState(new EnemyAttackState())
+                if(enemy.isAbilityToUse()){
+                    enemy.setState(new EnemyCastState())
+                }
+                else{
+                    enemy.setState(new EnemyAttackState())
+                }        
             }
         }
     }

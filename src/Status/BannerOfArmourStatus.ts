@@ -9,9 +9,11 @@ export default class BannerOfArmourStatus extends Status{
     apply(unit: any){
         this.unit = unit
         unit.armour_rate += 15
+        unit.fortify += 10
     }
 
     clear(): void {
         this.unit.armour_rate -= 15
+        this.unit.fortify -= 10
     }
 }

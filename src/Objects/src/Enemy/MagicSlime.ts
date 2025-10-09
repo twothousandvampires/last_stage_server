@@ -1,16 +1,12 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
+import EnemyRangeIdleState from "../../../State/EnemyRangeIdleState";
 import MentalCorrosion from "../../../Status/MentalCorrosion";
 import PuddleOfStream from "../../Effects/PuddleOfStream";
 import { EnemyLightning } from "../../Projectiles/EnemyLightning";
 import Enemy from "./Enemy";
 
 export default class MagicSlime extends Enemy {
-
-    weapon_angle: number
-    retreat_angle: number | undefined = undefined
-    retreat_distance: number = 8
-    attack_cd: number = 4000
 
     constructor(level: Level){
         
@@ -28,6 +24,7 @@ export default class MagicSlime extends Enemy {
         this.player_check_radius = 25
         this.create_item_chance = 1
         this.create_sorcerers_skull_chance = 10
+        this.retreat_distance = 12
     }
 
     afterDead(){
@@ -47,7 +44,7 @@ export default class MagicSlime extends Enemy {
         }
     }
 
-    attackAct(){
+    hitImpact(){
         if(this.action && !this.hit && this.target){
             this.hit = true
                 
@@ -69,23 +66,7 @@ export default class MagicSlime extends Enemy {
         }
     }
 
-    idleAct(tick: number){
-        this.checkPlayer()
-        
-        if(!this.target){
-            return
-        } 
-
-        if(Func.distance(this, this.target) <= 12 && Func.chance(70)){
-            this.setState(this.setIdleAct)
-        }
-
-        else if(Func.distance(this, this.target) <= 8 && Func.chance(50)){
-            this.setState(this.setRetreatState)
-        }
-
-        else if(this.enemyCanAtack(tick) && Func.distance(this, this.target) <= this.player_check_radius){
-            this.setState(this.setAttackState)
-        }
+    getIdleStateInstance(){
+        return new EnemyRangeIdleState()
     }
 }

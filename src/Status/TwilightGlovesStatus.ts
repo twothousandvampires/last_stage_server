@@ -56,7 +56,7 @@ export default class TwilightGlovesStatus extends Status{
         let b = this.unit.getBoxElipse()
         b.r = this.item.distance
 
-        let t = this.unit?.level.enemies.filter(elem => Func.elipseCollision(elem.getBoxElipse(), b))
+        let t = this.unit?.level.enemies.filter(elem => !elem.is_dead && Func.elipseCollision(elem.getBoxElipse(), b))
 
         if(t && t.length){
             for(let i = 0; i < count; i++){

@@ -1,7 +1,7 @@
 import Level from "../../Level";
 import Effect from "./Effects";
 
-export default class ElementalEnchantedEffect extends Effect{
+export default class ElementalEnchantedEffect extends Effect {
     x: any
     y: any
   

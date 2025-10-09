@@ -1,4 +1,5 @@
 import Func from "../../Func";
+import IUnitState from "../../Interfaces/IUnitState";
 import Blood from "../../Objects/Effects/Blood";
 import BloodSphere from "../../Objects/Effects/BloodSphere";
 import { ThrowedWeapon } from "../../Objects/Projectiles/ThrowedWeapon";
@@ -7,7 +8,7 @@ import Ability from "../Ability";
 import SwordmanAbility from "./SwordmanAbility";
 import WeaponThrow from "./WeaponThrow";
 
-export default class Whirlwind extends SwordmanAbility {
+export default class Whirlwind extends SwordmanAbility implements IUnitState<Swordman> {
     cost: number
     blood_harvest: boolean
     fan_of_swords: boolean
@@ -102,55 +103,53 @@ export default class Whirlwind extends SwordmanAbility {
         }
     }
 
-    use(echo = false){
-        if(this.owner.is_attacking && !echo) return
+    enter(player: Swordman){
+        player.prepareToAction()
+        player.state = 'swing'
 
-        let action_time = this.owner.getAttackSpeed() / 2
-
-        if(!echo){
-            this.owner.pay_to_cost = this.cost
-            this.owner.is_attacking = true
-            this.owner.state = 'swing'
-
-            this.owner.stateAct = this.act
-            this.owner.action_time = action_time
-            
-            this.courage_when_use = this.owner.getSecondResource()
-
-            this.owner.cancelAct = () => {
-                this.owner.is_attacking = false
-                this.owner.action = false
-                this.owner.hit = false
-                this.courage_when_use = 0
-            }
-        }
-        else{
-            this.owner.hit = false
-            this.owner.action = false
-        }
-        this.owner.setImpactTime(50)  
+        let action_time = player.getAttackSpeed() / 2
+        player.action_time = action_time
+        player.setImpactTime(70)
+        
+        this.courage_when_use = player.getSecondResource()
     }
 
-    act(){
-        if(this.action && !this.hit){
-            this.third_ability.impact()
+    update(unit: Swordman): void {
+        if(unit.action && !unit.hit){
+            this.impact()
+            unit.hit = true
         }
-        else if(this.action_is_end){
-            this.action_is_end = false
-            
-            let proc = this.third_ability.courage_when_use * 7
+        else if(unit.action_is_end){
+            unit.action_is_end = false
+    
+            let proc = this.courage_when_use * 7
 
             if(proc > 80){
                 proc = 80
             }
-             if(Func.chance(proc)){
-                this.third_ability.use(true)
-             }
-             else{
-                this.succefullCast()
-                this.payCost()
-                this.getState() 
-             }
+            if(Func.chance(proc)){
+                unit.hit = false
+                unit.action = false
+                unit.setImpactTime(70)
+            }
+            else{
+                unit.succefullCast()
+                unit.payCost()
+                unit.getState() 
+            }
         }
+    }
+
+    exit(unit: Swordman): void {
+        unit.is_attacking = false
+        unit.action = false
+        unit.hit = false
+        this.courage_when_use = 0
+    }
+
+    use(){
+        this.owner.using_ability = this
+        this.owner.pay_to_cost = this.cost
+        this.owner.setState(this)
     }
 }

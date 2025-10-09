@@ -1,12 +1,10 @@
+import SoulSeekers from "../../../EnemyAbilities.ts/SoulSeekers";
+import SoulVortex from "../../../EnemyAbilities.ts/SoulVortex";
 import Func from "../../../Func";
 import Level from "../../../Level";
-import SmallTextLanguage3 from "../../Effects/SmallTextLanguage3";
-import SpecterVortex from "../../Effects/SpecterVortex";
-import { SpecterSoulSeeker } from "../../Projectiles/SpecterSoulSeeker";
-import Enemy from "./Enemy";
-import Skull from "./Skull";
+import Undead from "./Undead";
 
-export default class Specter extends Enemy{
+export default class Specter extends Undead{
 
     ressurect_chance: number
     want_to_cast: boolean
@@ -33,84 +31,26 @@ export default class Specter extends Enemy{
         this.create_chance = 90
         this.gold_revard = 5
         this.create_item_chance = 6
+
+        this.abilities = [
+            new SoulVortex(),
+            new SoulSeekers()
+        ]
     }
 
-    takeDamage(unit: any = undefined, options: any = {}){
-        super.takeDamage(unit, options)
-
-        if(this.life_status <= 0 && unit?.blessed){
-            this.ressurect_chance = Math.round(this.ressurect_chance / 2)
-        }
+    getCastStateString(){
+        return 'cast'
     }
 
-    setDeadState(){
-        if(Func.notChance(this.ressurect_chance)){
-            this.is_corpse = true
-            this.state = 'dead'
-            this.stateAct = this.deadAct
-            let skull = new Skull(this.level)
-            skull.setPoint(this.x, this.y)
-
-            this.level.enemies.push(skull)
-        }
-        else{
-            this.state = 'dead_with_skull'
-            this.stateAct = this.deadAct
-            this.ressurect_chance -= 5
-            setTimeout(() => {
-                this.setState(this.setResurectAct)
-            }, 3000)
-        }
-    }
-
-    public sayPhrase(): void{
-        if(!Func.chance(1)) return
-
-        let phrase = new SmallTextLanguage3(this.level)
-        phrase.z = 12
-        phrase.setPoint(this.x, this.y)
-
-        this.level.effects.push(phrase)
-    }
-
-    getWeaponHitedSound(){
-        return  {
-            name: 'hit bones',
-            x:this.x,
-            y:this.y
-        }
-    }
-
-    ressurectAct(){
-
-    }
-
-    setResurectAct(){
-        this.state = 'ressurect'
-        this.stateAct = this.ressurectAct
-        this.phasing = false
-        setTimeout(() => {
-            this.is_dead = false
-            this.getState()
-        }, 1500)
-    }
-
-    getExplodedSound(){
-        return {
-            name: 'bones explode',
-            x: this.x,
-            y: this.y
-        }
-    }
-
-    attackAct(){
-        if(this.action && !this.hit && this.target && this.attack_angle){
-            this.hit = true
+    hitImpact(){
+        if(this.target && this.attack_angle){
+        
             this.level.sounds.push({
                 x: this.x,
                 y: this.y,
                 name: 'specter attack'
             })
+
             let e = this.getBoxElipse()
             e.r = this.attack_radius
 
@@ -119,130 +59,4 @@ export default class Specter extends Enemy{
             }
         }
     }
-
-    setAttackState(){
-        this.state = 'attack'
-        this.is_attacking = true
-        this.stateAct = this.attackAct
-        this.action_time = this.attack_speed
-        this.setImpactTime(90)
-
-        this.attack_angle = Func.angle(this.x, this.y, this.target?.x, this.target?.y)
-
-        this.cancelAct = () => {
-            this.action = false
-            this.hit = false
-            this.is_attacking = false
-            this.attack_angle = undefined
-        }
-
-        this.setTimerToGetState(this.attack_speed)
-    }
-
-    idleAct(tick: number){
-        this.checkPlayer()
-       
-        if(!this.target){
-            return
-        } 
-
-        this.spell_name = undefined
-        
-        if(this.want_to_cast){
-            this.want_to_cast = false
-            let d = Func.distance(this, this.target)
-            if(this.can_cast_vortex && d <= 12 && d > 5){
-                this.spell_name = 'vortex'
-                this.can_cast_vortex = false
-                setTimeout(() => {
-                    this.can_cast_vortex = true
-                }, 20000)
-            }
-            else if(this.can_cast_seekers && d <= 30 && d > 5){
-                this.spell_name = 'soul seekers'
-                this.can_cast_seekers = false
-                setTimeout(() => {
-                    this.can_cast_seekers = true
-                }, 25000)
-            }
-           
-            setTimeout(() => {
-                this.want_to_cast = true
-            }, Func.random(6000, 12000))
-        }
-
-        if(this.spell_name){
-            this.setState(this.setCastState)
-          
-        }
-        else{
-            let a_e = this.getBoxElipse()
-            a_e.r = this.attack_radius
-
-            if(Func.elipseCollision(a_e, this.target.getBoxElipse())){
-                if (this.enemyCanAtack(tick)){
-                    this.setState(this.setAttackState)
-                }
-                else{
-                    this.setState(this.setIdleAct)
-                }
-            }
-            else{
-                this.moveAct()
-            }
-        }
-    }
-
-      setCastState(){
-        this.state = 'cast'
-        this.is_attacking = true
-        this.stateAct = this.castAct
-        this.action_time = 2000
-
-        this.cancelAct = () => {
-            this.action = false
-            this.is_attacking = false
-        }
-
-        this.setTimerToGetState(2000)
-    }
-
-    castAct(){
-            if(this.action && !this.hit){
-                this.hit = true
-
-                if(!this.target) return
-
-                this.level.sounds.push({
-                        name:'dark cast',
-                        x: this.x,
-                        y: this.y
-                })
-    
-                if(this.spell_name === 'vortex'){
-                    let vortex = new SpecterVortex(this.level)
-                    vortex.setOwner(this)
-                    vortex.setPoint(this.x, this.y)
-
-                    this.level.binded_effects.push(vortex)
-                }
-                else if(this.spell_name === 'soul seekers'){
-                    let c = 8
-                    let zones = 6.28 / c
-                    
-                    for(let i = 1; i <= c; i++){
-                        let min_a = (i - 1) * zones
-                        let max_a = i * zones
-            
-                        let angle = Math.random() * (max_a - min_a) + min_a
-                        let proj = new SpecterSoulSeeker(this.level)
-                        proj.setAngle(angle)
-                        proj.setPoint(this.x, this.y)
-                        proj.setOwner(this)
-            
-                        this.level.projectiles.push(proj)
-                    }
-                }        
-            }
-        }
 }

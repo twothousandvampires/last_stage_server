@@ -176,7 +176,8 @@ export default abstract class Item {
         'durability',
         'instant kill',
         'when critical',
-        'ignite when hit'
+        'ignite when hit',
+        'frost shpere when kill'
     ]
 
     static forging_list_type_2 = [
@@ -186,7 +187,8 @@ export default abstract class Item {
         'regen time',
         'block chance',
         'when hit',
-        'freeze when hited'
+        'freeze when hited',
+        'sparks when block'
     ]
     
     static forging_list_type_3 = [
@@ -197,7 +199,8 @@ export default abstract class Item {
         'cooldown reduction',
         'blessed life',
         'cast speed',
-        'lightning when use skill'
+        'lightning when use skill',
+        'overcharge'
     ]
 
 

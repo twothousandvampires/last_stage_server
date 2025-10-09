@@ -28,6 +28,7 @@ export default class Solid extends Enemy{
         this.gold_revard = 4
         this.create_item_chance = 2
         this.dying_time = 1200
+        this.dead_time = 1200
     }
 
     getDeadStateInstance() {
@@ -48,7 +49,7 @@ export default class Solid extends Enemy{
         this.level.addSound('ground hit', e.x, e.y)
         this.level.players.forEach(p => {
             if(p?.z < 5 && Func.elipseCollision(e, p?.getBoxElipse())){
-                p.takeDamage()
+                p.takeDamage(this, {})
                 if(Func.chance(50)){
                     let s = new Crushed(this.level.time)
                     s.setDuration(6000)

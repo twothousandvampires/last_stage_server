@@ -1,7 +1,9 @@
 import Character from "../Objects/src/Character"
 import Status from "./Status"
 
-export default class Fortify extends Status{
+export default class Fortify extends Status {
+
+    power: number | undefined = 10
 
     constructor(public time: number){
         super(time)
@@ -10,30 +12,34 @@ export default class Fortify extends Status{
 
     apply(unit: any){
         this.unit = unit
-        if(this.unit instanceof Character){
-            this.unit.armour_rate += 15
+        this.unit.fortify += this.power
 
+        if(this.unit instanceof Character){
             this.unit.newStatus({
-                name: 'fortify ',
+                name: 'fortify',
                 duration: this.duration,
-                desc: 'armour is increased by 15'
+                desc: 'you have a chance to get half damage (' + this.power +'%)'
             })
         }
     }
 
     clear(){
-        if(this.unit instanceof Character){
-            this.unit.armour_rate -= 15
-        }
+        this.unit.fortify -= this.power
     }
 
     update(status: any){
         this.time = Date.now()
-        
-        this.unit.newStatus({
-            name: 'fortify',
-            duration: this.duration,
-             desc: 'armour is increased by 15'
-        })
+
+        this.power += status.power
+        this.unit.fortify += status.power
+
+        if(this.unit instanceof Character){
+             this.unit.newStatus({
+                name: 'fortify',
+                duration: this.duration,
+                desc: 'you have a chance to get half damage (' + this.power +'%)'
+            })
+        }
+       
     }
 }

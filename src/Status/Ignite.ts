@@ -50,7 +50,7 @@ export default class Ignite extends Status{
             this.last_checked += 1000
             if(Func.chance(this.power)){
                 this.unit?.takeDamage(undefined, {
-                    burn: true
+                    burn: true,
                 })
             }
         }

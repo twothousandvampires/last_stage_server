@@ -19,5 +19,10 @@ export default abstract class Scenario{
             this.map.shift()
         }
     }
+
     abstract start(level: Level): void
+
+    getInfo(){
+        return false
+    }
 }

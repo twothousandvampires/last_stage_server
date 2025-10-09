@@ -10,7 +10,6 @@ import PlayerDeadState from "../../State/PlayerDeadState"
 import PlayerDefendState from "../../State/PlayerDefendState"
 import PlayerDyingState from "../../State/PlayerDyingState"
 import PlayerIdleState from "../../State/PlayerIdleState"
-import StunnedState from "../../State/StunnedState"
 import Status from "../../Status/Status"
 import Sound from "../../Types/Sound"
 import Upgrade from "../../Types/Upgrade"
@@ -18,7 +17,7 @@ import Effect from "../Effects/Effects"
 import Grace from "../Effects/Grace"
 import SmallTextLanguage1 from "../Effects/SmallTextLanguage1"
 import Ward from "../Effects/Ward"
-import { Enemy } from "./Enemy/Enemy"
+import Enemy from "./Enemy/Enemy"
 import Unit from "./Unit"
 
 export default abstract class Character extends Unit {
@@ -54,6 +53,7 @@ export default abstract class Character extends Unit {
     durability: number = 0
     might: number = 0
 
+    enlight_timer: number = 25000
     base_regeneration_time: number = 10000
     grace: number = 1
     voice_radius: number = 20
@@ -66,7 +66,6 @@ export default abstract class Character extends Unit {
     impact: number = 0
     impact_cooldown: number = 2000 
     cast_speed: number = 2000
-    critical: number = 0
     status_resistance: number = 5
     spirit: number = 0
 
@@ -74,6 +73,7 @@ export default abstract class Character extends Unit {
     steps: boolean = true
     lust_for_life: boolean = false
     blessed: boolean = false
+    spirit_strikes: boolean = false
      
     triggers_on_kill: any[] = []
     triggers_on_hit: any[] = []
@@ -93,6 +93,8 @@ export default abstract class Character extends Unit {
     triggers_on_pierce: any = []
     triggers_on_armour_hit: any = []
     triggers_on_critical: any[] = []
+    triggers_on_enlight: any[] = []
+    triggers_on_impact: any[] = []
 
     chance_to_instant_kill: number = 0
     chance_to_avoid_damage_state: number = 0
@@ -114,6 +116,7 @@ export default abstract class Character extends Unit {
     can_cast: boolean = true
     can_block: boolean = true
     can_ressurect: boolean = false
+    ascend_level: number = 0
 
     current_state: IUnitState<Character> | undefined
 
@@ -154,12 +157,20 @@ export default abstract class Character extends Unit {
         this.triggers_on_pierce.forEach(elem => elem.trigger(this, enemy))
     }
 
+    impactHit(enemy: any = undefined, impact_damage: number = 1){
+        this.triggers_on_impact.forEach(elem => elem.trigger(this, enemy, impact_damage))
+    }
+
     playerGetResourse(){
         this.triggers_on_get_energy.forEach(elem => elem.trigger(this))
     }
 
     getCastSpeed(){
         return this.cast_speed
+    }
+
+    getPierce(){
+        return this.pierce
     }
 
     succesefulArmourBlock(target: Unit){
@@ -173,6 +184,16 @@ export default abstract class Character extends Unit {
 
         this.last_time_the_skill_was_used = this.level.time
         this.sayPhrase()
+    }
+
+    getImpactRating(){
+        let base = this.impact
+
+        if(this.spirit_strikes){
+            base += this.ward
+        }
+
+        return base
     }
 
     toJSON(){
@@ -228,7 +249,13 @@ export default abstract class Character extends Unit {
     }
 
     protected getEnlightenTimer(): number{
-        return 20000
+        return this.enlight_timer
+    }
+
+    playerWasEnlighted(){
+        this.triggers_on_enlight.forEach(elem => {
+            elem.trigger(this)
+        })
     }
 
     protected payCost(): void {
@@ -270,8 +297,10 @@ export default abstract class Character extends Unit {
         return this.attack_speed
     }
 
-    public takePureDamage(): void{
-        this.subLife(undefined, undefined)
+    public takePureDamage(value: number = 1): void{
+        this.subLife(undefined, {
+            damage_value: value
+        })
     }
 
     public removeUpgrades(): void{
@@ -310,10 +339,14 @@ export default abstract class Character extends Unit {
         if(!upgrade) return
 
         upgrade.teach(this)
-
+        
         this.grace -= upgrade.cost
         this.spend_grace = true
 
+        if(upgrade.cost && this.can_generate_upgrades){
+            this.ascend_level ++
+        }
+       
         this.level.addSound('upgrade', this.x, this.y)
         
         this.removeUpgrades()
@@ -422,12 +455,23 @@ export default abstract class Character extends Unit {
             value = options.damage_value
         }
        
-        if(unit && unit.pierce > this.getTotalArmour() && Func.chance(this.getTotalArmour() - unit.pierce)){
+        if(unit && unit.pierce > this.getTotalArmour() && Func.chance(unit.pierce - this.getTotalArmour())){
+            console.log('player was pierced')
             value = 2
         }
 
-        if(Func.notChance(100 - this.fragility, this.is_lucky)){
+        if(unit && Func.chance(unit.critical)){
+            console.log('player was critical')
             value *= 2
+        }
+
+        if(this.fragility){
+            console.log('player was fragle')
+            value *= 2
+        }
+        
+        if(this.fortify && Func.chance(this.fortify)){
+            value --
         }
 
         for(let i = 0; i < value; i++){

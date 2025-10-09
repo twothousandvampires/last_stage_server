@@ -76,8 +76,91 @@ import Spirit from "../Items/Forgings/Spirit"
 import FreezeWhenHited from "../Items/Forgings/FreezeWhenHited"
 import LightningWhenUseSkill from "../Items/Forgings/LightningWhenUseSkill"
 import DevouringAxe from "../Items/DevouringAxe"
+import FrostShpereWhenKill from "../Items/Forgings/FrostShpereWhenKill"
+import SparksWhenBlock from "../Items/Forgings/SparksWhenBlock"
+import Overcharge from "../Items/Forgings/Overcharge"
 
 export default class Builder{
+
+    static itemMap = {
+        'skull of first warrior': SkullOfFirstWarrior,
+        'glacial chain': GlacialChain,
+        'red potion': RedPotion,
+        'soul accumulator': SoulAccumulator,
+        'doom mantia': DoomMantia,  
+        'wall of bones': WallOfBones,
+        'flame ring': FlameRing,
+        'sparkling helmet': SparklingHelmet,
+        'glass sword': GlassSword,
+        'cloak': Cloak,
+        'staff': Staff,
+        'charged bow': ChargedBow,
+        'dagger of smoke': DaggerOfSmoke,
+        'yellow stone': YellowStone,
+        'white shield': WhiteShield,
+        'emerald knife': EmeraldKnife,
+        'whispering shield': WhisperingShield,
+        'twilight gloves': TwilightGloves,
+        'ring of transmutation': RingOfTransmutation,
+        'sword handle': SwordHandle,
+        'ice belt': IceBelt,
+        'searching heart': SearchingHeart,
+        'charged armour': ChargedArmour,
+        'molten helm': MoltenHelm,
+        'soul blade': SoulBlade,
+        'solar spear': SolarSpear,
+        'crystal greaves': CrystalGreaves,
+        'flying shards': FlyingShards,
+        'pale blade': PaleBlade,
+        'crossbow': Crossbow,
+        'royal mace': RoyalMace,
+        'devouring axe': DevouringAxe
+    }
+    
+    static forgingMap ={
+        'attack speed': AttackSpeed,
+        'armour rate': ArmourRate,
+        'block chance': BlockChance,
+        'bones when block': BonesWhenBlock, 
+        'cast speed': CastSpeed,
+        'chance': Chance,
+        'charisma': Charisma,
+        'cooldown reduction': CooldownReduction,
+        'count': Count,
+        'critical': Critical,
+        'distance': Distance,
+        'dominance when critical': DominanceWhenCritical,
+        'durability': Durability,
+        'duration': Duration,
+        'fortify when hit': FortifyWhenHit,
+        'frequency': Frequency,
+        'gold find': GoldFind,
+        'ignite when hit': IgniteWhenHit,   
+        'impact': Impact,
+        'instant kill': InstantKill,
+        'knowledge': Knowledge,
+        'max life': MaxLIfe,
+        'max resources': MaxResource,
+        'might': Might,
+        'nova when hit': NovaThenHit,
+        'penetrating': Penetrating,
+        'pierce': Pierce,
+        'regen time': Regen,
+        'resist': Resist,
+        'sacredness': Sacredness,
+        'shock nova when armour': ShockNovaWhenArmour,
+        'stun when hit': StunWhenHit,
+        'toughness': Toughness,
+        'will': Will,
+        'agility': Agility,
+        'spirit': Spirit,
+        'freeze when hited': FreezeWhenHited,
+        'lightning when use skill': LightningWhenUseSkill,
+        'frost shpere when kill': FrostShpereWhenKill,
+        'sparks when block': SparksWhenBlock,
+        'overcharge': Overcharge
+    }
+
     static createCharacter(client: Client, level: Level): Character{
         let template = client.template
         let character = undefined
@@ -110,186 +193,24 @@ export default class Builder{
     }
 
     static createItem(item_name: string): Item{
-        if(item_name === 'skull of first warrior'){
-            return new SkullOfFirstWarrior()
+        let ItemClass = Builder.itemMap[item_name.toLowerCase()]
+
+        if(ItemClass){
+            return new ItemClass()
         }
-        else if(item_name === 'glacial chain'){
+        else{
             return new GlacialChain()
         }
-        else if(item_name === 'red potion'){
-            return new RedPotion()
-        }
-        else if(item_name === 'soul accumulator'){
-            return new SoulAccumulator()
-        }
-        else if(item_name === 'doom mantia'){
-            return new DoomMantia()
-        }
-        else if(item_name === 'wall of bones'){
-            return new WallOfBones()
-        }
-        else if(item_name === 'flame ring'){
-            return new FlameRing()
-        }
-        else if(item_name === 'sparkling helmet'){
-            return new SparklingHelmet()
-        }
-        else if(item_name === 'glass sword'){
-            return new GlassSword()
-        }
-        else if(item_name === 'cloak'){
-            return new Cloak()
-        }
-        else if(item_name === 'staff'){
-            return new Staff()
-        }
-        else if(item_name === 'charged bow'){
-            return new ChargedBow()
-        }
-        else if(item_name === 'dagger of smoke'){
-            return new DaggerOfSmoke()
-        }
-        else if(item_name === 'yellow stone'){
-            return new YellowStone()
-        }
-        else if(item_name === 'white shield'){
-            return new WhiteShield()
-        }
-        else if(item_name === 'emerald knife'){
-            return new EmeraldKnife()
-        }
-        else if(item_name === 'whispering shield'){
-            return new WhisperingShield()
-        }
-        else if(item_name === 'twilight gloves'){
-            return new TwilightGloves()
-        }
-        else if(item_name === 'ring of transmutation'){
-            return new RingOfTransmutation()
-        }
-        else if(item_name === 'sword handle'){
-            return new SwordHandle()
-        }
-        else if(item_name === 'ice belt'){
-            return new IceBelt()
-        }
-        else if(item_name === 'searching heart'){
-            return new SearchingHeart()
-        }
-        else if(item_name === 'charged armour'){
-            return new ChargedArmour()
-        }
-        else if(item_name === 'molten helm'){
-            return new MoltenHelm()
-        }
-        else if(item_name === 'soul blade'){
-            return new SoulBlade()
-        }
-        else if(item_name === 'solar spear'){
-            return new SolarSpear()
-        }
-        else if(item_name === 'crystal greaves'){
-            return new CrystalGreaves()
-        }
-        else if(item_name === 'flying shards'){
-            return new FlyingShards()
-        }
-        else if(item_name === 'pale blade'){
-            return new PaleBlade()
-        }
-        else if(item_name === 'crossbow'){
-            return new Crossbow()
-        }
-        else if(item_name === 'royal mace'){
-            return new RoyalMace()
-        } 
-        else if(item_name === 'devouring axe'){
-            return new DevouringAxe()
-        }  
     }    
         
     static createForging(name: string, item: Item){
-        switch (name){
-            case 'critical':
-                return new Critical(item)
-            case 'pierce':
-                return new Pierce(item)
-            case 'attack speed':
-                return new AttackSpeed(item)
-            case 'armour rate':
-                return new ArmourRate(item)
-            case 'nova when hit':
-                return new NovaThenHit(item)
-            case 'resist':
-                return new Resist(item)
-            case 'will':
-                return new Will(item)
-            case 'knowledge':
-                return new Knowledge(item)
-            case 'agility':
-                return new Agility(item)
-            case 'Perception':
-                return new Perception(item)
-            case 'might':
-                return new Might(item)
-            case 'durability':
-                return new Durability(item)
-            case 'max resources':
-                return new MaxResource(item)
-            case 'regen time':
-                return new Regen(item)
-            case 'cast speed':
-                return new CastSpeed(item)
-            case 'block chance':
-                return new BlockChance(item)
-            case 'gold find':
-                return new GoldFind(item)
-            case 'chance':
-                return new Chance(item)
-            case 'distance':
-                return new Distance(item)
-            case 'count':
-                return new Count(item)
-            case 'duration':
-                return new Duration(item)
-            case 'frequency':
-                return new Frequency(item)
-            case 'cooldown reduction':
-                return new CooldownReduction(item)
-            case 'sacredness':
-                return new Sacredness(item)
-            case 'toughness':
-                return new Toughness(item)
-            case 'ignite when hit':
-                return new IgniteWhenHit(item)
-            case 'stun when hit':
-                return new StunWhenHit(item)
-            case 'shock nova when armour':
-                return new ShockNovaWhenArmour(item)
-            case 'bones when block':
-                return new BonesWhenBlock(item)
-            case 'instant kill':
-                return new InstantKill(item)
-            case 'charisma':
-                return new Charisma(item)
-            case 'when critical':
-                return new DominanceWhenCritical(item)
-            case 'when hit':
-                return new FortifyWhenHit(item)
-            case 'blessed life':
-                return new MaxLIfe(item)
-             case 'impact':
-                return new Impact(item)
-            case 'penetrating':
-                return new Penetrating(item)
-            case 'spirit':
-                return new Spirit(item)
-            case 'freeze when hited':
-                return new FreezeWhenHited(item)
-            case 'lightning when use skill':
-                return new LightningWhenUseSkill(item)
-            default:    
-                return new NovaThenHit(item)
+       let ItemClass = Builder.forgingMap[name.toLowerCase()]
+
+        if(ItemClass){
+            return new ItemClass(item)
+        }
+        else{
+            return new ArmourRate(item)
         }
     }
 }

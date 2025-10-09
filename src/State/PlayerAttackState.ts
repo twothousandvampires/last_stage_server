@@ -25,7 +25,7 @@ export default class PlayerAttackState implements IUnitState<Character>{
             if(player.using_ability){
                 player.using_ability.afterUse()
             }
-            if(player.using_ability.need_to_pay){
+            if(player.using_ability?.need_to_pay){
                 player.payCost()
             }
             player.succefullCast()

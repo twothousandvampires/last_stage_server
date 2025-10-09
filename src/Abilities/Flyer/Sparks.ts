@@ -4,7 +4,6 @@ import FlyerAbility from "./FlyerAbility";
 
 export default class Sparks extends FlyerAbility{
 
-    cost: number
     pierce: number = 1
     ttl: number = 3000
   

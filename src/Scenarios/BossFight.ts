@@ -155,16 +155,14 @@ export default class BossFight extends Scenario {
         clearInterval(this.check_players_interval)
         this.check_players_interval = undefined
 
-        let statues = level.enemies.filter(elem => elem.name === 'statue')
-
-        statues.forEach(elem => {
-            elem.is_corpse = true
-            elem.setdyingAct()
+        level.enemies.forEach(elem => {
+            level.deleted.push(elem.id)
         })
 
         level.boss_kills_trashold *= 2.5
         if(level.previuos_script){
             level.script = level.previuos_script
+            level.enemies = []
         }
         else{
             level.setScript(new Default())

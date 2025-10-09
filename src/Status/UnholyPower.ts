@@ -29,6 +29,7 @@ export default class UnholyPower extends Status{
         this.unit = unit
         unit.life_status += 4
         unit.gold_revard += 4
+        unit.pierce += 30
 
         let effect = new UnholyPowerEffect(this.unit.level)
 
