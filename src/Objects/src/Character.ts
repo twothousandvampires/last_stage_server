@@ -74,6 +74,7 @@ export default abstract class Character extends Unit {
     lust_for_life: boolean = false
     blessed: boolean = false
     spirit_strikes: boolean = false
+    free_upgrade_count: number = 0
      
     triggers_on_kill: any[] = []
     triggers_on_hit: any[] = []
@@ -340,13 +341,18 @@ export default abstract class Character extends Unit {
 
         upgrade.teach(this)
         
-        this.grace -= upgrade.cost
-        this.spend_grace = true
-
-        if(upgrade.cost && this.can_generate_upgrades){
-            this.ascend_level ++
+        if(this.free_upgrade_count){
+            this.free_upgrade_count --
         }
-       
+        else{
+            this.grace -= upgrade.cost
+            this.spend_grace = true
+
+            if(upgrade.cost){
+                this.ascend_level ++
+            }
+        }
+        
         this.level.addSound('upgrade', this.x, this.y)
         
         this.removeUpgrades()

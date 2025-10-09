@@ -23,13 +23,7 @@ export default class Helm extends Effect{
             let col = Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())
             if(col){
                 elem.ascend_level ++
-                let s = new Immortality(this.level.time)
-                s.setDuration(2000)
-
-                this.level.setStatus(elem, s ,true)
-
-                this.level.deleted.push(this.id)
-                this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
+                elem.free_upgrade_count ++
             }
         })
     }

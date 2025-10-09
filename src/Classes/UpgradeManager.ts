@@ -116,7 +116,8 @@ export default class UpgradeManager {
             grace: player.grace,
             can_hold: !player.spend_grace,
             ascend: player.ascend_level,
-            life: player.life_status
+            life: player.life_status,
+            free: player.free_upgrade_count
         })
     }
 
