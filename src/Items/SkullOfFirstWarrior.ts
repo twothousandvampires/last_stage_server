@@ -16,15 +16,15 @@ export default class SkullOfFirstWarrior extends Item {
         this.add_might = 8
         this.name = 'skull of first warrior'
         this.type = 3
-        this.description = 'increases your might by 10 for 10 seconds after 10 kills'
+        this.description = 'increases your might by 12 for 10 seconds after 12 kills'
     }
 
     getSpecialForgings(): string[] {
-        return ['duration', 'stun when hit']
+        return ['duration']
     }
     
     equip(character: Character): void {
-        character.triggers_on_hit.push(this)
+        character.triggers_on_kill.push(this)
     }
 
     trigger(character: Character){
@@ -40,14 +40,14 @@ export default class SkullOfFirstWarrior extends Item {
 
             character.newStatus({
                 name: 'skull of first warrior',
-                duration: 6000 + this.duration,
+                duration: 10000 + this.duration,
                 desc: 'might increased'
             })
 
             setTimeout(() => {
                 character.might -= this.add_might
                 this.countable = true
-            }, 6000 + this.duration)
+            }, 10000 + this.duration)
         }
     }
 }

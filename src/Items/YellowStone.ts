@@ -9,7 +9,7 @@ export default class YellowStone extends Item{
         this.name = 'yellow stone'
         this.type = 3
         this.description = 'increases a chance to resist status, when you resist gain a ward'
-        this.chance = 20
+        this.chance = 15
     }
 
     getSpecialForgings(): string[] {

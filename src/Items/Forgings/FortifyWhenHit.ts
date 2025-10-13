@@ -17,14 +17,14 @@ export default class FortifyWhenHit extends Forging{
         super(item)
         this.max_value = 30
         this.name = 'fortify'
-        this.description = 'when you get hit there is a chance to get fortify(+15 armour rate)'
+        this.description = 'when you get hit there is a chance to get fortify'
         this.gold_cost = 12
     }
 
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
-            if(!player.triggers_on_hit.some(elem => elem instanceof FortifyWhenHit)){
-                player.triggers_on_hit.push(this)
+            if(!player.triggers_on_get_hit.some(elem => elem instanceof FortifyWhenHit)){
+                player.triggers_on_get_hit.push(this)
             }
 
             this.payCost()

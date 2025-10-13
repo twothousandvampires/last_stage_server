@@ -54,10 +54,36 @@ import WardAfterEnlightTrigger from "../Triggers/WardAfterEnlightTrigger"
 import DivineWeaponTrigger from "../Triggers/DivineWeaponTrigger"
 import UnhumanFortitudeTrigger from "../Triggers/UnhumanFortitudeTrigger"
 import MassiveImpactTrigger from "../Triggers/MassiveImpactTrigger"
+import InspirationTrigger from "../Triggers/InspirationTrigger"
+import Creator from "../Status/Creator"
 
 export default class Upgrades{
     static getAllUpgrades(): Upgrade[]{
         return [
+                {
+                    name: 'creator of matter',
+                    canUse: (character: Character) => {
+                        return !character.level.status_pull.find(elem => elem.unit === character && elem instanceof Creator)
+                    },
+                    teach: (character: Character): void => {
+                        character.level.setStatus(character, new Creator(character.level.time))
+                    },
+                    cost: 4,
+                    ascend: 26,
+                    desc: 'you can create a sphere around you'
+                },
+                {
+                    name: 'inspiration',
+                    canUse: (character: Character) => {
+                        return !character.triggers_on_get_energy.some(elem => elem instanceof InspirationTrigger)
+                    },
+                    teach: (character: Character): void => {
+                        character.triggers_on_get_energy.push(new InspirationTrigger())
+                    },
+                    cost: 6,
+                    ascend: 20,
+                    desc: 'gives a chance depending on your perception get maximum energy when you get energy'
+                },
                 {
                     name: 'massive impact',
                     canUse: (character: Character) => {
@@ -85,7 +111,7 @@ export default class Upgrades{
                 {
                     name: 'unhuman fortitude',
                     canUse: (character: Character) => {
-                        return character.durability >= 5 &&  !character.triggers_on_get_hit.some(elem => elem instanceof UnhumanFortitudeTrigger)
+                        return character.durability >= 10 && !character.triggers_on_get_hit.some(elem => elem instanceof UnhumanFortitudeTrigger)
                     },
                     teach: (character: Character): void => {
                         character.triggers_on_get_hit.push(new UnhumanFortitudeTrigger())
@@ -160,7 +186,7 @@ export default class Upgrades{
                 {
                     name: 'clear mind',
                     canUse: (character: Character) => {
-                        return character.will >= 12
+                        return character.will >= 12 && character.cooldown_redaction < 100
                     },
                     teach: (character: Character): void => {
                         character.cooldown_redaction += 15
@@ -256,7 +282,7 @@ export default class Upgrades{
                         character.perception ++
                     },
                     cost: 1,
-                    desc: 'increases your agility'
+                    desc: 'increases your perception'
                 },
                 {
                     name: 'increase knowledge',

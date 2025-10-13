@@ -104,7 +104,7 @@ export default class characterTemplate{
                     name: 'heaven wrath',
                     type: 3,
                     selected: false,
-                    desc: 'Get a 10 second buff that causes destruction to enemies if you have been hitting an enemy in the last 1.5 seconds.'
+                    desc: 'Get a 8 second buff that causes destruction to enemies if you have been hitting an enemy in the last 1.5 seconds. Strikes frequency depends on attack speed, duration is incresed by courage.'
                 },
                 {
                     id: 9,

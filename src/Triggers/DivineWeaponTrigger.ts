@@ -8,7 +8,7 @@ export default class DivineWeaponTrigger {
     last_trigger_time: number = 0
 
     trigger(player: Character, target: any = undefined){
-        if(Func.notChance(player.will * 5, player.is_lucky)) return
+        if(Func.notChance(Math.round(player.will * 1.5), player.is_lucky)) return
             
         if(player.level.time - this.last_trigger_time >= this.cd){
             this.last_trigger_time = player.level.time

@@ -1,5 +1,7 @@
+import Func from "../Func"
 import { SharpedBone } from "../Objects/Projectiles/SharpedBone"
 import Enemy from "../Objects/src/Enemy/Enemy"
+import Undead from "../Objects/src/Enemy/Undead"
 import EnemyAbility from "./EnemyAbility"
 
 export default class FanOfBonesAbility extends EnemyAbility{
@@ -20,11 +22,16 @@ export default class FanOfBonesAbility extends EnemyAbility{
             y: enemy.y
         })
 
-        let count = 20
-        
-        let zones = 6.28 / count
+        let bone_count = enemy.level.enemies.filter(elem => elem instanceof Undead && Func.distance(enemy, elem) <= 20).length
+        bone_count ++
 
-        for(let i = 1; i <= count; i++){
+        if(bone_count > 12){
+            bone_count = 12
+        }
+        
+        let zones = 6.28 / bone_count
+
+        for(let i = 1; i <= bone_count; i++){
             let min_a = (i - 1) * zones
             let max_a = i * zones
 

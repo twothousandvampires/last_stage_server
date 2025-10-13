@@ -180,6 +180,54 @@ export default abstract class Enemy extends Unit {
             invisible: this.invisible
         }
     }
+
+    takePureDamage(unit: any = undefined, options: any = {}){
+        if(this.is_dead) return
+        if(!this.can_be_damaged) return
+
+        if(this.checkArmour(unit)){
+            return
+        }
+
+        let is_player_deal_hit = unit instanceof Character
+
+        let damage_value = 1
+
+        if(options?.damage_value){
+           damage_value = options.damage_value
+        }
+
+        if(is_player_deal_hit){
+            let pierce = unit.getPierce()
+            let is_pierce = Func.chance(pierce - this.armour_rate)
+
+            if(is_pierce){
+                damage_value ++
+            }
+        }
+
+        if(this.life_status <= 0){
+            this.is_dead = true
+
+            if(options?.explode){
+                this.exploded = true
+                this.level.addSound(this.getExplodedSound())
+            }
+            else if(options?.burn && this.can_be_burned){
+                this.burned = true
+            }
+
+            if(is_player_deal_hit){
+                this.create_grace_chance += unit.chance_to_create_grace
+                unit.succesefulKill(this)
+                unit.addGold(this.gold_revard)
+            }
+         
+            this.setState(new EnemyDyingState)
+        }
+
+        this.life_status -= damage_value
+    }
     
     takeDamage(unit: any = undefined, options: any = {}){
         if(this.is_dead) return

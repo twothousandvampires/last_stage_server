@@ -22,7 +22,7 @@ export default class Jump extends SwordmanAbility implements IUnitState<Swordman
         this.total_jump_time = 1200
         this.impact = false
         this.cost = 4
-        this.cd = 8000
+        this.cd = 6500
         this.heavy_landing = false
         this.stomp = false
         this.name = 'jump'

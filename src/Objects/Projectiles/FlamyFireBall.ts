@@ -44,6 +44,7 @@ export class FlamyFireBall extends Projectiles {
                     let s = new Ignite(this.level.time)
                     s.setDuration(6000)
                     s.setPower(20)
+                    s.provider = this
 
                     this.level.setStatus(p, s, true)
                 }

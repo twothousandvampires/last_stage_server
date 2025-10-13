@@ -23,7 +23,26 @@ export default class Helm extends Effect{
             let col = Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())
             if(col){
                 elem.ascend_level ++
-                elem.free_upgrade_count ++
+ 
+                let r = Func.random(1,6)
+                if(r === 1){
+                    elem.might ++
+                }
+                else if(r === 2){
+                    elem.durability ++
+                }
+                else if(r === 3){
+                    elem.knowledge ++
+                }
+                else if(r === 4){
+                    elem.will ++
+                }
+                else if(r === 5){
+                    elem.agility ++
+                }
+                else{
+                    elem.perception ++
+                }
 
                 this.level.deleted.push(this.id)
                 this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)

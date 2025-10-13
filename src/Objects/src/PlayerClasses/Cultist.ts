@@ -253,7 +253,11 @@ export default class Cultist extends Character{
         }
 
         if(this.ward){
-            this.loseWard()
+            let count = 1
+            if(unit && Func.chance(unit.critical)){
+                count ++
+            }
+            this.loseWard(count)
             let e = new ToothExplode(this.level)
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)
@@ -264,11 +268,7 @@ export default class Cultist extends Character{
                 x: this.x,
                 y: this.y
             })
-
-            return
-        }
-
-       
+        }       
 
         this.playerWasHited(unit)
 
@@ -474,6 +474,10 @@ export default class Cultist extends Character{
     }
 
     isStatusResist(){
-        return Func.chance(this.status_resistance + (this.will * 3), this.is_lucky)
+        let chacne = this.status_resistance + (this.will * 2)
+        if(chacne > 95){
+            chacne = 95
+        }
+        return Func.chance(chacne, this.is_lucky)
     }
 }

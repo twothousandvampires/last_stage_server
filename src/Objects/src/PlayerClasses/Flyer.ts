@@ -12,6 +12,7 @@ import Upgrades from "../../../Classes/Upgrades";
 import Func from "../../../Func";
 import Level from "../../../Level";
 import FlyerDefendState from "../../../State/FlyerDefendState";
+import PlayerDyingState from "../../../State/PlayerDyingState";
 import Upgrade from "../../../Types/Upgrade";
 import Armour from "../../Effects/Armour";
 import Blood from "../../Effects/Blood";
@@ -237,7 +238,7 @@ export default class Flyer extends Character{
             unit?.succesefulKill()
             this.is_dead = true
             this.life_status = 0
-            this.setState(this.setDyingState)
+            this.setState(new PlayerDyingState())
             this.level.playerDead()
             return
         }
@@ -245,7 +246,11 @@ export default class Flyer extends Character{
         if(this.damaged || this.is_dead) return
 
         if(this.ward){
-            this.loseWard()
+            let count = 1
+            if(unit && Func.chance(unit.critical)){
+                count ++
+            }
+            this.loseWard(count)
             let e = new ToothExplode(this.level)
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)
@@ -259,8 +264,6 @@ export default class Flyer extends Character{
 
             return
         }
-
-        
 
         this.playerWasHited(unit)
 

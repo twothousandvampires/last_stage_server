@@ -29,7 +29,9 @@ export default class MoltenHelm extends Item{
 
             let s = new Ignite(time)
             s.setDuration(4000)
-            s.setPower(character.armour_rate)
+            s.setPower(Math.floor(character.armour_rate /  2))
+            s.provider = this
+            
             character.level.setStatus(character, s, true)
 
             character.level.addSound('fire cast', character.x, character.y)
@@ -42,6 +44,8 @@ export default class MoltenHelm extends Item{
 
                     s.setDuration(6000)
                     s.setPower(character.armour_rate)
+                    s.provider = character
+
                     character.level.setStatus(elem, s)
                 }
             })

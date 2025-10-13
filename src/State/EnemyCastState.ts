@@ -27,7 +27,9 @@ export default class EnemyCastState implements IUnitState<Enemy>{
     update(enemy: Enemy){
         if(enemy.action && !enemy.hit){
             enemy.hit = true
-            let ability = enemy.abilities.filter(elem => elem.canUse(enemy))[0]
+            let abilities = enemy.abilities.filter(elem => elem.canUse(enemy))
+            let ability = Func.getRandomFromArray(abilities)
+
             if(ability){
                 ability.use(enemy)
             }
