@@ -24,6 +24,9 @@ export default class Helm extends Effect{
             if(col){
                 elem.ascend_level ++
                 elem.free_upgrade_count ++
+
+                this.level.deleted.push(this.id)
+                this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
             }
         })
     }
