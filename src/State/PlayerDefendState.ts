@@ -11,6 +11,9 @@ export default class PlayerDefendState implements IUnitState<Character>{
         player.triggers_on_start_block.forEach(elem => elem.trigger(player))
 
         this.move_reduce_value = player.getMoveSpeedReduceWhenBlock()
+        if(this.move_reduce_value < 0){
+            this.move_reduce_value = 0
+        } 
         player.addMoveSpeedPenalty(-this.move_reduce_value)
     }
 

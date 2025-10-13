@@ -35,7 +35,7 @@ export default class CurseOfDamned extends Status{
 
             ppl.forEach(elem => {
                 let s = new Curse(elem.time)
-                s.setDuration(5000)
+                s.setDuration(3500)
                 this.unit.level.setStatus(elem, s)
             })
 

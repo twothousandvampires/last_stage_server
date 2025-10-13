@@ -31,7 +31,7 @@ export default abstract class Item {
     static list = [
         {
             name: "skull of first warrior",
-            description: 'increases your might by 10 for 10 seconds after 10 kills'
+            description: 'increases your might by 12 for 10 seconds after 12 kills'
         },
         {
             name: "glacial chain",
@@ -156,6 +156,10 @@ export default abstract class Item {
             name: "devouring axe",
             description: 'give you a chance to get devouring after kill'
         },
+        {
+            name: "flamy nimbus",
+            description: 'when you get maximum energy create a ring that burn enemies'
+        },
     ]
 
     static forging_list_all = [
@@ -177,7 +181,8 @@ export default abstract class Item {
         'instant kill',
         'when critical',
         'ignite when hit',
-        'frost shpere when kill'
+        'frost shpere when kill',
+        'stun when hit'
     ]
 
     static forging_list_type_2 = [

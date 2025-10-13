@@ -1,4 +1,5 @@
 import CurseOfDamnedAbility from "../../../EnemyAbilities.ts/CurseOfDamnedAbility";
+import FanOfBonesAbility from "../../../EnemyAbilities.ts/FanOfBonesAbility";
 import GhostGripAbility from "../../../EnemyAbilities.ts/GhostGripAbility";
 import LaunchBones from "../../../EnemyAbilities.ts/LaunchBones";
 import Level from "../../../Level";
@@ -35,7 +36,7 @@ export default class FlyingBones extends Undead {
         this.create_sorcerers_skull_chance = 15
         this.abilities = [
             new GhostGripAbility(),
-            new LaunchBones(),
+            new FanOfBonesAbility(),
             new CurseOfDamnedAbility()
         ]
     }

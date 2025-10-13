@@ -1,5 +1,4 @@
 import Swordman from "../../Objects/src/PlayerClasses/Swordman";
-import SpectralSword from "../../Objects/src/Summons/SpectralSword";
 import HeavenWrathStatus from "../../Status/HeavenWrathStatus";
 import SwordmanAbility from "./SwordmanAbility";
 
@@ -15,14 +14,20 @@ export default class HeavenWrath extends SwordmanAbility{
     }
 
     impact(){
+        let second = this.owner.getSecondResource()
         this.owner.level.sounds.push({
             name: 'holy cast',
             x: this.owner.x,
             y: this.owner.y
         })
 
-        let s = new HeavenWrathStatus(this.owner.level.time)
-        s.setDuration(10000)
+        let frequency = this.owner.getAttackSpeed()
+        if(frequency < 100){
+            frequency = 100
+        }
+        frequency = Math.round(frequency / 2)
+        let s = new HeavenWrathStatus(this.owner.level.time, frequency)
+        s.setDuration(8000 + (second * 500))
 
         this.owner.level.setStatus(this.owner, s)
     }

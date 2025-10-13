@@ -144,9 +144,13 @@ export default class UpgradeManager {
     }
 
     static sacrifice(player: Character): void{
-        player.takePureDamage(3)
+        player.spend_grace = true
+        player.can_generate_upgrades = false
+         player.removeUpgrades()
+        let start = player.life_status
+        player.takePureDamage(start - 1)
 
-        player.grace ++
+        player.grace += start - player.life_status
     
         UpgradeManager.closeUpgrades(player)
     }

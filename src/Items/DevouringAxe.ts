@@ -7,14 +7,14 @@ export default class DevouringAxe extends Item {
 
     constructor(){
         super()
-        this.chance = 100
+        this.chance = 10
         this.name = 'devouring axe'
         this.type = 1
         this.description = 'give you a chance to get devouring after kill'
     }
 
     getSpecialForgings(): string[] {
-        return ['chance']
+        return ['chance', 'duration']
     }
 
     equip(character: Character): void {
@@ -33,7 +33,7 @@ export default class DevouringAxe extends Item {
             }
 
             let s = new Devouring(character.level.time)
-            s.setDuration(5000)
+            s.setDuration(6000 + this.duration)
         
             character.level.setStatus(character, s)
         }

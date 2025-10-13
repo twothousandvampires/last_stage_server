@@ -6,7 +6,9 @@ export default class EnemyTotemIdleState implements IUnitState<Pile>{
 
     enter(enemy: Pile){
         enemy.state = 'idle'
-        enemy.created = enemy.level.time
+        if(!enemy.created){
+            enemy.created = enemy.level.time
+        }
     }
 
     update(enemy: Pile){

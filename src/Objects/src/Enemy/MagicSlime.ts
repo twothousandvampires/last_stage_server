@@ -45,7 +45,7 @@ export default class MagicSlime extends Enemy {
     }
 
     hitImpact(){
-        if(this.action && !this.hit && this.target){
+        if(this.target){
             this.hit = true
                 
             let l = new EnemyLightning(this.level)

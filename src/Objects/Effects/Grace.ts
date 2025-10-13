@@ -15,7 +15,7 @@ export default class Grace extends Effect{
     not_deserving: any
     leaved: any
 
-    constructor(level: Level){
+    constructor(level: Level, private duration = 60000){
         super(level)
         this.name = 'grace'
         this.time = Date.now()
@@ -26,7 +26,7 @@ export default class Grace extends Effect{
     }
 
     act(time: number){
-        if(time - this.time >= 60000){
+        if(time - this.time >= this.duration){
             this.closeGate()
             return
         }

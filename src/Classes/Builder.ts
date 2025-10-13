@@ -79,6 +79,7 @@ import DevouringAxe from "../Items/DevouringAxe"
 import FrostShpereWhenKill from "../Items/Forgings/FrostShpereWhenKill"
 import SparksWhenBlock from "../Items/Forgings/SparksWhenBlock"
 import Overcharge from "../Items/Forgings/Overcharge"
+import FlamyNimbus from "../Items/FlamyNimbus"
 
 export default class Builder{
 
@@ -114,7 +115,8 @@ export default class Builder{
         'pale blade': PaleBlade,
         'crossbow': Crossbow,
         'royal mace': RoyalMace,
-        'devouring axe': DevouringAxe
+        'devouring axe': DevouringAxe,
+        'flamy nimbus': FlamyNimbus
     }
     
     static forgingMap ={
@@ -158,7 +160,8 @@ export default class Builder{
         'lightning when use skill': LightningWhenUseSkill,
         'frost shpere when kill': FrostShpereWhenKill,
         'sparks when block': SparksWhenBlock,
-        'overcharge': Overcharge
+        'overcharge': Overcharge,
+        'perception': Perception
     }
 
     static createCharacter(client: Client, level: Level): Character{

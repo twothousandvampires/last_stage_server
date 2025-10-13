@@ -40,7 +40,7 @@ export default class Swordman extends Character{
     constructor(level: Level){
         super(level)
 
-        this.weapon_angle = 0.8
+        this.weapon_angle = 1
         this.attack_radius = 8
         this.attack_speed = 1400
         this.name = 'swordman'
@@ -66,7 +66,7 @@ export default class Swordman extends Character{
     }
 
     getMoveSpeedReduceWhenBlock(){
-        return 80 - this.perception * 5
+        return 80 - this.agility * 5
     }
 
     addCourage(){
@@ -237,7 +237,11 @@ export default class Swordman extends Character{
         if(this.damaged || this.is_dead) return
 
         if(this.ward){
-            this.loseWard()
+            let count = 1
+            if(unit && Func.chance(unit.critical)){
+                count ++
+            }
+            this.loseWard(count)
             let e = new ToothExplode(this.level)
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)
@@ -248,8 +252,6 @@ export default class Swordman extends Character{
                 x: this.x,
                 y: this.y
             })
-
-            return
         }
 
         this.playerWasHited(unit)
@@ -417,7 +419,11 @@ export default class Swordman extends Character{
     }
 
     public isStatusResist(): boolean{
-        let result = Func.chance(this.status_resistance + (this.knowledge * 3), this.is_lucky)
+        let chacne = this.status_resistance + (this.knowledge * 2)
+        if(chacne > 95){
+            chacne = 95
+        }
+        let result = Func.chance(chacne, this.is_lucky)
         return result
     }
 

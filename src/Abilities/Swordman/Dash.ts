@@ -131,7 +131,7 @@ export default class Dash extends SwordmanAbility implements IUnitState{
             })
 
             player.level.players.forEach((elem) => {
-                if(elem != player && !ability.hited.includes(elem) && Func.elipseCollision(player.getBoxElipse(), elem.getBoxElipse())){
+                if(elem != player && !this.hited.includes(elem) && Func.elipseCollision(player.getBoxElipse(), elem.getBoxElipse())){
                     this.hited.push(elem)
 
                     if(this.targets > 0){

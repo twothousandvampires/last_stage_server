@@ -44,6 +44,7 @@ export default abstract class Character extends Unit {
     last_steps_time: number = 0
     last_impact_time: number = 0
     last_hit_time: number = 0
+    last_time_get_hit: number = 0
     dead_time: number = 0
 
     knowledge: number = 0
@@ -245,7 +246,11 @@ export default abstract class Character extends Unit {
     }
 
     public isStatusResist(): boolean{
-        let result = Func.chance(this.status_resistance, this.is_lucky)
+        let chacne = this.status_resistance
+        if(chacne > 95){
+            chacne = 95
+        }
+        let result = Func.chance(chacne, this.is_lucky)
         return result
     }
 
@@ -478,6 +483,10 @@ export default abstract class Character extends Unit {
         
         if(this.fortify && Func.chance(this.fortify)){
             value --
+        }
+
+        if(value != 0){
+            this.last_time_get_hit = this.level.time
         }
 
         for(let i = 0; i < value; i++){

@@ -52,7 +52,7 @@ export default class Level{
        },
         {
          'name': 'pile',
-         'weight': 12
+         'weight': 10
        },  
        {
          'name': 'magic slime',
@@ -154,6 +154,10 @@ export default class Level{
         this.loop()
     }
 
+    addEffect(effect: Effect){
+        this.effects.push(effect)
+    }
+
     loop(){
         let time = Date.now()
         if(time - this.last_update_time >= 30){
@@ -195,6 +199,8 @@ export default class Level{
             unit.statusWasResisted(status)
             return
         }
+
+        
     
         if(with_check){
             let exist: Status | undefined = this.status_pull.find(elem => elem.unit === unit && elem instanceof status.constructor)

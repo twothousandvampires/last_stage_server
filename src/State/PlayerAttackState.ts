@@ -10,7 +10,10 @@ export default class PlayerAttackState implements IUnitState<Character>{
         player.prepareToAction()
         player.state = 'attack'
 
-        this.move_penalty = player.getMoveSpeedPenaltyValue()      
+        this.move_penalty = player.getMoveSpeedPenaltyValue()
+        if(this.move_penalty < 0){
+            this.move_penalty = 0
+        }      
         player.addMoveSpeedPenalty(-this.move_penalty)
 
         player.action_time = player.getAttackSpeed()
@@ -33,7 +36,6 @@ export default class PlayerAttackState implements IUnitState<Character>{
         else if(player.action_is_end){
             player.action_is_end = false
             player.attack_angle = undefined
-            player.using_ability = undefined
             player.setState(new PlayerIdleState())
         }
     }       

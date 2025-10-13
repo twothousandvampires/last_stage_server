@@ -2,8 +2,12 @@ import Func from "../Func";
 import Level from "../Level";
 import ClosedGate from "../Objects/Effects/ClosedGate";
 import Grace from "../Objects/Effects/Grace";
+import UltimatumText from "../Objects/Effects/UltimatumText";
+import UltimatumText2 from "../Objects/Effects/UltimatumText2";
+import UltimatumText3 from "../Objects/Effects/UltimatumText3";
 import Character from "../Objects/src/Character";
 import Bones from "../Objects/src/Enemy/Bones";
+import Enemy from "../Objects/src/Enemy/Enemy";
 import { Flamy } from "../Objects/src/Enemy/Flamy";
 import FlyingBones from "../Objects/src/Enemy/FlyingBones";
 import Ghost from "../Objects/src/Enemy/Ghost";
@@ -32,17 +36,23 @@ export default class Default extends Scenario{
    
     last_checked: number
     time_between_wave_ms: number
+    max_time_wave: number = 10000
     waves_created: number = 0
+    times_count: number = 0
     add_e_life: number = 0
     add_e_armour: number = 0
     add_e_pierce: number = 0
     add_e_speed: number = 0
     add_attack_speed: number = 0
     add_cooldown_attack: number = 0
+    add_e_fortify: number = 0
+    minus_create_chance = 0
+
     monster_upgrades: any
     private need_to_check_grace: boolean = true
-    grace_trashold: number = 10
+    grace_trashold: number = 20
     times: number
+    portal_is_exist = false
 
     constructor(){
         super()
@@ -61,6 +71,11 @@ export default class Default extends Scenario{
                 move_speed: 0
             }
         }
+    }
+    setTimes(times){
+        this.times_count = Func.random(6, 8)
+        this.times = times
+        console.log(this.times)
     }
 
     getInfo(){
@@ -107,33 +122,24 @@ export default class Default extends Scenario{
         let wave_time = this.time_between_wave_ms
         
         if(this.times === Default.TIMES_BAD){
-            wave_time = Math.round(wave_time * 0.7)
+            wave_time = Math.round(wave_time * 0.8)
         }
         else if(this.times === Default.TIMES_GOOD){
-            wave_time = Math.round(wave_time * 1.4)
+            wave_time = Math.round(wave_time * 1.2)
         }
-       
+        
         if(level.time - this.last_checked >= wave_time){
-            console.log(wave_time)
-            this.last_checked = level.time
-           
-            this.createWave(level)
-               
-            if(this.times === Default.TIMES_NORMAL && Func.chance(15)){
-                this.times = Default.TIMES_BAD
-                console.log('bad times comes...')
-                setTimeout(() => {
-                    this.times = Default.TIMES_GOOD
-                    console.log('good times comes!')
-                    setTimeout(() => {
-                        this.times = Default.TIMES_NORMAL
-                        console.log('normal times.')
-                    }, Func.random(20000, 30000))
-
-                }, Func.random(20000, 30000))
-            }
-
             
+            this.last_checked = level.time
+            console.log('times: ' + this.times + ' ' + wave_time)
+            this.createWave(level)
+            if(this.times_count){
+                this.times_count --
+                if(!this.times_count){
+                    this.times = Default.TIMES_NORMAL
+                    console.log('times normal')
+                }
+            }
         }
     }
 
@@ -143,15 +149,19 @@ export default class Default extends Scenario{
 
         this.waves_created ++
 
-        if(this.times === Default.TIMES_NORMAL && this.time_between_wave_ms < 10000){
+        if(this.times === Default.TIMES_NORMAL && this.time_between_wave_ms < this.max_time_wave){
             this.time_between_wave_ms += 40
         }
 
-        let add_count = Math.floor(this.waves_created / 15)
+        let add_count = Math.floor(this.waves_created / 17)
 
         let count = Func.random(1 + Math.floor(add_count / 2), 2 + Math.floor(add_count))
         
         count += (level.players.length - 1)
+
+        if(this.times === Default.TIMES_BAD){
+            count = Math.round(count * 1.2)
+        }
 
         for(let i = 0; i < count; i++){
             await Func.sleep(Func.random(100, 300))
@@ -226,70 +236,92 @@ export default class Default extends Scenario{
             }
 
             let elite_chance = 5 + Math.floor(this.waves_created / 5)
+            
+            if(this.times === Default.TIMES_GOOD){
+                enemy.create_chance += 15
+            }
 
             if(Func.chance(elite_chance) && ((enemy instanceof Solid) || (enemy instanceof FlyingBones) || (enemy instanceof Specter))){
-                let r = Func.random(1, 7)
-
-                if(r === 1){
-                    let status = new BannerOfArmour(level.time)
-                    level.setStatus(enemy, status)
-                }
-                else if(r === 2){
-                    let status = new ElementalEnchanted(level.time)
-                    level.setStatus(enemy, status)
-                }
-                else if(r === 3){
-                    let status = new UnholyPower(level.time)
-                    level.setStatus(enemy, status)
-                }
-                else if(r === 4){
-                    let status = new UnholySpirit(level.time)
-                    level.setStatus(enemy, status)
-                }
-                else if(r === 5){
-                    let status = new Bless(level.time)
-                    level.setStatus(enemy, status)
-                }
-                else if(r === 6){
-                    let status = new SorceryHalo(level.time)
-                    level.setStatus(enemy, status)
-                }
-                else if(r === 7){
-                    let status = new Reanimator(level.time)
-                    level.setStatus(enemy, status)
-                }
+                enemy = this.createElite(enemy, level)
             }
 
-            enemy.life_status += this.add_e_life
-            enemy.armour_rate += this.add_e_armour
-            enemy.pierce += this.add_e_pierce
-            enemy.move_speed_penalty += this.add_e_speed
-            enemy.attack_speed -= this.add_attack_speed
-
-            if(enemy.attack_speed < 200){
-                enemy.attack_speed = 200
-            }
-
-            enemy.cooldown_attack -= this.add_cooldown_attack
-
-            if(enemy.cooldown_attack < 0){
-                enemy.cooldown_attack = 0
-            }
+            enemy = this.upgradeEnemy(enemy)
             
             level.enemies.push(enemy) 
         }
 
-    
-        this.checkUpgrade(level)
         this.checkPortal(level) 
+        this.checkUpgrade(level)
+     
+    }
+
+    createElite(enemy: Enemy, level: Level){
+        let r = Func.random(1, 7)
+
+        if(r === 1){
+            let status = new BannerOfArmour(level.time)
+            level.setStatus(enemy, status)
+        }
+        else if(r === 2){
+            let status = new ElementalEnchanted(level.time)
+            level.setStatus(enemy, status)
+        }
+        else if(r === 3){
+            let status = new UnholyPower(level.time)
+            level.setStatus(enemy, status)
+        }
+        else if(r === 4){
+            let status = new UnholySpirit(level.time)
+            level.setStatus(enemy, status)
+        }
+        else if(r === 5){
+            let status = new Bless(level.time)
+            level.setStatus(enemy, status)
+        }
+        else if(r === 6){
+            let status = new SorceryHalo(level.time)
+            level.setStatus(enemy, status)
+        }
+        else if(r === 7){
+            let status = new Reanimator(level.time)
+            level.setStatus(enemy, status)
+        }
+
+        return enemy
+    }
+
+    upgradeEnemy(enemy: Enemy){
+        enemy.life_status += this.add_e_life
+        enemy.armour_rate += this.add_e_armour
+        enemy.pierce += this.add_e_pierce
+        enemy.move_speed_penalty += this.add_e_speed
+        enemy.attack_speed -= this.add_attack_speed
+        enemy.create_chance -= this.minus_create_chance
+        enemy.fortify += this.add_e_fortify
+
+        if(enemy.create_chance <= 3){
+            enemy.create_chance = 3
+        }
+
+        if(enemy.attack_speed < 150){
+            enemy.attack_speed = 150
+        }
+
+        enemy.cooldown_attack -= this.add_cooldown_attack
+
+        if(enemy.cooldown_attack < 0){
+            enemy.cooldown_attack = 0
+        }
+
+        return enemy
     }
 
     checkPortal(level){
         if(!this.need_to_check_grace) return
 
-        let exist: boolean = level.binded_effects.some(elem => elem instanceof Grace)
+        this.portal_is_exist = level.binded_effects.some(elem => elem instanceof Grace)
 
-        if(exist){
+        if(this.portal_is_exist){
             return
         }
 
@@ -300,7 +332,7 @@ export default class Default extends Scenario{
         let chance = 20 + delta * 3
 
         if(Func.chance(chance)){
-            this.grace_trashold += 20 + Math.floor(this.waves_created / 10)
+            this.grace_trashold = Math.round(this.grace_trashold * 1.3)
             let portal: Grace = new Grace(level)
             while(portal.isOutOfMap()){
                 let random_player: Character = level.players[Math.floor(Math.random() * level.players.length)]
@@ -316,6 +348,29 @@ export default class Default extends Scenario{
     }
 
     checkUpgrade(level){
+        if(this.waves_created % 20 === 0 && this.waves_created >= 40){
+            let e = undefined
+            let r = Func.random(1,3)
+
+            if(r === 1){
+                e = new UltimatumText(level)
+            }
+            else if(r === 2){
+                e = new UltimatumText2(level)
+            }
+            else{
+                e = new UltimatumText3(level)
+            }
+           
+            let random_player: Character = level.players[Math.floor(Math.random() * level.players.length)]
+            let angle: number = Math.random() * 6.28
+            let distance_x: number = Func.random(15, 25)
+            let distance_y: number = Func.random(15, 25)
+
+            e.setPoint(random_player.x + Math.sin(angle) * distance_x, random_player.y + Math.cos(angle) * distance_y)
+            level.binded_effects.push(e)
+        }
+
         if(this.waves_created % 12 === 0){
             let min = undefined
             let name = undefined
@@ -334,10 +389,10 @@ export default class Default extends Scenario{
                     this.add_cooldown_attack += 50
                     break;
                 case 'pierce':
-                    this.add_e_pierce += 3
+                    this.add_e_pierce += 6
                     break;
                 case 'armour':
-                    this.add_e_armour += 3
+                    this.add_e_armour += 6
                     break;
             }
         }
@@ -355,18 +410,26 @@ export default class Default extends Scenario{
             this.monster_upgrades.major[name] ++
 
             switch(name){
-                case 'life':
-                    this.add_e_life += 1
+                case 'attack_speed':
+                    this.add_attack_speed += 50
                     break;
                 case 'move_speed':
                     this.add_e_speed += 5
+                    this.minus_create_chance ++
                     break;
-                case 'attack_speed':
-                    this.add_attack_speed += 50
+                case 'life':
+                    this.add_e_life += 1
+                    this.add_e_fortify += 3
                     break;
             }
 
             level.addSound('evel upgrade', 40, 40)
+        }
+        if(this.waves_created % 75 === 0){
+            this.max_time_wave -= 500
+            if(this.time_between_wave_ms > this.max_time_wave){
+                this.time_between_wave_ms = this.max_time_wave
+            }
         }
     }
 }
