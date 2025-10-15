@@ -36,6 +36,7 @@ export default class Cultist extends Character{
     service: boolean
     conduct_of_pain: boolean
     pain_extract: boolean
+  
 
     constructor(level: Level){
         super(level)
@@ -53,6 +54,7 @@ export default class Cultist extends Character{
         this.maximum_resources = 7
         this.hit_x = undefined
         this.hit_y = undefined
+        this.enlightenment_threshold = 7
 
         this.base_regeneration_time = 8500
         this.service = false
@@ -134,7 +136,7 @@ export default class Cultist extends Character{
             this.recent_hits.push(this.level.time)
         }
 
-        if(this.can_be_enlighten && this.recent_hits.length >= 8){
+        if(this.can_be_enlighten && this.recent_hits.length >= this.enlightenment_threshold){
             this.can_be_enlighten = false
 
             this.enlight()
@@ -181,6 +183,8 @@ export default class Cultist extends Character{
 
         let s = new Immortality(this.level.time)
         s.setDuration(3000)
+        
+        this.playerWasEnlighted()
         this.level.setStatus(this, s)
        
         this.level.addSound('enlight', this.x, this.y)
@@ -473,11 +477,7 @@ export default class Cultist extends Character{
         this.pay_to_cost = 0 
     }
 
-    isStatusResist(){
-        let chacne = this.status_resistance + (this.will * 2)
-        if(chacne > 95){
-            chacne = 95
-        }
-        return Func.chance(chacne, this.is_lucky)
+    getResistValue(): number {
+        return this.status_resistance + (this.will * 2)
     }
 }

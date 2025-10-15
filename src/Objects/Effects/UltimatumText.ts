@@ -1,27 +1,30 @@
 import Func from "../../Func";
+import IUltimatumChallenge from "../../Interfaces/IUltimatumChallenge";
 import Level from "../../Level";
 import Effect from "./Effects";
 import Grace from "./Grace";
+import UltimatumArena from "./UltimatumArena";
 
-export default class UltimatumText extends Effect{
+export default class UltimatumText extends Effect implements IUltimatumChallenge {
 
-    time: number
-    pool: any
-    acticated: boolean = false
-    activated_players: number = 0
-    failed: boolean = false
-    chalange_radius: number = 25
+    timer = Date.now()
 
-    constructor(level: Level, public start_power: number = 0){
+    activated: boolean = false
+    activated_players = []
+    failed = false
+    challenge_radius = 25
+    effect: any
+
+    constructor(level: Level){
         super(level)
-        this.name = 'teacher'
-        this.time = Date.now()
+        this.name = 'ultimatum1'
         this.box_r = 2.2
-        this.pool = []
-        this.z = 8
     }
 
-    explode(){     
+    success(): void {
+        this.level.addSound('challenge done', this.x, this.y)
+        this.level.addMessedge('come and ascend.')
+
         this.level.script.portal_is_exist = this.level.binded_effects.some(elem => elem instanceof Grace)
         
         this.level.players.forEach(elem => {
@@ -29,6 +32,11 @@ export default class UltimatumText extends Effect{
         })
 
         if(this.level.script.portal_is_exist){
+            if(this.effect){
+                this.effect.delete()
+            }
+
+            this.delete()
             return
         }
 
@@ -37,50 +45,69 @@ export default class UltimatumText extends Effect{
         portal.setPoint(this.x, this.y)
 
         this.level.binded_effects.push(portal)
+
+        if(this.effect){
+            this.effect.delete()
+        }
+
+        this.delete()
+    }
+
+    fail(){
+        this.level.addMessedge('failed...')
+        this.level.addSound('challenge failed', this.x, this.y)
+
+        this.level.players.forEach(elem => {
+            elem.grace -= 3
+            if(elem.grace < 0 ){
+                elem.grace = 0
+            }
+        })
+
+        if(this.effect){
+            this.effect.delete()
+        }
+
+        this.delete()
+    }
+
+    activate(){
+        this.level.addMessedge('do not take damage')
+        this.level.addSound('challenge start', this.x, this.y)
+
+        this.activated = true
+        this.timer = this.level.time
+
+        this.effect = new UltimatumArena(this.level)
+        this.effect.setPoint(this.x, this.y)
+
+        this.level.binded_effects.push(this.effect)
     }
 
     act(time: number){
-        if(this.failed){
-            this.level.players.forEach(elem => {
-                elem.grace -= 3
-                if(elem.grace < 0 ){
-                    elem.grace = 0
-                }
-            })
-            this.level.addSound('bones explode', this.x, this.y)
-            this.delete()
-            return
-        }
-        else if(time - this.time >= 20000){
-            if(this.acticated){
-                this.level.addSound('donate', this.x, this.y)
-                this.explode()
+        if(time - this.timer >= 20000){
+            if(this.activated){
+                this.success()
             }
-            this.delete()
-            return
+            else{
+                this.delete()
+            }      
         }
-
-        if(!this.acticated){
+        else if(!this.activated){
             this.level.players.forEach((elem) => {
-                if(Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
-                    this.activated_players ++
-                    if(this.activated_players === this.level.players.length){
-                        this.acticated = true
-                        this.time = Date.now()
-                        this.level.addSound('door open', this.x, this.y)
+                if(!this.activated_players.includes(elem.id) && Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
+                    this.activated_players.push(elem.id)
+                    if(this.activated_players.length === this.level.players.length){
+                        this.activate()
                     }
                 }
             })
         }
         else{
             this.level.players.forEach((elem) => {
-                if(elem.last_time_get_hit >= this.time){
-                    this.failed = true
+                if((elem.last_time_get_hit >= this.timer) || (Func.distance(this, elem) > this.challenge_radius)){
+                    this.fail()
                 }
-                if(Func.distance(this, elem) > this.chalange_radius){
-                    console.log(Func.distance(this, elem))
-                    this.failed = true
-                }   
             })
         }
     }

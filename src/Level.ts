@@ -19,6 +19,7 @@ import ItemDrop from "./Objects/Effects/ItemDrop"
 import SorcerersSkull from "./Objects/Effects/SorcerersSkull"
 import UpgradeManager from "./Classes/UpgradeManager"
 import Helm from "./Objects/Effects/Helm"
+import Message from "./Types/Message"
 
 export default class Level{
     static enemy_list = [
@@ -84,7 +85,7 @@ export default class Level{
     public started: number
     public ambient_time: number = 0
     public check_grace_time: number = 0
-
+    public messedges: Message[] = []
 
     private game_loop: any
     public script: Scenario = new Default()
@@ -171,6 +172,7 @@ export default class Level{
             this.deleted.length = 0
             this.sounds.length = 0
             this.changed_actors.clear()
+            this.messedges.length = 0
         }
         
         this.game_loop = setImmediate(this.loop.bind(this))
@@ -182,12 +184,19 @@ export default class Level{
             actors: [...this.players, ...changed],
             deleted: this.deleted,
             sounds: this.sounds,
+            messedges: this.messedges,
             meta: {
                 ms: this.time - this.started,       
                 killed: this.kill_count,
                 scenario: this.script.getInfo()
             }
         }
+    }
+
+    addMessedge(msg: string, id = undefined): void{
+        if(this.messedges.length) return
+        
+        this.messedges.push({text: msg, id: id})
     }
 
     public setStatus(unit: Unit | Character, status: Status, with_check: boolean = false): void{

@@ -52,6 +52,7 @@ export default class GameServer{
 
     private updateLobby(): void{
         let data: Client[] = Array.from(this.clients.values())
+        console.log(data[0]?.id)
         let p_items = this.getAllPlayersItems(data)
         let list = item.list
         let available = []
@@ -261,6 +262,8 @@ export default class GameServer{
 
                 socket.on('load_template', (data) => { 
                     client.template.abilities = data.abilities
+                    client.template.item = []
+
                     data.item.forEach(elem => {
                         if(elem.name != ''){
                             let item = Builder.createItem(elem.name)
@@ -327,13 +330,14 @@ export default class GameServer{
 
                 socket.on('disconnect', () => {
                     this.clients.delete(socket.id)
-                    this.updateLobby()
-
                     if(this.clients.size === 0){
                         if(this.level){
                             this.level.endGame()
                         }
                     }
+                    else{
+                        this.updateLobby()
+                    }       
                 })
                 
                 socket.on('set_target', (id) => {

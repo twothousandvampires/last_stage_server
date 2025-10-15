@@ -50,7 +50,7 @@ export default class Default extends Scenario{
 
     monster_upgrades: any
     private need_to_check_grace: boolean = true
-    grace_trashold: number = 20
+    grace_trashold: number = 15
     times: number
     portal_is_exist = false
 
@@ -75,7 +75,6 @@ export default class Default extends Scenario{
     setTimes(times){
         this.times_count = Func.random(6, 8)
         this.times = times
-        console.log(this.times)
     }
 
     getInfo(){
@@ -322,17 +321,14 @@ export default class Default extends Scenario{
         this.portal_is_exist = level.binded_effects.some(elem => elem instanceof Grace)
 
         if(this.portal_is_exist){
+            this.grace_trashold ++
             return
         }
 
-        if(this.waves_created < this.grace_trashold) return
-
-        let delta = this.waves_created - this.grace_trashold
-
-        let chance = 20 + delta * 3
-
-        if(Func.chance(chance)){
-            this.grace_trashold = Math.round(this.grace_trashold * 1.3)
+        let chance = this.waves_created - this.grace_trashold
+        console.log(chance)
+        if(chance > 0){
+            this.grace_trashold = Math.round(this.grace_trashold * 1.3) 
             let portal: Grace = new Grace(level)
             while(portal.isOutOfMap()){
                 let random_player: Character = level.players[Math.floor(Math.random() * level.players.length)]
@@ -348,7 +344,7 @@ export default class Default extends Scenario{
     }
 
     checkUpgrade(level){
-        if(this.waves_created % 20 === 0 && this.waves_created >= 40){
+        if(this.waves_created % 20 === 0 && this.waves_created >= 1){
             let e = undefined
             let r = Func.random(1,3)
 

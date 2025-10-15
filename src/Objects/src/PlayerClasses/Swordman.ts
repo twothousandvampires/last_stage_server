@@ -40,9 +40,10 @@ export default class Swordman extends Character{
     constructor(level: Level){
         super(level)
 
+        this.enlightenment_threshold = 12 
         this.weapon_angle = 1
         this.attack_radius = 8
-        this.attack_speed = 1400
+       
         this.name = 'swordman'
         this.move_speed = 0.5
         this.chance_to_avoid_damage_state = 10
@@ -51,6 +52,10 @@ export default class Swordman extends Character{
         this.armour_rate = 15
         this.resource = 0
         this.maximum_resources = 7
+
+        // this.impact = 100
+        // this.pierce = 100
+        this.attack_speed = 1450
 
         this.base_regeneration_time = 9000
         this.recent_kills = []
@@ -77,7 +82,7 @@ export default class Swordman extends Character{
         }
         this.recent_kills.push(this.level.time)
 
-        if(this.can_be_enlighten && this.recent_kills.length >= 10){
+        if(this.can_be_enlighten && this.recent_kills.length >= this.enlightenment_threshold){
             this.can_be_enlighten = false
 
             this.enlight()
@@ -120,6 +125,10 @@ export default class Swordman extends Character{
 
         this.level.addSound('enlight', this.x, this.y)
         this.playerWasEnlighted()
+    }
+
+    getCdRedaction(){
+        return this.cooldown_redaction + this.will
     }
 
     applyStats(stats: any){
@@ -418,13 +427,8 @@ export default class Swordman extends Character{
         this.setTimerToGetState(300)
     }
 
-    public isStatusResist(): boolean{
-        let chacne = this.status_resistance + (this.knowledge * 2)
-        if(chacne > 95){
-            chacne = 95
-        }
-        let result = Func.chance(chacne, this.is_lucky)
-        return result
+    getResistValue(): number{
+        return this.status_resistance + (this.knowledge * 2)
     }
 
     getSecondResource(){

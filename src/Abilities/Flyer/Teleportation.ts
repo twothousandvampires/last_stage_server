@@ -66,8 +66,6 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
         unit.can_be_damaged = true
         unit.is_attacking = false
         unit.action = false
-        unit.x = 50
-        unit.y = 50
     }
 
     update(unit: Flyer){

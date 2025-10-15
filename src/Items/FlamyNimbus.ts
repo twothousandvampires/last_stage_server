@@ -1,4 +1,5 @@
 import Func from "../Func";
+import FlamyRing from "../Objects/Effects/FlamyRing";
 import LightNova from "../Objects/Effects/LightNova";
 import Character from "../Objects/src/Character";
 import Item from "./Item";
@@ -32,7 +33,7 @@ export default class FlamyNimbus extends Item {
         if(character.level.time - this.last_trigger_time >= this.frequency && Func.chance(this.chance)){
             this.last_trigger_time = character.level.time
             
-            let e = new LightNova(character.level)
+            let e = new FlamyRing(character.level)
             e.setPoint(character.x, character.y)
 
             character.level.addEffect(e)

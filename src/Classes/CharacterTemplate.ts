@@ -35,7 +35,8 @@ export default class characterTemplate{
                 knowledge: `- gives a chance to get additional resource and courage
                             - increases status resistance`,
                 will: `- increases your life regeneration rate
-                       - increases the chance to skip damage state`,
+                       - increases the chance to skip damage state
+                       - reduces your cooldowns`,
                 perception: `- increases a block chance
                              - reduses penalty of speed when you attacking
                              - increases maximum of energy`,

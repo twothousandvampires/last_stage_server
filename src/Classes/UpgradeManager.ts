@@ -13,7 +13,8 @@ export default class UpgradeManager {
         player.level.socket.to(player.id).emit('show_forgings', {
             items: player.item,
             gold: player.gold,
-            can_buy: player.purchased_items < 2
+            can_buy: player.purchased_items < 2,
+            stats: player.getStats(),
         })
     }
 
@@ -117,7 +118,8 @@ export default class UpgradeManager {
             can_hold: !player.spend_grace,
             ascend: player.ascend_level,
             life: player.life_status,
-            free: player.free_upgrade_count
+            free: player.free_upgrade_count,
+            stats: player.getStats(),
         })
     }
 

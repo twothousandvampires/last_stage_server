@@ -1,6 +1,5 @@
 import Func from "../../Func";
 import Level from "../../Level";
-import Immortality from "../../Status/Immortality";
 import Effect from "./Effects";
 
 export default class Helm extends Effect{

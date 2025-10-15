@@ -43,6 +43,7 @@ export default class SpectralSwords extends SwordmanAbility {
             if(this.call){
                 summon.move_speed += 0.1
                 summon.player_check_radius += 10
+                summon.attack_speed -= 100
             }
             summon.setPoint(this.owner.x + n_x, this.owner.y + n_y)
             

@@ -4,16 +4,15 @@ import Cultist from "../../Objects/src/PlayerClasses/Cultist";
 import Ability from "../Ability";
 import CultistAbility from "./CultistAbility";
 
-export default class SelfFlagellation extends CultistAbility{
+export default class SelfFlagellation extends CultistAbility {
     
-    pack: boolean
-    lesson: boolean
+    pack: boolean = false
+    lesson: boolean = false
+    spreading: boolean = false
 
     constructor(owner: Cultist){
         super(owner)
         this.cd = 6000
-        this.pack = false
-        this.lesson = false
         this.name = 'self-flagellation'
         this.type = Ability.TYPE_INSTANT
     }
@@ -39,10 +38,18 @@ export default class SelfFlagellation extends CultistAbility{
         }
 
         if(this.lesson){
-            this.owner.move_speed_penalty += 20
+            this.owner.move_speed_penalty += 25
             setTimeout(() => {
-                this.owner.move_speed_penalty -= 20
-            }, 3000)
+                this.owner.move_speed_penalty -= 25
+            }, 5000)
+        }
+
+        if(this.spreading){
+            this.owner.level.enemies.forEach((elem) => {
+                if(Func.distance(elem, this.owner) <= 12){
+                    elem.takePureDamage()
+                }
+            })
         }
 
         this.afterUse()

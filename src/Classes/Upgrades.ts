@@ -56,10 +56,36 @@ import UnhumanFortitudeTrigger from "../Triggers/UnhumanFortitudeTrigger"
 import MassiveImpactTrigger from "../Triggers/MassiveImpactTrigger"
 import InspirationTrigger from "../Triggers/InspirationTrigger"
 import Creator from "../Status/Creator"
+import DamageInRadiusWhenEnlightnent from "../Triggers/DamageInRadiusWhenEnlightnent"
+import InnerPowerTrigger from "../Triggers/InnerPowerTrigger"
 
 export default class Upgrades{
     static getAllUpgrades(): Upgrade[]{
         return [
+                {
+                    name: 'overflow',
+                    canUse: (character: Character) => {
+                        return !character.triggers_on_enlight.some(elem => elem instanceof DamageInRadiusWhenEnlightnent)
+                    },
+                    teach: (character: Character): void => {
+                        character.triggers_on_enlight.push(new DamageInRadiusWhenEnlightnent())
+                    },
+                    cost: 3,
+                    ascend: 14,
+                    desc: 'when you get enlightenment you deal damage in big radius'
+                    },
+                    {
+                    name: 'way of enlightenment',
+                    canUse: (character: Character) => {
+                        return character.enlightenment_threshold >= 6
+                    },
+                    teach: (character: Character): void => {
+                        character.enlightenment_threshold --
+                    },
+                    cost: 3,
+                    ascend: 14,
+                    desc: 'reduces amount of courage to get enlightenment'
+                },
                 {
                     name: 'creator of matter',
                     canUse: (character: Character) => {
@@ -162,14 +188,14 @@ export default class Upgrades{
                  {
                     name: 'lightning reflexes',
                     canUse: (character: Character) => {
-                        return character.agility >= 10 && character.armour_rate < 100
+                        return character.agility >= 10 && character.armour_rate < 200
                     },
                     teach: (character: Character): void => {
                         character.armour_rate += 20
                     },
                     cost: 5,
                     ascend: 20,
-                    desc: 'increases your impact rating by 20'
+                    desc: 'increases your armour by 20'
                 },
                 {
                     name: 'titanic strikes',
@@ -274,7 +300,7 @@ export default class Upgrades{
                     desc: 'creates cold explosion periodically which freeze enemies and players, upgrade increases radius and frequency'
                 },
                 {
-                    name: 'increase agility',
+                    name: 'increase perception',
                     canUse: (character: Character) => {
                         return character.perception != undefined
                     },
@@ -329,7 +355,7 @@ export default class Upgrades{
                     desc: 'increases your will'
                 },
                 {
-                    name: 'increase speed',
+                    name: 'increase agility',
                     canUse: (character: Character) => {
                         return character.agility != undefined
                     },
@@ -694,6 +720,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 4,
+                ascend: 10,
                 desc: 'hit the single enemy if they died, create a soul projectiles count them based of your resourses'
             },
             {
@@ -741,6 +768,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 2,
+                ascend: 10,
                 desc: 'increases duration and radius of stuning'
             },
             {
@@ -822,6 +850,22 @@ export default class Upgrades{
                 cost: 1,
                 ascend: 25,
                 desc: 'increases radius for searching enemies and count of ghost warriors for each resourse'
+            },
+            {
+                name: 'spreading',
+                type: 'self flagellation',
+                canUse: (character: Character) => {
+                     return character.utility instanceof SelfFlagellation &&
+                    !character.utility.spreading
+                },
+                teach: (character: Character) => {
+                    if(character.utility && character.utility instanceof SelfFlagellation){
+                        character.utility.spreading = true
+                    }
+                },
+                cost: 2,
+                ascend: 12,
+                desc: 'deals damage in small radius'
             },
             {
                 name: 'restless warriors',
@@ -1487,6 +1531,21 @@ export default class Upgrades{
     static getSwordmanUpgrades(){
         return [
             {
+                name: 'crushing swings',
+                type: 'weapon swing',
+                canUse: (character: Character) => {
+                    return character.first_ability instanceof WeaponSwing && !character.first_ability.crushing
+                },
+                teach: (character: Character) => {
+                    if(character.first_ability && character.first_ability instanceof WeaponSwing){
+                        character.first_ability.crushing = true
+                    }
+                },
+                cost: 4,
+                ascend: 20,
+                desc: 'increase attack range and slash angle'
+            },
+            {
                 name: 'echo swing',
                 type: 'weapon swing',
                 canUse: (character: Character) => {
@@ -1560,6 +1619,25 @@ export default class Upgrades{
                 cost: 6,
                 ascend: 26,
                 desc: 'gives your weapon throw ability a chance to return'
+            },
+            {
+                name: 'while we alive',
+                type: 'inner power',
+                canUse: (character: Character) => {
+                    let status = character.level.status_pull.find(elem => elem.unit === character && elem instanceof InnerPowerTrigger)
+                    if(!status || !(status instanceof InnerPowerTrigger)) return
+
+                    return !status.while_alive
+                },
+                teach: (character: Character) => {
+                    let status = character.level.status_pull.find(elem => elem.unit === character && elem instanceof InnerPowerTrigger)
+                    if(!status || !(status instanceof InnerPowerTrigger)) return
+
+                    status.while_alive = true
+                },
+                cost: 3,
+                ascend: 30,
+                desc: 'your inner power passive also gives a fortify(40%)'
             },
             {
                 name: 'shattering',

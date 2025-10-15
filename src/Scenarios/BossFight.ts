@@ -100,10 +100,16 @@ export default class BossFight extends Scenario {
                     elem.can_be_controlled_by_player = true
                 })
 
-                let p = level.players[0]
+                let p = level.players.filter(elem => elem.zone_id === 0)[0]
 
-                let x = p.x
-                let y = p.y
+                let x = 60
+                let y = 60
+
+                if(p){
+                    x = p.x
+                    y = p.y
+                }
+                
                 let distance = 42
                 let count = 20
         
@@ -118,8 +124,7 @@ export default class BossFight extends Scenario {
                     let e = new Statue(level)
                     e.x = x + ((Math.sin(angle) * l) * distance)
                     e.y = y + ((Math.cos(angle) * l) * distance)
-                    e.look_angle = angle - 3.14
-    
+              
                     level.enemies.push(e)
                 }
                 
@@ -129,9 +134,17 @@ export default class BossFight extends Scenario {
                 time: 11000,
                 action: (level: Level) => {
                     let boss = new Boss(level)
-                    let p = level.players[0]
+                    let p = level.players.filter(elem => elem.zone_id === 0)[0]
 
-                    boss.setPoint(p.x + 14, p.y)
+                    let x = 60
+                    let y = 60
+
+                    if(p){
+                        x = p.x
+                        y = p.y
+                    }
+
+                    boss.setPoint(x + 14, y)
 
                     level.enemies.push(boss)
                     

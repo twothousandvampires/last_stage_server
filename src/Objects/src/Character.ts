@@ -105,6 +105,7 @@ export default abstract class Character extends Unit {
     chance_to_block: number = 0
     chance_to_create_grace: number = 0
 
+    enlightenment_threshold: number = 12
     can_get_courage: boolean = true
     can_be_controlled_by_player: boolean = true
     can_be_lethaled: boolean = true
@@ -245,8 +246,12 @@ export default abstract class Character extends Unit {
         this.triggers_on_block.forEach(elem => elem.trigger(this, unit))
     }
 
+    getResistValue(): number{
+        return this.status_resistance
+    }
+
     public isStatusResist(): boolean{
-        let chacne = this.status_resistance
+        let chacne = this.getResistValue()
         if(chacne > 95){
             chacne = 95
         }
@@ -301,6 +306,28 @@ export default abstract class Character extends Unit {
     
     getAttackSpeed(){
         return this.attack_speed
+    }
+
+    getStats(){ 
+        return {
+            might: this.might,
+            will: this.will,
+            knowledge: this.knowledge,
+            durability: this.durability,
+            agility: this.agility,
+            perception: this.perception,
+            ' ': ' ',
+            armour: this.getTotalArmour(),
+            resist: this.getResistValue(),
+            spirit: this.spirit,
+            '  ': ' ',
+            attack_speed: this.getAttackSpeed(),
+            cast_speed: this.getCastSpeed(),
+            pierce: this.getPierce(),
+            impact: this.getImpactRating(),
+            critical: this.critical,
+            penertrate: this.penetrated_rating, 
+        }
     }
 
     public takePureDamage(value: number = 1): void{

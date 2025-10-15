@@ -50,6 +50,7 @@ export default class Flyer extends Character{
         this.mental_shield = false
         this.recent_cast = []
         this.chance_to_block = 100
+        this.enlightenment_threshold = 9
     }
 
     getAdditionalRadius(){
@@ -441,7 +442,7 @@ export default class Flyer extends Character{
 
         this.recent_cast.push(this.level.time)
 
-        if(this.can_be_enlighten && this.recent_cast.length >= 8){
+        if(this.can_be_enlighten && this.recent_cast.length >= this.enlightenment_threshold){
             this.can_be_enlighten = false
 
             this.enlight()
@@ -475,6 +476,7 @@ export default class Flyer extends Character{
             elem.addResourse(5, true)
         })
 
+        this.playerWasEnlighted()
         this.level.addSound('enlight', this.x, this.y)
     }
 
