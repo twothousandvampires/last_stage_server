@@ -87,7 +87,7 @@ export default class Level{
     public check_grace_time: number = 0
     public messedges: Message[] = []
 
-    private game_loop: any
+    public game_loop: any
     public script: Scenario = new Default()
     status_pull: Status[] = []
     private last_id: number = 0
@@ -98,11 +98,6 @@ export default class Level{
         this.server = server
         this.socket = this.server.socket
         this.started = this.time
-    }
-
-    public endGame(): void{
-        clearImmediate(this.game_loop)
-        this.server.endOfLevel()
     }
 
     addSound(sound: Sound): void;
@@ -125,7 +120,8 @@ export default class Level{
         if(are_all_dead){
             setTimeout(() => {
                 if(this.players.length){
-                    this.endGame()
+                    clearImmediate(this.game_loop)
+                    this.server.endOfLevel()
                 }   
             }, 3000)
         }

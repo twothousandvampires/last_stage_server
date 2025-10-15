@@ -11,6 +11,7 @@ const mysql = require('mysql2')
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 import { createClient } from 'redis'
+import Default from './Scenarios/Default'
 
 let port = process.argv[2]
 let httpServer = createServer()
@@ -29,7 +30,6 @@ class GameServer{
     private realise: string = '1.0.0'
     private realise_name: string | undefined = undefined
     private start_scenario_name: string | undefined = undefined
-    private remove_level_timeout: any
 
     db: any
     public db_is_connected: boolean = false
@@ -108,8 +108,8 @@ class GameServer{
     }
 
     private createName(){
-        let first = ['brutal', 'grimy', 'cold', 'rotten', 'black', 'demented', 'gone', 'bloody']
-        let second = ['mace', 'head', 'mind', 'ceil', 'remains', 'ghoul']
+        let first = ['brutal', 'grimy', 'cold', 'rotten', 'black', 'demented', 'gone', 'bloody', 'lifeless', 'stinking', 'frightening','gigantic', 'smashed']
+        let second = ['mace', 'head', 'mind', 'ceil', 'remains', 'ghoul', 'tree', 'corpse', 'gem', 'shards', 'bloat']
 
         this.name = first[Math.floor(Math.random() * first.length)] + ' ' + second[Math.floor(Math.random() * second.length)]
     }
@@ -124,26 +124,46 @@ class GameServer{
     }
 
     public removeLevel(){
-        clearTimeout(this.remove_level_timeout)
         this.level = undefined
         this.game_started = false
         this.start_scenario_name = undefined
         this.clients = new Map()
         this.socket.emit('game_is_over')
+
+        
     }
 
-    suggetRecord(player: Character){
-        this.socket.to(player.id).emit('suggers_record', this.level?.kill_count, player)
+    async suggetRecord(player: Character){
+        if(!this.level) return
+
+        console.log(player.id)
+
+        await this.redisClient.setEx(player.id, 60, JSON.stringify({
+            kill_count: this.level.kill_count,
+            waves: this.level.script instanceof Default ? this.level.script.waves_created : 0,
+            time: this.level.time - this.level.started,
+            class: player.name
+        }))
+        
+        console.log('in suggest')
+        this.socket.to(player.id).emit('suggers_record', this.level.kill_count)
     }
 
-    addRecord(record_data){
-        this.db.query( 'INSERT INTO game_stats (name, kills, time, class) VALUES (?, ?, ?, ?)',
-        [name, this.level.kill_count, this.level.time - this.level.started, p.name],
-        (err, results) => {
-            if (err) {
-                return
-            }
-        })
+    async addRecord(name: string, id: string){
+        console.log(name, id)
+        let info = await this.redisClient.get(id)
+        info = JSON.parse(info)
+
+        console.log(info)
+        if(info && name){
+            this.db.query( 'INSERT INTO game_stats (name, kills, waves, time, class) VALUES (?, ?, ?, ?, ?)',
+            [name, info.kill_count, info.waves, info.time, info.class],
+            (err, results) => {
+               
+            })
+        }
+        
+        this.removeLevel()
     }
 
     public endOfLevel(): void{
@@ -209,34 +229,12 @@ class GameServer{
                 })
 
                 socket.on('add_record' ,(name) => {
+                    console.log(name)
                     this.addRecord(name, socket.id)
                 })
 
                 socket.on('set_start_scenario', (start_scenario_name) => {
                     this.start_scenario_name = start_scenario_name
-                })
-
-                socket.on('get_records', () => {
-
-                    let result:any = []
-
-                    if(this.db_is_connected){
-                        this.db.query(`SELECT * FROM (SELECT * FROM game_stats WHERE class = 'swordman' ORDER BY kills DESC LIMIT 3) AS swordman_top UNION ALL SELECT * FROM (SELECT * FROM game_stats WHERE class = 'flyer' ORDER BY kills DESC LIMIT 3) AS flyer_top UNION ALL SELECT * FROM (SELECT * FROM game_stats WHERE class = 'cultist' ORDER BY kills DESC LIMIT 3) AS cultist_top;`,
-                        (err, results) => {
-                                if(err){
-                                    console.log(err)
-                                }
-                                else{
-                                    result.push(results)
-                                    socket.emit('records', JSON.stringify(result))
-                                }
-                            }
-                        )
-
-                        return
-                    }
-                 
-                    socket.emit('records',[])
                 })
 
                 socket.on('increase_stat', (stat: string) => {
@@ -384,16 +382,19 @@ class GameServer{
 
                 socket.on('disconnect', () => {
                     this.clients.delete(socket.id)
-                    this.updateRedisLobby()
+                    
                     if(this.clients.size === 0){
                         if(this.level){
-                            this.level.endGame()
-                             this.createName()
+                            clearImmediate(this.level.game_loop)
+                            this.removeLevel()
+                            this.createName()
+                            
                         }
                     }
                     else{
                         this.updateLobby()
-                    }       
+                    }     
+                    this.updateRedisLobby()  
                 })
                 
                 socket.on('set_target', (id) => {
