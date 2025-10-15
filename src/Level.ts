@@ -209,8 +209,6 @@ export default class Level{
             return
         }
 
-        
-    
         if(with_check){
             let exist: Status | undefined = this.status_pull.find(elem => elem.unit === unit && elem instanceof status.constructor)
             if(exist){
