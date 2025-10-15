@@ -1,4 +1,4 @@
-import { Server, Socket } from 'socket.io'
+
 import Builder from './Classes/Builder'
 import Client from './Client'
 import item from './Items/Item'
@@ -6,14 +6,23 @@ import Level from './Level'
 import TemplateAbility from './Types/TemplateAbility'
 import Character from './Objects/src/Character'
 import UpgradeManager from './Classes/UpgradeManager'
-const mysql = require('mysql2');
+const mysql = require('mysql2')
 
-export default class GameServer{
+import { createServer } from 'http'
+import { Server } from 'socket.io'
+import { createClient } from 'redis'
+
+let port = process.argv[2]
+let httpServer = createServer()
+let socket = new Server(httpServer, { cors: { origin: '*' } })
+     
+httpServer.listen(port)
+
+class GameServer{
 
     static MAX_PLAYERS: number = 6
 
     public socket: Server
-
     private level: Level | undefined = undefined
     private clients: Map<string, Client> = new Map()
     private game_started: boolean = false
@@ -26,10 +35,44 @@ export default class GameServer{
     public db_is_connected: boolean = false
 
     new_game_timeout: any
+    httpServer: any
+    port: any
+    redisClient: any
+    name: string
     
-    constructor(socket: Server){
+    constructor(socket: any, port: any){
+        this.port = port
         this.socket = socket
-        this.initSocket()
+        this.redisClient = createClient()
+        this.name = ''
+    }
+
+    private async updateRedisLobby(): Promise<void> {
+        let lobbyInfo = {
+            port: this.port.toString(),
+            players: this.clients.size.toString(),
+            maxPlayers: GameServer.MAX_PLAYERS.toString(),
+            name: this.name.toString(),
+            started: this.game_started.toString(),
+        }
+
+        await this.redisClient.hSet(`lobby:${this.port}`, lobbyInfo)
+
+        await this.redisClient.publish('lobby_updates', 'updated')
+    }
+
+    private async initializeRedis(): Promise<void> {
+        await this.redisClient.connect()
+        
+        let lobbyInfo = {
+            port: this.port.toString(),
+            players: this.clients.size.toString(),
+            maxPlayers: GameServer.MAX_PLAYERS.toString(),
+            name: this.name.toString(),
+            started: this.game_started.toString(),
+        }
+
+        await this.redisClient.hSet(`lobby:${this.port}`, lobbyInfo)
     }
 
     public start(): void{
@@ -39,7 +82,6 @@ export default class GameServer{
     }
 
     getAllPlayersItems(data){
-        
         let p_items: string[] = []
 
         data.forEach(elem => {
@@ -47,12 +89,11 @@ export default class GameServer{
         })
 
         return p_items
-
     }
 
     private updateLobby(): void{
         let data: Client[] = Array.from(this.clients.values())
-        console.log(data[0]?.id)
+  
         let p_items = this.getAllPlayersItems(data)
         let list = item.list
         let available = []
@@ -62,16 +103,22 @@ export default class GameServer{
                 available.push(elem)
             }
         })
-
+        
         this.socket.emit('update_lobby_data', data, available)
     }
 
+    private createName(){
+        let first = ['brutal', 'grimy', 'cold', 'rotten', 'black', 'demented', 'gone', 'bloody']
+        let second = ['mace', 'head', 'mind', 'ceil', 'remains', 'ghoul']
 
+        this.name = first[Math.floor(Math.random() * first.length)] + ' ' + second[Math.floor(Math.random() * second.length)]
+    }
 
     private createNewClient(socket: Socket): Client{
         let client: Client = new Client(socket.id)
         this.clients.set(socket.id, client)
         this.updateLobby()
+        this.updateRedisLobby()
 
         return client
     }
@@ -94,7 +141,7 @@ export default class GameServer{
         [name, this.level.kill_count, this.level.time - this.level.started, p.name],
         (err, results) => {
             if (err) {
-                return;
+                return
             }
         })
     }
@@ -119,32 +166,34 @@ export default class GameServer{
                 else{
                     this.removeLevel()
                 }
-            });
+            })
         }
         else{
             this.removeLevel()
         }
     }
 
-     private initSocket() {
-
+    initSocket() {
+        this.createName()
+        this.initializeRedis()
+        
         this.db = mysql.createConnection({
             host: 'localhost',
             user: 'myuser',
             password: 'secure_password123',
             database: 'last_stage'
-        });
+        })
 
         this.db.connect((err) => {
             if (err) {
-                return;
+                return
             }
             this.db_is_connected = true
-        });
-
+        })
 
         this.socket.on('connection', (socket: Socket) => {
-
+            socket.emit('connect_to_lobby')
+ 
             socket.emit('server_status', {
                 status: this.game_started || (this.clients.size >= GameServer.MAX_PLAYERS),
                 realise: this.realise,
@@ -200,6 +249,10 @@ export default class GameServer{
                     this.updateLobby()                
                 })
 
+                socket.on('get_lobby_data', () => {
+                    this.updateLobby()  
+                })
+
                 socket.on('forge_item', (data) => {
                     if(!client.character) return
 
@@ -243,7 +296,7 @@ export default class GameServer{
 
                     client.template.abilities.filter(elem => elem.type === type).forEach(elem => elem.selected = false)
                     if(selected){
-                        selected.selected = true;
+                        selected.selected = true
                     }
                     this.updateLobby()                
                 })
@@ -321,6 +374,7 @@ export default class GameServer{
                                 this.game_started = true
                                 this.socket.emit('start', Array.from(this.clients.values()))
                                 this.level.start(this.start_scenario_name)
+                                this.updateRedisLobby()
                             }
                         }, 3000)
                     }
@@ -330,9 +384,11 @@ export default class GameServer{
 
                 socket.on('disconnect', () => {
                     this.clients.delete(socket.id)
+                    this.updateRedisLobby()
                     if(this.clients.size === 0){
                         if(this.level){
                             this.level.endGame()
+                             this.createName()
                         }
                     }
                     else{
@@ -381,3 +437,6 @@ export default class GameServer{
         return Array.from((this.clients.values())).every(elem => elem.ready)
     }
 }
+
+let lobby = new GameServer(socket, port)
+lobby.initSocket()
