@@ -108,8 +108,8 @@ class GameServer{
     }
 
     private createName(){
-        let first = ['brutal', 'grimy', 'cold', 'rotten', 'black', 'demented', 'gone', 'bloody', 'lifeless', 'stinking', 'frightening','gigantic', 'smashed']
-        let second = ['mace', 'head', 'mind', 'ceil', 'remains', 'ghoul', 'tree', 'corpse', 'gem', 'shards', 'bloat']
+        let first = ['brutal', 'grimy', 'cold', 'rotten', 'black', 'demented', 'gone', 'bloody', 'lifeless', 'stinking', 'frightening','gigantic', 'smashed', 'bleak', 'sinister', 'ominous']
+        let second = ['mace', 'head', 'mind', 'ceil', 'remains', 'ghoul', 'tree', 'corpse', 'gem', 'shards', 'bloat', 'phantom', 'melancholy', 'woe', 'maggot' ,'phlegm']
 
         this.name = first[Math.floor(Math.random() * first.length)] + ' ' + second[Math.floor(Math.random() * second.length)]
     }
@@ -129,14 +129,10 @@ class GameServer{
         this.start_scenario_name = undefined
         this.clients = new Map()
         this.socket.emit('game_is_over')
-
-        
     }
 
     async suggetRecord(player: Character){
         if(!this.level) return
-
-        console.log(player.id)
 
         await this.redisClient.setEx(player.id, 60, JSON.stringify({
             kill_count: this.level.kill_count,
@@ -154,16 +150,18 @@ class GameServer{
         let info = await this.redisClient.get(id)
         info = JSON.parse(info)
 
-        console.log(info)
         if(info && name){
             this.db.query( 'INSERT INTO game_stats (name, kills, waves, time, class) VALUES (?, ?, ?, ?, ?)',
             [name, info.kill_count, info.waves, info.time, info.class],
             (err, results) => {
-               
+                this.removeLevel()
             })
         }
+        else{
+
+            this.removeLevel()
+        }
         
-        this.removeLevel()
     }
 
     public endOfLevel(): void{

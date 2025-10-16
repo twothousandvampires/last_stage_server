@@ -9,7 +9,7 @@ export default class Frequency extends Forging{
         super(item)
         this.max_value = 500
         this.name = 'frequency'
-        this.description = 'increases item frequency of procing'
+        this.description = "increases the frequency of the item's activation"
         this.gold_cost = 5
     }
 

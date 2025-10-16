@@ -70,7 +70,7 @@ export default class UpgradeManager {
 
         if(!item) return
 
-        let cost = (item.forge.length * 5) + 5
+        let cost = (item.forge.length * 15) + 15
 
         if(player.gold < cost) return
 

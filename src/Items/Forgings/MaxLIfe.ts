@@ -9,7 +9,7 @@ export default class MaxLIfe extends Forging{
         super(item)
         this.max_value = 10
         this.name = 'life essence'
-        this.description = 'increases a chance to ignore maximum life when regen'
+        this.description = 'increases a chance to ignore maximum life when regeneration'
         this.gold_cost = 16
     }
 

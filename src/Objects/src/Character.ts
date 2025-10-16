@@ -326,7 +326,7 @@ export default abstract class Character extends Unit {
             pierce: this.getPierce(),
             impact: this.getImpactRating(),
             critical: this.critical,
-            penertrate: this.penetrated_rating, 
+            penertrate: this.penetrate, 
         }
     }
 

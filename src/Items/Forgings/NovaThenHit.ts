@@ -15,7 +15,7 @@ export default class NovaThenHit extends Forging{
         super(item)
         this.max_value = 80
         this.name = 'frost nova'
-        this.description = 'chance to cast frost nova when hit'
+        this.description = 'gives a chance to cast frost nova when hit'
         this.gold_cost = 20
     }
 

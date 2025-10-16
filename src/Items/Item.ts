@@ -47,18 +47,18 @@ export default abstract class Item {
         },
         {
             name: "doom mantia",
-            description: 'when you take lethal damage, there is a chance to redirect your death to a nearby unit'
+            description: 'when you take lethal damage, there is a chance to redirect your death to a nearby target'
         },
         {
             name: "wall of bones",
-            description: 'if you kill an enemy, you receive a bone charge that increases your armor. If you reach the maximum charge (default 10), there is a chance that the charges will explode and injure enemies'
+            description: 'if you kill an enemy, you receive a bone charge that increases your armor. if you reach the maximum charge (default 10), there is a chance that the charges will explode and injure enemies'
         },
         {
             name: "flame ring",
             description: 'when you take damage, the nearest enemy takes damage'
         },{
             name: "sparkling helmet",
-            description: 'if you do not use any skills for 5 seconds it creates a shock ring'
+            description: 'if you do not use any skills for 5 seconds, creates a shock ring'
         },
         {
             name: "glass sword",
@@ -110,7 +110,7 @@ export default abstract class Item {
         },
         {
             name: "ice belt",
-            description: 'increases maximum of resources'
+            description: 'increases maximum of energy'
         },
         {
             name: "searching heart",
@@ -212,7 +212,7 @@ export default abstract class Item {
     name: string = ''
 
     constructor(){
-
+        
     }
 
     getSpecialForgings(): string[] | []{

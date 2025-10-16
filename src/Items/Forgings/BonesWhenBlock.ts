@@ -17,7 +17,7 @@ export default class BonesWhenBlock extends Forging{
         super(item)
         this.max_value = 80
         this.name = 'bones when block'
-        this.description = 'chance to realise bones when you block which hurts enemies'
+        this.description = 'gives a chance to realise bones when you block which hurts enemies'
         this.gold_cost = 20
     }
 
