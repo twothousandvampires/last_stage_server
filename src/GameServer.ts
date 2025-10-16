@@ -129,8 +129,6 @@ class GameServer{
         this.start_scenario_name = undefined
         this.clients = new Map()
         this.socket.emit('game_is_over')
-
-        
     }
 
     async suggetRecord(player: Character){
@@ -152,16 +150,18 @@ class GameServer{
         let info = await this.redisClient.get(id)
         info = JSON.parse(info)
 
-        console.log(info)
         if(info && name){
             this.db.query( 'INSERT INTO game_stats (name, kills, waves, time, class) VALUES (?, ?, ?, ?, ?)',
             [name, info.kill_count, info.waves, info.time, info.class],
             (err, results) => {
-               
+                this.removeLevel()
             })
         }
+        else{
+
+            this.removeLevel()
+        }
         
-        this.removeLevel()
     }
 
     public endOfLevel(): void{
