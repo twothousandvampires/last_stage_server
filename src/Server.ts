@@ -1,11 +1,13 @@
 import { Server as SocketServer, Socket } from 'socket.io'
 import { createClient, RedisClientType } from 'redis'
+const mysql = require('mysql2')
 
 export default class MasterServer {
   
   private io: SocketServer
   private port: number
   private redisClient: RedisClientType
+  private db: any
 
   constructor(io: SocketServer, port: number) {
     this.io = io
@@ -19,6 +21,14 @@ export default class MasterServer {
     this.setupSocketHandlers()
     this.setupMasterCleanup()
     this.setupRedisSubscriptions()
+    this.db = mysql.createConnection({
+        host: 'localhost',
+        user: 'myuser',
+        password: 'secure_password123',
+        database: 'last_stage'
+    })
+
+    this.db.connect()
   }
 
   private async setupRedisSubscriptions(): Promise<void> {
@@ -91,6 +101,21 @@ export default class MasterServer {
       socket.on('get_lobbies', async () => {
         let lobbies = await this.getAllLobbies()
         socket.emit('lobbies_list', lobbies)
+      })
+
+      socket.on('get_records', () => {
+        this.db.query(`SELECT * FROM (SELECT * FROM game_stats WHERE class = 'swordman' ORDER BY kills DESC LIMIT 3) AS swordman_top UNION ALL SELECT * FROM (SELECT * FROM game_stats WHERE class = 'flyer' ORDER BY kills DESC LIMIT 3) AS flyer_top UNION ALL SELECT * FROM (SELECT * FROM game_stats WHERE class = 'cultist' ORDER BY kills DESC LIMIT 3) AS cultist_top;`,
+        (err, results) => {
+                if(err){
+                    console.log(err)
+                }
+                else{
+                    socket.emit('records', JSON.stringify(results))
+                }
+            }
+        )
+
+        socket.emit('records',[])
       })
     })
   }

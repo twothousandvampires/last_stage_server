@@ -11,6 +11,7 @@ import WanderingEvil from "../../../Abilities/Cultist/WanderingEvil";
 import Upgrades from "../../../Classes/Upgrades";
 import Func from "../../../Func";
 import Level from "../../../Level";
+import PlayerDyingState from "../../../State/PlayerDyingState";
 import Immortality from "../../../Status/Immortality";
 import Armour from "../../Effects/Armour";
 import Blood from "../../Effects/Blood";
@@ -251,8 +252,7 @@ export default class Cultist extends Character{
             unit?.succesefulKill()
             this.is_dead = true
             this.life_status = 0
-            this.setState(this.setDyingState)
-            this.level.playerDead()
+            this.setState(new PlayerDyingState())
             return
         }
 

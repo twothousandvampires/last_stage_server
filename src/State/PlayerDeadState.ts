@@ -11,15 +11,15 @@ export default class PlayerDeadState implements IUnitState<Character>{
     enter(player: Character){
         player.state = 'dead'
         player.dead_time = player.level.time
+
+        if(!player.can_ressurect){
+            player.level.playerDead()
+        }
     }
 
     update(player: Character){
-        if(!player.can_ressurect){
-            player.level.playerDead()
-            return
-        }
-
-        if(player.level.time - player.dead_time >= 3000){
+        
+        if(player.can_ressurect && player.level.time - player.dead_time >= 3000){
 
             let count = 5
             
