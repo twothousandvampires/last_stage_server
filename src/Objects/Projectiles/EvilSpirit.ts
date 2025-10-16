@@ -33,7 +33,7 @@ export class EvilSpirit extends Projectiles {
         this.level.players.forEach(elem => {
             if(Func.elipseCollision(this.getBoxElipse(), elem.getBoxElipse())){
                 if(elem.isBlock()){
-                    elem.succesefulBlock(undefined)
+                    elem.succesefulBlock(this.owner)
                 }
                 else{
                     let r = Func.random(1, 3)

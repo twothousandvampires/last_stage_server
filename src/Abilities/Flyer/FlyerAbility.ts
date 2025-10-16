@@ -8,6 +8,5 @@ export default abstract class FlyerAbility extends Ability {
     constructor(owner: Flyer){
         super(owner)
         this.owner = owner
-        this.used = false
     }
 }

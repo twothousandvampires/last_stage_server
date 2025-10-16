@@ -4,7 +4,6 @@ import FlyerAbility from "./FlyerAbility";
 
 export default class Frostnova extends FlyerAbility{
 
-    cost: number
     ice_genesis: boolean
     cold_spires: boolean
    

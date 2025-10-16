@@ -5,13 +5,13 @@ import Ability from "../Ability";
 import SwordmanAbility from "./SwordmanAbility";
 
 export default class WeaponSwing extends SwordmanAbility {
-    echo_swing: boolean
-    improved_swing_technology: boolean
+
+    echo_swing: boolean = false
+    improved_swing_technology: boolean = false
+    crushing: boolean = false
 
     constructor(owner: Swordman){
         super(owner)
-        this.echo_swing = false
-        this.improved_swing_technology = false
         this.name = 'swing'
         this.type = Ability.TYPE_ATTACK
     }
@@ -27,7 +27,17 @@ export default class WeaponSwing extends SwordmanAbility {
 
         let attack_angle = this.owner.attack_angle
 
-        let f = enemies.concat(players).filter(elem => elem != this.owner && Func.checkAngle(this.owner, elem, attack_angle, this.owner.weapon_angle + second / 10))
+        if(this.crushing){
+             attack_elipse.r += 3
+        }
+
+        let weapon_angle = this.owner.weapon_angle + second / 10
+
+        if(this.crushing){
+            weapon_angle += 0.5
+        }
+
+        let f = enemies.concat(players).filter(elem => elem != this.owner && Func.checkAngle(this.owner, elem, attack_angle, weapon_angle))
         let filtered_by_attack_radius = f.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
         filtered_by_attack_radius.sort((a,b) => Func.distance(a, this.owner) - Func.distance(b, this.owner))
 
@@ -65,18 +75,17 @@ export default class WeaponSwing extends SwordmanAbility {
         }
 
         if(this.echo_swing && attack_angle){
-            this.echo(40, attack_angle, attack_elipse)
+            this.echo(40, attack_angle, attack_elipse, weapon_angle)
         }
     }
 
-    echo(chance: number = 0, attack_angle: number, attack_elipse: any){
+    echo(chance: number = 0, attack_angle: number, attack_elipse: any, weapon_angle = 1){
         if(!Func.chance(chance)) return
 
         setTimeout(() => {
             attack_elipse.r += 1
-            let second = this.owner.getSecondResource()
-
-            let f = this.owner.level.enemies.filter(elem => Func.checkAngle(this.owner, elem, attack_angle, this.owner.weapon_angle + second / 10))
+          
+            let f = this.owner.level.enemies.filter(elem => Func.checkAngle(this.owner, elem, attack_angle, weapon_angle))
             let filtered_by_attack_radius = f.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
             filtered_by_attack_radius.sort((a,b) => Func.distance(a, this.owner) - Func.distance(b, this.owner))
 

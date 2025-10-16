@@ -14,12 +14,6 @@ export default class Commands extends SwordmanAbility{
         this.name = 'commands'
     }
 
-    use(){
-        this.owner.using_ability = this
-        this.owner.pay_to_cost = this.cost
-        this.owner.setState(this.owner.setCastAct)
-    }
-
     impact(){
         this.owner.level.sounds.push({
             name:'holy cast',
@@ -40,7 +34,7 @@ export default class Commands extends SwordmanAbility{
         if(this.fast_commands){
             move_buff = Math.round(move_buff * 2)
             armour_buff = Math.round(armour_buff * 2)
-            duration = 6000
+            duration = 8000
         }
 
         players.forEach(elem => {

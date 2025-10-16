@@ -1,143 +1,129 @@
 import Func from "../../Func";
+import IUnitState from "../../Interfaces/IUnitState";
+import Character from "../../Objects/src/Character";
 import Swordman from "../../Objects/src/PlayerClasses/Swordman";
 import Ability from "../Ability";
 import SwordmanAbility from "./SwordmanAbility";
 
-export default class Jump extends SwordmanAbility{
+export default class Jump extends SwordmanAbility implements IUnitState<Swordman>{
 
-    tick: number
+    start = 0
     total_jump_time: number //ms
-    direction: boolean
     impact: boolean
     cost: number
     distance: number | undefined
     move_per_tick: number | undefined
     heavy_landing: boolean
     stomp: boolean
+    z_add = 0.7
 
     constructor(owner: Swordman){
         super(owner)
-        this.tick = 0
         this.total_jump_time = 1200
-        this.direction = false
         this.impact = false
         this.cost = 4
-        this.cd = 8000
+        this.cd = 6500
         this.heavy_landing = false
         this.stomp = false
         this.name = 'jump'
         this.type = Ability.TYPE_CUSTOM
     }
 
-    use(){        
-        this.used = true
+    enter(player: Character){
+        player.prepareToAction()
 
-        let rel_x =  this.owner.pressed.canvas_x + this.owner.x - 40
-        let rel_y =  this.owner.pressed.canvas_y + this.owner.y - 40
-
-        if(rel_x < this.owner.x){
-            this.owner.flipped = true
-        }
-        else{
-            this.owner.flipped = false    
-        }
-
-        if(!this.owner.attack_angle){
-            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
-        }
-
-        this.distance = Math.sqrt(((this.owner.x - rel_x) ** 2) + ((this.owner.y -  rel_y) ** 2))
+        this.distance = Math.sqrt(((player.x - player.c_x) ** 2) + ((player.y -  player.c_y) ** 2))
 
         if(this.distance > 25) this.distance = 25
         if(this.distance < 10) this.distance = 10
 
         this.move_per_tick = this.distance / Math.floor(this.total_jump_time / 30)
         
-        this.owner.is_attacking = true
         this.owner.state = 'jump'
         this.owner.can_be_controlled_by_player = false
+        player.chance_to_avoid_damage_state += 100
 
-        setTimeout(() => {
-            this.direction = true
-        }, this.total_jump_time/ 2)
-
-        setTimeout(() => {
-            this.impact = true
-        }, this.total_jump_time)
-
-        this.owner.stateAct = this.getAct()  
-        this.owner.chance_to_avoid_damage_state += 100
-
-        this.owner.cancelAct = () => {
-            this.owner.z = 0
-            this.owner.is_attacking = false
-            this.owner.chance_to_avoid_damage_state -= 100
-            this.afterUse()
-            this.direction = false
-            this.impact = false
-            this.owner.can_be_controlled_by_player = true
-        }
+        this.start = player.level.time
     }
 
-    private getAct(){
-        let ability = this
-        let owner = this.owner
-        let add_z = 0.7
- 
-        return function(){
-            if(ability.impact){
-                owner.succefullCast()
-                let second = owner.getSecondResource()
-                let enemies = owner.level.enemies
+    exit(player: Character){
+        player.z = 0
+        player.is_attacking = false
+        player.chance_to_avoid_damage_state -= 100
+
+        this.afterUse()
+        this.start = 0
+        this.impact = false
+        this.owner.can_be_controlled_by_player = true
+        this.owner.attack_angle = undefined
+        this.z_add = 0.7
+    }
+
+    update(player: Character){
+        if(this.impact){
+            this.used = true
+            player.succefullCast()
+            let second = player.getSecondResource()
+            let enemies = player.level.enemies
     
-                let attack_elipse = owner.getBoxElipse()
-                attack_elipse.r = owner.attack_radius + (ability.stomp ? 5 : 0) + second
+            let attack_elipse = player.getBoxElipse()
+            attack_elipse.r = player.attack_radius + (this.stomp ? 5 : 0) + second
     
-                let filtered_by_attack_radius = enemies.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
-                let count = filtered_by_attack_radius.length
+            let filtered_by_attack_radius = enemies.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
+            let count = filtered_by_attack_radius.length
 
-                filtered_by_attack_radius.forEach(elem => {
-                    owner.addPoint()
-                    elem.takeDamage(owner)
-                })
+            filtered_by_attack_radius.forEach(elem => {
+                player.addPoint()
+                elem.takeDamage(player)
+            })
 
-                filtered_by_attack_radius = owner.level.players.filter(elem => elem != owner && Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
-            
-                filtered_by_attack_radius.forEach(elem => {
-                    owner.addPoint()
-                    elem.takeDamage(owner)
-                })
-
+            filtered_by_attack_radius = player.level.players.filter(elem => elem != player && Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
         
-                if(ability.heavy_landing){
-                    owner.armour_rate += count * 4
-                    setTimeout(() => {
-                        owner.armour_rate -= count * 4
-                    },5000)
-                }
+            filtered_by_attack_radius.forEach(elem => {
+                player.addPoint()
+                elem.takeDamage(player)
+            })
 
-                owner.getState()
-                owner.attack_angle = undefined
+            if(this.heavy_landing){
+                player.armour_rate += count * 4
+                setTimeout(() => {
+                    player.armour_rate -= count * 4
+                },5000)
+            }
+
+            player.getState()
+            return
+        }
+        else{
+            let delta = player.level.time - this.start
+            if(delta >= this.total_jump_time){
+                this.impact = true
                 return
             }
-            
-            owner.z += ability.direction ? -add_z : add_z
-
-            if(ability.direction && add_z < 0.7){
-                add_z += 0.02
-                if(add_z >= 0.7) add_z = 0.7
+            if(delta >= this.total_jump_time / 2){
+                player.z -= this.z_add
+                this.z_add += 0.02
             }
-            else if(add_z > 0){
-                add_z -= 0.02
-                if(add_z < 0) add_z = 0
+            else{
+                player.z += this.z_add
+                this.z_add -= 0.02
             }
 
-            let next_step_x = Math.sin(owner.attack_angle) * ability.move_per_tick
-            let next_step_y = Math.cos(owner.attack_angle) * ability.move_per_tick
+            if(this.z_add < 0) this.z_add = 0
 
-            if(!owner.isOutOfMap(owner.x + next_step_x, owner.y + next_step_y)){
-                owner.addToPoint(next_step_x, next_step_y)
+            let next_step_x = Math.sin(player.attack_angle) * this.move_per_tick
+            let next_step_y = Math.cos(player.attack_angle) * this.move_per_tick
+
+            if(!player.isOutOfMap(player.x + next_step_x, player.y + next_step_y)){
+                player.addToPoint(next_step_x, next_step_y)
             }
-        }
+        }  
+    }
+
+    use(){
+        this.owner.using_ability = this
+        this.owner.pay_to_cost = this.cost
+
+        this.owner.setState(this)
     }
 }

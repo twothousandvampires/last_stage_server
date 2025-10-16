@@ -4,7 +4,7 @@ import GraceShard from "../../Effects/GraceShard";
 import RuneExplode from "../../Effects/RuneExplode";
 import Pile from "../Piles/Pile";
 
-export default class Gifter extends Pile{
+export default class Gifter extends Pile {
 
     start_time: any
     last_grace_spawn_time: number = 0
@@ -20,37 +20,12 @@ export default class Gifter extends Pile{
         this.spawn_time = 1600
         this.armour_rate = 0
         this.create_chance = 0
-    }
-
-    getState(): void {
-        this.start_time = Date.now()
-        this.setState(this.setIdleAct)
-    }
-
-    idleAct(tick: number){
-        if(tick - this.start_time >= 20000){
-            this.setState(this.setdyingAct)
-        }
+        this.abilities = []
+        this.duration = 20000
     }
 
     takeDamage(unit: any = undefined, options: any = {}){
-        if(this.is_dead) return
-        
-        let damage_value = 1
-
-        if(options?.damage_value){
-            damage_value = options.damage_value
-        }
-        
-        if(unit && unit?.critical && Func.chance(unit.critical)){
-            damage_value *= 2
-        }
-
-        if(Func.chance(this.fragility)){
-            damage_value *= 2
-        }
-
-        this.life_status -= damage_value
+        super.takeDamage()
 
         if(this.level.time - this.last_grace_spawn_time >= 1000){
             if(Func.chance(10)){
@@ -84,19 +59,5 @@ export default class Gifter extends Pile{
                 this.level.binded_effects.push(grace)
             }
         }
-        
-        unit?.succesefulHit(this)
-        
-        if(this.life_status <= 0){
-            this.is_dead = true
-            unit?.succesefulKill(this)
-            this.setdyingAct()
-        }
-    }
-
-    setdyingAct(){
-        this.is_dead = true
-        this.is_corpse = true
-        this.state = 'dead'
     }
 }

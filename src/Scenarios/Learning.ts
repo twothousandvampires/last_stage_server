@@ -54,9 +54,9 @@ export default class Learning extends Scenario{
 
     start(level: Level){
         level.players.forEach(elem => {
-            elem.grace = 1000
+            elem.grace =10
             elem.gold = 1000
-            elem.life_status = 1000
+            elem.life_status = 4222
             elem.light_r = 18
         })
 
@@ -174,7 +174,7 @@ export default class Learning extends Scenario{
                 damage_value *= 2
             }
     
-            if(Func.chance(this.fragility)){
+            if(this.fragility){
                 damage_value *= 2
             }
     

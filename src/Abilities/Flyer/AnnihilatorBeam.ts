@@ -5,7 +5,6 @@ import FlyerAbility from "./FlyerAbility";
 
 export default class AnnihilatorBeam extends FlyerAbility{
 
-    cost: number
     concentrating_energy: boolean
 
     constructor(owner: Flyer){

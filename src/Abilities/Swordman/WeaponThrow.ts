@@ -13,7 +13,7 @@ export default class WeaponThrow extends SwordmanAbility {
 
     constructor(owner: Swordman){
         super(owner)
-        this.cd = 4000
+        this.cd = 3000
         this.light_grip = false
         this.returning = false
         this.shattering = false
@@ -25,7 +25,7 @@ export default class WeaponThrow extends SwordmanAbility {
     getCdValue(){
         let cd_time = this.cd
        
-        if(this.light_grip && Func.chance(50)){
+        if(this.light_grip && Func.chance(50, this.owner.is_lucky)){
             cd_time = Math.round(cd_time / 2)
         }
 

@@ -1,12 +1,11 @@
 import Func from "../Func";
 import Character from "../Objects/src/Character";
-import Exhaustion from "../Status/Exhaustion";
 import Ignite from "../Status/Ignite";
 import Item from "./Item";
 
 export default class MoltenHelm extends Item{
     
-    frequency: number = 3000
+    frequency: number = 10000
     last_trigger_time: number = 0
 
     constructor(){
@@ -22,7 +21,7 @@ export default class MoltenHelm extends Item{
 
     trigger(character: Character){
         if(this.disabled) return
-
+       
         let time = character.level.time
 
         if(time - this.last_trigger_time >= this.frequency){
@@ -30,7 +29,9 @@ export default class MoltenHelm extends Item{
 
             let s = new Ignite(time)
             s.setDuration(4000)
-            s.setPower(character.armour_rate)
+            s.setPower(Math.floor(character.armour_rate /  2))
+            s.provider = this
+            
             character.level.setStatus(character, s, true)
 
             character.level.addSound('fire cast', character.x, character.y)
@@ -43,6 +44,8 @@ export default class MoltenHelm extends Item{
 
                     s.setDuration(6000)
                     s.setPower(character.armour_rate)
+                    s.provider = character
+
                     character.level.setStatus(elem, s)
                 }
             })

@@ -33,6 +33,7 @@ export default class ChargedArmour extends Item{
 
             let s = new Ignite(character.level.time)
             s.setDuration(5000)
+            s.provider = character
             s.setPower(40)
 
             character.level.setStatus(character, s, true)

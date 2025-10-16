@@ -11,6 +11,9 @@ import Teleportation from "../../../Abilities/Flyer/Teleportation";
 import Upgrades from "../../../Classes/Upgrades";
 import Func from "../../../Func";
 import Level from "../../../Level";
+import FlyerDefendState from "../../../State/FlyerDefendState";
+import PlayerDyingState from "../../../State/PlayerDyingState";
+import Upgrade from "../../../Types/Upgrade";
 import Armour from "../../Effects/Armour";
 import Blood from "../../Effects/Blood";
 import ToothExplode from "../../Effects/ToothExplode";
@@ -47,27 +50,41 @@ export default class Flyer extends Character{
         this.mental_shield = false
         this.recent_cast = []
         this.chance_to_block = 100
+        this.enlightenment_threshold = 9
     }
 
     getAdditionalRadius(){
         return Math.floor(this.might / 2)
     }
 
-    generateUpgrades(){
+    getDefendState(){
+        return new FlyerDefendState()
+    }
+
+    generateUpgrades(ascend_level: number){
+        if(!this.can_generate_upgrades) return
         if(this.upgrades.length) return
 
         //get all upgrades for this class
         let p = Upgrades.getAllUpgrades()
-        let all = Upgrades.getFlyerUpgrades().concat(p)
-        
+        let all: Upgrade[] = Upgrades.getFlyerUpgrades().concat(p)
+       
         //filter by usability
         let filtered = all.filter(elem => {
-           return elem.cost <= this.grace && elem.canUse(this)
+            return (!elem.ascend || this.ascend_level >= elem.ascend) && elem.cost <= this.grace && elem.canUse(this)
         })
+
+        filtered.forEach(elem => {
+            if(elem.ascend === undefined){
+                elem.ascend = 0
+            }
+        })
+
+        filtered.sort((a, b) =>  { return (b.cost + b.ascend) - (a.cost + a.ascend)})
 
         //get 3 random ones
 
-        filtered.sort((a, b) =>  { return Math.random() > 0.5 ? 1 : -1 })
+        filtered.sort((a, b) =>  { return Func.chance(60) ? 1 : -1 })
 
         filtered = filtered.slice(0, 3)
 
@@ -222,7 +239,7 @@ export default class Flyer extends Character{
             unit?.succesefulKill()
             this.is_dead = true
             this.life_status = 0
-            this.setState(this.setDyingState)
+            this.setState(new PlayerDyingState())
             this.level.playerDead()
             return
         }
@@ -230,7 +247,11 @@ export default class Flyer extends Character{
         if(this.damaged || this.is_dead) return
 
         if(this.ward){
-            this.loseWard()
+            let count = 1
+            if(unit && Func.chance(unit.critical)){
+                count ++
+            }
+            this.loseWard(count)
             let e = new ToothExplode(this.level)
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)
@@ -244,8 +265,6 @@ export default class Flyer extends Character{
 
             return
         }
-
-        
 
         this.playerWasHited(unit)
 
@@ -366,7 +385,7 @@ export default class Flyer extends Character{
         
         if(!this.can_regen_resource) return
         
-        super.addResourse()
+        this.playerGetResourse()
 
         if(this.resource < this.maximum_resources || ignore_limit){
             this.resource += count
@@ -423,7 +442,7 @@ export default class Flyer extends Character{
 
         this.recent_cast.push(this.level.time)
 
-        if(this.can_be_enlighten && this.recent_cast.length >= 8){
+        if(this.can_be_enlighten && this.recent_cast.length >= this.enlightenment_threshold){
             this.can_be_enlighten = false
 
             this.enlight()
@@ -457,6 +476,7 @@ export default class Flyer extends Character{
             elem.addResourse(5, true)
         })
 
+        this.playerWasEnlighted()
         this.level.addSound('enlight', this.x, this.y)
     }
 

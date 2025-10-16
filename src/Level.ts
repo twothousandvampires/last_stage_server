@@ -13,10 +13,13 @@ import { Server, Socket } from "socket.io"
 import Status from "./Status/Status"
 import GameServer from "./GameServer"
 import Sound from "./Types/Sound"
-import { Enemy } from "./Objects/src/Enemy/Enemy"
+import Enemy from "./Objects/src/Enemy/Enemy"
 import Learning from "./Scenarios/Learning"
 import ItemDrop from "./Objects/Effects/ItemDrop"
 import SorcerersSkull from "./Objects/Effects/SorcerersSkull"
+import UpgradeManager from "./Classes/UpgradeManager"
+import Helm from "./Objects/Effects/Helm"
+import Message from "./Types/Message"
 
 export default class Level{
     static enemy_list = [
@@ -50,7 +53,7 @@ export default class Level{
        },
         {
          'name': 'pile',
-         'weight': 12
+         'weight': 10
        },  
        {
          'name': 'magic slime',
@@ -62,7 +65,7 @@ export default class Level{
        },      
         {
          'name': 'gifter',
-         'weight': 3
+         'weight': 2
        },
     ]
 
@@ -82,11 +85,11 @@ export default class Level{
     public started: number
     public ambient_time: number = 0
     public check_grace_time: number = 0
+    public messedges: Message[] = []
 
-
-    private game_loop: any
+    public game_loop: any
     public script: Scenario = new Default()
-    private status_pull: Status[] = []
+    status_pull: Status[] = []
     private last_id: number = 0
     public kill_count: number = 0
     public previuos_script: Scenario | undefined 
@@ -95,11 +98,6 @@ export default class Level{
         this.server = server
         this.socket = this.server.socket
         this.started = this.time
-    }
-
-    public endGame(): void{
-        clearImmediate(this.game_loop)
-        this.server.endOfLevel()
     }
 
     addSound(sound: Sound): void;
@@ -122,7 +120,8 @@ export default class Level{
         if(are_all_dead){
             setTimeout(() => {
                 if(this.players.length){
-                    this.endGame()
+                    clearImmediate(this.game_loop)
+                    this.server.endOfLevel()
                 }   
             }, 3000)
         }
@@ -136,8 +135,8 @@ export default class Level{
         player.startGame()
         player.setPoint(88 + this.players.length * 4, 22)
         this.players.push(player)
-        player.closeUpgrades()
-        player.closeSuggest()
+        UpgradeManager.closeUpgrades(player)
+        UpgradeManager.closeSuggest(player)
     }
 
     public start(forced_scenario_name: string | undefined): void{
@@ -150,6 +149,10 @@ export default class Level{
         this.started = Date.now()
 
         this.loop()
+    }
+
+    addEffect(effect: Effect){
+        this.effects.push(effect)
     }
 
     loop(){
@@ -165,8 +168,7 @@ export default class Level{
             this.deleted.length = 0
             this.sounds.length = 0
             this.changed_actors.clear()
-            
-            this.collectTheDead()
+            this.messedges.length = 0
         }
         
         this.game_loop = setImmediate(this.loop.bind(this))
@@ -178,11 +180,19 @@ export default class Level{
             actors: [...this.players, ...changed],
             deleted: this.deleted,
             sounds: this.sounds,
+            messedges: this.messedges,
             meta: {
                 ms: this.time - this.started,       
                 killed: this.kill_count,
+                scenario: this.script.getInfo()
             }
         }
+    }
+
+    addMessedge(msg: string, id = undefined): void{
+        if(this.messedges.length) return
+        
+        this.messedges.push({text: msg, id: id})
     }
 
     public setStatus(unit: Unit | Character, status: Status, with_check: boolean = false): void{
@@ -194,9 +204,9 @@ export default class Level{
             unit.statusWasResisted(status)
             return
         }
-    
+
         if(with_check){
-            let exist: Status | undefined = this.status_pull.find(elem => elem.unit === unit && elem.name === status.name)
+            let exist: Status | undefined = this.status_pull.find(elem => elem.unit === unit && elem instanceof status.constructor)
             if(exist){
                 exist.update(status)
             }
@@ -234,14 +244,7 @@ export default class Level{
         for(let i = 0; i < this.enemies.length; i ++){
             let e = this.enemies[i]
             if(e){
-               e.act(this.time) 
-               if(e.is_corpse){
-                    this.players.forEach(elem => {
-                        if(Func.distance(e, elem) <= 20){
-                            elem.enemyDeadNearby(e)
-                        }
-                    })
-               }
+               e.act(this.time)
             }
         }
         this.binded_effects.forEach(effect => {
@@ -252,7 +255,7 @@ export default class Level{
                 status.clear()
                 this.status_pull = this.status_pull.filter(elem => elem != status)
             }
-            else if(status.unit && status.unit.is_dead){
+            else if(!status.unit || status.unit.is_dead){
                 status?.unitDead()
                 status.clear()
                 this.status_pull = this.status_pull.filter(elem => elem != status)
@@ -263,13 +266,7 @@ export default class Level{
         })
     }
 
-    removeEnemy(enemy: Enemy | undefined){
-        if(!enemy) return
-
-        if(enemy.count_as_killed){
-            this.kill_count ++
-        }
-
+    check(enemy: Enemy){
         if(Func.chance(enemy.create_chance)){
             let drop_name: Effect | undefined | string = undefined
 
@@ -303,23 +300,25 @@ export default class Level{
             else if(drop_name === 'skull'){
                 drop_name = new SorcerersSkull(this)
             }
+            else if(drop_name === 'helm'){
+                drop_name = new Helm(this)
+            }
 
             if(drop_name instanceof Effect){
                 drop_name.setPoint(enemy.x, enemy.y)
                 this.binded_effects.push(drop_name)
             }
         }
+    }
+
+    removeEnemy(enemy: Enemy | undefined){
+        if(!enemy) return   
+
+        if(enemy.count_as_killed){
+            this.kill_count ++
+        }
 
         let index = this.enemies.indexOf(enemy)
         this.enemies.splice(index, 1)
-    }
-
-    private collectTheDead(): void{
-        for(let i = 0; i < this.enemies.length; i++){
-            let enemy: Enemy = this.enemies[i]
-            if(enemy.is_corpse){
-                this.removeEnemy(enemy)
-            }
-        }
     }
 }

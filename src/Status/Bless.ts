@@ -1,7 +1,4 @@
-import Func from "../Func"
-import BannerOfArmourEffect from "../Objects/Effects/BannerOfArmourEffect"
 import BlessEffect from "../Objects/Effects/BlessEffect"
-import BannerOfArmourStatus from "./BannerOfArmourStatus"
 import Status from "./Status"
 
 export default class Bless extends Status{
@@ -24,8 +21,9 @@ export default class Bless extends Status{
 
     apply(unit: any){
         this.unit = unit
-        unit.gold_revard += 10
-        unit.life_status += 2
+        unit.gold_revard += 15
+        unit.life_status += 1
+        unit.critical += 50
 
         let effect = new BlessEffect(this.unit.level)
         effect.setOwner(this.unit)

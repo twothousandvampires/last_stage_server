@@ -96,7 +96,7 @@ export default class ShieldBash extends CultistAbility {
             attack_elipse.r = 12
 
             if(this.deafening_wave){
-                attack_elipse.r += 8
+                attack_elipse.r += 10
             }
             let filtered_to_stun = f.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
             filtered_to_stun.forEach(elem => {

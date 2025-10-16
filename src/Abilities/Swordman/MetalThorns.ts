@@ -13,12 +13,6 @@ export default class MetalThorns extends SwordmanAbility{
         this.cd = 20000
     }
 
-    use(){
-        this.owner.using_ability = this
-        this.owner.pay_to_cost = this.cost
-        this.owner.setState(this.owner.setCastAct)
-    }
-
     impact(){
         this.owner.level.sounds.push({
             name: 'holy cast',

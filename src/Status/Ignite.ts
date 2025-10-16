@@ -6,6 +6,7 @@ import Status from "./Status"
 export default class Ignite extends Status{
 
     last_checked: number
+    provider: any = undefined
 
     constructor(public time: number){
         super(time)
@@ -49,8 +50,8 @@ export default class Ignite extends Status{
         if(tick_time > this.last_checked){
             this.last_checked += 1000
             if(Func.chance(this.power)){
-                this.unit?.takeDamage(undefined, {
-                    burn: true
+                this.unit?.takePureDamage(this.provider, {
+                    burn: true,
                 })
             }
         }

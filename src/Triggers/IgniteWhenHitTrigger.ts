@@ -30,6 +30,7 @@ export default class IgniteWhenHitTrigger {
                 let s = new Ignite(player.level.time)
                 s.setDuration(6000)
                 s.setPower(30)
+                s.provider = player
 
                 player.level.setStatus(target, s, true)
             }

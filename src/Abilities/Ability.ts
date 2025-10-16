@@ -1,4 +1,6 @@
 import Player from "../Objects/src/Character";
+import PlayerAttackState from "../State/PlayerAttackState";
+import PlayerCastState from "../State/PlayerCastState";
 
 export default abstract class Ability {
 
@@ -28,10 +30,10 @@ export default abstract class Ability {
         this.owner.pay_to_cost = this.cost
 
         if(this.type === Ability.TYPE_CAST){
-            this.owner.setState(this.owner.setCastAct)
+            this.owner.setState(new PlayerCastState())
         }
         else if(this.type === Ability.TYPE_ATTACK){
-            this.owner.setState(this.owner.setAttackAct)
+            this.owner.setState(new PlayerAttackState())
         }
     }
 

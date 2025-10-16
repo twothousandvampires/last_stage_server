@@ -21,7 +21,6 @@ export default class CrystalGreavesStatus extends Status{
                     this.unit.level.enemies.forEach(elem => {
                         if(Func.distance(elem, this.unit) <= 10){
                             let s = new Fragility(tick_time)
-                            s.setPower(15)
                             s.setDuration(2000)
 
                             this.unit.level.setStatus(elem, s, true)
@@ -30,7 +29,6 @@ export default class CrystalGreavesStatus extends Status{
                 }
                 else{
                     let s = new Fragility(tick_time)
-                    s.setPower(15)
                     s.setDuration(1500)
                     this.unit.level.setStatus(this.unit, s, true)
                 }      

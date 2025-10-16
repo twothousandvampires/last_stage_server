@@ -28,7 +28,7 @@ export class FrostBolt extends Projectiles{
                 e.setPoint(p.x, p.y)
                 this.level.effects.push(e)
 
-                p.takeDamage()
+                p.takeDamage(this.owner)
                 this.impact()
                 
                 return

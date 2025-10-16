@@ -1,15 +1,15 @@
 import Func from "../../Func";
+import IUnitState from "../../Interfaces/IUnitState";
+import Character from "../../Objects/src/Character";
 import Swordman from "../../Objects/src/PlayerClasses/Swordman";
 import Ability from "../Ability";
 import SwordmanAbility from "./SwordmanAbility";
 
-export default class Charge extends SwordmanAbility{
+export default class Charge extends SwordmanAbility implements IUnitState<Character> {
    
     cost: number
     distance: number
     point_added: boolean
-    start_x: number | undefined
-    start_y: number | undefined
     hited: any[]
     start: boolean
     end: boolean
@@ -33,109 +33,94 @@ export default class Charge extends SwordmanAbility{
         this.type = Ability.TYPE_CUSTOM
     }
 
-    use(){
-        this.owner.is_attacking = true
-      
-        this.start_x = this.owner.x
-        this.start_y = this.owner.y
-
+    enter(player: Character){
+        player.prepareToAction()
+   
         this.used = true
 
-        let rel_x =  this.owner.pressed.canvas_x + this.owner.x - 40
-        let rel_y =  this.owner.pressed.canvas_y + this.owner.y - 40
+        player.state = 'charge'
+        player.action_time = 200
+        player.setImpactTime(100)
 
-        if(rel_x < this.owner.x){
-            this.owner.flipped = true
-        }
-        else{
-            this.owner.flipped = false    
-        }
+        player.chance_to_avoid_damage_state += 100
+    }
 
-        if(!this.owner.attack_angle){
-            this.owner.attack_angle = Func.angle(this.owner.x, this.owner.y, rel_x, rel_y)
-        }  
-        this.owner.state = 'charge'
-        this.owner.action_time = 200
-        this.owner.setImpactTime(100)
+    update(player: Character){
+        if(this.end){
+            player.getState()
+        }
+        else if(player.action || this.start){
+            this.start = true
+            let speed = player.getMoveSpeed()
+
+            let next_step_x = Math.sin(player.attack_angle) * speed * 1.5
+            let next_step_y = Math.cos(player.attack_angle) * speed * 1.5
+
+            if(!player.isOutOfMap(player.x + next_step_x, player.y + next_step_y)){
+                player.addToPoint(next_step_x, next_step_y)
+            }
+
+            let stun_power = 2000
+
+            let count = player.getTargetsCount()
+            let second = player.getSecondResource()
+
+            player.level.enemies.forEach((elem) => {
+                if(!this.hited.includes(elem.id) && Func.elipseCollision(player.getBoxElipse(), elem.getBoxElipse())){
+                    this.hited.push(elem.id)
+
+                    if(count > 0 && this.destroyer && Func.chance(35 + second)){
+                        elem.takeDamage(player, {
+                            explode: true
+                        })
+                        count--
+                    }
+                    
+                    if(!elem.is_dead){
+                        elem.setStun(stun_power)
+                    }
+                    
+                    player.addPoint()
+                }
+            })
+
+            player.level.players.forEach((elem) => {
+                if(elem != player && !this.hited.includes(elem.id) && Func.elipseCollision(player.getBoxElipse(), elem.getBoxElipse())){
+                    this.hited.push(elem.id)
+                    elem.setStun(stun_power)
+                    player.addPoint()
+                }
+            })
+        }
+    }
+
+    exit(player: Character){
+        clearTimeout(this.end_timeout)
+        this.afterUse()
+        this.start = false
+        this.end = false
         
-        this.owner.chance_to_avoid_damage_state += 100
+        if(this.possibilities && this.hited.length >= 3){
+            player.addResourse()
+        }
 
+        player.is_attacking = false
+        player.action = false
+     
+        player.succefullCast()
+        player.attack_angle = undefined
+        player.chance_to_avoid_damage_state -= 100
+        
+        this.hited = []
+    }
+
+    use(){
+        this.owner.using_ability = this
+        this.owner.pay_to_cost = this.cost
+        this.owner.setState(this)
+       
         this.end_timeout = setTimeout(() => {
             this.end = true
         }, this.distance)
-
-        this.owner.cancelAct = () => {
-            clearTimeout(this.end_timeout)
-            this.owner.is_attacking = false
-            this.afterUse()
-            this.owner.action = false
-            this.point_added = false
-            this.start_x = undefined
-            this.start_y = undefined
-            this.start = false
-            this.end = false
-            this.owner.succefullCast()
-            this.owner.chance_to_avoid_damage_state -= 100
-            if(this.possibilities && this.hited.length >= 3){
-                this.owner.addResourse()
-            }
-            this.hited = []
-        }
-
-        this.owner.stateAct = this.getAct()
-    }
-
-    getAct(){
-        let owner = this.owner
-        let ability = this
-        let second = this.owner.getSecondResource()
-        let count = this.owner.getTargetsCount() + second
-
-        return () => {
-            if(ability.end){
-                owner.getState()
-                owner.attack_angle = undefined
-            }
-            else if(owner.action || ability.start){
-                ability.start = true
-                let speed = owner.getMoveSpeed()
-    
-                let next_step_x = Math.sin(owner.attack_angle) * speed * 1.5
-                let next_step_y = Math.cos(owner.attack_angle) * speed * 1.5
-    
-                if(!owner.isOutOfMap(owner.x + next_step_x, owner.y + next_step_y)){
-                    owner.addToPoint(next_step_x, next_step_y)
-                }
-
-                let stun_power = 2000
-
-                owner.level.enemies.forEach((elem) => {
-                    if(!ability.hited.includes(elem.id) && Func.elipseCollision(owner.getBoxElipse(), elem.getBoxElipse())){
-                        ability.hited.push(elem.id)
-
-                        if(count > 0 && ability.destroyer && Func.chance(35 + second)){
-                            elem.takeDamage(owner, {
-                                explode: true
-                            })
-                            count--
-                        }
-                        
-                        if(!elem.is_dead){
-                            elem.setStun(stun_power)
-                        }
-                        
-                        owner.addPoint()
-                    }
-                })
-
-                owner.level.players.forEach((elem) => {
-                    if(elem != owner && !ability.hited.includes(elem.id) && Func.elipseCollision(owner.getBoxElipse(), elem.getBoxElipse())){
-                        ability.hited.push(elem.id)
-                        elem.setStun(stun_power)
-                        owner.addPoint()
-                    }
-                })
-            }
-        }  
     }
 }

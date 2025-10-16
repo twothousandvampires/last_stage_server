@@ -1,11 +1,9 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
 import Bleed from "../../../Status/Bleed";
-import { Enemy } from "./Enemy";
+import Enemy from "./Enemy";
 
 export default class Impy extends Enemy {
-
-   
 
     constructor(level: Level){
         super(level)
@@ -20,53 +18,28 @@ export default class Impy extends Enemy {
         this.weapon_angle = 0.7
     }
 
-    attackAct(){
-        if(this.action && !this.hit && this.target && this.attack_angle){
-            this.hit = true
-    
-            let e = this.getBoxElipse()
-            e.r = this.attack_radius
+    hitImpact(){
+        if(!this.target || !this.attack_angle) return
 
-            if(this.target?.z < 5 && Func.elipseCollision(e, this.target?.getBoxElipse()) && Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle)){
-                this.target.takeDamage(this, {})
-                if(Func.chance(5)){
-                    let status = new Bleed(this.level.time)
-                    status.setDuration(4000)
-                    this.level.setStatus(this.target, status)
-                }
-            }
-        }
-    }
+        let e = this.getBoxElipse()
+        e.r = this.attack_radius
 
-    idleAct(tick: number){
-        this.checkPlayer()
-       
-        if(!this.target){
-            return
-        } 
-
-        let a_e = this.getBoxElipse()
-        a_e.r = this.attack_radius
-
-        if(Func.elipseCollision(a_e, this.target.getBoxElipse())){
-            if (this.enemyCanAtack(tick)){
-                if(Func.chance(30)){
-                    this.level.sounds.push({
-                        x: this.x,
-                        y: this.y,
-                        name: 'impy'
-                    })
-                }
+        if(this.target.z < 5 && Func.elipseCollision(e, this.target.getBoxElipse()) && Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle)){
+            this.target.takeDamage(this, {})
             
-                this.setState(this.setAttackState)
+            if(Func.chance(30)){
+                this.level.sounds.push({
+                    x: this.x,
+                    y: this.y,
+                    name: 'impy'
+                })
             }
 
-            else{
-                this.setState(this.setIdleAct)
+            if(Func.chance(5)){
+                let status = new Bleed(this.level.time)
+                status.setDuration(4000)
+                this.level.setStatus(this.target, status)
             }
-        }
-        else{
-            this.moveAct()
         }
     }
 }

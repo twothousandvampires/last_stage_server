@@ -6,7 +6,7 @@ export default class HeavenWrathStatus extends Status{
 
     last_checked: number
 
-    constructor(public time: number){
+    constructor(public time: number, private frequency = 500){
         super(time)
         this.last_checked = time
     }
@@ -37,7 +37,7 @@ export default class HeavenWrathStatus extends Status{
 
     act(tick_time: number){
         if(tick_time > this.last_checked){
-            this.last_checked += 350
+            this.last_checked += this.frequency
 
             if(tick_time - this.unit.last_hit_time <= 1500){
                 let targets = this.unit.level.enemies.filter(elem => !elem.is_dead &&Func.distance(this.unit, elem) <= 20)

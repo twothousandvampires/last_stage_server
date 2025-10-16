@@ -6,6 +6,7 @@ type Upgrade = {
     canUse: (character: Character) => boolean,
     teach: (character: Character) => void,
     cost: number,
+    ascend?: number,
     desc: string
 }
 

@@ -13,38 +13,33 @@ export default class Fragility extends Status {
 
     apply(unit: any){
         this.unit = unit
-        this.unit.fragility += this.power
-
+        this.unit.fragility = true
+        
         if(this.unit instanceof Character){
             this.unit.statusWasApplied()
+            
             this.unit.newStatus({
                 name: 'fragility',
                 duration: this.duration,
-                desc: 'you can get double damage (' + (this.power > 100 ? 100 : this.power) + '%)'
+                desc: 'you get double damage'
             })
         }
     }
 
     update(status: any): void {
-        if(status.power > this.power){
-            this.unit.fragility -= this.power
-            this.power = status.power
-            this.unit.fragility += this.power
-        }   
-       
         this.time = Date.now()
 
         if(this.unit instanceof Character){
                 this.unit.newStatus({
                 name: 'fragility',
                 duration: this.duration,
-                desc: 'you can get double damage (' + (this.power > 100 ? 100 : this.power) + '%)'
+                desc: 'you get double damage'
             })
         }
         
     }
 
     clear(){
-        this.unit.fragility -= this.power
+        this.unit.fragility = false
     }
 }

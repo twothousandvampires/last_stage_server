@@ -3,7 +3,6 @@ import Func from "../Func";
 import { Lightning } from "../Objects/Projectiles/Lightning";
 import Character from "../Objects/src/Character";
 import Unit from "../Objects/src/Unit";
-import Ignite from "../Status/Ignite";
 
 export default class LightningWhenUseAbilityTrigger {
 

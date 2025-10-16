@@ -11,6 +11,7 @@ import WanderingEvil from "../../../Abilities/Cultist/WanderingEvil";
 import Upgrades from "../../../Classes/Upgrades";
 import Func from "../../../Func";
 import Level from "../../../Level";
+import PlayerDyingState from "../../../State/PlayerDyingState";
 import Immortality from "../../../Status/Immortality";
 import Armour from "../../Effects/Armour";
 import Blood from "../../Effects/Blood";
@@ -36,6 +37,7 @@ export default class Cultist extends Character{
     service: boolean
     conduct_of_pain: boolean
     pain_extract: boolean
+  
 
     constructor(level: Level){
         super(level)
@@ -53,6 +55,7 @@ export default class Cultist extends Character{
         this.maximum_resources = 7
         this.hit_x = undefined
         this.hit_y = undefined
+        this.enlightenment_threshold = 7
 
         this.base_regeneration_time = 8500
         this.service = false
@@ -134,7 +137,7 @@ export default class Cultist extends Character{
             this.recent_hits.push(this.level.time)
         }
 
-        if(this.can_be_enlighten && this.recent_hits.length >= 8){
+        if(this.can_be_enlighten && this.recent_hits.length >= this.enlightenment_threshold){
             this.can_be_enlighten = false
 
             this.enlight()
@@ -148,7 +151,7 @@ export default class Cultist extends Character{
     addResourse(count: number = 1, ignore_limit = false){
         if(!this.can_regen_resource) return
 
-        super.addResourse()
+        this.playerGetResourse()
         
         if(this.resource < this.maximum_resources || ignore_limit){
             this.resource += count
@@ -181,6 +184,8 @@ export default class Cultist extends Character{
 
         let s = new Immortality(this.level.time)
         s.setDuration(3000)
+        
+        this.playerWasEnlighted()
         this.level.setStatus(this, s)
        
         this.level.addSound('enlight', this.x, this.y)
@@ -247,13 +252,16 @@ export default class Cultist extends Character{
             unit?.succesefulKill()
             this.is_dead = true
             this.life_status = 0
-            this.setState(this.setDyingState)
-            this.level.playerDead()
+            this.setState(new PlayerDyingState())
             return
         }
 
         if(this.ward){
-            this.loseWard()
+            let count = 1
+            if(unit && Func.chance(unit.critical)){
+                count ++
+            }
+            this.loseWard(count)
             let e = new ToothExplode(this.level)
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)
@@ -264,11 +272,7 @@ export default class Cultist extends Character{
                 x: this.x,
                 y: this.y
             })
-
-            return
-        }
-
-       
+        }       
 
         this.playerWasHited(unit)
 
@@ -340,7 +344,8 @@ export default class Cultist extends Character{
         return this.base_regeneration_time
     }
 
-    generateUpgrades(){
+    generateUpgrades(ascend_level: number){
+        if(!this.can_generate_upgrades) return
         if(this.upgrades.length) return
 
         //get all upgrades for this class
@@ -349,11 +354,19 @@ export default class Cultist extends Character{
        
         //filter by usability
         let filtered = all.filter(elem => {
-           return elem.cost <= this.grace && elem.canUse(this)
+           return (!elem.ascend || ascend_level >= elem.ascend) && elem.cost <= this.grace && elem.canUse(this)
         })
+        filtered.forEach(elem => {
+            if(elem.ascend === undefined){
+                elem.ascend = 0
+            }
+        })
+
+        filtered.sort((a, b) =>  { return b.ascend - a.ascend})
+
         //get 3 random ones
 
-        filtered.sort((a, b) =>  { return Math.random() > 0.5 ? 1 : -1 })
+        filtered.sort((a, b) =>  { return Func.chance(70) ? 1 : -1 })
 
         filtered = filtered.slice(0, 3)
         
@@ -464,7 +477,7 @@ export default class Cultist extends Character{
         this.pay_to_cost = 0 
     }
 
-    isStatusResist(){
-        return Func.chance(this.status_resistance + (this.will * 3), this.is_lucky)
+    getResistValue(): number {
+        return this.status_resistance + (this.will * 2)
     }
 }

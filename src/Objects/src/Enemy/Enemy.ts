@@ -1,13 +1,18 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
+import EnemyDeadState from "../../../State/EnemyDeadState";
+import EnemyDyingState from "../../../State/EnemyDyingState";
+import EnemyMeleeIdleState from "../../../State/EnemyMeleeIdleState";
+import EnemySpawnState from "../../../State/EnemySpawnState";
 import Armour from "../../Effects/Armour";
 import QuakeEffect from "../../Effects/Quake";
 import SmallTextLanguage2 from "../../Effects/SmallTextLanguage2";
 import Character from "../Character";
 import Unit from "../Unit";
 
-export abstract class Enemy extends Unit {
+export default abstract class Enemy extends Unit {
 
+    
     is_spawning: boolean = true
     target: Character | undefined
     check_timer: any
@@ -20,6 +25,8 @@ export abstract class Enemy extends Unit {
     retreat_distance: number = 0
     retreat_angle: number | undefined
     ranged: boolean = false
+    hit_x: number = 0
+    hit_y: number = 0
 
     create_grace_chance: number = 15
     create_energy_chance: number = 5
@@ -27,6 +34,7 @@ export abstract class Enemy extends Unit {
     create_intervention_chance: number = 2
     create_item_chance: number = 0
     create_sorcerers_skull_chance: number = 0
+    create_helm_of_ascendence_chance: number = 1
 
     create_chance: number = 15
     last_action: number = 0
@@ -35,48 +43,35 @@ export abstract class Enemy extends Unit {
     say_z: number = 12
     gold_revard: number = 1
     can_be_burned: boolean = true
+    abilities: any[] = []
+    dead_time: number = 5000
+    
     
     constructor(level: Level){
         super(level)
         this.name = 'enemy'
     }
 
-    abstract idleAct(server_tick: number): void
-    abstract attackAct(server_tick: number): void
+    hitImpact(){
 
-    setAttackState(){
-        this.state = 'attack'
-        this.is_attacking = true
-        this.stateAct = this.attackAct
-        this.action_time = this.attack_speed
-        this.setImpactTime(80)
-        
-        this.attack_angle = Func.angle(this.x, this.y, this.target.x, this.target.y)
-
-        this.cancelAct = () => {
-            this.action = false
-            this.hit = false
-            this.is_attacking = false
-            this.attack_angle = undefined
-        }
-
-        this.setTimerToGetState(this.attack_speed)
     }
 
-     setRetreatState(){
-        if(!this.target) return
+    whenDead(){
 
-        this.state = 'move'
-        this.retreat_angle = Func.angle(this.target.x, this.target.y, this.x, this.y)
-        this.retreat_angle += Math.random() * 1.57 * (Func.random(50) ? -1 : 1)
+    }
 
-        this.stateAct = this.retreatAct
+    getCastStateString(){
+        return 'attack'
+    }
 
-        this.cancelAct = () => {
-            this.retreat_angle = undefined
-        }
+    isAbilityToUse(){
+        if(this.abilities.length === 0) return false
 
-        this.setTimerToGetState(2000)
+        return this.abilities.some(elem => elem.canUse(this))
+    }
+
+    getDeadStateInstance(){
+        return new EnemyDeadState()
     }
 
     checkPlayer(){
@@ -111,19 +106,9 @@ export abstract class Enemy extends Unit {
             ['entity', this.create_entity_chance],
             ['intervention', this.create_intervention_chance],
             ['item', this.create_item_chance],
-            ['skull', this.create_sorcerers_skull_chance], 
+            ['skull', this.create_sorcerers_skull_chance],
+            ['helm', this.create_helm_of_ascendence_chance],  
         ]
-    }
-
-    moveAct(){
-        if(this.is_dead) return
-        
-        this.state = 'move'
-
-        let a = Func.angle(this.x, this.y, this.target.x, this.target.y)
-
-        this.moveByAngle(a)
-        this.wasChanged()
     }
 
     setImpactTime(c: number){
@@ -135,26 +120,19 @@ export abstract class Enemy extends Unit {
         this.last_action = this.level.time + this.action_time
     }
 
-    enemyCanAtack(tick: number){
-        return tick - this.last_action >= this.cooldown_attack
-    }
-
-    retreatAct(){
-        let a = this.retreat_angle
-      
-        if(!a) return
-        
-        this.moveByAngle(a)
-        this.wasChanged()
+    enemyCanAtack(){
+        return this.level.time - this.last_action >= this.cooldown_attack
     }
 
     act(time: number){
-        if(!this.stateAct){
+        if(!this.current_state){
             this.getState()
         }
+
+        if(this.current_state){
+            this.current_state.update(this)
+        }
         
-        this.stateAct(time)
-       
         if(this.action_impact && time >= this.action_impact){
             if(!this.action){
                 this.action = true
@@ -164,75 +142,20 @@ export abstract class Enemy extends Unit {
                 this.action_impact = 0
             }
         }
-    }
-
-    spawnAct(){
-        
-    }
-
-    setStunAct(){
-        this.stunned = true
-        this.state = 'stunned'     
-
-        this.stateAct = this.stunnedAct
-
-        this.cancelAct = () => {
-            this.stunned = false
+        if(this.action_end_time && time >= this.action_end_time){
+            if(!this.action_is_end){
+                this.action_is_end = true
+            }
+            else{
+                this.action_is_end = false
+                this.action_end_time = 0
+            }
         }
     }
 
-    setStun(duration: number){
-        this.setState(this.setStunAct)
-
-        this.setTimerToGetState(duration)
-    }
-
+    // todo
     afterDead(){
 
-    }
-
-    setdyingAct(){
-        let to_delete = true
-        this.invisible = false
-
-        if(this.freezed){
-            this.state = 'freeze_dying'
-            this.level.sounds.push({
-                name: 'shatter',
-                x: this.x,
-                y: this.y
-            })
-        }
-        else if(this.burned){
-            this.state = 'burn_dying'
-        }
-        else if(this.exploded){
-            this.state = 'explode'
-        }
-        else{
-            this.state = 'dying'
-            to_delete = false
-        }
-
-        if(to_delete){
-            this.level.removeEnemy(this)
-        }
-        else{
-            this.stateAct = this.dyingAct
-            this.setTimerToGetState(this.dying_time)
-            this.afterDead()
-        }
-    }
-
-    setIdleAct(){
-        this.state = 'idle'
-        this.stateAct = this.idleAct
-    }
-
-    setDeadState(){
-        this.is_corpse = true
-        this.state = 'dead'
-        this.stateAct = this.deadAct
     }
 
     getExplodedSound(){
@@ -254,15 +177,65 @@ export abstract class Enemy extends Unit {
             z: this.z,
             action: this.action,
             action_time: this.action_time,
+            invisible: this.invisible
         }
+    }
+
+    takePureDamage(unit: any = undefined, options: any = {}){
+        if(this.is_dead) return
+        if(!this.can_be_damaged) return
+
+        if(this.checkArmour(unit)){
+            return
+        }
+
+        let is_player_deal_hit = unit instanceof Character
+
+        let damage_value = 1
+
+        if(options?.damage_value){
+           damage_value = options.damage_value
+        }
+
+        if(is_player_deal_hit){
+            let pierce = unit.getPierce()
+            let is_pierce = Func.chance(pierce - this.armour_rate)
+
+            if(is_pierce){
+                damage_value ++
+            }
+        }
+
+        if(this.life_status <= 0){
+            this.is_dead = true
+
+            if(options?.explode){
+                this.exploded = true
+                this.level.addSound(this.getExplodedSound())
+            }
+            else if(options?.burn && this.can_be_burned){
+                this.burned = true
+            }
+
+            if(is_player_deal_hit){
+                this.create_grace_chance += unit.chance_to_create_grace
+                unit.succesefulKill(this)
+                unit.addGold(this.gold_revard)
+            }
+         
+            this.setState(new EnemyDyingState)
+        }
+
+        this.life_status -= damage_value
     }
     
     takeDamage(unit: any = undefined, options: any = {}){
         if(this.is_dead) return
-
+        if(!this.can_be_damaged) return
+        
         let is_player_deal_hit = unit instanceof Character
 
-        let instantly = options?.instant_death || (unit && unit.chance_to_instant_kill && Func.chance(unit.chance_to_instant_kill))
+        let instantly = options?.instant_death || (unit && unit.chance_to_instant_kill && Func.chance(unit.chance_to_instant_kill)) && this.can_be_instant_killed
 
         if(instantly){
             this.life_status = 1
@@ -289,15 +262,16 @@ export abstract class Enemy extends Unit {
            damage_value = options.damage_value
         }
 
-        let is_pierce = unit && unit?.pierce > this.armour_rate && Func.chance(unit.pierce - this.armour_rate)
+        if(is_player_deal_hit){
+            let pierce = unit.getPierce()
+            let is_pierce = Func.chance(pierce - this.armour_rate)
 
-        if(is_pierce){
-            damage_value ++
-            if(is_player_deal_hit){
+            if(is_pierce){
+                damage_value ++
                 unit.succesefulPierce(this)
             }
         }
-
+        
         if(this.penetrated_rating > 0 && Func.chance(this.penetrated_rating)){
             damage_value ++
         }
@@ -313,12 +287,18 @@ export abstract class Enemy extends Unit {
             }
         }
 
-        if(Func.chance(this.fragility)){
+        if(this.fragility){
+            console.log('enemy was fragle')
             damage_value *= 2
         }
 
-        this.life_status -= damage_value
+        if(this.fortify && Func.chance(this.fortify)){
+            console.log('enemy was fortified')
+            damage_value --
+        }
 
+        this.life_status -= damage_value
+ 
         if(is_player_deal_hit){
             unit.succesefulHit(this)
         }
@@ -340,20 +320,23 @@ export abstract class Enemy extends Unit {
                 unit.addGold(this.gold_revard)
             }
          
-            this.setState(this.setdyingAct)
+            this.setState(new EnemyDyingState)
         }
         
-        if(is_player_deal_hit && unit.impact > 0 && unit.level.time - unit.last_impact_time >= unit.impact_cooldown){
-            if(Func.chance(unit.impact)){
+        if(is_player_deal_hit && unit.level.time - unit.last_impact_time >= unit.impact_cooldown){
+            let impact_rating = unit.getImpactRating() 
+            if(Func.chance(impact_rating)){
                 unit.last_impact_time = unit.level.time
                 let e = new QuakeEffect(this.level)
                 e.setPoint(this.x, this.y)
 
                 this.level.effects.push(e)
-
+                unit.impactHit(this, damage_value)
                 this.level.enemies.forEach(elem => {
                     if(Func.distance(this, elem) <= 10 && !elem.is_dead && elem != this){
-                        elem.takeDamage(undefined)
+                        elem.takeDamage(undefined, {
+                            damage_value: damage_value
+                        })
                     }
                 })
             }
@@ -372,27 +355,19 @@ export abstract class Enemy extends Unit {
 
     getState(): void {
         if(this.is_dead){
-            this.setState(this.setDeadState)
+            this.setState(this.getDeadStateInstance())
         }
         else if(this.is_spawning){
-            this.setState(this.setSpawsState)
+            this.setState(new EnemySpawnState())
         }
         else{
             this.sayPhrase()
-            this.setState(this.setIdleAct)
+            this.setState(this.getIdleStateInstance())
         }
     }
 
-    setSpawsState(){
-        this.state = 'spawn'
-        this.stateAct = this.spawnAct
-        this.action_time = this.spawn_time
-        
-        this.cancelAct = () => {
-            this.is_spawning = false
-        }
-
-        this.setTimerToGetState(this.spawn_time)
+    getIdleStateInstance(){
+        return new EnemyMeleeIdleState()
     }
 
     public sayPhrase(): void{

@@ -1,7 +1,7 @@
 import Level from "../../Level";
 import GameObject from "../src/GameObject";
 
-export default abstract class Effect extends GameObject{
+export default abstract class Effect extends GameObject {
     
     owner: any
     producer: any
@@ -15,11 +15,9 @@ export default abstract class Effect extends GameObject{
              return
         }  
         
-        if(this.x != this.owner.x || this.y != this.owner.y){
-            this.x = this.owner.x
-            this.y = this.owner.y
-            this.wasChanged()
-        } 
+        this.x = this.owner.x
+        this.y = this.owner.y
+        this.wasChanged()
     }
 
     toJSON(){

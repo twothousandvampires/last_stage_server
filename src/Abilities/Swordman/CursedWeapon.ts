@@ -2,7 +2,7 @@ import Swordman from "../../Objects/src/PlayerClasses/Swordman";
 import CursedWeaponStatus from "../../Status/CursedWeaponStatus";
 import SwordmanAbility from "./SwordmanAbility";
 
-export default class CursedWeapon extends SwordmanAbility{
+export default class CursedWeapon extends SwordmanAbility {
 
     drinker: boolean
 
@@ -11,12 +11,6 @@ export default class CursedWeapon extends SwordmanAbility{
         this.drinker = false
         this.name = 'cursed weapon'
         this.cd = 12000
-    }
-
-    use(){
-        this.owner.using_ability = this
-        this.owner.pay_to_cost = this.cost
-        this.owner.setState(this.owner.setCastAct)
     }
 
     impact(){

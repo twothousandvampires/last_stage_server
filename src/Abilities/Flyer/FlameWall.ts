@@ -5,7 +5,6 @@ import FlyerAbility from "./FlyerAbility";
 
 export default class FlameWall extends FlyerAbility{
 
-    cost: number
     scorching: boolean
     frendly_flame: boolean
 

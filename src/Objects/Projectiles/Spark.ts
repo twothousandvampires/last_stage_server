@@ -11,6 +11,7 @@ export class Spark extends Projectiles{
     start: any
     change_angle: any
     hitted: any[] = []
+    by_enemy: boolean = false
 
     constructor(level: Level, private pierce_count: number = 1, private ttl: number = 3000){
         super(level)
@@ -62,20 +63,21 @@ export class Spark extends Projectiles{
             }
         })
 
-        this.level.enemies.forEach(elem => {
-            if(!this.hitted.includes(elem.id) && !elem.is_dead && Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
-                elem.takeDamage()
-                this.pierce_count --
-                if(this.pierce_count === 0){
-                    this.impact()
+        if(!this.by_enemy){
+             this.level.enemies.forEach(elem => {
+                if(!this.hitted.includes(elem.id) && !elem.is_dead && Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
+                    elem.takeDamage()
+                    this.pierce_count --
+                    if(this.pierce_count === 0){
+                        this.impact()
+                    }
+                    else{
+                        this.hitted.push(elem.id)
+                    }
                 }
-                else{
-                    this.hitted.push(elem.id)
-                }
-            }
-        })
-
-
+            })
+        }
+       
         let l = 1 - Math.abs(0.5 * Math.cos(this.angle))    
 
         let n_x = Math.sin(this.angle) * l

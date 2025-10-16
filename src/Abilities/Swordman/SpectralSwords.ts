@@ -10,6 +10,7 @@ export default class SpectralSwords extends SwordmanAbility {
         super(owner)
         this.name = 'spectral swords'
         this.cost = 8
+        this.need_to_pay = true
     }
 
     impact(){
@@ -42,16 +43,11 @@ export default class SpectralSwords extends SwordmanAbility {
             if(this.call){
                 summon.move_speed += 0.1
                 summon.player_check_radius += 10
+                summon.attack_speed -= 100
             }
             summon.setPoint(this.owner.x + n_x, this.owner.y + n_y)
             
             this.owner.level.enemies.push(summon)
         }
-    }
-
-    use(){
-        this.owner.using_ability = this
-        this.owner.pay_to_cost = this.cost
-        this.owner.setState(this.owner.setCastAct)
     }
 }

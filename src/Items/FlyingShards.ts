@@ -14,6 +14,7 @@ export default class FlyingShards extends Item {
         this.count = 2
         this.frequency = 1000
         this.description = 'When you block hit with armour there is a chance to realise metal shards to enemies'
+        this.name = 'flying shards'
     }
 
     equip(character: Character): void {
