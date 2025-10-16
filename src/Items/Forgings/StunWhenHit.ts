@@ -17,7 +17,7 @@ export default class StunWhenHit extends Forging{
         super(item)
         this.max_value = 80
         this.name = 'stun when hit'
-        this.description = 'chance to stun in radius of hitting'
+        this.description = 'gives chance to stun in radius when you hit enemy'
         this.gold_cost = 20
     }
 

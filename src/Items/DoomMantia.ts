@@ -11,7 +11,7 @@ export default class DoomMantia extends Item {
         this.distance = 20
         this.name = 'doom mantia'
         this.type = 3
-        this.description = 'when you take lethal damage, there is a chance to redirect your death to a nearby unit'
+        this.description = 'when you take lethal damage, there is a chance to redirect your death to a nearby target'
     }
 
     equip(character: Character): void {

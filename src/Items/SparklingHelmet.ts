@@ -2,7 +2,7 @@ import Character from "../Objects/src/Character";
 import SparklingHelmetStatus from "../Status/SparklingHelmetStatus";
 import Item from "./Item";
 
-export default class SparklingHelmet extends Item{
+export default class SparklingHelmet extends Item {
 
     unit: any
     status: SparklingHelmetStatus | undefined
@@ -11,7 +11,7 @@ export default class SparklingHelmet extends Item{
         super()
         this.name = 'sparkling helmet'
         this.type = 2
-        this.description = 'if you do not use any skills for 5 seconds it creates a shock ring'
+        this.description = 'if you do not use any skills for 5 seconds, creates a shock ring'
     }
 
     getSpecialForgings(): string[] {

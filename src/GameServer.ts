@@ -108,8 +108,8 @@ class GameServer{
     }
 
     private createName(){
-        let first = ['brutal', 'grimy', 'cold', 'rotten', 'black', 'demented', 'gone', 'bloody', 'lifeless', 'stinking', 'frightening','gigantic', 'smashed']
-        let second = ['mace', 'head', 'mind', 'ceil', 'remains', 'ghoul', 'tree', 'corpse', 'gem', 'shards', 'bloat']
+        let first = ['brutal', 'grimy', 'cold', 'rotten', 'black', 'demented', 'gone', 'bloody', 'lifeless', 'stinking', 'frightening','gigantic', 'smashed', 'bleak', 'sinister', 'ominous']
+        let second = ['mace', 'head', 'mind', 'ceil', 'remains', 'ghoul', 'tree', 'corpse', 'gem', 'shards', 'bloat', 'phantom', 'melancholy', 'woe', 'maggot' ,'phlegm']
 
         this.name = first[Math.floor(Math.random() * first.length)] + ' ' + second[Math.floor(Math.random() * second.length)]
     }
@@ -135,8 +135,6 @@ class GameServer{
 
     async suggetRecord(player: Character){
         if(!this.level) return
-
-        console.log(player.id)
 
         await this.redisClient.setEx(player.id, 60, JSON.stringify({
             kill_count: this.level.kill_count,
