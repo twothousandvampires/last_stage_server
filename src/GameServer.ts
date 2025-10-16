@@ -311,21 +311,27 @@ class GameServer{
                     UpgradeManager.buyNewItem(client.character)
                 })
 
-                socket.on('load_template', (data) => { 
-                    client.template.abilities = data.abilities
-                    client.template.item = []
+                socket.on('load_template', (data) => {
+                    try{
+                        client.template.abilities = data.abilities
+                        client.template.item = []
 
-                    data.item.forEach(elem => {
-                        if(elem.name != ''){
-                            let item = Builder.createItem(elem.name)
-                            client.template.item.push(item)
-                        }
-                        
-                    })
-                    client.template.stats = data.stats
-                    client.template.stat_count = data.stat_count
+                        data.item.forEach(elem => {
+                            if(elem.name != ''){
+                                let item = Builder.createItem(elem.name)
+                                client.template.item.push(item)
+                            }
+                            
+                        })
+                        client.template.stats = data.stats
+                        client.template.stat_count = data.stat_count
 
-                    this.updateLobby()
+                        this.updateLobby()
+                    } catch(e){
+                        console.log(data)
+                        console.log(e)
+                    }
+                    
                 })
 
                 socket.on('buy_item', (id) => {   
