@@ -344,7 +344,7 @@ export default class Default extends Scenario{
     }
 
     checkUpgrade(level){
-        if(this.waves_created % 20 === 0 && this.waves_created >= 1){
+        if(this.waves_created % 18 === 0 && this.waves_created >= 1){
             let e = undefined
             let r = Func.random(1,3)
 

@@ -8,8 +8,8 @@ export default class SoulBlade extends Item{
 
     frequency: number = 4000
     last_trigger: number = 0
-    chance: number = 5
-    max_chance: number = 30
+    chance: number = 2
+    max_chance: number = 10
 
     constructor(){
         super()
