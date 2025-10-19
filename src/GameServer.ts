@@ -141,8 +141,11 @@ class GameServer{
             class: player.name
         }))
         
-        console.log('in suggest')
         this.socket.to(player.id).emit('suggers_record', this.level.kill_count)
+
+        setTimeout(() => {
+            this.addRecord('unknown warrior', player.id)
+        }, 30000)
     }
 
     async addRecord(name: string, id: string){
@@ -158,10 +161,8 @@ class GameServer{
             })
         }
         else{
-
             this.removeLevel()
         }
-        
     }
 
     public endOfLevel(): void{

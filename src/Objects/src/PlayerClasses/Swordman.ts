@@ -382,7 +382,7 @@ export default class Swordman extends Character{
     }
 
     getSecondResourceTimer(){
-        return 8000
+        return this.courage_expire_timer
     }
 
     regen(){
@@ -440,7 +440,7 @@ export default class Swordman extends Character{
     }
 
     getAttackSpeed() {
-        let value = this.attack_speed - (this.agility * 50)
+        let value = this.attack_speed - (this.agility * 25) - (this.getSecondResource() * 20)
         
         if(value < Swordman.MIN_ATTACK_SPEED){
             value = Swordman.MIN_ATTACK_SPEED

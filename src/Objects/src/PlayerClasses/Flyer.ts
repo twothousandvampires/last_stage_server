@@ -13,6 +13,8 @@ import Func from "../../../Func";
 import Level from "../../../Level";
 import FlyerDefendState from "../../../State/FlyerDefendState";
 import PlayerDyingState from "../../../State/PlayerDyingState";
+import Accumulation from "../../../Triggers/Accumulation";
+import FragilityWhenHitTrigger from "../../../Triggers/FragilityWhenHitTrigger";
 import Upgrade from "../../../Types/Upgrade";
 import Armour from "../../Effects/Armour";
 import Blood from "../../Effects/Blood";
@@ -22,6 +24,8 @@ import Character from "../Character";
 import Unit from "../Unit";
 
 export default class Flyer extends Character{
+
+    static MIN_CAST_SPEED: number = 150
 
     next_life_regen_time: any
     next_mana_regen_time: any
@@ -36,7 +40,7 @@ export default class Flyer extends Character{
     constructor(level: Level){
         super(level)
         this.steps = false
-        this.cast_speed = 1500
+        this.cast_speed = 200
         this.name = 'flyer'
         this.move_speed = 0.45
         this.chance_to_avoid_damage_state = 0
@@ -164,6 +168,17 @@ export default class Flyer extends Character{
         }
         else if(utility_name === 'static field'){
             this.utility = new StaticField(this)
+        }
+
+        let passive = abilities.find(elem => elem.type === 5 && elem.selected)
+
+        if(passive){
+            if(passive.name === 'disintegration'){
+                this.triggers_on_hit.push(new FragilityWhenHitTrigger(30))
+            }
+            if(passive.name === 'accumulation'){
+                this.triggers_on_use_not_utility.push(new Accumulation())
+            }
         }
     }
 
@@ -359,7 +374,7 @@ export default class Flyer extends Character{
             for(let i = this.recent_cast.length; i >= 0; i--){
                 let hit_time = this.recent_cast[i]
                 // todo timer
-                if(this.level.time - hit_time >= 8000){
+                if(this.level.time - hit_time >= this.courage_expire_timer){
                     this.recent_cast.splice(i, 1);
                 }
             }
@@ -485,6 +500,13 @@ export default class Flyer extends Character{
     }
 
     getCastSpeed() {
-        return this.cast_speed - this.getSecondResource() * 50
+        let value = this.cast_speed - (this.getSecondResource() * 50)
+        
+        if(value < Flyer.MIN_CAST_SPEED){
+            value = Flyer.MIN_CAST_SPEED
+        }
+
+        return value
+
     }
 }

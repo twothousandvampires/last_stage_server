@@ -1,3 +1,4 @@
+import Character from "../Objects/src/Character";
 import Player from "../Objects/src/Character";
 import PlayerAttackState from "../State/PlayerAttackState";
 import PlayerCastState from "../State/PlayerCastState";
@@ -21,20 +22,22 @@ export default abstract class Ability {
 
     }
 
-    isEnergyEnough(){
-        return this.owner.resource >= this.cost
-    }
-    
-    use(){
-        this.owner.using_ability = this
-        this.owner.pay_to_cost = this.cost
+    abstract impact(): void
 
+    use(player: Character){
         if(this.type === Ability.TYPE_CAST){
-            this.owner.setState(new PlayerCastState())
+            player.setState(new PlayerCastState())
         }
         else if(this.type === Ability.TYPE_ATTACK){
-            this.owner.setState(new PlayerAttackState())
+            player.setState(new PlayerAttackState())
         }
+        else if(this.type === Ability.TYPE_INSTANT){
+            this.impact()
+        }
+    }
+
+    isEnergyEnough(){
+        return this.owner.resource >= this.cost
     }
 
     canUse(){
@@ -58,6 +61,12 @@ export default abstract class Ability {
     }
 
     afterUse(forced_cd: number | undefined = undefined){
+        console.log('after use: ' + this.name)
+        if(this.need_to_pay){
+            this.owner.payCost()
+        }
+        this.owner.succefullCast()
+
         if(this.cd === 0) return
        
         this.used = true

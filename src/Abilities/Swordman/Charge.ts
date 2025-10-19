@@ -36,8 +36,6 @@ export default class Charge extends SwordmanAbility implements IUnitState<Charac
     enter(player: Character){
         player.prepareToAction()
    
-        this.used = true
-
         player.state = 'charge'
         player.action_time = 200
         player.setImpactTime(100)
@@ -47,9 +45,11 @@ export default class Charge extends SwordmanAbility implements IUnitState<Charac
 
     update(player: Character){
         if(this.end){
+            this.afterUse()
             player.getState()
         }
         else if(player.action || this.start){
+            this.used = true
             this.start = true
             let speed = player.getMoveSpeed()
 
@@ -96,7 +96,7 @@ export default class Charge extends SwordmanAbility implements IUnitState<Charac
 
     exit(player: Character){
         clearTimeout(this.end_timeout)
-        this.afterUse()
+       
         this.start = false
         this.end = false
         
@@ -104,19 +104,12 @@ export default class Charge extends SwordmanAbility implements IUnitState<Charac
             player.addResourse()
         }
 
-        player.is_attacking = false
-        player.action = false
-     
-        player.succefullCast()
-        player.attack_angle = undefined
         player.chance_to_avoid_damage_state -= 100
         
         this.hited = []
     }
 
     use(){
-        this.owner.using_ability = this
-        this.owner.pay_to_cost = this.cost
         this.owner.setState(this)
        
         this.end_timeout = setTimeout(() => {

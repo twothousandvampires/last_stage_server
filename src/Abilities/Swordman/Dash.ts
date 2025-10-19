@@ -48,13 +48,11 @@ export default class Dash extends SwordmanAbility implements IUnitState{
     }
 
     use(){
-        this.owner.using_ability = this
-        this.owner.pay_to_cost = this.cost
         this.owner.setState(this)
     }
 
     exit(player: Character){
-        this.afterUse()
+    
         this.total_duration = this.duration
 
         if(this.electrified){
@@ -82,16 +80,12 @@ export default class Dash extends SwordmanAbility implements IUnitState{
         this.hited = []
         this.end = false
         this.start_time = 0
-
-        player.is_attacking = false
-        player.action = false
-        player.succefullCast()
-        player.attack_angle = undefined
         player.chance_to_avoid_damage_state -= 100
     }
 
     update(player: Character){
         if(this.end){
+            this.afterUse()
             player.getState()
         }
         else if(player.action || this.start_time){
