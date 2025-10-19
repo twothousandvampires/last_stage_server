@@ -4,15 +4,13 @@ import FlyerAbility from "./FlyerAbility";
 
 export default class Frostnova extends FlyerAbility{
 
-    ice_genesis: boolean
-    cold_spires: boolean
+    ice_genesis: boolean = false
+    cold_spires: boolean = false
    
     constructor(owner: Flyer){
         super(owner)
         this.cost = 7
         this.name = 'frost nova'
-        this.ice_genesis = false
-        this.cold_spires = false
         this.need_to_pay = true
     }
 

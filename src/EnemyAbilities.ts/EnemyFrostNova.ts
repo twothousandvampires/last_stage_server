@@ -5,7 +5,7 @@ import EnemyAbility from "./EnemyAbility"
 
 export default class EnemyFrostNova extends EnemyAbility {
 
-     cooldown: number = 12000
+    cooldown: number = 12000
 
     canUse(enemy: Enemy){
         return enemy.level.time - this.last_used_time >= this.cooldown && enemy.target

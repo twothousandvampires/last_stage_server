@@ -66,7 +66,7 @@ export class FrostSphereProjectile extends Projectiles{
                 return
             }
         }
-        if(this.icicles_count > 0 && time - this.last_icicles_time > 1000){
+        if(this.icicles_count > 0 && time - this.last_icicles_time > 500){
 
             let proj = new Icicle(this.level)
             proj.setOwner(this.owner)

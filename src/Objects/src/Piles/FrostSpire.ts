@@ -1,70 +1,42 @@
+import ColdSpireFrostNova from "../../../EnemyAbilities.ts/ColdSpireFrostNova";
 import Func from "../../../Func";
 import Level from "../../../Level";
 import FrostExplosionMedium from "../../Effects/FrostExplosionMedium";
 import FrostNova from "../../Effects/FrostNova";
 import Pile from "./Pile";
 
-export default class FrostSpire extends Pile{
+export default class FrostSpire extends Pile {
 
     constructor(level: Level){
         super(level)
-        this.frequency = 3000
         this.life_status = 1
         this.name = 'frost spire'
-        this.getState()
+        this.duration = 6000
+
+        this.abilities = [
+            new ColdSpireFrostNova()
+        ]
     }
 
-    setdyingAct(){
-        this.state = 'dying'
-    
-        this.stateAct = this.dyingAct
-        this.setTimerToGetState(this.dying_time)
+    afterDead(): void {
+        let effect = new FrostExplosionMedium(this.level)
+        effect.setPoint(this.x, this.y)
 
-        if(this.life_status <= 0){
-            let effect = new FrostExplosionMedium(this.level)
-            effect.setPoint(this.x, this.y)
+        this.level.effects.push(effect)
 
-            this.level.effects.push(effect)
+        let e = this.getBoxElipse()
+        e.r = 6
 
-            let e = this.getBoxElipse()
-            e.r = 6
+        this.level.enemies.forEach(elem => {
+            if(Func.elipseCollision(e, elem.getBoxElipse())){
+                elem.takeDamage()
+            }
+        })
 
-            this.level.enemies.forEach(elem => {
-                if(Func.elipseCollision(e, elem.getBoxElipse())){
-                    elem.takeDamage()
-                }
-            })
-
-            this.level.players.forEach(elem => {
-                if(Func.elipseCollision(e, elem.getBoxElipse())){
-                    elem.takeDamage()
-                }
-            })
-        }
-    }
-
-    castAct(){
-        if(this.action && !this.hit){
-            this.hit = true
-
-            let e = this.getBoxElipse()
-            e.r = 8
-
-            let effect = new FrostNova(this.level)
-            effect.setPoint(this.x, this.y)
-            this.level.effects.push(effect)
-
-            this.level.enemies.forEach(elem => {
-                if(Func.elipseCollision(e, elem.getBoxElipse())){
-                    elem.setFreeze(1000)
-                }
-            })
-
-            this.level.players.forEach(elem => {
-                if(Func.elipseCollision(e, elem.getBoxElipse())){
-                    elem.setFreeze(1000)
-                }
-            })
-        }
+        this.level.players.forEach(elem => {
+            if(Func.elipseCollision(e, elem.getBoxElipse())){
+                elem.takeDamage()
+            }
+        })
     }
 }
