@@ -35,11 +35,9 @@ export default class Fireball extends FlyerAbility {
 
         this.owner.level.projectiles.push(proj)
 
-        if(this.fire_splitting && Func.chance(this.owner.getSecondResource() * 10, this.owner.is_lucky)){
+        if(this.fire_splitting){
         
-            let half = this.owner.getAdditionalRadius()
-
-            console.log(half)
+            let half = this.owner.getSecondResource()
             if(half){
                 for(let i = -half; i < half; i++){
                     if(i === 0) continue

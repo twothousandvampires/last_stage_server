@@ -40,7 +40,7 @@ export default class Flyer extends Character{
     constructor(level: Level){
         super(level)
         this.steps = false
-        this.cast_speed = 200
+        this.cast_speed = 1500
         this.name = 'flyer'
         this.move_speed = 0.45
         this.chance_to_avoid_damage_state = 0

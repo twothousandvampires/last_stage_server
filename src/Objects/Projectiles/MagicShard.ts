@@ -16,10 +16,10 @@ export class MagicShard extends Projectiles{
 
     act(): void { 
         for(let i = 0; i < this.level.enemies.length; i++){
-            let p = this.level.players[i]
+            let p = this.level.enemies[i]
 
             if(!p.is_dead && p.z < this.w && Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
-                p.takeDamage()
+                p.takeDamage(this.owner)
                 this.impact()
                 return
             }

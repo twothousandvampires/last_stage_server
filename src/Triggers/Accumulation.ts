@@ -25,7 +25,7 @@ export default class Accumulation {
                     let proj = new MagicShard(player.level)
                     proj.setPoint(player.x, player.y)
                     proj.setAngle(Func.angle(player.x, player.y, element.x, element.y))
-
+                    proj.setOwner(player)
                     player.level.projectiles.push(proj)
                 });
 

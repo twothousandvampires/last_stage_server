@@ -8,6 +8,7 @@ export default class MasterServer {
   private port: number
   private redisClient: RedisClientType
   private db: any
+  private lobbies: Map<number, any> = new Map();
 
   constructor(io: SocketServer, port: number) {
     this.io = io
@@ -78,29 +79,43 @@ export default class MasterServer {
 
     console.log(`Starting ${count} game server processes...`)
 
+    
+
     for (let i = 0; i < count; i++) {
       let port = 9002 + i
 
       let { spawn } = require('child_process')
       let path = require('path')
       
-      spawn('node', [
-        path.join(__dirname, 'GameServer.js'), 
-        port.toString()
-      ], {
-        stdio: 'inherit',
-        shell: true
-      })
+      const gameProcess = spawn('node', [path.join(__dirname, 'GameServer.js'),  port.toString()], {
+        stdio: ['inherit', 'inherit', 'inherit', 'ipc']  // ВКЛЮЧАЕМ IPC
+      });
 
-      console.log(`GameServer started on port ${port}`)
+      // Получаем сообщения от GameServer
+      gameProcess.on('message', (message) => {
+          if (message.type === 'register_lobby') {
+              this.lobbies.set(port, message.data);
+              console.log(`✅ Lobby registered: ${port}`);
+          }
+          else if (message.type === 'update_lobby') {
+              if (this.lobbies.has(port)) {
+                  const existing = this.lobbies.get(port);
+                  this.lobbies.set(port, { ...existing, ...message.data });
+              }
+          }
+      });
+
+      gameProcess.on('exit', (code) => {
+          console.log(`GameServer ${port} exited with code ${code}`);
+          this.lobbies.delete(port);
+      });
     }
   }
 
   private setupSocketHandlers(): void {
     this.io.on('connection', async (socket: Socket) => {
       socket.on('get_lobbies', async () => {
-        let lobbies = await this.getAllLobbies()
-        socket.emit('lobbies_list', lobbies)
+        socket.emit('lobbies_list', Array.from(this.lobbies.values()));
       })
 
       socket.on('get_records', () => {

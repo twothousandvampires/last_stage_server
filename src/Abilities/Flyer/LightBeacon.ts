@@ -122,7 +122,7 @@ export default class LightBeacon extends FlyerAbility implements IUnitState<Flye
     }
 
     exit(unit: Flyer): void {
-/
+
         unit.can_be_controlled_by_player = true
 
         unit.can_regen_resource = true

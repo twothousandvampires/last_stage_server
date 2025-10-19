@@ -56,14 +56,16 @@ class GameServer{
             started: this.game_started.toString(),
         }
 
-        await this.redisClient.hSet(`lobby:${this.port}`, lobbyInfo)
-
-        await this.redisClient.publish('lobby_updates', 'updated')
+        if (process.send) {
+            process.send({
+                type: 'update_lobby', 
+                data: lobbyInfo
+            });
+        }
     }
 
     private async initializeRedis(): Promise<void> {
-        await this.redisClient.connect()
-        
+         await this.redisClient.connect()
         let lobbyInfo = {
             port: this.port.toString(),
             players: this.clients.size.toString(),
@@ -72,7 +74,12 @@ class GameServer{
             started: this.game_started.toString(),
         }
 
-        await this.redisClient.hSet(`lobby:${this.port}`, lobbyInfo)
+        if (process.send) {
+            process.send({
+                type: 'register_lobby',
+                data: lobbyInfo
+            });
+        }
     }
 
     public start(): void{
