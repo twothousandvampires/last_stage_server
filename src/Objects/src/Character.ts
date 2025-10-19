@@ -5,6 +5,8 @@ import IUnitState from "../../Interfaces/IUnitState"
 import Item from "../../Items/Item"
 import item from "../../Items/Item"
 import Level from "../../Level"
+import PlayerAttackState from "../../State/PlayerAttackState"
+import PlayerCastState from "../../State/PlayerCastState"
 import PlayerDamagedState from "../../State/PlayerDamagedState"
 import PlayerDeadState from "../../State/PlayerDeadState"
 import PlayerDefendState from "../../State/PlayerDefendState"
@@ -54,7 +56,7 @@ export default abstract class Character extends Unit {
     durability: number = 0
     might: number = 0
 
-    enlight_timer: number = 25000
+    enlight_timer: number = 35000
     base_regeneration_time: number = 10000
     grace: number = 1
     voice_radius: number = 20
@@ -120,6 +122,7 @@ export default abstract class Character extends Unit {
     can_block: boolean = true
     can_ressurect: boolean = false
     ascend_level: number = 0
+    courage_expire_timer: number = 8000
 
     current_state: IUnitState<Character> | undefined
 
@@ -178,6 +181,16 @@ export default abstract class Character extends Unit {
 
     succesefulArmourBlock(target: Unit){
         this.triggers_on_armour_hit.forEach(elem => elem.trigger(this, target))
+    }
+
+    useAbility(ability: Ability){
+        console.log('use: ' + ability.name)
+
+        this.using_ability = ability
+        this.pay_to_cost = ability.cost
+        this.useNotUtility()
+
+        ability.use(this)  
     }
 
     useNotUtility(): void{
@@ -985,7 +998,7 @@ export default abstract class Character extends Unit {
                 this.action_impact = 0
             }
         }
-        if(this.action_end_time && time >= this.action_end_time){
+        if(!this.action && this.action_end_time && time >= this.action_end_time){
             if(!this.action_is_end){
                 this.action_is_end = true
             }
@@ -1007,6 +1020,14 @@ export default abstract class Character extends Unit {
     }
 
     public getState(): void {
+        this.action_is_end = false
+        this.attack_angle = undefined
+        this.using_ability = undefined
+        this.is_attacking = false
+        this.action = false
+        this.target = undefined
+        this.hit = false
+
         if(this.is_dead){
             this.setState(new PlayerDeadState())
         }

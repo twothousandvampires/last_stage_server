@@ -133,23 +133,17 @@ export default class Whirlwind extends SwordmanAbility implements IUnitState<Swo
                 unit.setImpactTime(70)
             }
             else{
-                unit.succefullCast()
-                unit.payCost()
+                this.afterUse()
                 unit.getState() 
             }
         }
     }
 
     exit(unit: Swordman): void {
-        unit.is_attacking = false
-        unit.action = false
-        unit.hit = false
         this.courage_when_use = 0
     }
 
     use(){
-        this.owner.using_ability = this
-        this.owner.pay_to_cost = this.cost
         this.owner.setState(this)
     }
 }

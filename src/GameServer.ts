@@ -56,14 +56,16 @@ class GameServer{
             started: this.game_started.toString(),
         }
 
-        await this.redisClient.hSet(`lobby:${this.port}`, lobbyInfo)
-
-        await this.redisClient.publish('lobby_updates', 'updated')
+        if (process.send) {
+            process.send({
+                type: 'update_lobby', 
+                data: lobbyInfo
+            });
+        }
     }
 
     private async initializeRedis(): Promise<void> {
-        await this.redisClient.connect()
-        
+         await this.redisClient.connect()
         let lobbyInfo = {
             port: this.port.toString(),
             players: this.clients.size.toString(),
@@ -72,7 +74,12 @@ class GameServer{
             started: this.game_started.toString(),
         }
 
-        await this.redisClient.hSet(`lobby:${this.port}`, lobbyInfo)
+        if (process.send) {
+            process.send({
+                type: 'register_lobby',
+                data: lobbyInfo
+            });
+        }
     }
 
     public start(): void{
@@ -141,8 +148,11 @@ class GameServer{
             class: player.name
         }))
         
-        console.log('in suggest')
         this.socket.to(player.id).emit('suggers_record', this.level.kill_count)
+
+        setTimeout(() => {
+            this.addRecord('unknown warrior', player.id)
+        }, 30000)
     }
 
     async addRecord(name: string, id: string){
@@ -158,10 +168,8 @@ class GameServer{
             })
         }
         else{
-
             this.removeLevel()
         }
-        
     }
 
     public endOfLevel(): void{

@@ -240,6 +240,20 @@ export default class characterTemplate{
                     selected: false,
                     desc: 'Units and projectiles can not move in static field.'
                 },
+                {
+                    id: 8,
+                    name: 'disintegration',
+                    type: 5,
+                    selected: true,
+                    desc: 'Your hits have a chance to apply fragility on enemies.'
+                },
+                {
+                    id: 8,
+                    name: 'accumulation',
+                    type: 5,
+                    selected: false,
+                    desc: 'When you cast 10 spells, realise magick stars equals your courage.'
+                },
             ]
         }
         else if(class_name === 'cultist'){

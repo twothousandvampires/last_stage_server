@@ -1,6 +1,5 @@
 import IUnitState from "../Interfaces/IUnitState";
 import Character from "../Objects/src/Character";
-import PlayerIdleState from "./PlayerIdleState";
 
 export default class PlayerDefendState implements IUnitState<Character>{
 
@@ -19,7 +18,7 @@ export default class PlayerDefendState implements IUnitState<Character>{
 
     update(player: Character){
         if(!player.pressed[32]){
-            player.setState(new PlayerIdleState())
+            player.getState()
         }
     }
 

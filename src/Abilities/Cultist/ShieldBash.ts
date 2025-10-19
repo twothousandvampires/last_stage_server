@@ -21,14 +21,6 @@ export default class ShieldBash extends CultistAbility {
         this.type = Ability.TYPE_ATTACK
     }
 
-    use(){
-        this.owner.using_ability = this
-        this.owner.pay_to_cost = this.cost
-
-        this.owner.setState(this.owner.setAttackAct)
-        this.owner.state = 'shield hit'
-    }
-
     afterUse(forced_cd: number | undefined = undefined) {
         if(this.cd === 0) return
         

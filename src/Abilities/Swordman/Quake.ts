@@ -43,26 +43,18 @@ export default class Quake extends SwordmanAbility implements IUnitState{
         player.chance_to_avoid_damage_state -= 100
         player.addMoveSpeedPenalty(50)
         this.impact = false
-        this.z = 0.5
+        this.z_add = 0.5
 
-        player.is_attacking = false
-        player.action = false
-        player.attack_angle = undefined
         player.z = 0
         player.can_block = true
     }
 
     use(){
-        this.owner.using_ability = this
-        this.owner.pay_to_cost = this.cost
         this.owner.setState(this)
     }
 
     update(player: Character){
         if(this.impact){
-            player.succefullCast()
-            player.payCost()
-
             let second = player.getSecondResource()
             let enemies = player.level.enemies
             let players = player.level.players
@@ -127,6 +119,8 @@ export default class Quake extends SwordmanAbility implements IUnitState{
             status.setDuration(this.consequences ? 6000 : 3000)
             
             player.level.setStatus(player, status)
+
+            this.afterUse()
             player.getState() 
         }
         else{

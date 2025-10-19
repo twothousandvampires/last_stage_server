@@ -2,8 +2,9 @@ import Func from "../../Func";
 import IUnitState from "../../Interfaces/IUnitState";
 import SmallShockNova from "../../Objects/Effects/SmallShockNova";
 import { Lightning } from "../../Objects/Projectiles/Lightning";
-import Character from "../../Objects/src/Character";
+
 import Flyer from "../../Objects/src/PlayerClasses/Flyer";
+import Ability from "../Ability";
 import FlyerAbility from "./FlyerAbility";
 
 export default class LightBeacon extends FlyerAbility implements IUnitState<Flyer>{
@@ -25,6 +26,7 @@ export default class LightBeacon extends FlyerAbility implements IUnitState<Flye
         this.lightning_waves = false
         this.air_form = false
         this.need_to_pay = true
+        this.type = Ability.TYPE_CUSTOM
     }
 
     enter(unit: Flyer): void {
@@ -47,8 +49,7 @@ export default class LightBeacon extends FlyerAbility implements IUnitState<Flye
     update(unit: Flyer): void {
         if(this.state === 0){
             if(unit.action){
-                unit.payCost()
-                unit.action = false
+     
                 this.state = 1
                 unit.state = 'light beacon'
                 unit.z += 2
@@ -113,7 +114,6 @@ export default class LightBeacon extends FlyerAbility implements IUnitState<Flye
             unit.z -= 0.1
             if(unit.action){                 
                 this.state = 0
-                unit.action = false
                 unit.z = 0
                 this.afterUse()
                 unit.getState()
@@ -122,10 +122,9 @@ export default class LightBeacon extends FlyerAbility implements IUnitState<Flye
     }
 
     exit(unit: Flyer): void {
-        unit.action = false
+
         unit.can_be_controlled_by_player = true
-        unit.hit = false
-        unit.is_attacking = false
+
         unit.can_regen_resource = true
         unit.z = 0
         unit.light_r -= 5
@@ -141,8 +140,6 @@ export default class LightBeacon extends FlyerAbility implements IUnitState<Flye
     }
 
     use(){
-        this.owner.using_ability = this
-        this.owner.pay_to_cost = this.cost
         this.owner.setState(this)    
     }
 }

@@ -17,7 +17,7 @@ export default class SelfFlagellation extends CultistAbility {
         this.type = Ability.TYPE_INSTANT
     }
 
-    use(): void {
+    impact(): void {
         this.used = true
 
         let e = new Blood(this.owner.level)

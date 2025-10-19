@@ -383,7 +383,7 @@ export default class Cultist extends Character{
     }
 
     getSecondResourceTimer(){
-        return 10000 + this.knowledge * 1000
+        return this.courage_expire_timer + this.knowledge * 300
     }
 
     regen(){

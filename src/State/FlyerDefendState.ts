@@ -17,7 +17,7 @@ export default class FlyerDefendState implements IUnitState<Flyer>{
 
     update(player: Flyer){
         if(!player.pressed[32]){
-            player.setState(new PlayerIdleState())
+            player.getState()
         }
     }
 

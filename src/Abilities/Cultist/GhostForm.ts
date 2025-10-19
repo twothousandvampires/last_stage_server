@@ -60,13 +60,5 @@ export default class GhostForm extends CultistAbility{
                 })
             }
         }, 500)
-
-        this.owner.cancelAct = () => {
-            this.afterUse()
-            this.owner.can_be_damaged = true
-            this.owner.phasing = false
-            this.owner.can_attack = true
-            this.owner.can_cast = true
-        }
     }
 }

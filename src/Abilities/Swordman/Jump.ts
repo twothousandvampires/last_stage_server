@@ -48,21 +48,18 @@ export default class Jump extends SwordmanAbility implements IUnitState<Swordman
 
     exit(player: Character){
         player.z = 0
-        player.is_attacking = false
         player.chance_to_avoid_damage_state -= 100
 
-        this.afterUse()
+       
         this.start = 0
         this.impact = false
         this.owner.can_be_controlled_by_player = true
-        this.owner.attack_angle = undefined
         this.z_add = 0.7
     }
 
     update(player: Character){
         if(this.impact){
             this.used = true
-            player.succefullCast()
             let second = player.getSecondResource()
             let enemies = player.level.enemies
     
@@ -91,6 +88,7 @@ export default class Jump extends SwordmanAbility implements IUnitState<Swordman
                 },5000)
             }
 
+            this.afterUse()
             player.getState()
             return
         }
@@ -121,9 +119,6 @@ export default class Jump extends SwordmanAbility implements IUnitState<Swordman
     }
 
     use(){
-        this.owner.using_ability = this
-        this.owner.pay_to_cost = this.cost
-
         this.owner.setState(this)
     }
 }

@@ -4,7 +4,9 @@ import FrostExplosionBig from "../Effects/FrostExplosionBig";
 import FrostExplosionMedium from "../Effects/FrostExplosionMedium";
 import FrostExplosionSmall from "../Effects/FrostExplosionSmall";
 import Flyer from "../src/PlayerClasses/Flyer";
+import { Icicle } from "./Icicle";
 import Projectiles from "./Projectiles";
+import { Tooth } from "./Tooth";
 
 export class FrostSphereProjectile extends Projectiles{
     size: number
@@ -17,6 +19,8 @@ export class FrostSphereProjectile extends Projectiles{
     w: number
     frost_rich: boolean
     reign_of_frost: boolean
+    icicles_count: number = 0
+    last_icicles_time: number = 0
 
     constructor(level: Level){
         super(level)
@@ -40,13 +44,14 @@ export class FrostSphereProjectile extends Projectiles{
         this.y = y
     }
 
-    act(): void { 
+    act(time: number): void { 
         let enemies = this.level.enemies
         let players = this.level.players
 
         for(let i = 0; i < players.length; i++){
             let p = players[i]
             if(p === this.owner || this.w < p.z) continue
+            if(p.is_dead) continue
 
             if(Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
                 this.impact()
@@ -61,7 +66,18 @@ export class FrostSphereProjectile extends Projectiles{
                 return
             }
         }
+        if(this.icicles_count > 0 && time - this.last_icicles_time > 1000){
 
+            let proj = new Icicle(this.level)
+            proj.setOwner(this.owner)
+            proj.setAngle(Math.random() * 6.28)
+            proj.setPoint(this.x, this.y)
+
+            this.level.projectiles.push(proj)
+
+            this.last_icicles_time = time
+            this.icicles_count --
+        }
         this.traveled = Math.sqrt(((this.x - this.start_x) ** 2) + ((this.y - this.start_y) ** 2))
 
         if(this.traveled >= this.max_distance){

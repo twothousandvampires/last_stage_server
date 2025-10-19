@@ -3,7 +3,7 @@ import Swordman from "../../Objects/src/PlayerClasses/Swordman";
 import CommandsStatus from "../../Status/CommandsStatus";
 import SwordmanAbility from "./SwordmanAbility";
 
-export default class Commands extends SwordmanAbility{
+export default class Commands extends SwordmanAbility {
 
     fast_commands: boolean
 

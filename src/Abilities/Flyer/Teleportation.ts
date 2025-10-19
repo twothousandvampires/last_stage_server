@@ -25,8 +25,6 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
     }
 
     use(){
-        this.owner.using_ability = this
-        this.owner.pay_to_cost = this.cost
         this.owner.setState(this)   
     }
 
@@ -60,12 +58,9 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
     exit(unit: Flyer){
         this.teleport_x = undefined
         this.teleport_y = undefined
-        this.afterUse()
 
         this.state = Teleportation.TELEPOR_START_STATE
         unit.can_be_damaged = true
-        unit.is_attacking = false
-        unit.action = false
     }
 
     update(unit: Flyer){
@@ -104,6 +99,7 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
                 this.state = 0
                 this.used = true
 
+                this.afterUse()
                 unit.addCourage()
                 unit.getState()
             }

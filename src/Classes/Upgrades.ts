@@ -58,6 +58,7 @@ import InspirationTrigger from "../Triggers/InspirationTrigger"
 import Creator from "../Status/Creator"
 import DamageInRadiusWhenEnlightnent from "../Triggers/DamageInRadiusWhenEnlightnent"
 import InnerPowerTrigger from "../Triggers/InnerPowerTrigger"
+import Luck from "../Status/Luck"
 
 export default class Upgrades{
     static getAllUpgrades(): Upgrade[]{
@@ -97,6 +98,32 @@ export default class Upgrades{
                     cost: 4,
                     ascend: 26,
                     desc: 'you can create a sphere around you'
+                },
+                {
+                    name: 'luck',
+                    canUse: (character: Character) => {
+                        return !character.is_lucky
+                    },
+                    teach: (character: Character): void => {
+                        let status = new Luck(character.level.time)
+                        status.setDuration(30000)
+                        character.after_grace_statuses.push(status)
+                    },
+                    cost: 2,
+                    ascend: 12,
+                    desc: 'you become lucky for 30 seconds'
+                },
+                {
+                    name: 'focus',
+                    canUse: (character: Character) => {
+                        return character.courage_expire_timer <= 15000
+                    },
+                    teach: (character: Character): void => {
+                        character.courage_expire_timer += 2000
+                    },
+                    cost: 4,
+                    ascend: 10,
+                    desc: 'your courage expires slower'
                 },
                 {
                     name: 'inspiration',
@@ -1107,6 +1134,36 @@ export default class Upgrades{
     }
     static getFlyerUpgrades(){
             return [
+                {
+                        name: 'fire spliting',
+                        type: 'fireball',
+                        canUse: (character: Character) => {
+                            return character.first_ability instanceof Fireball && !character.first_ability.fire_splitting
+                        },
+                        teach: (character: Character) => {
+                            if(character && character.first_ability instanceof Fireball){
+                                character.first_ability.fire_splitting = true
+                            }
+                        },
+                        cost: 3,
+                        ascend: 20,
+                        desc: 'your fireball has a chance to create additional projectiles based on your courage'
+                    },
+                    {
+                        name: 'icicles',
+                        type: 'frost sphere',
+                        canUse: (character: Character) => {
+                            return character.first_ability instanceof FrostSphere && !character.first_ability.icicles
+                        },
+                        teach: (character: Character) => {
+                            if(character && character.first_ability instanceof FrostSphere){
+                                character.first_ability.icicles = true
+                            }
+                        },
+                        cost: 5,
+                        ascend: 16,
+                        desc: 'your frost sphere releases icicles while moving count depends on you courage'
+                    },
                     {
                         name: 'scorching',
                         type: '(flame wall)',

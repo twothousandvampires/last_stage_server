@@ -7,6 +7,7 @@ export default class FrostSphere extends FlyerAbility{
 
     frost_rich: boolean
     reign_of_frost: boolean
+    icicles: boolean = false
 
     constructor(owner: Flyer){
         super(owner)
@@ -30,6 +31,9 @@ export default class FrostSphere extends FlyerAbility{
         let proj = new FrostSphereProjectile(this.owner.level)
         proj.frost_rich = this.frost_rich
         proj.reign_of_frost = this.reign_of_frost
+        if(this.icicles){
+            proj.icicles_count = this.owner.getSecondResource()
+        }
         proj.setOwner(this.owner)
         proj.setAngle(a ? a : this.owner.attack_angle)
         proj.setPoint(this.owner.x, this.owner.y)

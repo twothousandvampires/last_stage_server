@@ -40,7 +40,7 @@ export default class PlayerDeadState implements IUnitState<Character>{
             player.can_be_controlled_by_player = true
             player.life_status = player.max_life
             player.can_ressurect = false
-            player.setState(new PlayerIdleState())
+            player.getState()
         }
     }
 
