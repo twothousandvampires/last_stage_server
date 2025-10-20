@@ -24,7 +24,6 @@ export default class PlayerCastState implements IUnitState<Character>{
           
             if(player.using_ability){
                 player.using_ability.impact()
-                player.using_ability.afterUse()
             }
         }
         else if(player.action_is_end){

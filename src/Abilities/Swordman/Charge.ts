@@ -45,7 +45,6 @@ export default class Charge extends SwordmanAbility implements IUnitState<Charac
 
     update(player: Character){
         if(this.end){
-            this.afterUse()
             player.getState()
         }
         else if(player.action || this.start){

@@ -115,7 +115,7 @@ export default class LightBeacon extends FlyerAbility implements IUnitState<Flye
             if(unit.action){                 
                 this.state = 0
                 unit.z = 0
-                this.afterUse()
+
                 unit.getState()
             }
         }

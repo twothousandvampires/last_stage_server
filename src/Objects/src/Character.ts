@@ -1020,9 +1020,14 @@ export default abstract class Character extends Unit {
     }
 
     public getState(): void {
+        if(this.using_ability){
+            this.using_ability.afterUse()
+        }
+        
+        this.using_ability = undefined
         this.action_is_end = false
         this.attack_angle = undefined
-        this.using_ability = undefined
+    
         this.is_attacking = false
         this.action = false
         this.target = undefined

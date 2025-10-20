@@ -33,6 +33,7 @@ export default abstract class Ability {
         }
         else if(this.type === Ability.TYPE_INSTANT){
             this.impact()
+            this.afterUse()
         }
     }
 
@@ -61,7 +62,7 @@ export default abstract class Ability {
     }
 
     afterUse(forced_cd: number | undefined = undefined){
-        console.log('after use: ' + this.name)
+        
         if(this.need_to_pay){
             this.owner.payCost()
         }
