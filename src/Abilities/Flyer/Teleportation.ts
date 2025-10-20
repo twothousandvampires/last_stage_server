@@ -99,7 +99,6 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
                 this.state = 0
                 this.used = true
 
-                this.afterUse()
                 unit.addCourage()
                 unit.getState()
             }

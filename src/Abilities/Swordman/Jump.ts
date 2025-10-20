@@ -88,7 +88,6 @@ export default class Jump extends SwordmanAbility implements IUnitState<Swordman
                 },5000)
             }
 
-            this.afterUse()
             player.getState()
             return
         }

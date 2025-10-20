@@ -120,7 +120,6 @@ export default class Quake extends SwordmanAbility implements IUnitState{
             
             player.level.setStatus(player, status)
 
-            this.afterUse()
             player.getState() 
         }
         else{

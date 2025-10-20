@@ -81,11 +81,12 @@ export default class Dash extends SwordmanAbility implements IUnitState{
         this.end = false
         this.start_time = 0
         player.chance_to_avoid_damage_state -= 100
+
+
     }
 
     update(player: Character){
         if(this.end){
-            this.afterUse()
             player.getState()
         }
         else if(player.action || this.start_time){

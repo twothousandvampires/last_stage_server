@@ -133,7 +133,6 @@ export default class Whirlwind extends SwordmanAbility implements IUnitState<Swo
                 unit.setImpactTime(70)
             }
             else{
-                this.afterUse()
                 unit.getState() 
             }
         }
