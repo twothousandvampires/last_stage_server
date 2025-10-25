@@ -14,10 +14,6 @@ export default class SparklingHelmet extends Item {
         this.description = 'if you do not use any skills for 5 seconds, creates a shock ring'
     }
 
-    getSpecialForgings(): string[] {
-        return ['shock nova when armour']
-    }
-    
     equip(character: Character): void {
         let status = new SparklingHelmetStatus(character.level.time)
         this.status = status

@@ -38,19 +38,19 @@ export class EvilSpirit extends Projectiles {
                 else{
                     let r = Func.random(1, 3)
                     if(r === 1){
-                        let status = new Curse(elem.time)
+                        let status = new Curse(elem.level.time)
                         status.setDuration(6000)
 
                         this.level.setStatus(elem, status)
                     }
                     else if(r === 2){
-                        let status = new Despair(elem.time)
+                        let status = new Despair(elem.level.time)
                         status.setDuration(6000)
 
                         this.level.setStatus(elem, status, true)
                     }
                     else if(r === 3){
-                        let status = new Curse2(elem.time)
+                        let status = new Curse2(elem.level.time)
                         status.setDuration(6000)
 
                         this.level.setStatus(elem, status, true)
@@ -74,8 +74,9 @@ export class EvilSpirit extends Projectiles {
 
         if(this.target){
             this.angle = Func.angle(this.x, this.y, this.target.x, this.target.y)
+            
         }
-        
+
         this.moveAct()
     }
 }

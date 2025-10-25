@@ -19,7 +19,7 @@ export default abstract class Unit extends GameObject {
     exploded: boolean = false
     burned: boolean = false
     can_be_instant_killed: boolean = true
-    
+    crushing: number = 0
     weapon_angle: number = 0
     is_corpse: boolean = false
     flipped: boolean = false
@@ -39,7 +39,7 @@ export default abstract class Unit extends GameObject {
     damaged: boolean = false
     action_time: number | undefined
     freezed: boolean = false
-    penetrated_rating: number = 0
+    ignited: boolean = false
 
     life_status: number = 1
     armour_rate: number = 0

@@ -8,8 +8,9 @@ export class ForkedLightningProjectile extends Projectiles{
     start_y: number | undefined
     w: number
     check_rasius: number
-    improved_chain_reaction: boolean
-    lightning_eye: boolean
+    improved_chain_reaction: boolean = false
+    lightning_eye: boolean = false
+    fork: boolean = false
 
     constructor(level: Level, public hitted_ids:any = [], public chance_to_fork = 100){
         super(level)
@@ -18,8 +19,6 @@ export class ForkedLightningProjectile extends Projectiles{
         this.move_speed = 1.5
         this.w = 1
         this.check_rasius = 15
-        this.improved_chain_reaction = false
-        this.lightning_eye = false
     }
 
     setPoint(x: number = 0, y: number = 0): void{
@@ -62,7 +61,7 @@ export class ForkedLightningProjectile extends Projectiles{
         let targets:any = []
         
         let radius = this.lightning_eye ? 30 : this.check_rasius
-        let max_for_serching_targets = 3 + this.owner.getAdditionalRadius()
+        let max_for_serching_targets = 3 + (this.fork ? 3 : 0)
 
         this.level.players.forEach(p => {
             if(!p.is_dead && targets.length < max_for_serching_targets && Func.distance(this, p) <= radius && p != this.owner && !this.hitted_ids.includes(p.id)){
@@ -84,6 +83,7 @@ export class ForkedLightningProjectile extends Projectiles{
                 let proj = new ForkedLightningProjectile(this.level, this.hitted_ids, reduce_chance)
                 proj.improved_chain_reaction = this.improved_chain_reaction
                 proj.lightning_eye = this.lightning_eye
+                proj.fork = this.fork
 
                 let angle = Func.angle(this.x, this.y, elem.x, elem.y)
               

@@ -10,6 +10,7 @@ export default class DamageInRadiusWhenEnlightnent {
     trigger(player: Character){
     
         if(player.level.time - this.last_trigger_time >= this.cd){
+            this.last_trigger_time = player.level.time
             
             let e = new FlamyRing(player.level)
             e.setPoint(player.x, player.y)

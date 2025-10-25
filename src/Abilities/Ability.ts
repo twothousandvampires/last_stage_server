@@ -17,6 +17,7 @@ export default abstract class Ability {
     free: boolean = false
     need_to_pay: boolean = false
     type: number = Ability.TYPE_CAST
+    state: string | undefined
 
     constructor(public owner: Player){
 
@@ -34,6 +35,9 @@ export default abstract class Ability {
         else if(this.type === Ability.TYPE_INSTANT){
             this.impact()
             this.afterUse()
+        }
+        if(this.state){
+            player.state = this.state
         }
     }
 

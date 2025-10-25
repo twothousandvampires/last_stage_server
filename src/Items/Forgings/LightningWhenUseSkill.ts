@@ -30,7 +30,7 @@ export default class LightningWhenUseSkill extends Forging {
     }
 
     getValue(){
-        return this.value
+        return this.value + '%'
     }
 
     canBeForged(): boolean {

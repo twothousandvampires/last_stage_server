@@ -1,7 +1,7 @@
 import Character from "../Objects/src/Character"
 import Status from "./Status"
 
-export default class GrimPileStatus extends Status{
+export default class GrimPileStatus extends Status {
 
     name: string
     add_armour: number

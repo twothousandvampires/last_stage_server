@@ -85,16 +85,18 @@ export default class Flyer extends Character{
         })
 
         filtered.sort((a, b) =>  { return (b.cost + b.ascend) - (a.cost + a.ascend)})
+        
+        let part_size = Math.ceil(filtered.length / 3);
 
-        //get 3 random ones
+        let part1 = filtered.slice(0, part_size);
+        let part2 = filtered.slice(part_size, part_size * 2);
+        let part3 = filtered.slice(part_size * 2);
 
-        filtered.sort((a, b) =>  { return Func.chance(60) ? 1 : -1 })
+        this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part1))
+        this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part2))
+        this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part3))
 
-        filtered = filtered.slice(0, 3)
-
-        //add to this.upgrades
-
-        this.upgrades = filtered
+        this.upgrades = this.upgrades.filter(elem => elem)
     }
 
     castSound(){
@@ -355,7 +357,7 @@ export default class Flyer extends Character{
     }
 
     getManaRegenTimer(){
-        return 5000 - this.getSecondResource() * 100
+        return 5000 - this.getSecondResource() * 25
     }
 
     startGame(){
@@ -500,7 +502,7 @@ export default class Flyer extends Character{
     }
 
     getCastSpeed() {
-        let value = this.cast_speed - (this.getSecondResource() * 50)
+        let value = this.cast_speed - (this.getSecondResource() * 12)
         
         if(value < Flyer.MIN_CAST_SPEED){
             value = Flyer.MIN_CAST_SPEED

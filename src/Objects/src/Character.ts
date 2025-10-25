@@ -58,14 +58,16 @@ export default abstract class Character extends Unit {
 
     enlight_timer: number = 35000
     base_regeneration_time: number = 10000
-    grace: number = 1
+    grace: number = 2221
     voice_radius: number = 20
-    gold: number = 0
+    gold: number = 2220
     cooldown_redaction: number = 0
     max_life: number = 4
     maximum_resources: number = 7
     resource: number = 0
-    penetrate: number = 0
+    crushing_rating: number = 0
+    crushing_cd: number = 2000
+    last_crashing_time = 0
     impact: number = 0
     impact_cooldown: number = 2000 
     cast_speed: number = 2000
@@ -158,6 +160,7 @@ export default abstract class Character extends Unit {
     abstract getTotalArmour(): number
     abstract getMoveSpeedPenaltyValue(): number
     abstract addCourage(): void
+    abstract getRegenTimer(): number
     
     succesefulPierce(enemy: Unit): void {
         this.triggers_on_pierce.forEach(elem => elem.trigger(this, enemy))
@@ -165,6 +168,21 @@ export default abstract class Character extends Unit {
 
     impactHit(enemy: any = undefined, impact_damage: number = 1){
         this.triggers_on_impact.forEach(elem => elem.trigger(this, enemy, impact_damage))
+    }
+
+    isCrushing(){
+        if(Func.chance(this.crushing_rating, this.is_lucky)){
+            if(this.level.time - this.last_crashing_time >= this.crushing_cd){
+                this.last_crashing_time = this.level.time
+                return true
+            }
+            else{
+                return false
+            }
+        }
+        else{
+            return false
+        }       
     }
 
     playerGetResourse(){
@@ -184,8 +202,6 @@ export default abstract class Character extends Unit {
     }
 
     useAbility(ability: Ability){
-        console.log('use: ' + ability.name)
-
         this.using_ability = ability
         this.pay_to_cost = ability.cost
         this.useNotUtility()
@@ -230,7 +246,9 @@ export default abstract class Character extends Unit {
             action_time: this.action_time,
             light_r: this.light_r,
             ward: this.ward,
-            invisible: this.invisible
+            invisible: this.invisible,
+            courage: this.getSecondResource(),
+            max_courage: this.enlightenment_threshold
         }
     }
 
@@ -282,9 +300,23 @@ export default abstract class Character extends Unit {
         })
     }
 
+    getStatsArray(){
+        return [
+            'might',
+            'will',
+            'knowledge',
+            'agility',
+            'perception',
+            'durability'
+        ]
+    }
+
     protected payCost(): void {
         this.resource -= this.pay_to_cost
         this.pay_to_cost = 0
+        if(this.resource < 0){
+            this.resource = 0
+        }
     }
 
     public statusWasApplied(): void{
@@ -322,24 +354,40 @@ export default abstract class Character extends Unit {
     }
 
     getStats(){ 
+        let descriptions = {
+            armour: 'increases your chance of not taking damage',
+            resist: 'increases your chance of not geting bad status(ignite, shock, etc)',
+            spirit: 'increases your chance of losing energy instead of life',
+            pierce: 'increases your chance to deal damage by reducing enemy armour',
+            impact: 'increases your chance to damage adjacent targets in addition to your primary target',
+            critical: 'increases your chance to deal double damage',
+            crushing: 'increases your chance to crush an enemy, every time when enemy being crushed they take additional damage next time'
+        }
         return {
-            might: this.might,
-            will: this.will,
-            knowledge: this.knowledge,
-            durability: this.durability,
-            agility: this.agility,
-            perception: this.perception,
-            ' ': ' ',
-            armour: this.getTotalArmour(),
-            resist: this.getResistValue(),
-            spirit: this.spirit,
-            '  ': ' ',
-            attack_speed: this.getAttackSpeed(),
-            cast_speed: this.getCastSpeed(),
-            pierce: this.getPierce(),
-            impact: this.getImpactRating(),
-            critical: this.critical,
-            penertrate: this.penetrate, 
+            stats: {
+                might: this.might,
+                will: this.will,
+                knowledge: this.knowledge,
+                durability: this.durability,
+                agility: this.agility,
+                perception: this.perception,
+                "~~~": "~~~~~~~~~~~~~~~~~",
+                armour: this.getTotalArmour(),
+                resist: this.getResistValue() + '%',
+                spirit: this.spirit + '%',
+                "~~~~~~~~~~~~~~~~~": "~~~",
+                "attack speed": this.getAttackSpeed() + 'ms',
+                "cast speed": this.getCastSpeed() + 'ms',
+                pierce: this.getPierce() +'%',
+                impact: this.getImpactRating() + '%',
+                critical: this.critical + '%',
+                crushing: this.crushing_rating + '%', 
+                "~~": "~~~~~~~~~~~~~~~~~~",
+                "move speed": this.move_speed_penalty + '%',
+                "cooldown reduction": this.getCdRedaction() + '%',
+                "regeneration rate": (this.getRegenTimer() / 1000) + 'sec'
+            },
+            descriptions: descriptions
         }
     }
 
@@ -507,7 +555,6 @@ export default abstract class Character extends Unit {
         }
        
         if(unit && unit.pierce > this.getTotalArmour() && Func.chance(unit.pierce - this.getTotalArmour())){
-            console.log('player was pierced')
             value = 2
         }
 
@@ -525,51 +572,51 @@ export default abstract class Character extends Unit {
             value --
         }
 
-        if(value != 0){
+        if(value > 0){
             this.last_time_get_hit = this.level.time
-        }
 
-        for(let i = 0; i < value; i++){
-            if(this.life_status <= 0) continue
+            for(let i = 0; i < value; i++){
+                if(this.life_status <= 0) continue
 
-            this.life_status --
+                this.life_status --
 
-            if(this.life_status === 1){
-                this.reachNearDead()
-            }
-
-            if(this.life_status <= 0){
-                this.playerTakeLethalDamage()
-
-                if(this.can_be_lethaled){
-                    if(options?.explode){
-                        this.exploded = true
-                    }
-                    if(unit instanceof Character){
-                        unit.succesefulKill(this)
-                    }
-                    this.is_dead = true
-                    this.setState(new PlayerDyingState())
+                if(this.life_status === 1){
+                    this.reachNearDead()
                 }
-            }
+
+                if(this.life_status <= 0){
+                    this.playerTakeLethalDamage()
+
+                    if(this.can_be_lethaled){
+                        if(options?.explode){
+                            this.exploded = true
+                        }
+                        if(unit instanceof Character){
+                            unit.succesefulKill(this)
+                        }
+                        this.is_dead = true
+                        this.setState(new PlayerDyingState())
+                    }
+                }
            
-            let penalty = -this.getPenaltyByLifeStatus()
-            this.addMoveSpeedPenalty(penalty) 
-        }
+                let penalty = -this.getPenaltyByLifeStatus()
+                this.addMoveSpeedPenalty(penalty) 
+            }
 
-        if(this.is_dead) return
+            if(this.is_dead) return
 
-        if(this.life_status > 0){
-            this.playerLoseLife()
-        }
+            if(this.life_status > 0){
+                this.playerLoseLife()
+            }
 
-        if(!this.can_be_lethaled){
-            this.life_status = 1
-            this.can_be_lethaled = true
-        }
+            if(!this.can_be_lethaled){
+                this.life_status = 1
+                this.can_be_lethaled = true
+            }
 
-        if(!this.freezed && Func.notChance(this.getSkipDamageStateChance(), this.is_lucky)){
-            this.setState(new PlayerDamagedState())
+            if(!this.freezed && Func.notChance(this.getSkipDamageStateChance(), this.is_lucky)){
+                this.setState(new PlayerDamagedState())
+            }
         }
     }
 
@@ -705,6 +752,7 @@ export default abstract class Character extends Unit {
     }
 
     private directMove(): void{
+        console.log(this.angle_for_forced_movement)
         if(this.canMove()){
             this.incA()
             this.is_moving = true
@@ -981,7 +1029,7 @@ export default abstract class Character extends Unit {
         }
         
         if(this.current_state){
-            this.current_state.update(this)
+            this.current_state.update(this, time)
         }
       
         if(!this.is_dead){

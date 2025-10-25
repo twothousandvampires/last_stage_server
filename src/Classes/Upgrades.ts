@@ -59,6 +59,11 @@ import Creator from "../Status/Creator"
 import DamageInRadiusWhenEnlightnent from "../Triggers/DamageInRadiusWhenEnlightnent"
 import InnerPowerTrigger from "../Triggers/InnerPowerTrigger"
 import Luck from "../Status/Luck"
+import Item from "../Items/Item"
+import Forging from "../Items/Forgings/Forging"
+import MagicFlowTrigger from "../Triggers/MagicFlowTrigger"
+import RisingMoraleTrigger from "../Triggers/RisingMoraleTrigger"
+import CrushingWave from "../Status/CrushingWave"
 
 export default class Upgrades{
     static getAllUpgrades(): Upgrade[]{
@@ -100,6 +105,41 @@ export default class Upgrades{
                     desc: 'you can create a sphere around you'
                 },
                 {
+                    name: 'divine forging',
+                    canUse: (character: Character) => {
+                        return character.item.length > 0
+                    },
+                    teach: (character: Character): void => {
+                        let item = Func.getRandomFromArray(character.item)
+
+                        if(item){
+                            item.max_forgings ++
+
+                            let forging: Forging = Func.getRandomFromArray(item.forge.filter(elem => elem.canBeForged()))
+                            
+                            if(forging){
+                                character.gold += forging.gold_cost
+                                forging.forge(character)                             
+                            }
+                            
+                            let new_forge = item.getRandomForging()
+            
+                            while(item.suggested_forgings.some(elem => elem instanceof new_forge.constructor)){
+                                new_forge = item.getRandomForging()
+                            }
+            
+                            character.gold += new_forge.gold_cost
+            
+                            new_forge.forge(character)
+            
+                            item.forge.push(new_forge)
+                        }
+                    },
+                    cost: 3,
+                    ascend: 30,
+                    desc: 'your random item get new forging, upgrade random one and increases maximum forgings'
+                },
+                {
                     name: 'luck',
                     canUse: (character: Character) => {
                         return !character.is_lucky
@@ -112,6 +152,20 @@ export default class Upgrades{
                     cost: 2,
                     ascend: 12,
                     desc: 'you become lucky for 30 seconds'
+                },
+                {
+                    name: 'crushing wave',
+                    canUse: (character: Character) => {
+                        return character.crushing_rating >= 30 && !character.level.status_pull.some(elem => elem instanceof CrushingWave)
+                    },
+                    teach: (character: Character): void => {
+                        let s = new CrushingWave(character.level.time)
+                        
+                        character.level.setStatus(character, s)
+                    },
+                    cost: 3,
+                    ascend: 26,
+                    desc: 'every 2 seconds crushed nearby enemies get damage'
                 },
                 {
                     name: 'focus',
@@ -128,7 +182,7 @@ export default class Upgrades{
                 {
                     name: 'inspiration',
                     canUse: (character: Character) => {
-                        return !character.triggers_on_get_energy.some(elem => elem instanceof InspirationTrigger)
+                        return !character.triggers_on_get_energy.some(elem => elem instanceof InspirationTrigger) && character.perception >= 8
                     },
                     teach: (character: Character): void => {
                         character.triggers_on_get_energy.push(new InspirationTrigger())
@@ -218,11 +272,11 @@ export default class Upgrades{
                         return character.agility >= 10 && character.armour_rate < 200
                     },
                     teach: (character: Character): void => {
-                        character.armour_rate += 20
+                        character.armour_rate += 10
                     },
                     cost: 5,
                     ascend: 20,
-                    desc: 'increases your armour by 20'
+                    desc: 'increases your armour by 10'
                 },
                 {
                     name: 'titanic strikes',
@@ -629,45 +683,72 @@ export default class Upgrades{
                 desc: 'increases maximum of energy'
                 },
                 {
-                name: 'impact',
-                canUse: (character: Character) => {
-                    return character.impact < 100
-                },
-                teach: (character: Character) => {
-                    if(character instanceof Character){
-                        character.impact ++
-                    }
-                },
-                cost: 2,
-                ascend: 6,
-                desc: 'increases impact rating'
+                    name: 'impact',
+                    canUse: (character: Character) => {
+                        return character.impact < 100
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Character){
+                            character.impact ++
+                        }
+                    },
+                    cost: 1,
+                    ascend: 6,
+                    desc: 'increases impact rating'
+                    },
+                {
+                    name: 'crushing',
+                    canUse: (character: Character) => {
+                        return character.crushing_rating < 100
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Character){
+                            character.crushing_rating ++
+                        }
+                    },
+                    cost: 1,
+                    ascend: 8,
+                    desc: 'increases crushing rating'
                 },
                 {
-                name: 'penetrating',
-                canUse: (character: Character) => {
-                    return character.penetrate < 100
-                },
-                teach: (character: Character) => {
-                    if(character instanceof Character){
-                        character.penetrate ++
-                    }
-                },
-                cost: 2,
-                desc: 'increases penetrate rating'
+                    name: 'raising morale',
+                    canUse: (character: Character) => {
+                        return !character.triggers_on_say.some(elem => elem instanceof RisingMoraleTrigger)
+                    },
+                    teach: (character: Character) => {
+                        character.triggers_on_say.push(new RisingMoraleTrigger())
+                    },
+                    cost: 5,
+                    ascend: 16,
+                    desc: 'when you speak there is a chance to give 1 life to you and alies'
                 },
                 {
-                name: 'spirit',
-                canUse: (character: Character) => {
-                    return character.spirit < 100
+                    name: 'spirit',
+                    canUse: (character: Character) => {
+                        return character.spirit < 100
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Character){
+                            character.spirit ++
+                        }
+                    },
+                    cost: 2,
+                    desc: 'increases chance lose energy instead life when get damage'
                 },
-                teach: (character: Character) => {
-                    if(character instanceof Character){
-                        character.spirit ++
-                    }
-                },
-                cost: 2,
-                desc: 'increases chance lose energy instead life when get damage'
-                },
+                {
+                    name: 'shout',
+                    canUse: (character: Character) => {
+                        return character.level.players.length > 1
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Character){
+                            character.voice_radius += 10
+                        }
+                    },
+                    cost: 2,
+                    ascend: 6,
+                    desc: 'increases your voice radius'
+                }
         ]
     }
     static getCultistUpgrades(){
@@ -1165,6 +1246,18 @@ export default class Upgrades{
                         desc: 'your frost sphere releases icicles while moving count depends on you courage'
                     },
                     {
+                        name: 'magic flow',
+                        canUse: (character: Character) => {
+                            return !character.triggers_on_say.some(elem => elem instanceof MagicFlowTrigger)
+                        },
+                        teach: (character: Character) => {
+                            character.triggers_on_say.push(new MagicFlowTrigger())
+                        },
+                        cost: 2,
+                        ascend: 10,
+                        desc: 'when you speak there is a chance to give 1 energy to you and alies'
+                    },
+                    {
                         name: 'scorching',
                         type: '(flame wall)',
                         canUse: (character: Character) => {
@@ -1313,7 +1406,22 @@ export default class Upgrades{
                         },
                         cost: 2,
                         ascend: 10,
-                        desc: 'now your lightning bolt also hit 2 additional times in close area but mana cost is increased'
+                        desc: 'now your can create additional bolts depend on your courage but mana cost is increased'
+                    },
+                    {
+                        name: 'conductivity',
+                        type: 'lightning bolt',
+                        canUse: (character: Character) => {
+                            return character instanceof Flyer && (character.first_ability instanceof LightningBolt) && !character.first_ability.conductivity
+                        },
+                        teach: (character: Character) => {
+                            if(character instanceof Flyer && character.first_ability instanceof LightningBolt){
+                                character.first_ability.conductivity = true
+                            }
+                        },
+                        cost: 2,
+                        ascend: 6,
+                        desc: 'increases the radius'
                     },
                     {
                         name: 'improved chain reaction',
@@ -1331,6 +1439,21 @@ export default class Upgrades{
                         desc: 'increases the chain chance'
                     },
                     {
+                        name: 'fork',
+                        type: 'forking lightning',
+                        canUse: (character: Character) => {
+                            return character instanceof Flyer && (character.second_ability instanceof ForkedLightning) && !character.second_ability.fork
+                        },
+                        teach: (character: Character) => {
+                            if(character instanceof Flyer && character.second_ability instanceof ForkedLightning){
+                                character.second_ability.fork = true
+                            }
+                        },
+                        cost: 5,
+                        ascend: 16,
+                        desc: 'increases the amount of creating lightnings when chain'
+                    },
+                    {
                         name: 'lightning eye',
                         type: 'forking lightning',
                         canUse: (character: Character) => {
@@ -1343,7 +1466,7 @@ export default class Upgrades{
                         },
                         cost: 1,
                         ascend: 3,
-                        desc: 'increases the radius of checking targets for chain'
+                        desc: 'increases the target check radius for a chain'
                     },
                     {
                         name: 'lightning waves',
@@ -2019,7 +2142,7 @@ export default class Upgrades{
                 },
                 cost: 6,
                 ascend: 15,
-                desc: 'metal thorns penetrates enemies when hit'
+                desc: 'metal thorns crush enemies when hit'
             },
             {
                 name: 'call of arms',

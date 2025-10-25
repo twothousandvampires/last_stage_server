@@ -3,8 +3,9 @@ import ExplodeEnemyWhenGetEnergy from "../../Triggers/ExplodeEnemyWhenGetEnergy"
 import Item from "../Item";
 import Forging from "./Forging";
 
-export default class Overcharge extends Forging {5
+export default class Overcharge extends Forging {
     value: number = 0
+    trigger: any
    
     constructor(item: Item){
         super(item)
@@ -16,25 +17,21 @@ export default class Overcharge extends Forging {5
 
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
-            let trigger = player.triggers_on_get_energy.find(elem => elem instanceof ExplodeEnemyWhenGetEnergy)
-
-            if(trigger){
-                trigger.chance += 5
+            if(this.canBeForged() && this.costEnough()){
+                if(!this.trigger){
+                    this.trigger = new ExplodeEnemyWhenGetEnergy()
+                    player.triggers_on_get_energy.push(this.trigger)
+                }
+                this.trigger.chance += 5
+                
+                this.payCost()
+                this.value += 5
             }
-            else{
-                let t = new ExplodeEnemyWhenGetEnergy()
-                t.chance = 5
-
-                player.triggers_on_get_energy.push(t)
-            }
-           
-            this.payCost()
-            this.value += 5
         }
     }
 
     getValue(){
-        return this.value
+        return this.value + '%'
     }
 
     canBeForged(): boolean {

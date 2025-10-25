@@ -6,15 +6,13 @@ import PileOfThorns from "../../Objects/src/Piles/PileOfThorns";
 export default class PileOfThornCast extends CultistAbility{
 
     distance: 25
-    ring_of_pain: boolean
-    collection_of_bones: boolean
+    ring_of_pain: boolean = false
+    collection_of_bones: boolean = false
 
     constructor(owner: Cultist){
         super(owner)
         this.name = 'pile of thorns'
         this.distance = 25
-        this.ring_of_pain = false
-        this.collection_of_bones = false
         this.cost = 6
         this.need_to_pay = true
     }
@@ -33,14 +31,8 @@ export default class PileOfThornCast extends CultistAbility{
         let hit_x = this.owner.x + (Math.sin(this.owner.attack_angle) * distance)
         let hit_y = this.owner.y + (Math.cos(this.owner.attack_angle) * distance)
 
-        let totem_power = this.owner.getSecondResource()
-        let pile = new PileOfThorns(this.owner.level, totem_power)
+        let pile = new PileOfThorns(this.owner.level, this.ring_of_pain)
         pile.collection_of_bones = this.collection_of_bones
-        
-        if(this.ring_of_pain){
-            pile.frequency = 2000
-            pile.radius += 4
-        }
         
         pile.setPoint(hit_x, hit_y)
         

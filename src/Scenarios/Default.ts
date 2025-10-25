@@ -9,11 +9,14 @@ import Character from "../Objects/src/Character";
 import Bones from "../Objects/src/Enemy/Bones";
 import Enemy from "../Objects/src/Enemy/Enemy";
 import { Flamy } from "../Objects/src/Enemy/Flamy";
+import { FleshManifistation } from "../Objects/src/Enemy/FleshManifistation";
 import FlyingBones from "../Objects/src/Enemy/FlyingBones";
+import { ForgeManifistation } from "../Objects/src/Enemy/ForgeManifistation";
 import Ghost from "../Objects/src/Enemy/Ghost";
 import Gifter from "../Objects/src/Enemy/Gifter";
 import Impy from "../Objects/src/Enemy/Impy";
 import MagicSlime from "../Objects/src/Enemy/MagicSlime";
+import { MasterManifestation } from "../Objects/src/Enemy/MasterManifestation";
 import Slime from "../Objects/src/Enemy/Slime";
 import Solid from "../Objects/src/Enemy/Solid";
 import Specter from "../Objects/src/Enemy/Specter";
@@ -36,7 +39,7 @@ export default class Default extends Scenario{
    
     last_checked: number
     time_between_wave_ms: number
-    max_time_wave: number = 10000
+    max_time_wave: number = 9000
     waves_created: number = 0
     times_count: number = 0
     add_e_life: number = 0
@@ -45,8 +48,10 @@ export default class Default extends Scenario{
     add_e_speed: number = 0
     add_attack_speed: number = 0
     add_cooldown_attack: number = 0
+    add_critical: number = 0
     add_e_fortify: number = 0
     minus_create_chance = 0
+    wave_boss_trashold: number = 90
 
     monster_upgrades: any
     private need_to_check_grace: boolean = true
@@ -72,7 +77,7 @@ export default class Default extends Scenario{
             }
         }
     }
-    setTimes(times){
+    setTimes(times: number){
         this.times_count = Func.random(6, 8)
         this.times = times
     }
@@ -113,7 +118,8 @@ export default class Default extends Scenario{
     }
 
     checkTime(level: Level){
-        if(level.kill_count >= level.boss_kills_trashold){
+        if(this.waves_created >= this.wave_boss_trashold){
+            this.wave_boss_trashold = Math.round(this.wave_boss_trashold * 1.6)
             level.previuos_script = this
             level.setScript(new BossFight())
             return
@@ -130,13 +136,15 @@ export default class Default extends Scenario{
         if(level.time - this.last_checked >= wave_time){
             
             this.last_checked = level.time
-            console.log('times: ' + this.times + ' ' + wave_time)
+           
             this.createWave(level)
+            this.checkPortal(level) 
+            this.checkUpgrade(level)
             if(this.times_count){
                 this.times_count --
                 if(!this.times_count){
                     this.times = Default.TIMES_NORMAL
-                    console.log('times normal')
+                 
                 }
             }
         }
@@ -147,16 +155,16 @@ export default class Default extends Scenario{
         if(!player_in_zone) return
 
         this.waves_created ++
-
+      
         if(this.times === Default.TIMES_NORMAL && this.time_between_wave_ms < this.max_time_wave){
-            this.time_between_wave_ms += 40
+            this.time_between_wave_ms += 30
         }
 
-        let add_count = Math.floor(this.waves_created / 17)
+        let add_count = Math.floor(this.waves_created / 20)
 
-        let count = Func.random(1 + Math.floor(add_count / 2), 2 + Math.floor(add_count))
+        let count = Func.random(1 + Math.floor(add_count / 2), 2 + add_count)
         
-        count += (level.players.length - 1)
+        count += (level.players.length - 1) * 2
 
         if(this.times === Default.TIMES_BAD){
             count = Math.round(count * 1.2)
@@ -164,94 +172,104 @@ export default class Default extends Scenario{
 
         for(let i = 0; i < count; i++){
             await Func.sleep(Func.random(100, 300))
-            let enemy_name = undefined
-
-            let w = Math.random() * Level.enemy_list.reduce((acc, elem) => acc + elem.weight, 0)
-            let w2 = 0;
             
-            for (let item of Level.enemy_list) {
-                w2 += item.weight;
-                if (w <= w2) {
-                    enemy_name = item.name;
-                    break;
-                }
-            }
+            this.createRandomEnemy(level)
+        }
+    }
 
-            if(enemy_name === undefined){
-                continue
-            }
+    createRandomEnemy(level: Level, list: string[] = []){
+        let enemy_name = undefined
 
-            let enemy = undefined
+        let enemy_list = []
 
-            if(enemy_name === 'solid'){
-                enemy = new Solid(level)
+        if(list.length){
+            enemy_list = Level.enemy_list.filter(elem => list.includes(elem.name))
+        }
+        else{
+            enemy_list =  Level.enemy_list
+        }
+        
+        let w = Math.random() * enemy_list.reduce((acc, elem) => acc + elem.weight, 0)
+        let w2 = 0;
+        
+        for (let item of enemy_list) {
+            w2 += item.weight;
+            if (w <= w2) {
+                enemy_name = item.name;
+                break;
             }
-            else if(enemy_name === 'flying bones'){
-                enemy = new FlyingBones(level)
-            }
-            else if(enemy_name === 'bones'){
-                enemy = new Bones(level)
-            }
-            else if(enemy_name === 'flamy'){
-                enemy = new Flamy(level)
-            }
-            else if(enemy_name === 'specter'){
-                enemy = new Specter(level)
-            }
-            else if(enemy_name === 'impy'){
-                enemy = new Impy(level)
-            }
-            else if(enemy_name === 'gifter'){
-                enemy = new Gifter(level)
-            }
-            else if(enemy_name === 'ghost'){
-                enemy = new Ghost(level)
-            }
-            else if(enemy_name === 'slime'){
-                enemy = new Slime(level)
-            }
-             else if(enemy_name === 'magic slime'){
-                enemy = new MagicSlime(level)
-            }
-            else if(enemy_name === 'pile'){
-                enemy = new Pile(level)
-            }
-
-            if(!enemy){
-                continue
-            }
-
-            while(enemy.isOutOfMap()){
-                let players_in_zone = level.players.filter(elem => elem.zone_id === 0)
-                let random_player = players_in_zone[Math.floor(Math.random() * players_in_zone.length)]
-                if(!random_player){
-                    return
-                }
-                let angle = Math.random() * 6.28
-                let distance_x = Func.random(14, 30)
-                let distance_y = Func.random(14, 30)
-
-                enemy.setPoint(random_player.x + Math.sin(angle) * distance_x, random_player.y + Math.cos(angle) * distance_y)
-            }
-
-            let elite_chance = 5 + Math.floor(this.waves_created / 5)
-            
-            if(this.times === Default.TIMES_GOOD){
-                enemy.create_chance += 15
-            }
-
-            if(Func.chance(elite_chance) && ((enemy instanceof Solid) || (enemy instanceof FlyingBones) || (enemy instanceof Specter))){
-                enemy = this.createElite(enemy, level)
-            }
-
-            enemy = this.upgradeEnemy(enemy)
-            
-            level.enemies.push(enemy) 
         }
 
-        this.checkPortal(level) 
-        this.checkUpgrade(level)
-     
+        if(enemy_name === undefined){
+            return
+        }
+
+        let enemy = undefined
+
+        if(enemy_name === 'solid'){
+            enemy = new Solid(level)
+        }
+        else if(enemy_name === 'flying bones'){
+            enemy = new FlyingBones(level)
+        }
+        else if(enemy_name === 'bones'){
+            enemy = new Bones(level)
+        }
+        else if(enemy_name === 'flamy'){
+            enemy = new Flamy(level)
+        }
+        else if(enemy_name === 'specter'){
+            enemy = new Specter(level)
+        }
+        else if(enemy_name === 'impy'){
+            enemy = new Impy(level)
+        }
+        else if(enemy_name === 'gifter'){
+            enemy = new Gifter(level)
+        }
+        else if(enemy_name === 'ghost'){
+            enemy = new Ghost(level)
+        }
+        else if(enemy_name === 'slime'){
+            enemy = new Slime(level)
+        }
+            else if(enemy_name === 'magic slime'){
+            enemy = new MagicSlime(level)
+        }
+        else if(enemy_name === 'pile'){
+            enemy = new Pile(level)
+        }
+
+        if(!enemy){
+            return
+        }
+
+        while(enemy.isOutOfMap()){
+            let players_in_zone = level.players.filter(elem => elem.zone_id === 0)
+            let random_player = players_in_zone[Math.floor(Math.random() * players_in_zone.length)]
+            if(!random_player){
+                return
+            }
+            let angle = Math.random() * 6.28
+            let distance_x = Func.random(14, 30)
+            let distance_y = Func.random(14, 30)
+
+            enemy.setPoint(random_player.x + Math.sin(angle) * distance_x, random_player.y + Math.cos(angle) * distance_y)
+        }
+
+        let elite_chance = 5 + Math.floor(this.waves_created / 5)
+        
+        if(this.times === Default.TIMES_GOOD){
+            enemy.create_chance += 15
+        }
+
+        if(Func.chance(elite_chance) && ((enemy instanceof Solid) || (enemy instanceof FlyingBones) || (enemy instanceof Specter))){
+            enemy = this.createElite(enemy, level)
+        }
+
+        enemy = this.upgradeEnemy(enemy)
+        
+        level.enemies.push(enemy) 
     }
 
     createElite(enemy: Enemy, level: Level){
@@ -297,6 +315,7 @@ export default class Default extends Scenario{
         enemy.attack_speed -= this.add_attack_speed
         enemy.create_chance -= this.minus_create_chance
         enemy.fortify += this.add_e_fortify
+        enemy.critical += this.add_critical
 
         if(enemy.create_chance <= 3){
             enemy.create_chance = 3
@@ -326,7 +345,7 @@ export default class Default extends Scenario{
         }
 
         let chance = this.waves_created - this.grace_trashold
-        console.log(chance)
+      
         if(chance > 0){
             this.grace_trashold = Math.round(this.grace_trashold * 1.3) 
             let portal: Grace = new Grace(level)
@@ -344,6 +363,39 @@ export default class Default extends Scenario{
     }
 
     checkUpgrade(level){
+        if(this.waves_created % 10 === 0 && this.waves_created > 1){
+            let e = undefined
+            let r = Func.random(1,3)
+
+            if(r === 1){
+                e = new MasterManifestation(level)
+            }
+            else if(r === 2){
+                e = new FleshManifistation(level)
+            }
+            else{
+                e = new ForgeManifistation(level)
+            }
+
+            while(e.isOutOfMap()){
+                let players: Character = level.players.filter(elem => elem.zone_id === 0)
+
+                let random = Func.getRandomFromArray(players)
+
+                if(random){
+                    let angle: number = Math.random() * 6.28
+                    let distance_x: number = Func.random(15, 25)
+                    let distance_y: number = Func.random(15, 25)
+
+                    e.setPoint(random.x + Math.sin(angle) * distance_x, random.y + Math.cos(angle) * distance_y)
+                }
+                else{
+                    e.setPoint(60, 60)
+                }
+            }
+            
+            level.binded_effects.push(e)
+        }
         if(this.waves_created % 18 === 0 && this.waves_created >= 1){
             let e = undefined
             let r = Func.random(1,3)
@@ -357,17 +409,28 @@ export default class Default extends Scenario{
             else{
                 e = new UltimatumText3(level)
             }
-           
-            let random_player: Character = level.players[Math.floor(Math.random() * level.players.length)]
-            let angle: number = Math.random() * 6.28
-            let distance_x: number = Func.random(15, 25)
-            let distance_y: number = Func.random(15, 25)
+            
+            while(e.isOutOfMap()){
+                let players: Character = level.players.filter(elem => elem.zone_id === 0)
 
-            e.setPoint(random_player.x + Math.sin(angle) * distance_x, random_player.y + Math.cos(angle) * distance_y)
+                let random = Func.getRandomFromArray(players)
+
+                if(random){
+                    let angle: number = Math.random() * 6.28
+                    let distance_x: number = Func.random(15, 25)
+                    let distance_y: number = Func.random(15, 25)
+
+                    e.setPoint(random.x + Math.sin(angle) * distance_x, random.y + Math.cos(angle) * distance_y)
+                }
+                else{
+                    e.setPoint(60, 60)
+                }
+            }
+            
             level.binded_effects.push(e)
         }
 
-        if(this.waves_created % 12 === 0){
+        if(this.waves_created % 15 === 0){
             let min = undefined
             let name = undefined
             for(let minor in this.monster_upgrades.minor){
@@ -408,6 +471,7 @@ export default class Default extends Scenario{
             switch(name){
                 case 'attack_speed':
                     this.add_attack_speed += 50
+                    this.add_critical += 3
                     break;
                 case 'move_speed':
                     this.add_e_speed += 5
@@ -421,7 +485,7 @@ export default class Default extends Scenario{
 
             level.addSound('evel upgrade', 40, 40)
         }
-        if(this.waves_created % 75 === 0){
+        if(this.waves_created % 90 === 0 && this.max_time_wave > 4000){
             this.max_time_wave -= 500
             if(this.time_between_wave_ms > this.max_time_wave){
                 this.time_between_wave_ms = this.max_time_wave

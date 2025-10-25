@@ -13,7 +13,7 @@ export default class InspirationTrigger {
 
     trigger(player: Character){
         
-        if(Func.notChance(player.perception * 2, player.is_lucky)) return
+        if(Func.notChance(Math.round(player.perception / 2), player.is_lucky)) return
         
         if(player.level.time - this.last_trigger_time >= this.cd){
             this.last_trigger_time = player.level.time

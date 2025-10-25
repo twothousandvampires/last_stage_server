@@ -15,7 +15,7 @@ export default class BurningCircle extends CultistAbility{
         this.consuming = false
         this.hatred = false
         this.devouring = false
-        this.cd = 14000
+        this.cd = 25000
     }
 
     impact(){
@@ -32,7 +32,7 @@ export default class BurningCircle extends CultistAbility{
         status.setDuration(8000)
 
         if(this.consuming){
-            status.setRadius(20)
+            status.setRadius(16)
         }
 
         if(this.hatred){
@@ -41,6 +41,6 @@ export default class BurningCircle extends CultistAbility{
         
         status.devouring = this.devouring
 
-        this.owner.level.setStatus(this.owner, status)
+        this.owner.level.setStatus(this.owner, status, true)
     }
 }

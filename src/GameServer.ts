@@ -57,15 +57,16 @@ class GameServer{
         }
 
         if (process.send) {
-            process.send({
-                type: 'update_lobby', 
-                data: lobbyInfo
-            });
-        }
+                process.send({
+                    type: 'update_lobby', 
+                    data: lobbyInfo
+                });
+            }
     }
 
     private async initializeRedis(): Promise<void> {
-         await this.redisClient.connect()
+        await this.redisClient.connect()
+        
         let lobbyInfo = {
             port: this.port.toString(),
             players: this.clients.size.toString(),
@@ -156,7 +157,7 @@ class GameServer{
     }
 
     async addRecord(name: string, id: string){
-        console.log(name, id)
+       
         let info = await this.redisClient.get(id)
         info = JSON.parse(info)
 
@@ -235,7 +236,7 @@ class GameServer{
                 })
 
                 socket.on('add_record' ,(name) => {
-                    console.log(name)
+                  
                     this.addRecord(name, socket.id)
                 })
 
@@ -334,8 +335,7 @@ class GameServer{
 
                         this.updateLobby()
                     } catch(e){
-                        console.log(data)
-                        console.log(e)
+                       
                     }
                     
                 })

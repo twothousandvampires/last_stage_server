@@ -8,8 +8,8 @@ export class Spark extends Projectiles{
     w: number
     start_x: number | undefined
     start_y: number | undefined
-    start: any
-    change_angle: any
+    start: number
+    change_angle: number
     hitted: any[] = []
     by_enemy: boolean = false
 
@@ -19,11 +19,8 @@ export class Spark extends Projectiles{
         this.name = 'spark'
         this.move_speed = 0.8
         this.w = 3
-    }
-
-    setStart(time: number){
-        this.start = time
-        this.change_angle = time
+        this.start = level.time
+        this.change_angle = level.time
     }
 
     setPoint(x: number = 0, y: number = 0): void{

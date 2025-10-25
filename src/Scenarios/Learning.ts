@@ -77,134 +77,134 @@ export default class Learning extends Scenario{
         forger.setPoint(40, 20)
         level.binded_effects.push(forger)
 
-        let impy = new Impy(level)
-        impy.setPoint(70, 40)
-        impy.life_status = 1000
+        // let impy = new Impy(level)
+        // impy.setPoint(70, 40)
+        // impy.life_status = 1000
 
-        impy.idleAct = () => {
+        // impy.idleAct = () => {
 
-        }
+        // }
 
-        function curse(unit: any = undefined, options: any = {}){
-            if(!this.curse_num){
-                this.curse_num = 1
-            }
-            this.level.players.forEach(elem => {
-                let d = 10000
-                let s = undefined
+        // function curse(unit: any = undefined, options: any = {}){
+        //     if(!this.curse_num){
+        //         this.curse_num = 1
+        //     }
+        //     this.level.players.forEach(elem => {
+        //         let d = 10000
+        //         let s = undefined
 
-                if(this.curse_num === 1){
-                    s = new Weakness(level.time)
-                }
-                else if(this.curse_num === 2){
-                    s = new Poison(level.time)
-                }
-                else if(this.curse_num === 3){
-                    s = new Curse(level.time)
-                }
-                else if(this.curse_num === 4){
-                    s = new Drained(level.time)
-                }
-                else if(this.curse_num === 5){
-                    s = new Bleed(level.time)
-                }
-                else if(this.curse_num === 6){
-                    s = new GhostGrip(level.time)
-                }
-                else if(this.curse_num === 7){
-                    s = new Blind(level.time)
-                }
-                else if(this.curse_num === 8){
-                    s = new ShockStatus(level.time)
-                }
-                else if(this.curse_num === 9){
-                    elem.setFreeze(3000)
-                }
-                else if(this.curse_num === 10){
-                    s = new Fragility(level.time)
-                }
+        //         if(this.curse_num === 1){
+        //             s = new Weakness(level.time)
+        //         }
+        //         else if(this.curse_num === 2){
+        //             s = new Poison(level.time)
+        //         }
+        //         else if(this.curse_num === 3){
+        //             s = new Curse(level.time)
+        //         }
+        //         else if(this.curse_num === 4){
+        //             s = new Drained(level.time)
+        //         }
+        //         else if(this.curse_num === 5){
+        //             s = new Bleed(level.time)
+        //         }
+        //         else if(this.curse_num === 6){
+        //             s = new GhostGrip(level.time)
+        //         }
+        //         else if(this.curse_num === 7){
+        //             s = new Blind(level.time)
+        //         }
+        //         else if(this.curse_num === 8){
+        //             s = new ShockStatus(level.time)
+        //         }
+        //         else if(this.curse_num === 9){
+        //             elem.setFreeze(3000)
+        //         }
+        //         else if(this.curse_num === 10){
+        //             s = new Fragility(level.time)
+        //         }
 
-                if(s != undefined){
-                    s.setDuration(d)
-                    this.level.setStatus(elem, s)
-                }
+        //         if(s != undefined){
+        //             s.setDuration(d)
+        //             this.level.setStatus(elem, s)
+        //         }
 
                
                
-            })
-             if(this.curse_num === 10){
-                this.curse_num = 1
-            }
-            else{
-                this.curse_num ++
-            }
+        //     })
+        //      if(this.curse_num === 10){
+        //         this.curse_num = 1
+        //     }
+        //     else{
+        //         this.curse_num ++
+        //     }
 
-            if(this.is_dead) return
+        //     if(this.is_dead) return
                     
 
-            if(options?.instant_death){
-                unit?.succesefulKill()
-                this.is_dead = true
-                this.setdyingAct()
-                return
-            }
+        //     if(options?.instant_death){
+        //         unit?.succesefulKill()
+        //         this.is_dead = true
+        //         this.setdyingAct()
+        //         return
+        //     }
     
-            if(this.checkArmour(unit)){
+        //     if(this.checkArmour(unit)){
     
-                this.level.addSound({
-                    name: 'metal hit',
-                    x: this.x,
-                    y: this.y
-                })
+        //         this.level.addSound({
+        //             name: 'metal hit',
+        //             x: this.x,
+        //             y: this.y
+        //         })
     
-                let e = new Armour(this.level)
-                e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
-                e.z = Func.random(2, 8)
-                this.level.effects.push(e)
-                return
-            }
+        //         let e = new Armour(this.level)
+        //         e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
+        //         e.z = Func.random(2, 8)
+        //         this.level.effects.push(e)
+        //         return
+        //     }
     
-            let damage_value = 1
+        //     let damage_value = 1
     
-            if(options?.damage_value){
-                damage_value = options.damage_value
-            }
+        //     if(options?.damage_value){
+        //         damage_value = options.damage_value
+        //     }
             
-            if(unit && unit?.critical && Func.chance(unit.critical)){
-                damage_value *= 2
-            }
+        //     if(unit && unit?.critical && Func.chance(unit.critical)){
+        //         damage_value *= 2
+        //     }
     
-            if(this.fragility){
-                damage_value *= 2
-            }
+        //     if(this.fragility){
+        //         damage_value *= 2
+        //     }
     
-            this.life_status -= damage_value
+        //     this.life_status -= damage_value
 
-            if(unit){
-                unit?.succesefulHit(this)
-            }
+        //     if(unit){
+        //         unit?.succesefulHit(this)
+        //     }
             
             
-            if(this.life_status <= 0){
-                if(options?.explode){
-                    this.dead_type = 'explode'
-                    this.is_corpse = true
-                    this.level.addSound(this.getExplodedSound())
-                }
-                else if(options?.burn){
-                    this.dead_type = 'burn_dying'
-                    this.is_corpse = true
-                }
+        //     if(this.life_status <= 0){
+        //         if(options?.explode){
+        //             this.dead_type = 'explode'
+        //             this.is_corpse = true
+        //             this.level.addSound(this.getExplodedSound())
+        //         }
+        //         else if(options?.burn){
+        //             this.dead_type = 'burn_dying'
+        //             this.is_corpse = true
+        //         }
                 
-                this.is_dead = true
-                this.create_grace_chance += unit?.chance_to_create_grace ? unit?.chance_to_create_grace : 0
-                unit?.succesefulKill()
-                //todo
-                unit?.addGold(this.gold_revard)
+        //         this.is_dead = true
+        //         this.create_grace_chance += unit?.chance_to_create_grace ? unit?.chance_to_create_grace : 0
+        //         unit?.succesefulKill()
+        //         //todo
+        //         unit?.addGold(this.gold_revard)
     
-                this.setdyingAct()
-            }
-        }
+        //         this.setdyingAct()
+        //     }
+        // }
 
         function buff(unit: any = undefined, options: any = {}){
             // this.super.takeDamage(unit, options)
@@ -257,20 +257,20 @@ export default class Learning extends Scenario{
             }
         }
 
-        impy.takeDamage = curse
+        // impy.takeDamage = curse
 
-        level.enemies.push(impy)
+        // level.enemies.push(impy)
 
-        let bones = new Bones(level)
-        bones.life_status = 1000
-        bones.setPoint(55, 40)
-        bones.idleAct = () => {
+        // let bones = new Bones(level)
+        // bones.life_status = 1000
+        // bones.setPoint(55, 40)
+        // bones.idleAct = () => {
 
-        }
+        // }
 
-        bones.takeDamage = buff
+        // bones.takeDamage = buff
         
-        level.enemies.push(bones)
+        // level.enemies.push(bones)
 
         setInterval(() => {
             let shard = level.binded_effects.find(elem => elem.name === 'grace shard')

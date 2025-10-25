@@ -58,7 +58,7 @@ export default class BurningCircleStatus extends Status{
             box.r = this.radius
 
             this.unit.level.enemies.forEach(elem => {
-                if(Func.elipseCollision(box, elem.getBoxElipse())){
+                if(!elem.is_dead && Func.elipseCollision(box, elem.getBoxElipse())){
                     elem.takeDamage(this.unit, {
                         burn: true
                     })

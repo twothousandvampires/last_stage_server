@@ -69,7 +69,7 @@ export default class Level{
        },
     ]
 
-    public boss_kills_trashold: number = 300
+    public boss_kills_trashold: number = 0
     public enemies: (Enemy | Unit)[] = []
     public players: Character[] = []
     public projectiles: Projectiles[] = []
@@ -241,15 +241,16 @@ export default class Level{
         this.projectiles.forEach(proj => {
             proj.act(this.time)
         })
+        this.binded_effects.forEach(effect => {
+            effect.act(this.time)
+        })
         for(let i = 0; i < this.enemies.length; i ++){
             let e = this.enemies[i]
             if(e){
                e.act(this.time)
             }
         }
-        this.binded_effects.forEach(effect => {
-            effect.act(this.time)
-        })
+        
         this.status_pull.forEach(status => {
             if(status.isExpired(this.time)){
                 status.clear()

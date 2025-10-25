@@ -22,7 +22,7 @@ export default class Frequency extends Forging{
     }
 
     getValue(){
-        return this.value
+        return this.value + 'ms'
     }
 
     canBeForged(): boolean {
