@@ -367,7 +367,7 @@ export default class Default extends Scenario{
     checkUpgrade(level){
         if(this.waves_created % 10 === 0 && this.waves_created > 1){
             let e = undefined
-            let r = Func.random(1,4)
+            let r = Func.random(1, 4)
 
             if(r === 1){
                 e = new MasterManifestation(level)
