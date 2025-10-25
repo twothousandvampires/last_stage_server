@@ -97,7 +97,7 @@ export default abstract class Manifistation extends Effect {
               
                 this.level.players.forEach(elem => {
                     if(Func.elipseCollision(this.getBoxElipse(), elem.getBoxElipse())){
-                        this.level.addSound('potion', this.x, this.y)
+                        this.level.addSound('manifistation launch', this.x, this.y)
                         this.hitted_by = elem
 
                         this.effect = new ActivatedManifistation(this.level)

@@ -60,7 +60,7 @@ export default class UpgradeManager {
 
         forging.forge(player)
 
-        player.level.addSound('gold spending', player.x, player.y)
+        player.level.addSound('forge', player.x, player.y)
 
         UpgradeManager.closeForgings(player)
     }

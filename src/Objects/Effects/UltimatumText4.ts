@@ -38,7 +38,7 @@ export default class UltimatumText4 extends Effect{
 
         let statue = new GoldStatue(this.level)
 
-        while(this.isOutOfMap()){
+        while(statue.isOutOfMap()){
             let angle = Math.random() * 6.28
 
             let distance_x = Func.random(6, 12)
@@ -49,12 +49,12 @@ export default class UltimatumText4 extends Effect{
         }
 
         this.monster = statue
-
+        console.log(this.monster.x, this.monster.y)
         this.level.enemies.push(this.monster)
     }
 
     success(){     
-        this.level.addSound('challenge done', this.x, this.y)
+        this.level.addSound('gold spending', this.x, this.y)
         this.level.addMessedge('gold was added.')
 
         this.level.players.forEach(elem => {
