@@ -10,7 +10,7 @@ export class Icicle extends Projectiles{
     constructor(level: Level){
         super(level)
         this.box_r = 0.3
-        this.name = 'tooth'
+        this.name = 'icicle'
         this.move_speed = 1.7
         this.w = 1
     }

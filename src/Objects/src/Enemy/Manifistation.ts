@@ -1,5 +1,6 @@
 import Func from "../../../Func";
 import Level from "../../../Level";
+import ActivatedManifistation from "../../Effects/ActivatedManifistation";
 import BurningCircleEffect from "../../Effects/BurningCircleEffect";
 import Effect from "../../Effects/Effects";
 
@@ -96,10 +97,10 @@ export default abstract class Manifistation extends Effect {
               
                 this.level.players.forEach(elem => {
                     if(Func.elipseCollision(this.getBoxElipse(), elem.getBoxElipse())){
-                        this.level.addSound('potion', this.x, this.y)
+                        this.level.addSound('manifistation launch', this.x, this.y)
                         this.hitted_by = elem
 
-                        this.effect = new BurningCircleEffect(this.level)
+                        this.effect = new ActivatedManifistation(this.level)
 
                         this.effect.setPoint(this.x, this.y)
 

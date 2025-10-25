@@ -5,7 +5,9 @@ import Grace from "../Objects/Effects/Grace";
 import UltimatumText from "../Objects/Effects/UltimatumText";
 import UltimatumText2 from "../Objects/Effects/UltimatumText2";
 import UltimatumText3 from "../Objects/Effects/UltimatumText3";
+import UltimatumText4 from "../Objects/Effects/UltimatumText4";
 import Character from "../Objects/src/Character";
+import { AscentManifistation } from "../Objects/src/Enemy/AscentManifistation";
 import Bones from "../Objects/src/Enemy/Bones";
 import Enemy from "../Objects/src/Enemy/Enemy";
 import { Flamy } from "../Objects/src/Enemy/Flamy";
@@ -365,7 +367,7 @@ export default class Default extends Scenario{
     checkUpgrade(level){
         if(this.waves_created % 10 === 0 && this.waves_created > 1){
             let e = undefined
-            let r = Func.random(1,3)
+            let r = Func.random(1, 4)
 
             if(r === 1){
                 e = new MasterManifestation(level)
@@ -373,8 +375,11 @@ export default class Default extends Scenario{
             else if(r === 2){
                 e = new FleshManifistation(level)
             }
-            else{
+            else if(r === 3){
                 e = new ForgeManifistation(level)
+            }
+            else{
+                e = new AscentManifistation(level)
             }
 
             while(e.isOutOfMap()){
@@ -396,9 +401,9 @@ export default class Default extends Scenario{
             
             level.binded_effects.push(e)
         }
-        if(this.waves_created % 18 === 0 && this.waves_created >= 1){
+        if(this.waves_created % 18 === 0 && this.waves_created > 1){
             let e = undefined
-            let r = Func.random(1,3)
+            let r = Func.random(1, 4)
 
             if(r === 1){
                 e = new UltimatumText(level)
@@ -406,8 +411,11 @@ export default class Default extends Scenario{
             else if(r === 2){
                 e = new UltimatumText2(level)
             }
-            else{
+            else if(r === 3){
                 e = new UltimatumText3(level)
+            }
+            else{
+                e = new UltimatumText4(level)
             }
             
             while(e.isOutOfMap()){

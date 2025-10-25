@@ -13,7 +13,7 @@ export class MasterManifestation extends Manifistation {
 
     constructor(level: Level){
         super(level)
-        this.name = 'teacher'
+        this.name = 'master manifistation'
     }
 
     activate(): void {

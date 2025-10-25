@@ -12,7 +12,7 @@ export class FleshManifistation extends Manifistation {
     constructor(level: Level){
     
         super(level)
-        this.name = 'closed gate'
+        this.name = 'flesh manifistation'
     }
 
     activate(): void {
