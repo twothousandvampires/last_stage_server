@@ -5,6 +5,7 @@ import Grace from "../Objects/Effects/Grace";
 import UltimatumText from "../Objects/Effects/UltimatumText";
 import UltimatumText2 from "../Objects/Effects/UltimatumText2";
 import UltimatumText3 from "../Objects/Effects/UltimatumText3";
+import UltimatumText4 from "../Objects/Effects/UltimatumText4";
 import Character from "../Objects/src/Character";
 import Bones from "../Objects/src/Enemy/Bones";
 import Enemy from "../Objects/src/Enemy/Enemy";
@@ -396,9 +397,9 @@ export default class Default extends Scenario{
             
             level.binded_effects.push(e)
         }
-        if(this.waves_created % 18 === 0 && this.waves_created >= 1){
+        if(this.waves_created % 1 === 0 && this.waves_created <= 2){
             let e = undefined
-            let r = Func.random(1,3)
+            let r = 4
 
             if(r === 1){
                 e = new UltimatumText(level)
@@ -406,8 +407,11 @@ export default class Default extends Scenario{
             else if(r === 2){
                 e = new UltimatumText2(level)
             }
-            else{
+            else if(r === 3){
                 e = new UltimatumText3(level)
+            }
+             else if(r === 4){
+                e = new UltimatumText4(level)
             }
             
             while(e.isOutOfMap()){

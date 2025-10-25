@@ -2,21 +2,13 @@ import Func from "../../../Func";
 import Forging from "../../../Items/Forgings/Forging";
 import Level from "../../../Level";
 import Default from "../../../Scenarios/Default";
-import Bones from "./Bones";
-import { Flamy } from "./Flamy";
-import FlyingBones from "./FlyingBones";
-import Impy from "./Impy";
-import MagicSlime from "./MagicSlime";
 import Manifistation from "./Manifistation";
-import Slime from "./Slime";
-import Solid from "./Solid";
-import Specter from "./Specter";
 
 export class ForgeManifistation extends Manifistation {
     constructor(level: Level){
     
         super(level)
-        this.name = 'forger'
+        this.name = 'forge manifistation'
     }
 
     activate(): void {

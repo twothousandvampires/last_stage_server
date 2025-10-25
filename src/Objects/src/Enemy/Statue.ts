@@ -47,7 +47,7 @@ export default class Statue extends Enemy {
 
                 this.setState(new EnemyCastState())
 
-                    this.can_check_player = false
+                this.can_check_player = false
             
                 setTimeout(() => {
                     this.can_check_player = true
