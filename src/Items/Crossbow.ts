@@ -14,7 +14,7 @@ export default class Crossbow extends Item {
         this.chance = 35
         this.frequency = 2000
         this.distance = 10
-        this.description = 'when you lead critical damage there is a chance to penetrate nearby enemies'
+        this.description = 'when you lead critical damage there is a chance to crushingw nearby enemies'
     }
 
     equip(character: Character): void {
@@ -38,7 +38,7 @@ export default class Crossbow extends Item {
             
             character.level.enemies.forEach(elem => {
                 if(Func.distance(elem, target) <= this.distance){
-                    elem.penetrated_rating += 25
+                    elem.crushing ++
                 }
             })
         }

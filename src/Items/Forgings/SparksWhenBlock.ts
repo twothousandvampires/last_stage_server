@@ -7,6 +7,7 @@ import Forging from "./Forging";
 export default class SparksWhenBlock extends Forging {
 
     value: number = 0
+    trigger: any
    
     constructor(item: Item){
         super(item)
@@ -18,25 +19,19 @@ export default class SparksWhenBlock extends Forging {
 
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
-            let trigger = player.triggers_on_block.find(elem => elem instanceof SparksWhenBlockTrigger)
-
-            if(trigger){
-                trigger.chance += 5
+            if(!this.trigger){
+                this.trigger = new SparksWhenBlockTrigger()
+                player.triggers_on_block.push(this.trigger)
             }
-            else{
-                let t = new SparksWhenBlockTrigger()
-                t.chance = 5
-
-                player.triggers_on_block.push(t)
-            }
-           
+            this.trigger.chance += 5
+            
             this.payCost()
             this.value += 5
         }
     }
 
     getValue(){
-        return this.value
+        return this.value + '%'
     }
 
     canBeForged(): boolean {

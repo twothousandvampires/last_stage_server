@@ -25,7 +25,7 @@ export default class Cloak extends Item{
         if(this.disabled) return
         
         if(Func.chance(this.chance)){
-            let status = new Phase(character.time)
+            let status = new Phase(character.level.time)
 
             status.setDuration(3000 + this.duration)
             character.level.setStatus(character, status, true)

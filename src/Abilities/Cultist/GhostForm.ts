@@ -1,14 +1,20 @@
 import Func from "../../Func";
+import IUnitState from "../../Interfaces/IUnitState";
+import Character from "../../Objects/src/Character";
 import Cultist from "../../Objects/src/PlayerClasses/Cultist";
 import AfterlifeCold from "../../Status/AfterlifeCold";
 import Weakness from "../../Status/Weakness";
 import Ability from "../Ability";
 import CultistAbility from "./CultistAbility";
 
-export default class GhostForm extends CultistAbility{
+export default class GhostForm extends CultistAbility implements IUnitState{
 
     lead: boolean
     afterlife_cold: boolean
+    start: number = 0
+    base_ghost_time: number = 3000
+    ghost_time: number = 0
+    started: boolean = false
 
     constructor(owner: Cultist){
         super(owner)
@@ -20,26 +26,35 @@ export default class GhostForm extends CultistAbility{
         this.type = Ability.TYPE_CUSTOM
     }
 
-    use(): void {
-        this.used = true
+    use(){
+        this.owner.setState(this)
+    }
 
-        this.owner.action_time = 500
-        this.owner.can_be_damaged = false
-        this.owner.phasing = true
-        this.owner.can_attack = false
-        this.owner.can_cast = false
-        this.owner.state = 'start ghost'
-        
-        setTimeout(() => {
+    enter(player: Character){
+        this.used = true
+      
+
+        player.action_time = 500
+        player.can_be_damaged = false
+        player.setImpactTime(100)
+        player.phasing = true
+        player.can_attack = false
+        player.can_cast = false
+        player.state = 'start ghost'
+    }
+
+    update(player: Character, time: number){
+        if(player.action && !this.started){
+            this.start = player.level.time
+            this.started = true
             this.owner.state = 'ghost'
-            let ghost_time = 3000 + this.owner.getSecondResource() * 250
-            this.owner.setTimerToGetState(ghost_time)
+            this.ghost_time = this.base_ghost_time + player.getSecondResource() * 100
 
             if(this.afterlife_cold){
-                let status = new AfterlifeCold(this.owner.time)
-                status.setDuration(ghost_time)
+                let status = new AfterlifeCold(time)
+                status.setDuration(this.ghost_time)
 
-                this.owner.level.setStatus(this.owner, status)
+                player.level.setStatus(this.owner, status)
             }
 
             if(this.lead){
@@ -48,17 +63,31 @@ export default class GhostForm extends CultistAbility{
                 this.owner.level.players.forEach(elem => {
                     if(elem != this.owner && Func.elipseCollision(elem.getBoxElipse(), r)){
                         elem.phasing = true
-                        let status = new Weakness(this.owner.time)
-                        status.setDuration(ghost_time)
+                        let status = new Weakness(time)
+                        status.setDuration(this.ghost_time)
 
                         this.owner.level.setStatus(elem, status)
 
                         setTimeout(() => {
                             elem.phasing = false
-                        }, ghost_time)
+                        }, this.ghost_time)
                     }
                 })
             }
-        }, 500)
+        }
+        else if(this.started){
+            if(time - this.start >= this.ghost_time){
+                player.getState()
+            }
+        }
+    }
+
+    exit(player: Character){
+        this.started = false
+
+        player.can_be_damaged = true
+        player.phasing = false
+        player.can_attack = true
+        player.can_cast = true
     }
 }

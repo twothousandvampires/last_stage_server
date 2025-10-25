@@ -2,7 +2,6 @@ import Func from "../../Func";
 import QuakeEffect from "../../Objects/Effects/Quake";
 import Character from "../../Objects/src/Character";
 import Unit from "../../Objects/src/Unit";
-import Ignite from "../../Status/Ignite";
 import Item from "../Item";
 import Forging from "./Forging";
 
@@ -11,7 +10,6 @@ export default class StunWhenHit extends Forging{
     value: number = 0
     freq: number = 3000
     last_trigger_time: number = 0
-
 
     constructor(item: Item){
         super(item)
@@ -33,22 +31,22 @@ export default class StunWhenHit extends Forging{
     }
 
     getValue(){
-        return this.value
+        return this.value + '%'
     }
 
     trigger(player: Character, target: Unit){
         if(Func.notChance(this.value, player.is_lucky)) return
         if(!target) return
-
-        let effect = new QuakeEffect(player.level)
-        effect.setPoint(target.x, target.y)
-
-        player.level.effects.push(effect)
-
+        
         if(player.level.time - this.last_trigger_time >= this.freq){
             this.last_trigger_time = player.level.time
             let box = target.getBoxElipse()
             box.r = 8
+
+            let effect = new QuakeEffect(player.level)
+            effect.setPoint(target.x, target.y)
+
+            player.level.effects.push(effect)
 
             let targets = player.level.enemies.concat(player.level.players.filter(elem => elem != player)).filter(elem => !elem.is_dead && Func.elipseCollision(elem.getBoxElipse() ,box))
             

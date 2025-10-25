@@ -99,8 +99,8 @@ export default class MasterServer {
           }
           else if (message.type === 'update_lobby') {
               if (this.lobbies.has(port)) {
-                  const existing = this.lobbies.get(port);
-                  this.lobbies.set(port, { ...existing, ...message.data });
+                  this.lobbies.set(port, message.data );
+                  this.io.emit('lobbies_list', Array.from(this.lobbies.values()));
               }
           }
       });

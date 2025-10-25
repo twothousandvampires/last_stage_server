@@ -7,12 +7,12 @@ export default class RoyalMace extends Item{
         super()
         this.name = 'royal mace'
         this.type = 1
-        this.description = 'increases impact, penetrate and critical rating'
+        this.description = 'increases impact, crush and critical rating'
     }
 
     equip(character: Character): void {
         character.impact += 5
-        character.penetrate += 5
+        character.crushing_rating += 5
         character.critical += 5
     }
 
@@ -20,7 +20,7 @@ export default class RoyalMace extends Item{
         this.disabled = true
         if(this.player){
             this.player.impact -= 5
-            this.player.penetrate -= 5
+            this.player.crushing_rating -= 5
             this.player.critical -= 5
         }
     }
@@ -29,7 +29,7 @@ export default class RoyalMace extends Item{
         this.disabled = false
         if(this.player){
             this.player.impact += 5
-            this.player.penetrate += 5
+            this.player.crushing_rating += 5
             this.player.critical += 5
         }
     }

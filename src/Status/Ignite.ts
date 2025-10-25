@@ -20,6 +20,8 @@ export default class Ignite extends Status{
         e.setPoint(unit.x, unit.y)
         unit.level.effects.push(e)
 
+        unit.ignited = true
+
         if(this.unit instanceof Character){
             this.unit.statusWasApplied()
             this.unit.newStatus({
@@ -31,7 +33,9 @@ export default class Ignite extends Status{
     }
 
     clear(){
-        
+        if(this.unit){
+            this.unit.ignited = false
+        }
     }
 
     update(status: any){

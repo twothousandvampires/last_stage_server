@@ -36,6 +36,7 @@ export default abstract class Enemy extends Unit {
     create_sorcerers_skull_chance: number = 0
     create_helm_of_ascendence_chance: number = 1
 
+
     create_chance: number = 15
     last_action: number = 0
 
@@ -272,12 +273,13 @@ export default abstract class Enemy extends Unit {
             }
         }
         
-        if(this.penetrated_rating > 0 && Func.chance(this.penetrated_rating)){
-            damage_value ++
+        if(this.crushing > 0){
+            console.log(this.name + ' ' + this.crushing)
+            damage_value += this.crushing
         }
 
-        if(unit && unit.penetrate > 0){
-            this.penetrated_rating += unit.penetrate
+        if(is_player_deal_hit && unit.isCrushing()){
+            this.crushing ++
         }
        
         if(unit && unit?.critical && Func.chance(unit.critical)){
@@ -288,12 +290,10 @@ export default abstract class Enemy extends Unit {
         }
 
         if(this.fragility){
-            console.log('enemy was fragle')
             damage_value *= 2
         }
 
         if(this.fortify && Func.chance(this.fortify)){
-            console.log('enemy was fortified')
             damage_value --
         }
 
@@ -354,6 +354,7 @@ export default abstract class Enemy extends Unit {
     }
 
     getState(): void {
+
         if(this.is_dead){
             this.setState(this.getDeadStateInstance())
         }

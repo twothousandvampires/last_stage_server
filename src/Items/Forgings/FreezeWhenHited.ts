@@ -35,7 +35,7 @@ export default class FreezeWhenHited extends Forging {
     }
 
     getValue(){
-        return this.value
+        return this.value + '%'
     }
 
     canBeForged(): boolean {

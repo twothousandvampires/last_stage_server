@@ -19,6 +19,10 @@ export default class Count extends Forging {
         }
     }
 
+    getValue(){
+        return this.value
+    }
+
     canBeForged(): boolean {
         return this.item.count != undefined && (this.value < this.max_value)
     }

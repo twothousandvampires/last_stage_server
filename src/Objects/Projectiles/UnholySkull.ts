@@ -1,7 +1,6 @@
 
 import Func from "../../Func";
 import Level from "../../Level";
-import Cowardice from "../../Status/Cowardice";
 import Exhaustion from "../../Status/Exhaustion";
 import Fear from "../../Status/Fear";
 import Fragility from "../../Status/Fragility";
@@ -31,6 +30,7 @@ export class UnholySkull extends Projectiles{
     }
 
     act(): void { 
+        
         this.level.players.forEach(elem => {
             if(Func.elipseCollision(this.getBoxElipse(), elem.getBoxElipse())){
                 if(elem.isBlock()){
@@ -40,19 +40,20 @@ export class UnholySkull extends Projectiles{
                     let r = Func.random(1, 3)
     
                     if(r === 1){
-                        let status = new Exhaustion(elem.time)
+                        let status = new Exhaustion(elem.level.time)
                         status.setDuration(10000)
 
                         this.level.setStatus(elem, status, true)
                     }
                     else if(r === 2){
-                        let status = new Fear(elem.time)
+                        let status = new Fear(elem.level.time)
                         status.setDuration(3000)
+                        status.setFearTarget(this.owner)
 
                         this.level.setStatus(elem, status, true)
                     }
                     else if(r === 3){
-                        let status = new Fragility(elem.time)
+                        let status = new Fragility(elem.level.time)
                         status.setDuration(8000)
 
                         this.level.setStatus(elem, status, true)
@@ -64,20 +65,20 @@ export class UnholySkull extends Projectiles{
         })
 
         let traveled = Math.sqrt(((this.x - this.start_x) ** 2) + ((this.y - this.start_y) ** 2))
-
+        
         if(traveled >= this.max_distance){
             this.impact()
             return
         }
 
         if(!this.target){
-            this.target = this.level.players.filter(elem => Func.distance(this, elem) <= 8)[0]
+            this.target = this.level.players.filter(elem => Func.distance(this, elem) <= 15)[0]
         }
 
         if(this.target){
             this.angle = Func.angle(this.x, this.y, this.target.x, this.target.y)
         }
-        
+
         this.moveAct()
     }
 }

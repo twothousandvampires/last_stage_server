@@ -80,6 +80,12 @@ import FrostShpereWhenKill from "../Items/Forgings/FrostShpereWhenKill"
 import SparksWhenBlock from "../Items/Forgings/SparksWhenBlock"
 import Overcharge from "../Items/Forgings/Overcharge"
 import FlamyNimbus from "../Items/FlamyNimbus"
+import IcePresence from "../Items/Forgings/IcePresence"
+import ColdHeart from "../Items/Forgings/ColdHeart"
+import ExplosiveArmour from "../Items/Forgings/ExplosiveArmour"
+import ThunderStrikes from "../Items/Forgings/ThunderStrikes"
+import FirePresence from "../Items/Forgings/FirePresence"
+import StormPresence from "../Items/Forgings/StormPresence"
 
 export default class Builder{
 
@@ -161,7 +167,13 @@ export default class Builder{
         'frost shpere when kill': FrostShpereWhenKill,
         'sparks when block': SparksWhenBlock,
         'overcharge': Overcharge,
-        'perception': Perception
+        'perception': Perception,
+        'ice presence': IcePresence,
+        'cold heart': ColdHeart,
+        'explosive armour': ExplosiveArmour,
+        'thunder strikes': ThunderStrikes,
+        'fire presence': FirePresence,
+        'storm presence': StormPresence 
     }
 
     static createCharacter(client: Client, level: Level): Character{

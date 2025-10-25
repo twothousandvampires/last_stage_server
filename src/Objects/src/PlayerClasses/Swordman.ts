@@ -28,8 +28,6 @@ export default class Swordman extends Character{
     static MAX_ARMOUR = 90
 
     weapon_angle: number
-    chance_to_get_additional_point: number
-    chance_to_hit_additional_target: number
     resource: number
     maximum_resources: number
     next_life_regen_time: any
@@ -39,16 +37,13 @@ export default class Swordman extends Character{
 
     constructor(level: Level){
         super(level)
-
+       
         this.enlightenment_threshold = 12 
         this.weapon_angle = 1
         this.attack_radius = 8
-       
         this.name = 'swordman'
         this.move_speed = 0.5
         this.chance_to_avoid_damage_state = 10
-        this.chance_to_get_additional_point = 0
-        this.chance_to_hit_additional_target = 0
         this.armour_rate = 15
         this.resource = 0
         this.maximum_resources = 7

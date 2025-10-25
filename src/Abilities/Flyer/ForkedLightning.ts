@@ -5,15 +5,14 @@ import FlyerAbility from "./FlyerAbility";
 
 export default class ForkedLightning extends FlyerAbility{
     
-    improved_chain_reaction: boolean
-    lightning_eye: boolean
+    improved_chain_reaction: boolean = false
+    lightning_eye: boolean = false
+    fork: boolean = false
 
     constructor(owner: Flyer){
         super(owner)
         this.cost = 4
         this.name = 'forked lightning'
-        this.improved_chain_reaction = false
-        this.lightning_eye = false
         this.cd = 3500
     }
 
@@ -32,6 +31,7 @@ export default class ForkedLightning extends FlyerAbility{
         let proj = new ForkedLightningProjectile(this.owner.level)
         proj.improved_chain_reaction = this.improved_chain_reaction
         proj.lightning_eye = this.lightning_eye
+        proj.fork = this.fork
         
         proj.setOwner(this.owner)
         if(a){

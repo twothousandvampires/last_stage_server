@@ -70,7 +70,7 @@ export default class MetalThornsStatus extends Status{
                 if(Func.elipseCollision(box, elem.getBoxElipse())){
                     elem.takeDamage(this.unit)
                     if(this.pointed){
-                        elem.penetrated_rating += 30
+                        elem.crushing ++
                     }
                 }
             })

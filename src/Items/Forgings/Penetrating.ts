@@ -8,15 +8,15 @@ export default class Penetrating extends Forging{
     constructor(item: Item){
         super(item)
         this.max_value = 10
-        this.name = 'penetrating'
-        this.description = 'increases your penetrate rating'
+        this.name = 'crushing'
+        this.description = 'increases your crushing rating'
         this.gold_cost = 5
     }
 
     forge(){
         if(this.canBeForged() && this.costEnough()){
             this.value ++
-            this.item.player.penetrate += 1
+            this.item.player.crushing_rating += 1
             this.payCost()
         }
     }

@@ -19,7 +19,7 @@ export default class Recharge extends Forging {
     }
 
     getValue(){
-        return 'this.value'
+        return ''
     }
 
     canBeForged(): boolean {

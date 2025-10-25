@@ -1,7 +1,6 @@
 import IUnitState from "../Interfaces/IUnitState";
 import Character from "../Objects/src/Character";
 import Unit from "../Objects/src/Unit";
-import PlayerIdleState from "./PlayerIdleState";
 
 export default class FreezeState implements IUnitState<Unit>{
 

@@ -25,8 +25,7 @@ export default class EnemySparks extends EnemyAbility{
             let angle = Math.random() * (max_a - min_a) + min_a
 
             let proj = new Spark(enemy.level, 1, 3000)
-            
-            proj.setStart(enemy.level.time)
+
             proj.setAngle(angle)
             proj.setPoint(enemy.x, enemy.y)
             proj.by_enemy = true

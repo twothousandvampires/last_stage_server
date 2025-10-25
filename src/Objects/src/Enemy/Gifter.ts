@@ -28,7 +28,7 @@ export default class Gifter extends Pile {
         super.takeDamage()
 
         if(this.level.time - this.last_grace_spawn_time >= 1000){
-            if(Func.chance(10)){
+            if(Func.chance(30)){
                 let hit = this.getBoxElipse()
                 hit.r = 10
 

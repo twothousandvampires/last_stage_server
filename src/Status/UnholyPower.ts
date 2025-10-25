@@ -45,14 +45,15 @@ export default class UnholyPower extends Status{
             this.last_checked += 8000
             if(!this.unit) return
 
-            let possible = this.unit?.level.players.filter(elem => Func.distance(elem, this.unit) < 30)
+            let possible = this.unit.level.players.filter(elem => Func.distance(elem, this.unit) < 30)
             if(possible){
                 let t = possible[Math.floor(Math.random() * possible.length)]
 
                 if(t){
                     let proj = new UnholySkull(this.unit.level)
-                    proj.setOwner(t)
+                    proj.setOwner(this.unit)
                     proj.setPoint(this.unit.x, this.unit.y)
+                    proj.setAngle(Func.angle(this.unit.x, this.unit.y, t.x, t.y))
 
                     this.unit.level.projectiles.push(proj)
                 } 

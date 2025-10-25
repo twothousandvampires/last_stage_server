@@ -54,6 +54,7 @@ export default class UnholySpirit extends Status {
                     let proj = new EvilSpirit(this.unit.level)
                     proj.setOwner(t)
                     proj.setPoint(this.unit.x, this.unit.y)
+                    proj.setAngle(Func.angle(this.unit.x, this.unit.y, t.x, t.y))
 
                     this.unit.level.projectiles.push(proj)
                 } 

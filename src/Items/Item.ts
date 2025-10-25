@@ -146,11 +146,11 @@ export default abstract class Item {
         },
         {
             name: "crossbow",
-            description: 'when you lead critical damage there is a chance to penetrate nearby enemies'
+            description: 'when you lead critical damage there is a chance to crush nearby enemies'
         },
         {
             name: "royal mace",
-            description: 'increases impact, penetrate and critical rating'
+            description: 'increases impact, crushing and critical rating'
         },
         {
             name: "devouring axe",
@@ -182,7 +182,9 @@ export default abstract class Item {
         'when critical',
         'ignite when hit',
         'frost shpere when kill',
-        'stun when hit'
+        'stun when hit',
+        'thunder strikes',
+        'storm presence'
     ]
 
     static forging_list_type_2 = [
@@ -193,7 +195,10 @@ export default abstract class Item {
         'block chance',
         'when hit',
         'freeze when hited',
-        'sparks when block'
+        'sparks when block',
+        'shock nova when armour',
+        'explosive armour',
+        'fire presence',
     ]
     
     static forging_list_type_3 = [
@@ -205,9 +210,10 @@ export default abstract class Item {
         'blessed life',
         'cast speed',
         'lightning when use skill',
-        'overcharge'
+        'overcharge',
+        'ice presence',
+        'cold heart'
     ]
-
 
     name: string = ''
 

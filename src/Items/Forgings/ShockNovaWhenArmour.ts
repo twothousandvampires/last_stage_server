@@ -2,6 +2,7 @@ import Func from "../../Func";
 import SmallShockNova from "../../Objects/Effects/SmallShockNova";
 import Character from "../../Objects/src/Character";
 import Unit from "../../Objects/src/Unit";
+import ShockNovaWhenArmourBlock from "../../Triggers/ShockNovaWhenArmourBlock";
 import Item from "../Item";
 import Forging from "./Forging";
 
@@ -10,7 +11,7 @@ export default class ShockNovaWhenArmour extends Forging{
     value: number = 0
     freq: number = 3000
     last_trigger_time: number = 0
-
+    trigger: any
 
     constructor(item: Item){
         super(item)
@@ -22,48 +23,19 @@ export default class ShockNovaWhenArmour extends Forging{
 
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
-            if(!player.triggers_on_armour_hit.some(elem => elem instanceof ShockNovaWhenArmour)){
-                player.triggers_on_armour_hit.push(this)
+            if(!this.trigger){
+                this.trigger = new ShockNovaWhenArmourBlock()
+                player.triggers_on_armour_hit.push(this.trigger)
             }
-
+            this.trigger.chance += 5
+            
             this.payCost()
-            this.value += 10
+            this.value += 5
         }
     }
 
     getValue(){
-        return this.value
-    }
-
-    trigger(player: Character, target: Unit){
-        if(this.item.disabled) return
-        
-        let e = new SmallShockNova(player.level)
-
-        e.setPoint(player.x, player.y)
-
-        player.level.effects.push(e)
-
-        let enemies = player.level.enemies
-        let players = player.level.players
-
-        let targets = enemies.concat(players)
-        let wave = player.getBoxElipse()
-        wave.r = 12
-
-        player.level.addSound('static', player.x, player.y)
-
-        let was_sound = false
-        targets.forEach((elem) => {
-            if(!elem.is_dead && elem.z < 1 && Func.elipseCollision(wave, elem.getBoxElipse()) && elem != player){
-                let timer = Func.random(200, 1400)
-                elem.setZap(timer)
-                if(!was_sound){
-                    player.level.addSound('zap', elem.x, elem.y)
-                    was_sound = true
-                }
-            }
-        })
+        return this.value + '%'
     }
 
     canBeForged(): boolean {

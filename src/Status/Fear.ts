@@ -36,11 +36,14 @@ export default class Fear extends Status {
         if(tick_time > this.last_checked){
             this.last_checked += 1000
             if(this.fear_target){
-                this.unit.angle_for_forced_movement = Func.angle(this.fear_target.x, this.fear_target.y,this.unit.x, this.unit.y)
+                this.unit.angle_for_forced_movement = Func.angle(this.fear_target.x, this.fear_target.y, this.unit.x, this.unit.y)
             }
             else{
                 this.unit.angle_for_forced_movement = Math.random() * 6.28
             }
+
+
+            console.log(this.unit.angle_for_forced_movement)
         }
     }
 

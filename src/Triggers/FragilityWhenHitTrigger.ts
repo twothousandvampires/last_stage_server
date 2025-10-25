@@ -18,7 +18,8 @@ export default class FragilityWhenHitTrigger {
         if(!target) return
 
         if(player.level.time - this.last_trigger_time >= this.cd){
-            console.log(target.name + ' was fragle')
+            this.last_trigger_time = player.level.time
+            
             let s = new Fragility(player.level.time)
             s.setDuration(4000)
 

@@ -344,7 +344,7 @@ export default class Cultist extends Character{
         return this.base_regeneration_time
     }
 
-    generateUpgrades(ascend_level: number){
+    generateUpgrades(){
         if(!this.can_generate_upgrades) return
         if(this.upgrades.length) return
 
@@ -354,7 +354,7 @@ export default class Cultist extends Character{
        
         //filter by usability
         let filtered = all.filter(elem => {
-           return (!elem.ascend || ascend_level >= elem.ascend) && elem.cost <= this.grace && elem.canUse(this)
+           return (!elem.ascend || this.ascend_level >= elem.ascend) && elem.cost <= this.grace && elem.canUse(this)
         })
         filtered.forEach(elem => {
             if(elem.ascend === undefined){
@@ -362,17 +362,19 @@ export default class Cultist extends Character{
             }
         })
 
-        filtered.sort((a, b) =>  { return b.ascend - a.ascend})
-
-        //get 3 random ones
-
-        filtered.sort((a, b) =>  { return Func.chance(70) ? 1 : -1 })
-
-        filtered = filtered.slice(0, 3)
+        filtered.sort((a, b) =>  { return (b.cost + b.ascend) - (a.cost + a.ascend)})
         
-        //add to this.upgrades
+        let part_size = Math.ceil(filtered.length / 3);
 
-        this.upgrades = this.upgrades.concat(filtered)
+        let part1 = filtered.slice(0, part_size);
+        let part2 = filtered.slice(part_size, part_size * 2);
+        let part3 = filtered.slice(part_size * 2);
+
+        this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part1))
+        this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part2))
+        this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part3))
+
+        this.upgrades = this.upgrades.filter(elem => elem)
     }
 
     startGame(){
@@ -441,7 +443,7 @@ export default class Cultist extends Character{
     }
 
     getAttackSpeed() {
-        let value = this.attack_speed - (this.might * 50)
+        let value = this.attack_speed - (this.might * 15)
         
         if(value < Cultist.MIN_ATTACK_SPEED){
             value = Cultist.MIN_ATTACK_SPEED

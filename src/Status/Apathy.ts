@@ -2,7 +2,7 @@ import Func from "../Func"
 import Character from "../Objects/src/Character"
 import Status from "./Status"
 
-export default class Apathy extends Status{
+export default class Apathy extends Status {
    
     name: string
     power: number
