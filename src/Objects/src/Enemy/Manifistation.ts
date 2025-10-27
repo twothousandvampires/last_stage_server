@@ -1,8 +1,10 @@
+import EffectBuilder from "../../../Classes/EffectBuiler";
 import Func from "../../../Func";
 import Level from "../../../Level";
 import ActivatedManifistation from "../../Effects/ActivatedManifistation";
 import BurningCircleEffect from "../../Effects/BurningCircleEffect";
 import Effect from "../../Effects/Effects";
+import Soul from "../../Effects/Soul";
 
 export default abstract class Manifistation extends Effect {
 
@@ -85,8 +87,8 @@ export default abstract class Manifistation extends Effect {
                             this.x = 666
                             this.y = 666
                             this.effect.delete()
-                            this.out_of_map_start = time
-
+                            this.out_of_map_start = time    
+                            this.level.addMessedge(this.stage + '/5 activated', this.activated_by.id)
                             this.wasChanged()
                         }
                     }
@@ -101,7 +103,7 @@ export default abstract class Manifistation extends Effect {
                         this.hitted_by = elem
 
                         this.effect = new ActivatedManifistation(this.level)
-
+                    
                         this.effect.setPoint(this.x, this.y)
 
                         this.level.binded_effects.push(this.effect)
@@ -125,6 +127,7 @@ export default abstract class Manifistation extends Effect {
             this.y = this.previous_y + (Math.cos(angle) * distance_y)
         }
 
+        EffectBuilder.createGroup(this)
         this.wasChanged()
     }
 }

@@ -133,6 +133,7 @@ export default class Whirlwind extends SwordmanAbility implements IUnitState<Swo
                 unit.setImpactTime(70)
             }
             else{
+                this.afterUse()
                 unit.getState() 
             }
         }
@@ -140,9 +141,5 @@ export default class Whirlwind extends SwordmanAbility implements IUnitState<Swo
 
     exit(unit: Swordman): void {
         this.courage_when_use = 0
-    }
-
-    use(){
-        this.owner.setState(this)
     }
 }

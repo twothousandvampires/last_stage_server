@@ -81,5 +81,7 @@ export default class Rune extends CultistAbility{
                 this.owner.level.binded_effects.push(rune)
             }
         }
+
+        this.afterUse()
     }
 }

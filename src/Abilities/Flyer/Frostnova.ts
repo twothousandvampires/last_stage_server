@@ -15,6 +15,7 @@ export default class Frostnova extends FlyerAbility{
     }
 
     impact(){
+        this.afterUse()
         this.owner.level.sounds.push({
             name: 'frost nova',
             x: this.owner.x,

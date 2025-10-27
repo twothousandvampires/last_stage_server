@@ -43,6 +43,7 @@ export default class Swordman extends Character{
         this.attack_radius = 8
         this.name = 'swordman'
         this.move_speed = 0.5
+        this.light_r = 30
         this.chance_to_avoid_damage_state = 10
         this.armour_rate = 15
         this.resource = 0
@@ -305,6 +306,38 @@ export default class Swordman extends Character{
         }
        
         this.subLife(unit, options)
+    }
+
+    getStatDescription(stat: string){
+        if(stat === 'might'){
+            return `Affects the number of targets that can be hit by your abilities.
+                        Affects the chance of not losing courage when receiving damage.
+                        Increases pierce rating.`
+        }
+        if(stat === 'will'){
+            return `Increases your life regeneration rate.
+                       Increases the chance to skip the damage state.
+                       Reduces your cooldowns of your abilities.`
+        }
+        if(stat === 'agility'){
+            return `Increases your attack speed.
+                          Reduces speed penalty when defending.`
+        }
+        if(stat === 'knowledge'){
+            return `Gives a chance to get additional energy.
+                            Increases status resistance.`
+        }
+        if(stat === 'durability'){
+            return `Gives a chance to gain extra life during regeneration.
+                             Increases your armour.`
+        }
+        if(stat === 'perception'){
+            return `Increases the block chance.
+                             Reduces penalty of speed when you attacking.
+                             Increases maximum of energy.`
+        }
+        
+        return ''
     }
 
     getPenaltyByLifeStatus(){

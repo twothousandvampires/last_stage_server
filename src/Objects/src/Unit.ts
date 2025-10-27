@@ -40,6 +40,8 @@ export default abstract class Unit extends GameObject {
     action_time: number | undefined
     freezed: boolean = false
     ignited: boolean = false
+    can_be_removed: boolean = true
+    elemental_status_resist: number = 0
 
     life_status: number = 1
     armour_rate: number = 0
@@ -208,10 +210,11 @@ export default abstract class Unit extends GameObject {
     }
 
     setZap(duration: number = 0){
-        if(!duration) return
         if(this.is_dead) return
         if(!this.can_be_damaged) return
         if(this.immune_to_zap) return
+        if(!duration) return
+        if(Func.chance(this.elemental_status_resist)) return
 
         this.setState(new ZapState(duration))
     }
@@ -228,6 +231,7 @@ export default abstract class Unit extends GameObject {
         if(this.is_dead) return
         if(!this.can_be_damaged) return
         if(this.immune_to_freeze) return
+        if(Func.chance(this.elemental_status_resist)) return
 
         if(this instanceof Character){
             if(this.isStatusResist()){

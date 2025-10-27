@@ -312,6 +312,12 @@ class GameServer{
                     client.character.setLastInputs(inputs)
                 })
 
+                socket.on('add_mastery', (data: object) => {   
+                    if(!client.character) return
+
+                    UpgradeManager.addMastery(client.character, data)
+                })
+
                 socket.on('buy', () => {   
                     if(!client.character) return
 

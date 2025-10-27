@@ -153,6 +153,7 @@ export default class Upgrades{
                     ascend: 12,
                     desc: 'you become lucky for 30 seconds'
                 },
+               
                 {
                     name: 'crushing wave',
                     canUse: (character: Character) => {
@@ -178,6 +179,19 @@ export default class Upgrades{
                     cost: 4,
                     ascend: 10,
                     desc: 'your courage expires slower'
+                },
+                {
+                    name: 'divine pack',
+                    canUse: (character: Character) => {
+                        return character.max_items < 8
+                    },
+                    teach: (character: Character): void => {
+                        character.max_items ++
+                        character.purchased_items --
+                    },
+                    cost: 2,
+                    ascend: 30,
+                    desc: 'gives additional item slot'
                 },
                 {
                     name: 'inspiration',
@@ -1199,6 +1213,7 @@ export default class Upgrades{
             },
             {
                 name: 'soul fragments',
+                type: 'soulrender',
                 canUse: (character: Character) => {
                     return character.first_ability instanceof Soulrender && !character.first_ability.soul_fragments
                 },
@@ -1210,6 +1225,21 @@ export default class Upgrades{
                 cost: 1,
                 ascend: 10,
                 desc: 'increases the count of shards after tear enemy'
+            },
+            {
+                name: 'dark prolifiration',
+                type: 'soulrender',
+                canUse: (character: Character) => {
+                    return character.first_ability instanceof Soulrender && character.first_ability.prolifiration < 75
+                },
+                teach: (character: Character) => {
+                    if(character.first_ability instanceof Soulrender){
+                        character.first_ability.prolifiration += 25
+                    }
+                },
+                cost: 2,
+                ascend: 20,
+                desc: 'gives a chance to youe soulrender ability to tear additional nearby target'
             },
         ]
     }
@@ -1724,6 +1754,18 @@ export default class Upgrades{
                 cost: 4,
                 ascend: 20,
                 desc: 'increase attack range and slash angle'
+            },
+            {
+                name: 'spirit weapon',
+                canUse: (character: Character) => {
+                    return character.attack_radius <= 14 && character.perception > 10
+                },
+                teach: (character: Character): void => {
+                    character.attack_radius += 1.5
+                },
+                cost: 3,
+                ascend: 16,
+                desc: 'increases your attack range'
             },
             {
                 name: 'echo swing',

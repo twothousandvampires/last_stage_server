@@ -16,6 +16,7 @@ export default class AnnihilatorBeam extends FlyerAbility{
     }
 
     impact(){
+        this.afterUse()
         this.used = true
         this.owner.level.addSound('cast', this.owner.x, this.owner.y)
 

@@ -17,14 +17,17 @@ export default abstract class Ability {
     free: boolean = false
     need_to_pay: boolean = false
     type: number = Ability.TYPE_CAST
-    state: string | undefined
+    state_sprite: string | undefined
+
+    after_use_triggers: any[] = []
+    before_use_triggers: any[] = []
 
     constructor(public owner: Player){
 
     }
 
     abstract impact(): void
-
+        
     use(player: Character){
         if(this.type === Ability.TYPE_CAST){
             player.setState(new PlayerCastState())
@@ -36,8 +39,12 @@ export default abstract class Ability {
             this.impact()
             this.afterUse()
         }
-        if(this.state){
-            player.state = this.state
+        else if(this.type === Ability.TYPE_CUSTOM){
+            player.setState(this)
+        }
+
+        if(this.state_sprite){
+            player.state = this.state_sprite
         }
     }
 
@@ -65,18 +72,22 @@ export default abstract class Ability {
         return this.cd
     }
 
-    afterUse(forced_cd: number | undefined = undefined){
+    afterUse(){
+        this.after_use_triggers.forEach(elem => {
+            elem.trigger(this.owner, this)
+        })
         
         if(this.need_to_pay){
             this.owner.payCost()
         }
+
         this.owner.succefullCast()
 
         if(this.cd === 0) return
        
         this.used = true
     
-        let cd = forced_cd ? forced_cd : this.getCd()
+        let cd = this.getCd()
 
         setTimeout(() => {
             this.used = false

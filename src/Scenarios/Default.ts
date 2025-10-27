@@ -1,7 +1,10 @@
+import EffectBuilder from "../Classes/EffectBuiler";
 import Func from "../Func";
 import Level from "../Level";
 import ClosedGate from "../Objects/Effects/ClosedGate";
+import Effect from "../Objects/Effects/Effects";
 import Grace from "../Objects/Effects/Grace";
+import Soul from "../Objects/Effects/Soul";
 import UltimatumText from "../Objects/Effects/UltimatumText";
 import UltimatumText2 from "../Objects/Effects/UltimatumText2";
 import UltimatumText3 from "../Objects/Effects/UltimatumText3";
@@ -22,6 +25,7 @@ import { MasterManifestation } from "../Objects/src/Enemy/MasterManifestation";
 import Slime from "../Objects/src/Enemy/Slime";
 import Solid from "../Objects/src/Enemy/Solid";
 import Specter from "../Objects/src/Enemy/Specter";
+import GameObject from "../Objects/src/GameObject";
 import Pile from "../Objects/src/Piles/Pile";
 import BannerOfArmour from "../Status/BannerOfArmour";
 import Bless from "../Status/Bless";
@@ -52,8 +56,9 @@ export default class Default extends Scenario{
     add_cooldown_attack: number = 0
     add_critical: number = 0
     add_e_fortify: number = 0
+    add_e_elem_resist: number = 0
     minus_create_chance = 0
-    wave_boss_trashold: number = 90
+    wave_boss_trashold: number = 85
 
     monster_upgrades: any
     private need_to_check_grace: boolean = true
@@ -120,6 +125,9 @@ export default class Default extends Scenario{
     }
 
     checkTime(level: Level){
+        let player_in_zone = level.players.some(elem =>  elem.zone_id === 0)
+        if(!player_in_zone) return
+
         if(this.waves_created >= this.wave_boss_trashold){
             this.wave_boss_trashold = Math.round(this.wave_boss_trashold * 1.6)
             level.previuos_script = this
@@ -138,10 +146,11 @@ export default class Default extends Scenario{
         if(level.time - this.last_checked >= wave_time){
             
             this.last_checked = level.time
-           
+        
             this.createWave(level)
             this.checkPortal(level) 
             this.checkUpgrade(level)
+
             if(this.times_count){
                 this.times_count --
                 if(!this.times_count){
@@ -153,9 +162,7 @@ export default class Default extends Scenario{
     }
 
     async createWave(level: Level){
-        let player_in_zone = level.players.some(elem =>  elem.zone_id === 0)
-        if(!player_in_zone) return
-
+        
         this.waves_created ++
       
         if(this.times === Default.TIMES_NORMAL && this.time_between_wave_ms < this.max_time_wave){
@@ -333,6 +340,8 @@ export default class Default extends Scenario{
             enemy.cooldown_attack = 0
         }
 
+        enemy.elemental_status_resist += this.add_e_elem_resist
+        
         return enemy
     }
 
@@ -398,9 +407,11 @@ export default class Default extends Scenario{
                     e.setPoint(60, 60)
                 }
             }
-            
+    
+            EffectBuilder.createGroup(e)
             level.binded_effects.push(e)
         }
+
         if(this.waves_created % 18 === 0 && this.waves_created > 1){
             let e = undefined
             let r = Func.random(1, 4)
@@ -435,6 +446,7 @@ export default class Default extends Scenario{
                 }
             }
             
+            EffectBuilder.createGroup(e)
             level.binded_effects.push(e)
         }
 
@@ -488,6 +500,9 @@ export default class Default extends Scenario{
                 case 'life':
                     this.add_e_life += 1
                     this.add_e_fortify += 3
+                    if(this.add_e_elem_resist < 60){
+                        this.add_e_elem_resist += 15
+                    }
                     break;
             }
 

@@ -7,7 +7,7 @@ export default class Fortify extends Status {
 
     constructor(public time: number){
         super(time)
-        this.name = 'fortify'
+        this.name = 'fortification'
     }
 
     apply(unit: any){
@@ -16,9 +16,9 @@ export default class Fortify extends Status {
 
         if(this.unit instanceof Character){
             this.unit.newStatus({
-                name: 'fortify',
+                name: 'fortification',
                 duration: this.duration,
-                desc: 'you have a chance to get half damage (' + this.power +'%)'
+                desc: 'you have a chance to reduce total damage (' + this.power +'%)'
             })
         }
     }
@@ -35,9 +35,9 @@ export default class Fortify extends Status {
 
         if(this.unit instanceof Character){
              this.unit.newStatus({
-                name: 'fortify',
+                name: 'fortification',
                 duration: this.duration,
-                desc: 'you have a chance to get half damage (' + this.power +'%)'
+                desc: 'you have a chance to reduce total damage (' + this.power +'%)'
             })
         }
        

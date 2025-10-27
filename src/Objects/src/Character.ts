@@ -1,12 +1,16 @@
 import Ability from "../../Abilities/Ability"
 import UpgradeManager from "../../Classes/UpgradeManager"
 import Func from "../../Func"
+import FallingStones from "../../Glyphs/FallingStones"
+import Mastery from "../../Glyphs/Mastery"
+import Recovery from "../../Glyphs/Recovery"
+import VoidDevouring from "../../Glyphs/VoidDevouring"
+import WaveOfTransformation from "../../Glyphs/WaveOfTransformation"
+import WindBarrier from "../../Glyphs/WindBarrier"
 import IUnitState from "../../Interfaces/IUnitState"
 import Item from "../../Items/Item"
 import item from "../../Items/Item"
 import Level from "../../Level"
-import PlayerAttackState from "../../State/PlayerAttackState"
-import PlayerCastState from "../../State/PlayerCastState"
 import PlayerDamagedState from "../../State/PlayerDamagedState"
 import PlayerDeadState from "../../State/PlayerDeadState"
 import PlayerDefendState from "../../State/PlayerDefendState"
@@ -39,7 +43,9 @@ export default abstract class Character extends Unit {
     utility: Ability | undefined
     passive: any
     item: item[] = []
+    masteries: Mastery[] = []
 
+    max_items: number = 6
     start_move_time: number = 0
     end_move_time: number = 0
     last_time_the_skill_was_used: number | undefined
@@ -58,9 +64,9 @@ export default abstract class Character extends Unit {
 
     enlight_timer: number = 35000
     base_regeneration_time: number = 10000
-    grace: number = 2221
+    grace: number = 1
     voice_radius: number = 20
-    gold: number = 2220
+    gold: number = 0
     cooldown_redaction: number = 0
     max_life: number = 4
     maximum_resources: number = 7
@@ -355,13 +361,19 @@ export default abstract class Character extends Unit {
 
     getStats(){ 
         let descriptions = {
-            armour: 'increases your chance of not taking damage',
-            resist: 'increases your chance of not geting bad status(ignite, shock, etc)',
-            spirit: 'increases your chance of losing energy instead of life',
-            pierce: 'increases your chance to deal damage by reducing enemy armour',
-            impact: 'increases your chance to damage adjacent targets in addition to your primary target',
-            critical: 'increases your chance to deal double damage',
-            crushing: 'increases your chance to crush an enemy, every time when enemy being crushed they take additional damage next time'
+            might: this.getStatDescription('might'),
+            will: this.getStatDescription('will'),
+            agility: this.getStatDescription('agility'),
+            knowledge: this.getStatDescription('knowledge'),
+            perception: this.getStatDescription('perception'),
+            durability: this.getStatDescription('durability'),
+            armour: 'Increases your chance of not taking damage.',
+            resist: 'Increases your chance of not geting bad status(ignite, shock, etc).',
+            spirit: 'Increases your chance of losing energy instead of life.',
+            pierce: 'Increases your chance to deal damage by reducing enemy armour.',
+            impact: 'Increases your chance to damage adjacent targets in addition to your primary target.',
+            critical: 'Increases your chance to deal double damage.',
+            crushing: 'Increases your chance to crush an enemy, every time when enemy being crushed they take additional damage next time.'
         }
         return {
             stats: {
@@ -375,6 +387,7 @@ export default abstract class Character extends Unit {
                 armour: this.getTotalArmour(),
                 resist: this.getResistValue() + '%',
                 spirit: this.spirit + '%',
+                fortification: this.fortify + '%',
                 "~~~~~~~~~~~~~~~~~": "~~~",
                 "attack speed": this.getAttackSpeed() + 'ms',
                 "cast speed": this.getCastSpeed() + 'ms',
@@ -1068,10 +1081,6 @@ export default abstract class Character extends Unit {
     }
 
     public getState(): void {
-        if(this.using_ability){
-            this.using_ability.afterUse()
-        }
-        
         this.using_ability = undefined
         this.action_is_end = false
         this.attack_angle = undefined

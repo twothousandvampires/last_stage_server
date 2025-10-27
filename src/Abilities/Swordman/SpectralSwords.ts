@@ -49,5 +49,7 @@ export default class SpectralSwords extends SwordmanAbility {
             
             this.owner.level.enemies.push(summon)
         }
+
+        this.afterUse()
     }
 }

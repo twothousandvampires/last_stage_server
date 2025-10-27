@@ -37,5 +37,6 @@ export default class PileOfThornCast extends CultistAbility{
         pile.setPoint(hit_x, hit_y)
         
         this.owner.level.enemies.push(pile)
+           this.afterUse()
     }
 }

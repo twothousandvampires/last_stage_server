@@ -161,6 +161,25 @@ export class FrostSphereProjectile extends Projectiles{
                 }
             }
         })
+
+        if(this.icicles_count > 0){
+            let count = this.icicles_count
+            
+            let zones = 6.28 / count
+    
+            for(let i = 1; i <= count; i++){
+                let min_a = (i - 1) * zones
+                let max_a = i * zones
+    
+                let angle = Math.random() * (max_a - min_a) + min_a
+                let proj = new Icicle(this.level)
+                proj.setOwner(this.owner)
+                proj.setAngle(angle)
+                proj.setPoint(this.x, this.y)
+    
+                this.level.projectiles.push(proj)
+            }
+        }
         
         this.level.deleted.push(this.id)
         this.level.projectiles = this.level.projectiles.filter(elem => elem != this)

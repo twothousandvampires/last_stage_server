@@ -18,14 +18,16 @@ export default class StormPresenceStatus extends Status{
 
     act(tick_time: number){
         if(tick_time > this.last_checked){
-            this.last_checked += 1500
+            this.last_checked += 2000
             if(!this.unit) return
-
+            let max_hits = 3
             this.unit.level.enemies.forEach(elem => {
-                if(elem.zaped && Func.distance(this.unit, elem) <= 15){
+                if(max_hits > 0 && elem.zaped && Func.distance(this.unit, elem) <= 15){
+                    max_hits --
+                    
                     let count = 3
                     let zones = 6.28 / count
-                    
+                   
                     for(let i = 1; i <= count; i++){
                         let min_a = (i - 1) * zones
                         let max_a = i * zones

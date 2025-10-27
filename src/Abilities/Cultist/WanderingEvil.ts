@@ -34,5 +34,7 @@ export default class WanderingEvil extends CultistAbility{
         evil.setPoint(hit_x, hit_y)
         
         this.owner.level.binded_effects.push(evil)
+
+        this.afterUse()
     }
 }

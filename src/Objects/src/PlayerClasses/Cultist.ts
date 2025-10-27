@@ -442,6 +442,35 @@ export default class Cultist extends Character{
         this.setTimerToGetState(300)
     }
 
+    getStatDescription(stat: string){
+        if(stat === 'might'){
+            return `Increases your attack speed.
+                        Increases your armour.`
+        }
+        if(stat === 'will'){
+            return `Gives a chance to avoid damage.
+                       Increases status resistance.`
+        }
+        if(stat === 'agility'){
+            return `Increases your move speed.
+                          Increases a block chance.`
+        }
+        if(stat === 'knowledge'){
+            return `Gives a chance not to spend mana when used.
+                            Increases your cast speed.`
+        }
+        if(stat === 'durability'){
+            return `Increases spirit.
+                             Gives a chance to get additional energy.`
+        }
+        if(stat === 'perception'){
+            return `Increases a chance to avoid damage state.
+                             Reduses cooldowns of abilities.`
+        }
+        
+        return ''
+    }
+
     getAttackSpeed() {
         let value = this.attack_speed - (this.might * 15)
         

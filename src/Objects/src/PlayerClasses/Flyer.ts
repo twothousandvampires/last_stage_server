@@ -368,6 +368,34 @@ export default class Flyer extends Character{
         this.check_recent_hits_timer = time + 1000
     }
 
+    getStatDescription(stat: string){
+        if(stat === 'might'){
+            return `Affects your abilities (increases AOE, number of projectiles, etc.).
+                        Reduces cooldowns of your abilities.`
+        }
+        if(stat === 'will'){
+            return `Gives a chance not to lose mana when block.
+                       Gives a chance to get additional energy.`
+        }
+        if(stat === 'agility'){
+            return `Increases your armour.
+                          - increases your move speed.`
+        }
+        if(stat === 'knowledge'){
+            return `Gives a chance not to spend mana when used.
+                            Affect to start maximum energy.`
+        }
+        if(stat === 'durability'){
+            return `Gives a chance to avoid damage state.
+                             Increases life regeneration rate.`
+        }
+        if(stat === 'perception'){
+            return `Reduces penalty of speed when your cast.
+                             Gives a chance to get additional courage.`
+        }
+        
+        return ''
+    }
 
     regen(){
         if(this.level.time >= this.check_recent_hits_timer){

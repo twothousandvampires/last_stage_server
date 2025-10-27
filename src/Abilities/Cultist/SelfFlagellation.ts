@@ -51,5 +51,7 @@ export default class SelfFlagellation extends CultistAbility {
                 }
             })
         }
+
+        this.afterUse()
     }
 }

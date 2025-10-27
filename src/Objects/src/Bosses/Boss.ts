@@ -1,3 +1,4 @@
+import Builder from "../../../Classes/Builder";
 import BlindAbility from "../../../EnemyAbilities.ts/BlindAbility";
 import DespairAbility from "../../../EnemyAbilities.ts/DespairAbility";
 import FanOfBonesAbility from "../../../EnemyAbilities.ts/FanOfBonesAbility";
@@ -31,6 +32,7 @@ export default class Boss extends Undead {
 
         this.init()
         this.gold_revard = 30
+        this.can_be_removed = false
     }
 
     init(){
@@ -47,8 +49,13 @@ export default class Boss extends Undead {
 
     takeDamage(unit: any = undefined, options = {}){
         super.takeDamage(unit, options)
-        console.log(this.life_status)
+      
         if(this.life_status <= 0){
+            this.level.players.forEach(elem => {
+                let mastery = Builder.createRandomMastery()
+                elem.masteries.push(mastery)
+                elem.level.addMessedge('you have got ' + mastery.name + ' mastery', elem.id)
+            })
             this.level.script.end(this.level)
         }
     }

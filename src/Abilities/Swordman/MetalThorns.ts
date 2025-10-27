@@ -19,9 +19,6 @@ export default class MetalThorns extends SwordmanAbility{
             x: this.owner.x,
             y: this.owner.y
         })
-
-        this.used = true
-        this.owner.hit = true
         
         let status = new MetalThornsStatus(this.owner.level.time)
         status.pointed = this.pointed
@@ -30,5 +27,7 @@ export default class MetalThorns extends SwordmanAbility{
         status.setDuration(10000)
         
         this.owner.level.setStatus(this.owner, status)
+
+        this.afterUse()
     }
 }

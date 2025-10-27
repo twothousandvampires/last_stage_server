@@ -22,7 +22,7 @@ export default class UnholyPower extends Status{
     }
 
     isExpired(tick_time: number){
-        return this.unit.is_dead
+        return !this.unit || this.unit.is_dead
     }
 
     apply(unit: any){

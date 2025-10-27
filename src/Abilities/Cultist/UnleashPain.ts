@@ -48,5 +48,7 @@ export default class UnleashPain extends CultistAbility{
 
             this.owner.level.binded_effects.push(ghost)
         })
+
+        this.afterUse()
     }
 }

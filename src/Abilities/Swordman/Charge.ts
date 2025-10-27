@@ -7,26 +7,16 @@ import SwordmanAbility from "./SwordmanAbility";
 
 export default class Charge extends SwordmanAbility implements IUnitState<Character> {
    
-    cost: number
-    distance: number
-    point_added: boolean
-    hited: any[]
-    start: boolean
-    end: boolean
+    cost: number = 4
+    distance: number = 1200
+    hited: any[] = []
     destroyer: boolean
     possibilities: boolean
-    end_timeout: any
+    start_time: number = 0
 
     constructor(owner: Swordman){
         super(owner)
-        this.cost = 4
-        this.distance = 2000
-        this.point_added = false
-        this.hited = []
-        this.start = false
-        this.end = false
         this.destroyer = false
-        this.end_timeout = undefined
         this.possibilities = false
         this.name = 'charge'
         this.cd = 8500
@@ -44,14 +34,24 @@ export default class Charge extends SwordmanAbility implements IUnitState<Charac
     }
 
     update(player: Character){
-        if(this.end){
-            player.getState()
+        
+        if(this.start_time != 0){
+            console.log(player.level.time - this.start_time)
+            if(player.level.time - this.start_time >= this.distance){
+                console.log('her')
+                player.getState()
+                return
+            }
         }
-        else if(player.action || this.start){
-            this.used = true
-            this.start = true
-            let speed = player.getMoveSpeed()
+        if(player.action || this.start_time != 0){
+            if(!this.start_time){
+                this.used = true
+                this.afterUse()
+                this.start_time = player.level.time
+            }
 
+            let speed = player.getMoveSpeed()
+          
             let next_step_x = Math.sin(player.attack_angle) * speed * 1.5
             let next_step_y = Math.cos(player.attack_angle) * speed * 1.5
 
@@ -94,11 +94,8 @@ export default class Charge extends SwordmanAbility implements IUnitState<Charac
     }
 
     exit(player: Character){
-        clearTimeout(this.end_timeout)
-       
-        this.start = false
-        this.end = false
-        
+        this.start_time = 0
+
         if(this.possibilities && this.hited.length >= 3){
             player.addResourse()
         }
@@ -106,13 +103,5 @@ export default class Charge extends SwordmanAbility implements IUnitState<Charac
         player.chance_to_avoid_damage_state -= 100
         
         this.hited = []
-    }
-
-    use(){
-        this.owner.setState(this)
-       
-        this.end_timeout = setTimeout(() => {
-            this.end = true
-        }, this.distance)
     }
 }

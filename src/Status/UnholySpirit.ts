@@ -21,8 +21,8 @@ export default class UnholySpirit extends Status {
         this.unit.level.binded_effects = this.unit.level.binded_effects.filter(elem => elem != this.effect)
     }
 
-    isExpired(tick_time: number){
-        return this.unit.is_dead
+     isExpired(tick_time: number){
+        return !this.unit || this.unit.is_dead
     }
 
     apply(unit: any){

@@ -19,6 +19,7 @@ export default class BurningCircle extends CultistAbility{
     }
 
     impact(){
+        
         this.owner.level.sounds.push({
                 name:'fire cast',
                 x: this.owner.x,
@@ -42,5 +43,6 @@ export default class BurningCircle extends CultistAbility{
         status.devouring = this.devouring
 
         this.owner.level.setStatus(this.owner, status, true)
+        this.afterUse()
     }
 }

@@ -8,10 +8,9 @@ import SwordmanAbility from "./SwordmanAbility";
 
 export default class Dash extends SwordmanAbility implements IUnitState{
    
-    hited: any[]
-    start: boolean
-    end: boolean
-    end_timeout: number = 350
+    hited: any[] = []
+    start: boolean = false
+    end: boolean = false
     start_time: number = 0
     electrified: boolean = false
     targets = 0
@@ -20,9 +19,6 @@ export default class Dash extends SwordmanAbility implements IUnitState{
 
     constructor(owner: Swordman){
         super(owner)
-        this.hited = []
-        this.start = false
-        this.end = false
         this.name = 'dash'
         this.cd = 3000
         this.type = Ability.TYPE_CUSTOM
@@ -45,10 +41,6 @@ export default class Dash extends SwordmanAbility implements IUnitState{
         if(this.total_duration < this.duration){
             this.total_duration = this.duration
         }
-    }
-
-    use(){
-        this.owner.setState(this)
     }
 
     exit(player: Character){
@@ -81,23 +73,19 @@ export default class Dash extends SwordmanAbility implements IUnitState{
         this.end = false
         this.start_time = 0
         player.chance_to_avoid_damage_state -= 100
-
-
     }
 
     update(player: Character){
-        if(this.end){
-            player.getState()
-        }
-        else if(player.action || this.start_time){
+        if(player.action || this.start_time){
 
             if(!this.start_time){
                 this.used = true
+                this.afterUse()
                 this.start_time = player.level.time
             }
             
             if(player.level.time - this.start_time >= this.total_duration){
-                this.end = true
+                player.getState()
                 return
             }
 

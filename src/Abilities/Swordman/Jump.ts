@@ -59,7 +59,8 @@ export default class Jump extends SwordmanAbility implements IUnitState<Swordman
 
     update(player: Character){
         if(this.impact){
-            this.used = true
+            this.afterUse()
+
             let second = player.getSecondResource()
             let enemies = player.level.enemies
     
@@ -115,9 +116,5 @@ export default class Jump extends SwordmanAbility implements IUnitState<Swordman
                 player.addToPoint(next_step_x, next_step_y)
             }
         }  
-    }
-
-    use(){
-        this.owner.setState(this)
     }
 }

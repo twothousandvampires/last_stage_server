@@ -30,5 +30,7 @@ export default class HeavenWrath extends SwordmanAbility{
         s.setDuration(8000 + (second * 500))
 
         this.owner.level.setStatus(this.owner, s)
+        
+        this.afterUse()
     }
 }

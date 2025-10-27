@@ -4,19 +4,19 @@ import SwordmanAbility from "./SwordmanAbility";
 
 export default class CursedWeapon extends SwordmanAbility {
 
-    drinker: boolean
+    drinker: boolean = false
 
     constructor(owner: Swordman){
         super(owner)
-        this.drinker = false
         this.name = 'cursed weapon'
         this.cd = 12000
     }
 
     impact(){
+        this.afterUse()
         
         let second = this.owner.getSecondResource()
-        this.used = true
+
         let status = new CursedWeaponStatus(this.owner.level.time, this.drinker)
         status.setDuration(8000 + second * 200)
         

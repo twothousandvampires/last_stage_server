@@ -44,5 +44,7 @@ export default class ShatteredWeapon extends SwordmanAbility{
 
             this.owner.level.projectiles.push(proj)
         }
+
+        this.afterUse()
     }
 }

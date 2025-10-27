@@ -73,5 +73,7 @@ export default class SoulShatter extends CultistAbility{
                 targer.takeDamage(this.owner)
             }
         }
+
+        this.afterUse()
     }
 }

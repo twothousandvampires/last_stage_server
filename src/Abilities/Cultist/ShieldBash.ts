@@ -19,10 +19,21 @@ export default class ShieldBash extends CultistAbility {
         this.cost = 4
         this.cd = 5000
         this.type = Ability.TYPE_ATTACK
-        this.state = 'shield hit'
+        this.state_sprite = 'shield hit'
     }
 
     afterUse(forced_cd: number | undefined = undefined) {
+
+        this.after_use_triggers.forEach(elem => {
+            elem.trigger(this.owner, this)
+        })
+        
+        if(this.need_to_pay){
+            this.owner.payCost()
+        }
+
+        this.owner.succefullCast()
+        
         if(this.cd === 0) return
         
         this.used = true
@@ -98,7 +109,7 @@ export default class ShieldBash extends CultistAbility {
                 }
             })
         }
-
+     
         this.owner.level.sounds.push({
             name:'ground hit',
             x: this.owner.x,

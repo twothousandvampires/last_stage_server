@@ -13,6 +13,7 @@ export default class Teeth extends FlyerAbility{
     }
     
     impact(){
+        this.afterUse()
         this.used = true
 
         this.owner.level.addSound('cast', this.x, this.y)
