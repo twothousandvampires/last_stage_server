@@ -1,9 +1,12 @@
 import Ability from "../../Abilities/Ability"
+import Builder from "../../Classes/Builder"
 import UpgradeManager from "../../Classes/UpgradeManager"
 import Func from "../../Func"
 import FallingStones from "../../Glyphs/FallingStones"
+import HolyStrike from "../../Glyphs/HolyStrike"
 import Mastery from "../../Glyphs/Mastery"
 import Recovery from "../../Glyphs/Recovery"
+import TornadoLaunch from "../../Glyphs/TornadoLaunch"
 import VoidDevouring from "../../Glyphs/VoidDevouring"
 import WaveOfTransformation from "../../Glyphs/WaveOfTransformation"
 import WindBarrier from "../../Glyphs/WindBarrier"
@@ -131,6 +134,7 @@ export default abstract class Character extends Unit {
     can_ressurect: boolean = false
     ascend_level: number = 0
     courage_expire_timer: number = 8000
+    last_ascent_mastery_getting: number = 0
 
     current_state: IUnitState<Character> | undefined
 
@@ -167,6 +171,7 @@ export default abstract class Character extends Unit {
     abstract getMoveSpeedPenaltyValue(): number
     abstract addCourage(): void
     abstract getRegenTimer(): number
+    abstract getPower(): number
     
     succesefulPierce(enemy: Unit): void {
         this.triggers_on_pierce.forEach(elem => elem.trigger(this, enemy))
@@ -320,6 +325,7 @@ export default abstract class Character extends Unit {
     protected payCost(): void {
         this.resource -= this.pay_to_cost
         this.pay_to_cost = 0
+        
         if(this.resource < 0){
             this.resource = 0
         }
@@ -373,7 +379,9 @@ export default abstract class Character extends Unit {
             pierce: 'Increases your chance to deal damage by reducing enemy armour.',
             impact: 'Increases your chance to damage adjacent targets in addition to your primary target.',
             critical: 'Increases your chance to deal double damage.',
-            crushing: 'Increases your chance to crush an enemy, every time when enemy being crushed they take additional damage next time.'
+            crushing: 'Increases your chance to crush an enemy, every time when enemy being crushed they take additional damage next time.',
+            power: 'Gives a chance to increase damage by 1 after all calculations',
+            fortification: 'Gives a chance to reduce damage by 1 before critical calculation    '
         }
         return {
             stats: {
@@ -398,7 +406,8 @@ export default abstract class Character extends Unit {
                 "~~": "~~~~~~~~~~~~~~~~~~",
                 "move speed": this.move_speed_penalty + '%',
                 "cooldown reduction": this.getCdRedaction() + '%',
-                "regeneration rate": (this.getRegenTimer() / 1000) + 'sec'
+                "regeneration rate": (this.getRegenTimer() / 1000) + 'sec',
+                power: this.getPower(),
             },
             descriptions: descriptions
         }
@@ -455,7 +464,7 @@ export default abstract class Character extends Unit {
             this.spend_grace = true
 
             if(upgrade.cost){
-                this.ascend_level ++
+                this.addAscent()
             }
         }
         
@@ -463,6 +472,19 @@ export default abstract class Character extends Unit {
         
         this.removeUpgrades()
         UpgradeManager.closeUpgrades(this)
+    }
+
+    addAscent(value = 1){
+        this.ascend_level += value
+
+        let diff = this.ascend_level - this.last_ascent_mastery_getting
+
+        while(diff >= 15){
+            this.last_ascent_mastery_getting += 15
+            this.masteries.push(Builder.createRandomMastery())
+            
+            diff = this.ascend_level - this.last_ascent_mastery_getting
+        }
     }
 
     public exitGrace(): void{
@@ -523,7 +545,7 @@ export default abstract class Character extends Unit {
             let previous = this.life_status
 
             if(previous >= this.max_life){
-                if(ignore_limit || this.canRegenMoreLife()){
+                if(previous === this.max_life && (ignore_limit || this.canRegenMoreLife())){
 
                 }
                 else{
@@ -568,7 +590,11 @@ export default abstract class Character extends Unit {
         }
        
         if(unit && unit.pierce > this.getTotalArmour() && Func.chance(unit.pierce - this.getTotalArmour())){
-            value = 2
+            value ++
+        }
+
+        if(Func.chance(this.fortify)){
+            value --
         }
 
         if(unit && Func.chance(unit.critical)){
@@ -580,11 +606,11 @@ export default abstract class Character extends Unit {
             console.log('player was fragle')
             value *= 2
         }
-        
-        if(this.fortify && Func.chance(this.fortify)){
-            value --
-        }
 
+        if(unit && Func.chance(unit.power)){
+            value ++
+        }
+        
         if(value > 0){
             this.last_time_get_hit = this.level.time
 

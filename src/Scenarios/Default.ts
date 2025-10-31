@@ -22,6 +22,7 @@ import Gifter from "../Objects/src/Enemy/Gifter";
 import Impy from "../Objects/src/Enemy/Impy";
 import MagicSlime from "../Objects/src/Enemy/MagicSlime";
 import { MasterManifestation } from "../Objects/src/Enemy/MasterManifestation";
+import { MasteryManifistation } from "../Objects/src/Enemy/MasteryManifistation";
 import Slime from "../Objects/src/Enemy/Slime";
 import Solid from "../Objects/src/Enemy/Solid";
 import Specter from "../Objects/src/Enemy/Specter";
@@ -345,6 +346,25 @@ export default class Default extends Scenario{
         return enemy
     }
 
+    setGraceTrashold(){
+        let add = 0
+
+        if(this.waves_created < 45){
+            add = 15
+        }
+        else if(this.waves_created < 100){
+            add = 25
+        }
+        else if(this.waves_created < 200){
+            add = 50
+        }
+        else{
+            add = 75
+        }
+
+        this.grace_trashold += add
+    }
+
     checkPortal(level){
         if(!this.need_to_check_grace) return
 
@@ -358,7 +378,7 @@ export default class Default extends Scenario{
         let chance = this.waves_created - this.grace_trashold
       
         if(chance > 0){
-            this.grace_trashold = Math.round(this.grace_trashold * 1.3) 
+            this.setGraceTrashold() 
             let portal: Grace = new Grace(level)
             while(portal.isOutOfMap()){
                 let random_player: Character = level.players[Math.floor(Math.random() * level.players.length)]
@@ -376,7 +396,7 @@ export default class Default extends Scenario{
     checkUpgrade(level){
         if(this.waves_created % 10 === 0 && this.waves_created > 1){
             let e = undefined
-            let r = Func.random(1, 4)
+            let r = Func.random(1, 5)
 
             if(r === 1){
                 e = new MasterManifestation(level)
@@ -387,8 +407,11 @@ export default class Default extends Scenario{
             else if(r === 3){
                 e = new ForgeManifistation(level)
             }
-            else{
+            else if(r === 4){
                 e = new AscentManifistation(level)
+            }
+            else{
+                e = new MasteryManifistation(level)
             }
 
             while(e.isOutOfMap()){

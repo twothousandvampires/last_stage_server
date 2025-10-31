@@ -18,7 +18,7 @@ export default class LightBeacon extends FlyerAbility implements IUnitState<Flye
 
     constructor(owner: Flyer){
         super(owner)
-        this.cost = 7
+        this.cost = 8
         this.state = 0
         this.up_timer
         this.beacon_timer

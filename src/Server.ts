@@ -22,14 +22,14 @@ export default class MasterServer {
     this.setupSocketHandlers()
     this.setupMasterCleanup()
     this.setupRedisSubscriptions()
-    this.db = mysql.createConnection({
-        host: 'localhost',
-        user: 'myuser',
-        password: 'secure_password123',
-        database: 'last_stage'
-    })
+    // this.db = mysql.createConnection({
+    //     host: 'localhost',
+    //     user: 'myuser',
+    //     password: 'secure_password123',
+    //     database: 'last_stage'
+    // })
 
-    this.db.connect()
+    // this.db.connect()
   }
 
   private async setupRedisSubscriptions(): Promise<void> {

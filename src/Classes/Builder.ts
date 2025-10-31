@@ -92,6 +92,13 @@ import Recovery from "../Glyphs/Recovery"
 import Func from "../Func"
 import FallingStones from "../Glyphs/FallingStones"
 import WaveOfTransformation from "../Glyphs/WaveOfTransformation"
+import HolyStrike from "../Glyphs/HolyStrike"
+import TornadoLaunch from "../Glyphs/TornadoLaunch"
+import Power from "../Items/Forgings/Power"
+import InfernalGaze from "../Glyphs/InfernalGaze"
+import SwirlingIce from "../Glyphs/SwirlingIce"
+import LightningFury from "../Glyphs/LightningFury"
+import FlyingSwords from "../Glyphs/FlyingSwords"
 
 export default class Builder{
 
@@ -100,7 +107,13 @@ export default class Builder{
         'devouring void': VoidDevouring,
         'recovery': Recovery,
         'falling stones': FallingStones,
-        'wave of trasformation': WaveOfTransformation
+        'wave of trasformation': WaveOfTransformation,
+        'hole strike': HolyStrike,
+        // 'tornado launch': TornadoLaunch,
+        'infernal gaze': InfernalGaze,
+        'swirling ice': SwirlingIce,
+        'lightning fury': LightningFury,
+        'flying sword': FlyingSwords
     }
 
     static itemMap = {
@@ -187,7 +200,8 @@ export default class Builder{
         'explosive armour': ExplosiveArmour,
         'thunder strikes': ThunderStrikes,
         'fire presence': FirePresence,
-        'storm presence': StormPresence 
+        'storm presence': StormPresence,
+        'power': Power
     }
 
     static createCharacter(client: Client, level: Level): Character{

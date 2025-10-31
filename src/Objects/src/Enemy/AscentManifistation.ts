@@ -32,7 +32,7 @@ export class AscentManifistation extends Manifistation {
                 
         }
         else{
-            let portal: Grace = new Grace(this.level, 5000 + this.stage * 3000)
+            let portal: Grace = new Grace(this.level, 10000 + this.stage * 3000)
 
             portal.setPoint(this.activated_by.x, this.activated_by.y)
 

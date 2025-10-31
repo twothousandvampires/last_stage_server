@@ -59,11 +59,14 @@ import Creator from "../Status/Creator"
 import DamageInRadiusWhenEnlightnent from "../Triggers/DamageInRadiusWhenEnlightnent"
 import InnerPowerTrigger from "../Triggers/InnerPowerTrigger"
 import Luck from "../Status/Luck"
-import Item from "../Items/Item"
 import Forging from "../Items/Forgings/Forging"
 import MagicFlowTrigger from "../Triggers/MagicFlowTrigger"
 import RisingMoraleTrigger from "../Triggers/RisingMoraleTrigger"
 import CrushingWave from "../Status/CrushingWave"
+import FromDefendToAttackTrigger from "../Triggers/FromDefendToAttackTrigger"
+import WallOfWillTrigger from "../Triggers/WallOfWillTrigger"
+import FirstToStrikeTrigger from "../Triggers/FirstToStrikeTrigger"
+import PressingSteps from "../Status/PressingSteps"
 
 export default class Upgrades{
     static getAllUpgrades(): Upgrade[]{
@@ -103,6 +106,66 @@ export default class Upgrades{
                     cost: 4,
                     ascend: 26,
                     desc: 'you can create a sphere around you'
+                },
+                {
+                    name: 'pressing steps',
+                    canUse: (character: Character) => {
+                        return !character.level.status_pull.find(elem => elem.unit === character && elem instanceof PressingSteps)
+                    },
+                    teach: (character: Character): void => {
+                        character.level.setStatus(character, new PressingSteps(character.level.time))
+                    },
+                    cost: 4,
+                    ascend: 40,
+                    desc: 'if you moving 3 second you start deal damage to nearby enemies'
+                },
+                {
+                    name: 'from defense to attack',
+                    canUse: (character: Character) => {
+                        return !character.triggers_on_block.some(elem => elem instanceof FromDefendToAttackTrigger)
+                    },
+                    teach: (character: Character): void => {
+                        character.triggers_on_block.push(new FromDefendToAttackTrigger())
+                    },
+                    cost: 2,
+                    ascend: 12,
+                    desc: 'when block you have a chance to increase your power'
+                },
+                {
+                    name: 'wall of will',
+                    canUse: (character: Character) => {
+                        return !character.triggers_on_block.some(elem => elem instanceof WallOfWillTrigger) && !(character instanceof Flyer)
+                    },
+                    teach: (character: Character): void => {
+                        character.triggers_on_block.push(new WallOfWillTrigger())
+                    },
+                    cost: 4,
+                    ascend: 20,
+                    desc: 'when block you have a chance to increase your block chance'
+                },
+                {
+                    name: 'power',
+                    canUse: (character: Character) => {
+                        return character.power < 100
+                    },
+                    teach: (character: Character): void => {
+                        character.power ++
+                    },
+                    cost: 1,
+                    ascend: 12,
+                    desc: 'increases your power'
+                },
+                {
+                    name: 'first to strike',
+                    canUse: (character: Character) => {
+                        return !character.triggers_on_block.some(elem => elem instanceof FirstToStrikeTrigger)
+                    },
+                    teach: (character: Character): void => {
+                        character.triggers_on_block.push(new FirstToStrikeTrigger())
+                    },
+                    cost: 2,
+                    ascend: 10,
+                    desc: 'when block you have a chance to increase your attack and cast speed'
                 },
                 {
                     name: 'divine forging',
@@ -358,7 +421,7 @@ export default class Upgrades{
                         return character.ascend_level <= 25
                     },
                     teach: (character: Character): void => {
-                        character.ascend_level += 4
+                        character.addAscent(4)
                     },
                     cost: 5,
                     ascend:5,
@@ -892,6 +955,21 @@ export default class Upgrades{
                 cost: 2,
                 ascend: 10,
                 desc: 'increases duration and radius of stuning'
+            },
+            {
+                name: 'gore aegis',
+                type: "shield bash",
+                canUse: (character: Character) => {
+                     return character.second_ability instanceof ShieldBash && !character.second_ability.gore_aegis
+                },
+                teach: (character: Character) => {
+                    if(character.second_ability && character.second_ability instanceof ShieldBash){
+                        character.second_ability.gore_aegis = true
+                    }
+                },
+                cost: 2,
+                ascend: 16,
+                desc: 'when you kill an enemy with shield bash, you get gore aegis'
             },
             {
                 name: 'hate',

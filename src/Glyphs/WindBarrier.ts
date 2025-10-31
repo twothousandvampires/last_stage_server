@@ -1,12 +1,12 @@
 import Ability from "../Abilities/Ability"
 import Func from "../Func"
-import QuakeEffect from "../Objects/Effects/Quake"
+import SingleTornado from "../Objects/Effects/SingleTornado"
 import Character from "../Objects/src/Character"
 import Mastery from "./Mastery"
 
 export default class WindBarrier extends Mastery {
 
-    base_chance: number = 10
+    base_chance: number = 60
     
     constructor(){
         super()
@@ -17,7 +17,7 @@ export default class WindBarrier extends Mastery {
     trigger(player: Character, ability: Ability){
         
         if(Func.chance(this.base_chance + ability.cost * 10)){
-            let e = new QuakeEffect(player.level)
+            let e = new SingleTornado(player.level)
             e.setPoint(player.x, player.y)
 
             player.level.addEffect(e)

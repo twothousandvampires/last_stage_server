@@ -176,7 +176,7 @@ export default class Flyer extends Character{
 
         if(passive){
             if(passive.name === 'disintegration'){
-                this.triggers_on_hit.push(new FragilityWhenHitTrigger(30))
+                this.triggers_on_hit.push(new FragilityWhenHitTrigger(10))
             }
             if(passive.name === 'accumulation'){
                 this.triggers_on_use_not_utility.push(new Accumulation())
@@ -383,7 +383,8 @@ export default class Flyer extends Character{
         }
         if(stat === 'knowledge'){
             return `Gives a chance not to spend mana when used.
-                            Affect to start maximum energy.`
+                            Affect to start maximum energy.
+                            Increases your power`
         }
         if(stat === 'durability'){
             return `Gives a chance to avoid damage state.
@@ -459,6 +460,10 @@ export default class Flyer extends Character{
         this.addCourage()
     }
 
+    getPower(): number {
+        return this.power + this.knowledge
+    }
+
     payCost(){
         if(this.pay_to_cost === 0) return
 
@@ -468,7 +473,7 @@ export default class Flyer extends Character{
             return
         }
         
-        let chance = this.knowledge * 2
+        let chance = this.knowledge
 
         if(chance > 70){
             chance = 70
@@ -479,7 +484,9 @@ export default class Flyer extends Character{
         }
         
         this.pay_to_cost = 0
-
+        if(this.resource < 0){
+            this.resource = 0
+        }
     }
 
     addCourage(){

@@ -65,10 +65,8 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
         console.log('exit state')
         this.state = Teleportation.TELEPOR_START_STATE
 
-        if(this.protected){
-            unit.can_be_damaged = true
-        }
-       
+        unit.can_be_damaged = true
+        
         unit.can_be_controlled_by_player = true
     }
 

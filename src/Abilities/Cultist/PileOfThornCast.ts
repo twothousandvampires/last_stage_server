@@ -18,8 +18,8 @@ export default class PileOfThornCast extends CultistAbility{
     }
 
     impact(){
-         this.owner.level.sounds.push({
-                name:'dark cast',
+        this.owner.level.sounds.push({
+                name:'bone cast',
                 x: this.owner.x,
                 y: this.owner.y
         })

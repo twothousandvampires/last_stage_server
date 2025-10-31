@@ -1,6 +1,5 @@
 import Level from "../../Level";
 import GameObject from "../src/GameObject";
-import Soul from "./Soul";
 
 export default abstract class Effect extends GameObject {
     

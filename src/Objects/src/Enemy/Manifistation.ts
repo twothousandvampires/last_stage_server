@@ -2,9 +2,7 @@ import EffectBuilder from "../../../Classes/EffectBuiler";
 import Func from "../../../Func";
 import Level from "../../../Level";
 import ActivatedManifistation from "../../Effects/ActivatedManifistation";
-import BurningCircleEffect from "../../Effects/BurningCircleEffect";
 import Effect from "../../Effects/Effects";
-import Soul from "../../Effects/Soul";
 
 export default abstract class Manifistation extends Effect {
 
@@ -27,6 +25,7 @@ export default abstract class Manifistation extends Effect {
     constructor(level: Level){
         super(level)
         this.box_r = 4
+        this.name = 'manifistation'
     }
 
     abstract giveReward(): void
@@ -88,7 +87,7 @@ export default abstract class Manifistation extends Effect {
                             this.y = 666
                             this.effect.delete()
                             this.out_of_map_start = time    
-                            this.level.addMessedge(this.stage + '/5 activated', this.activated_by.id)
+                            this.level.addMessedge(this.name + ' ' + this.stage + '/5 activated', this.activated_by.id)
                             this.wasChanged()
                         }
                     }

@@ -243,6 +243,10 @@ export default class Cultist extends Character{
         return Func.chance(this.spirit + this.durability, this.is_lucky)
     }
 
+    getPower(): number {
+        return this.power + this.will
+    }
+
     takeDamage(unit:any = undefined, options: any = {}){      
         if(!this.can_be_damaged) return
 
@@ -449,7 +453,8 @@ export default class Cultist extends Character{
         }
         if(stat === 'will'){
             return `Gives a chance to avoid damage.
-                       Increases status resistance.`
+                       Increases status resistance.
+                       Increases your power`
         }
         if(stat === 'agility'){
             return `Increases your move speed.
@@ -501,11 +506,15 @@ export default class Cultist extends Character{
             this.free_cast = false
             return
         }
-        if(Func.notChance(this.knowledge * 4, this.is_lucky)){
+
+        if(Func.notChance(this.knowledge, this.is_lucky)){
             this.resource -= this.pay_to_cost
         }
         
-        this.pay_to_cost = 0 
+        this.pay_to_cost = 0
+        if(this.resource < 0){
+            this.resource = 0
+        }
     }
 
     getResistValue(): number {

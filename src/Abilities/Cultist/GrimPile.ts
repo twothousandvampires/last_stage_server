@@ -23,7 +23,7 @@ export default class GrimPile extends CultistAbility{
         let rel_distance = Math.sqrt(((this.owner.x - this.owner.c_x) ** 2) + ((this.owner.y - this.owner.c_y) ** 2))
 
         this.owner.level.sounds.push({
-                name:'dark cast',
+                name:'bone cast',
                 x: this.owner.x,
                 y: this.owner.y
         })

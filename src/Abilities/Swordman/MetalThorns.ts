@@ -19,6 +19,8 @@ export default class MetalThorns extends SwordmanAbility{
             x: this.owner.x,
             y: this.owner.y
         })
+
+        this.owner.level.addSound('metal cast', this.owner.x, this.owner.y)
         
         let status = new MetalThornsStatus(this.owner.level.time)
         status.pointed = this.pointed

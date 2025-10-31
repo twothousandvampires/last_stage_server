@@ -281,6 +281,10 @@ export default abstract class Enemy extends Unit {
         if(is_player_deal_hit && unit.isCrushing()){
             this.crushing ++
         }
+
+        if(Func.chance(this.fortify)){
+            damage_value --
+        }
        
         if(unit && unit?.critical && Func.chance(unit.critical)){
             damage_value *= 2
@@ -293,8 +297,8 @@ export default abstract class Enemy extends Unit {
             damage_value *= 2
         }
 
-        if(this.fortify && Func.chance(this.fortify)){
-            damage_value --
+        if(is_player_deal_hit && Func.chance(unit.getPower())){
+            damage_value ++
         }
 
         this.life_status -= damage_value
@@ -326,6 +330,7 @@ export default abstract class Enemy extends Unit {
         if(is_player_deal_hit && unit.level.time - unit.last_impact_time >= unit.impact_cooldown){
             let impact_rating = unit.getImpactRating() 
             if(Func.chance(impact_rating)){
+                this.level.addSound('impact', this.x, this.y)
                 unit.last_impact_time = unit.level.time
                 let e = new QuakeEffect(this.level)
                 e.setPoint(this.x, this.y)

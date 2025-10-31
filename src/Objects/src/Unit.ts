@@ -59,6 +59,7 @@ export default abstract class Unit extends GameObject {
     immune_to_zap = false
     immune_to_stun = false
     fortify: number = 0
+    power: number = 0
 
     current_state: IUnitState<Unit> | undefined
     
