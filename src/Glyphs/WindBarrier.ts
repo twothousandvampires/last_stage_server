@@ -6,7 +6,7 @@ import Mastery from "./Mastery"
 
 export default class WindBarrier extends Mastery {
 
-    base_chance: number = 60
+    base_chance: number = 5
     
     constructor(){
         super()

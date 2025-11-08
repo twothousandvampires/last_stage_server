@@ -13,7 +13,7 @@ export default class WeaponThrow extends SwordmanAbility {
 
     constructor(owner: Swordman){
         super(owner)
-        this.cd = 3000
+        this.cd = 2500
         this.light_grip = false
         this.returning = false
         this.shattering = false

@@ -208,7 +208,12 @@ export default class Flyer extends Character{
     }
 
     getMoveSpeedPenaltyValue(){
-        return 70 - (this.perception * 5);
+        let pen = 70 - (this.perception * 2)
+        if(pen < 0){
+            pen = 0
+        } 
+
+        return pen  
     }
 
     defendAct(){

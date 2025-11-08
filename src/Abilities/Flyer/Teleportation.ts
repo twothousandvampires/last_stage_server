@@ -64,6 +64,7 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
         this.teleport_y = undefined
         console.log('exit state')
         this.state = Teleportation.TELEPOR_START_STATE
+        this.out_of_map_start = 0
 
         unit.can_be_damaged = true
         

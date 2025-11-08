@@ -11,19 +11,19 @@ export default class Dominance extends Status{
     apply(unit: any){
         this.unit = unit
         if(this.unit instanceof Character){
-            this.unit.critical += 15
+            this.unit.power += 15
 
             this.unit.newStatus({
                 name: 'dominance',
                 duration: this.duration,
-                desc: 'critical chance is increased by 15%'
+                desc: 'power is increased by 15'
             })
         }
     }
 
     clear(){
         if(this.unit instanceof Character){
-            this.unit.critical -= 15
+            this.unit.power -= 15
         }
     }
 
@@ -33,7 +33,7 @@ export default class Dominance extends Status{
         this.unit.newStatus({
             name: 'dominance',
             duration: this.duration,
-            desc: 'critical chance is increased by 15%'
+            desc: 'power is increased by 15'
         })
     }
 }

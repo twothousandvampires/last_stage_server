@@ -356,10 +356,10 @@ export default class Default extends Scenario{
             add = 25
         }
         else if(this.waves_created < 200){
-            add = 50
+            add = 35
         }
         else{
-            add = 75
+            add = 50
         }
 
         this.grace_trashold += add
@@ -491,10 +491,10 @@ export default class Default extends Scenario{
                     this.add_cooldown_attack += 50
                     break;
                 case 'pierce':
-                    this.add_e_pierce += 6
+                    this.add_e_pierce += 5
                     break;
                 case 'armour':
-                    this.add_e_armour += 6
+                    this.add_e_armour += 5
                     break;
             }
         }

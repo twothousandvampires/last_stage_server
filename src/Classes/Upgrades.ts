@@ -1917,7 +1917,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 6,
-                ascend: 26,
+                ascend: 12,
                 desc: 'gives your weapon throw ability a chance to return'
             },
             {
@@ -1951,7 +1951,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 6,
-                ascend: 26,
+                ascend: 12,
                 desc: 'gives your weapon throw ability a chance to shatter up to 3 shards'
             },
             {

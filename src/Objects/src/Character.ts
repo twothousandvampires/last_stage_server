@@ -588,6 +588,10 @@ export default abstract class Character extends Unit {
         if(options?.damage_value){
             value = options.damage_value
         }
+
+        if(value <= 0) {
+            return
+        }
        
         if(unit && unit.pierce > this.getTotalArmour() && Func.chance(unit.pierce - this.getTotalArmour())){
             value ++
@@ -610,7 +614,7 @@ export default abstract class Character extends Unit {
         if(unit && Func.chance(unit.power)){
             value ++
         }
-        
+      
         if(value > 0){
             this.last_time_get_hit = this.level.time
 

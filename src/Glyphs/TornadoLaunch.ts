@@ -6,7 +6,7 @@ import Mastery from "./Mastery"
 
 export default class TornadoLaunch extends Mastery {
 
-    base_chance: number = 50
+    base_chance: number = 5
     
     constructor(){
         super()

@@ -15,7 +15,7 @@ export default class GrimPile extends CultistAbility{
         this.increased_effect = false
         this.resistance = false
         this.distance = 25
-        this.cost = 2
+        this.cost = 3
         this.cd = 6000
     }
 
@@ -42,6 +42,7 @@ export default class GrimPile extends CultistAbility{
         pile.setPoint(hit_x, hit_y)
         
         this.owner.level.enemies.push(pile)
-           this.afterUse()
+
+        this.afterUse()
     }
 }

@@ -487,7 +487,7 @@ export default class Cultist extends Character{
     }
 
     getMoveSpeedPenaltyValue(){
-         return 70
+        return 70
     }
 
     getCastSpeed(){

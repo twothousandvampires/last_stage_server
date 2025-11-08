@@ -472,7 +472,12 @@ export default class Swordman extends Character{
     }
 
     getMoveSpeedPenaltyValue(){
-        return 70 - (this.perception * 3)
+        let pen = 70 - (this.perception * 2)
+        if(pen < 0){
+            pen = 0
+        } 
+
+        return pen  
     }
 
     getAttackSpeed() {

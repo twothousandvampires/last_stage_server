@@ -10,9 +10,7 @@ export default class PlayerAttackState implements IUnitState<Character>{
         player.state = 'attack'
 
         this.move_penalty = player.getMoveSpeedPenaltyValue()
-        if(this.move_penalty < 0){
-            this.move_penalty = 0
-        }      
+           
         player.addMoveSpeedPenalty(-this.move_penalty)
 
         player.action_time = player.getAttackSpeed()

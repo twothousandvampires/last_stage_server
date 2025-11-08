@@ -1,6 +1,10 @@
 import { Server as SocketServer, Socket } from 'socket.io'
 import { createClient, RedisClientType } from 'redis'
 const mysql = require('mysql2')
+import * as fs from 'fs';
+import * as path from 'path';
+
+const logPath = path.join(__dirname, 'log.text');
 
 export default class MasterServer {
   
@@ -9,11 +13,23 @@ export default class MasterServer {
   private redisClient: RedisClientType
   private db: any
   private lobbies: Map<number, any> = new Map();
+  private logStream: fs.WriteStream;
 
   constructor(io: SocketServer, port: number) {
     this.io = io
     this.port = port
+    
+    this.logStream = fs.createWriteStream(logPath, { flags: 'a' });
+    this.log('Master server started');
     this.redisClient = createClient()
+  }
+
+  private log(message: string): void {
+    const timestamp = new Date().toISOString();
+    const logMessage = `[${timestamp}] ${message}\n`;
+    
+    console.log(logMessage);
+    this.logStream.write(logMessage);
   }
 
   async initialize(): Promise<void> {
@@ -22,14 +38,14 @@ export default class MasterServer {
     this.setupSocketHandlers()
     this.setupMasterCleanup()
     this.setupRedisSubscriptions()
-    // this.db = mysql.createConnection({
-    //     host: 'localhost',
-    //     user: 'myuser',
-    //     password: 'secure_password123',
-    //     database: 'last_stage'
-    // })
+    this.db = mysql.createConnection({
+        host: 'localhost',
+        user: 'myuser',
+        password: 'secure_password123',
+        database: 'last_stage'
+    })
 
-    // this.db.connect()
+    this.db.connect()
   }
 
   private async setupRedisSubscriptions(): Promise<void> {
@@ -75,11 +91,11 @@ export default class MasterServer {
 
   private startGameServers(): void {
     this.cleanupAllLobbies()
-    let count = require('os').cpus().length
+    let count = require('os').cpus().length * 2
 
-    console.log(`Starting ${count} game server processes...`)
-
-    
+    if(count > 10){
+      count = 10
+    }
 
     for (let i = 0; i < count; i++) {
       let port = 9002 + i
@@ -91,7 +107,6 @@ export default class MasterServer {
         stdio: ['inherit', 'inherit', 'inherit', 'ipc']  // ВКЛЮЧАЕМ IPC
       });
 
-      // Получаем сообщения от GameServer
       gameProcess.on('message', (message) => {
           if (message.type === 'register_lobby') {
               this.lobbies.set(port, message.data);
@@ -99,21 +114,32 @@ export default class MasterServer {
           }
           else if (message.type === 'update_lobby') {
               if (this.lobbies.has(port)) {
-                  this.lobbies.set(port, message.data );
+                  this.lobbies.set(port, message.data);
                   this.io.emit('lobbies_list', Array.from(this.lobbies.values()));
               }
           }
       });
 
       gameProcess.on('exit', (code) => {
+          if (code === 0) {
+              this.log(`GameServer ${port} exited normally`);
+          } else {
+              // Логируем падение с ошибкой
+              this.log(`GameServer ${port} CRASHED - Code: ${code}`);
+          }
           console.log(`GameServer ${port} exited with code ${code}`);
           this.lobbies.delete(port);
+      });
+
+      gameProcess.on('error', (error) => {
+          this.log(`GameServer ${port} spawn error: ${error.message}`);
       });
     }
   }
 
   private setupSocketHandlers(): void {
     this.io.on('connection', async (socket: Socket) => {
+
       socket.on('get_lobbies', async () => {
         socket.emit('lobbies_list', Array.from(this.lobbies.values()));
       })

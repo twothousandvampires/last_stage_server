@@ -185,7 +185,8 @@ export default abstract class Item {
         'frost shpere when kill',
         'stun when hit',
         'thunder strikes',
-        'storm presence'
+        'storm presence',
+        'dominance when critical'
     ]
 
     static forging_list_type_2 = [

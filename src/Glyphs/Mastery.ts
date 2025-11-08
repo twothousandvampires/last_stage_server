@@ -14,4 +14,8 @@ export default abstract class Mastery{
     apply(ability: Ability){
         ability.after_use_triggers.push(this)
     }
+
+    getTriggerChance(ability: Ability){
+        
+    }   
 }

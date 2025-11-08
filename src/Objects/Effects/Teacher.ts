@@ -20,7 +20,7 @@ export default class Teacher extends Effect{
 
     act(time: number){
         this.level.players.forEach(elem => {
-            if(Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
+            if(!elem.is_dead && Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
                 if(this.closed.includes(elem.id)){
                     this.closed = this.closed.filter(elem2 => elem2 != elem.id)
                 }
