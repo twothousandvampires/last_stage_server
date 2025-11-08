@@ -12,7 +12,7 @@ export default abstract class Effect extends GameObject {
 
     act(time: number){
         if(!this.owner){
-             return
+            return
         }  
         
         this.x = this.owner.x

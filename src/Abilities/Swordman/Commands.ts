@@ -5,23 +5,23 @@ import SwordmanAbility from "./SwordmanAbility";
 
 export default class Commands extends SwordmanAbility {
 
-    fast_commands: boolean
+    fast_commands: boolean = false
 
     constructor(owner: Swordman){
         super(owner)
         this.cd = 16000
-        this.fast_commands = false
         this.name = 'commands'
     }
 
     impact(){
+        this.afterUse()
+
         this.owner.level.sounds.push({
             name:'holy cast',
             x: this.owner.x,
             y: this.owner.y
         })
         
-        this.used = true
         let skill_elip = this.owner.getBoxElipse()
         skill_elip.r = 25
 

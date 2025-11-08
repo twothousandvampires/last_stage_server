@@ -18,6 +18,7 @@ export default class FlameWall extends FlyerAbility{
     }
 
     impact(){
+        this.afterUse()
         this.used = true
 
         this.owner.level.addSound('fire massive', this.owner.x, this.owner.y)

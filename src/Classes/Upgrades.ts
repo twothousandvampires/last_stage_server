@@ -59,11 +59,14 @@ import Creator from "../Status/Creator"
 import DamageInRadiusWhenEnlightnent from "../Triggers/DamageInRadiusWhenEnlightnent"
 import InnerPowerTrigger from "../Triggers/InnerPowerTrigger"
 import Luck from "../Status/Luck"
-import Item from "../Items/Item"
 import Forging from "../Items/Forgings/Forging"
 import MagicFlowTrigger from "../Triggers/MagicFlowTrigger"
 import RisingMoraleTrigger from "../Triggers/RisingMoraleTrigger"
 import CrushingWave from "../Status/CrushingWave"
+import FromDefendToAttackTrigger from "../Triggers/FromDefendToAttackTrigger"
+import WallOfWillTrigger from "../Triggers/WallOfWillTrigger"
+import FirstToStrikeTrigger from "../Triggers/FirstToStrikeTrigger"
+import PressingSteps from "../Status/PressingSteps"
 
 export default class Upgrades{
     static getAllUpgrades(): Upgrade[]{
@@ -103,6 +106,66 @@ export default class Upgrades{
                     cost: 4,
                     ascend: 26,
                     desc: 'you can create a sphere around you'
+                },
+                {
+                    name: 'pressing steps',
+                    canUse: (character: Character) => {
+                        return !character.level.status_pull.find(elem => elem.unit === character && elem instanceof PressingSteps)
+                    },
+                    teach: (character: Character): void => {
+                        character.level.setStatus(character, new PressingSteps(character.level.time))
+                    },
+                    cost: 4,
+                    ascend: 40,
+                    desc: 'if you moving 3 second you start deal damage to nearby enemies'
+                },
+                {
+                    name: 'from defense to attack',
+                    canUse: (character: Character) => {
+                        return !character.triggers_on_block.some(elem => elem instanceof FromDefendToAttackTrigger)
+                    },
+                    teach: (character: Character): void => {
+                        character.triggers_on_block.push(new FromDefendToAttackTrigger())
+                    },
+                    cost: 2,
+                    ascend: 12,
+                    desc: 'when block you have a chance to increase your power'
+                },
+                {
+                    name: 'wall of will',
+                    canUse: (character: Character) => {
+                        return !character.triggers_on_block.some(elem => elem instanceof WallOfWillTrigger) && !(character instanceof Flyer)
+                    },
+                    teach: (character: Character): void => {
+                        character.triggers_on_block.push(new WallOfWillTrigger())
+                    },
+                    cost: 4,
+                    ascend: 20,
+                    desc: 'when block you have a chance to increase your block chance'
+                },
+                {
+                    name: 'power',
+                    canUse: (character: Character) => {
+                        return character.power < 100
+                    },
+                    teach: (character: Character): void => {
+                        character.power ++
+                    },
+                    cost: 1,
+                    ascend: 12,
+                    desc: 'increases your power'
+                },
+                {
+                    name: 'first to strike',
+                    canUse: (character: Character) => {
+                        return !character.triggers_on_block.some(elem => elem instanceof FirstToStrikeTrigger)
+                    },
+                    teach: (character: Character): void => {
+                        character.triggers_on_block.push(new FirstToStrikeTrigger())
+                    },
+                    cost: 2,
+                    ascend: 10,
+                    desc: 'when block you have a chance to increase your attack and cast speed'
                 },
                 {
                     name: 'divine forging',
@@ -153,6 +216,7 @@ export default class Upgrades{
                     ascend: 12,
                     desc: 'you become lucky for 30 seconds'
                 },
+               
                 {
                     name: 'crushing wave',
                     canUse: (character: Character) => {
@@ -178,6 +242,19 @@ export default class Upgrades{
                     cost: 4,
                     ascend: 10,
                     desc: 'your courage expires slower'
+                },
+                {
+                    name: 'divine pack',
+                    canUse: (character: Character) => {
+                        return character.max_items < 8
+                    },
+                    teach: (character: Character): void => {
+                        character.max_items ++
+                        character.purchased_items --
+                    },
+                    cost: 2,
+                    ascend: 30,
+                    desc: 'gives additional item slot'
                 },
                 {
                     name: 'inspiration',
@@ -344,7 +421,7 @@ export default class Upgrades{
                         return character.ascend_level <= 25
                     },
                     teach: (character: Character): void => {
-                        character.ascend_level += 4
+                        character.addAscent(4)
                     },
                     cost: 5,
                     ascend:5,
@@ -880,6 +957,21 @@ export default class Upgrades{
                 desc: 'increases duration and radius of stuning'
             },
             {
+                name: 'gore aegis',
+                type: "shield bash",
+                canUse: (character: Character) => {
+                     return character.second_ability instanceof ShieldBash && !character.second_ability.gore_aegis
+                },
+                teach: (character: Character) => {
+                    if(character.second_ability && character.second_ability instanceof ShieldBash){
+                        character.second_ability.gore_aegis = true
+                    }
+                },
+                cost: 2,
+                ascend: 16,
+                desc: 'when you kill an enemy with shield bash, you get gore aegis'
+            },
+            {
                 name: 'hate',
                 type: "shield bash",
                 canUse: (character: Character) => {
@@ -1199,6 +1291,7 @@ export default class Upgrades{
             },
             {
                 name: 'soul fragments',
+                type: 'soulrender',
                 canUse: (character: Character) => {
                     return character.first_ability instanceof Soulrender && !character.first_ability.soul_fragments
                 },
@@ -1210,6 +1303,21 @@ export default class Upgrades{
                 cost: 1,
                 ascend: 10,
                 desc: 'increases the count of shards after tear enemy'
+            },
+            {
+                name: 'dark prolifiration',
+                type: 'soulrender',
+                canUse: (character: Character) => {
+                    return character.first_ability instanceof Soulrender && character.first_ability.prolifiration < 75
+                },
+                teach: (character: Character) => {
+                    if(character.first_ability instanceof Soulrender){
+                        character.first_ability.prolifiration += 25
+                    }
+                },
+                cost: 2,
+                ascend: 20,
+                desc: 'gives a chance to youe soulrender ability to tear additional nearby target'
             },
         ]
     }
@@ -1726,6 +1834,18 @@ export default class Upgrades{
                 desc: 'increase attack range and slash angle'
             },
             {
+                name: 'spirit weapon',
+                canUse: (character: Character) => {
+                    return character.attack_radius <= 14 && character.perception > 10
+                },
+                teach: (character: Character): void => {
+                    character.attack_radius += 1.5
+                },
+                cost: 3,
+                ascend: 16,
+                desc: 'increases your attack range'
+            },
+            {
                 name: 'echo swing',
                 type: 'weapon swing',
                 canUse: (character: Character) => {
@@ -1797,7 +1917,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 6,
-                ascend: 26,
+                ascend: 12,
                 desc: 'gives your weapon throw ability a chance to return'
             },
             {
@@ -1831,7 +1951,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 6,
-                ascend: 26,
+                ascend: 12,
                 desc: 'gives your weapon throw ability a chance to shatter up to 3 shards'
             },
             {

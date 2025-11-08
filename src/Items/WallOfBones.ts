@@ -9,26 +9,25 @@ import Item from "./Item";
         end_timeout: any
         stack_count: number
         effect: BoneArmour | undefined
-        explode_chance: number
         delete_timeout: any
 
         constructor(){
             super()
             this.stack_count = 0
-            this.explode_chance = 40
             this.name = 'wall of bones'
             this.count = 10
             this.type = 2
             this.duration = 6000
-            this.description = 'if you kill an enemy, you receive a bone charge that increases your armor. If you reach the maximum charge (default 10), there is a chance that the charges will explode and injure enemies'
+            this.chance = 25
+            this.description = 'if you get hit, you have a chance to receive a bone charge that increases your armor and fortification. If you reach the maximum charge (default 10), there is a chance that the charges will explode and injure enemies.'
         }
 
         equip(character: Character): void {
-            character.triggers_on_kill.push(this)
+            character.triggers_on_get_hit.push(this)
         }
 
         getSpecialForgings(): string[] {
-            return ['count', 'duration', 'bones when block']
+            return ['count', 'duration', 'bones when block', 'chance']
         }
             
         remove(character){
@@ -39,6 +38,7 @@ import Item from "./Item";
             this.effect = undefined
 
             character.armour_rate -= this.stack_count
+            character.fortify -= this.stack_count
             this.stack_count = 0
 
             character.emitStatusEnd('wall of bones')
@@ -46,9 +46,10 @@ import Item from "./Item";
 
         trigger(character: Character){
             if(this.disabled) return  
-            
+            if(Func.notChance(this.chance)) return
+
             if(this.effect){
-                if(this.stack_count >= this.count && Func.chance(this.explode_chance)){
+                if(this.stack_count >= this.count && Func.chance(this.chance)){
                     this.remove(character)
                     
                     let explosion_effect = new BoneArmourExplosion(character.level)
@@ -75,7 +76,7 @@ import Item from "./Item";
                     character.newStatus({
                         name: 'wall of bones',
                         duration: undefined,
-                        desc: 'armour is increased(' + this.stack_count + ')'
+                        desc: 'armour and fortification are increased(' + this.stack_count + ')'
                     })
                     
                     clearTimeout(this.delete_timeout)
@@ -87,6 +88,9 @@ import Item from "./Item";
             else{
                 this.stack_count ++
                 character.armour_rate ++
+                character.fortify ++
+
+                character.level.addSound('bone cast', character.x, character.y)
 
                 let effect = new BoneArmour(character.level)
             
@@ -98,7 +102,7 @@ import Item from "./Item";
                 character.newStatus({
                     name: 'wall of bones',
                     duration: undefined,
-                    desc: 'armour is increased(' + this.stack_count + ')'
+                    desc: 'armour and fortification are increased(' + this.stack_count + ')'
                 })
 
                 this.delete_timeout = setTimeout(() => {

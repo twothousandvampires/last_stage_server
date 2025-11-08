@@ -74,6 +74,7 @@ export default class WeaponSwing extends SwordmanAbility {
             }
         }
 
+        this.afterUse()
         if(this.echo_swing && attack_angle){
             this.echo(40, attack_angle, attack_elipse, weapon_angle)
         }

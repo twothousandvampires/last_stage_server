@@ -29,9 +29,10 @@ export default class characterTemplate{
             this.stats_description = {
                 might: `- affects the number of targets that can be hit by your abilities
                         - affects the chance of not losing courage when receiving damage
-                        - increases pierce rating`,
+                        - increases your power`,
                 agility: `- increases your attack speed
-                          - reduces speed penalty when defending`,
+                          - reduces speed penalty when defending
+                          - increases pierce rating`,
                 knowledge: `- gives a chance to get additional energy
                             - increases status resistance`,
                 will: `- increases your life regeneration rate
@@ -161,7 +162,8 @@ export default class characterTemplate{
                 agility: `- increases your armour
                           - increases your move speed`,
                 knowledge: `- gives a chance not to spend mana when used
-                            - affect to start maximum energy`,
+                            - affect to start amount of energy
+                            - increases your power`,
                 will: `- gives a chance not to lose mana when block
                        - gives a chance to get additional energy`,
                 perception: `- reduces penalty of speed when your cast
@@ -275,7 +277,8 @@ export default class characterTemplate{
                 knowledge: `- gives a chance not to spend mana when used
                             - increases your cast speed`,
                 will: `- gives a chance to avoid damage
-                       - increases status resistance`,
+                       - increases status resistance
+                       - increases your power`,
                 perception: `- increases a chance to avoid damage state
                              - reduses cooldowns of abilities`,
                 durability: `- increases spirit

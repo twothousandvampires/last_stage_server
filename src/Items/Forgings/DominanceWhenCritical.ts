@@ -16,7 +16,7 @@ export default class DominanceWhenCritical extends Forging{
         super(item)
         this.max_value = 30
         this.name = 'dominance'
-        this.description = 'when you lead critical strike there is a chance to get dominance(+15% critical)'
+        this.description = 'when you lead critical strike there is a chance to get dominance(+15 power)'
         this.gold_cost = 12
     }
 

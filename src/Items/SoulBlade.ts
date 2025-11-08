@@ -1,7 +1,7 @@
 import Func from "../Func";
 import Soul from "../Objects/Effects/Soul";
 import Character from "../Objects/src/Character";
-import { Enemy } from "../Objects/src/Enemy/Enemy";
+import Enemy from "../Objects/src/Enemy/Enemy";
 import Item from "./Item";
 
 export default class SoulBlade extends Item{

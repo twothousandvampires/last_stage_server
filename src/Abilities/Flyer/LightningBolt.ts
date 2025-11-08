@@ -18,6 +18,7 @@ export default class LightningBolt extends FlyerAbility{
     }
 
     createLightning(x: number, y: number){
+        this.afterUse()
         let enemies = this.owner.level.enemies
         let players = this.owner.level.players
 

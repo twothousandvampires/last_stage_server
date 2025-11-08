@@ -5,20 +5,15 @@ import Func from "../../Func";
 
 export default class Rune extends CultistAbility{
 
-    distance: number
-    runefield: boolean
-    fast_detonation: boolean
-    explosive: boolean
-    second_detanation: boolean
+    distance: number = 25 
+    runefield: boolean = false
+    fast_detonation: boolean = false
+    explosive: boolean = false
+    second_detanation: boolean = false
 
     constructor(owner: Cultist){
         super(owner)
         this.name = 'rune'
-        this.distance = 25
-        this.runefield = false
-        this.fast_detonation = false
-        this.explosive = false
-        this.second_detanation = false
     }
 
     async impact(){
@@ -81,5 +76,7 @@ export default class Rune extends CultistAbility{
                 this.owner.level.binded_effects.push(rune)
             }
         }
+
+        this.afterUse()
     }
 }

@@ -21,9 +21,8 @@ export default class HeavenVengeance extends SwordmanAbility{
     }
 
     impact(){
-        this.owner.hit = true
-        this.used = true
-
+        this.afterUse()
+        
         let enemies = this.owner.level.enemies
         let players = this.owner.level.players
 

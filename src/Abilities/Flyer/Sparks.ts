@@ -15,6 +15,8 @@ export default class Sparks extends FlyerAbility{
     }
     
     impact(){
+        this.afterUse()
+        
         let count = 10 + this.owner.getAdditionalRadius()
         let zones = 6.28 / count
 

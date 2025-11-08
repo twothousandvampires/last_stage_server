@@ -1,12 +1,19 @@
 import Ability from "../../Abilities/Ability"
+import Builder from "../../Classes/Builder"
 import UpgradeManager from "../../Classes/UpgradeManager"
 import Func from "../../Func"
+import FallingStones from "../../Glyphs/FallingStones"
+import HolyStrike from "../../Glyphs/HolyStrike"
+import Mastery from "../../Glyphs/Mastery"
+import Recovery from "../../Glyphs/Recovery"
+import TornadoLaunch from "../../Glyphs/TornadoLaunch"
+import VoidDevouring from "../../Glyphs/VoidDevouring"
+import WaveOfTransformation from "../../Glyphs/WaveOfTransformation"
+import WindBarrier from "../../Glyphs/WindBarrier"
 import IUnitState from "../../Interfaces/IUnitState"
 import Item from "../../Items/Item"
 import item from "../../Items/Item"
 import Level from "../../Level"
-import PlayerAttackState from "../../State/PlayerAttackState"
-import PlayerCastState from "../../State/PlayerCastState"
 import PlayerDamagedState from "../../State/PlayerDamagedState"
 import PlayerDeadState from "../../State/PlayerDeadState"
 import PlayerDefendState from "../../State/PlayerDefendState"
@@ -39,7 +46,9 @@ export default abstract class Character extends Unit {
     utility: Ability | undefined
     passive: any
     item: item[] = []
+    masteries: Mastery[] = []
 
+    max_items: number = 6
     start_move_time: number = 0
     end_move_time: number = 0
     last_time_the_skill_was_used: number | undefined
@@ -58,9 +67,9 @@ export default abstract class Character extends Unit {
 
     enlight_timer: number = 35000
     base_regeneration_time: number = 10000
-    grace: number = 2221
+    grace: number = 1
     voice_radius: number = 20
-    gold: number = 2220
+    gold: number = 0
     cooldown_redaction: number = 0
     max_life: number = 4
     maximum_resources: number = 7
@@ -125,6 +134,7 @@ export default abstract class Character extends Unit {
     can_ressurect: boolean = false
     ascend_level: number = 0
     courage_expire_timer: number = 8000
+    last_ascent_mastery_getting: number = 0
 
     current_state: IUnitState<Character> | undefined
 
@@ -161,6 +171,7 @@ export default abstract class Character extends Unit {
     abstract getMoveSpeedPenaltyValue(): number
     abstract addCourage(): void
     abstract getRegenTimer(): number
+    abstract getPower(): number
     
     succesefulPierce(enemy: Unit): void {
         this.triggers_on_pierce.forEach(elem => elem.trigger(this, enemy))
@@ -314,6 +325,7 @@ export default abstract class Character extends Unit {
     protected payCost(): void {
         this.resource -= this.pay_to_cost
         this.pay_to_cost = 0
+        
         if(this.resource < 0){
             this.resource = 0
         }
@@ -355,13 +367,21 @@ export default abstract class Character extends Unit {
 
     getStats(){ 
         let descriptions = {
-            armour: 'increases your chance of not taking damage',
-            resist: 'increases your chance of not geting bad status(ignite, shock, etc)',
-            spirit: 'increases your chance of losing energy instead of life',
-            pierce: 'increases your chance to deal damage by reducing enemy armour',
-            impact: 'increases your chance to damage adjacent targets in addition to your primary target',
-            critical: 'increases your chance to deal double damage',
-            crushing: 'increases your chance to crush an enemy, every time when enemy being crushed they take additional damage next time'
+            might: this.getStatDescription('might'),
+            will: this.getStatDescription('will'),
+            agility: this.getStatDescription('agility'),
+            knowledge: this.getStatDescription('knowledge'),
+            perception: this.getStatDescription('perception'),
+            durability: this.getStatDescription('durability'),
+            armour: 'Increases your chance of not taking damage.',
+            resist: 'Increases your chance of not geting bad status(ignite, shock, etc).',
+            spirit: 'Increases your chance of losing energy instead of life.',
+            pierce: 'Increases your chance to deal damage by reducing enemy armour.',
+            impact: 'Increases your chance to damage adjacent targets in addition to your primary target.',
+            critical: 'Increases your chance to deal double damage.',
+            crushing: 'Increases your chance to crush an enemy, every time when enemy being crushed they take additional damage next time.',
+            power: 'Gives a chance to increase damage by 1 after all calculations',
+            fortification: 'Gives a chance to reduce damage by 1 before critical calculation    '
         }
         return {
             stats: {
@@ -375,6 +395,7 @@ export default abstract class Character extends Unit {
                 armour: this.getTotalArmour(),
                 resist: this.getResistValue() + '%',
                 spirit: this.spirit + '%',
+                fortification: this.fortify + '%',
                 "~~~~~~~~~~~~~~~~~": "~~~",
                 "attack speed": this.getAttackSpeed() + 'ms',
                 "cast speed": this.getCastSpeed() + 'ms',
@@ -385,7 +406,8 @@ export default abstract class Character extends Unit {
                 "~~": "~~~~~~~~~~~~~~~~~~",
                 "move speed": this.move_speed_penalty + '%',
                 "cooldown reduction": this.getCdRedaction() + '%',
-                "regeneration rate": (this.getRegenTimer() / 1000) + 'sec'
+                "regeneration rate": (this.getRegenTimer() / 1000) + 'sec',
+                power: this.getPower(),
             },
             descriptions: descriptions
         }
@@ -442,7 +464,7 @@ export default abstract class Character extends Unit {
             this.spend_grace = true
 
             if(upgrade.cost){
-                this.ascend_level ++
+                this.addAscent()
             }
         }
         
@@ -450,6 +472,19 @@ export default abstract class Character extends Unit {
         
         this.removeUpgrades()
         UpgradeManager.closeUpgrades(this)
+    }
+
+    addAscent(value = 1){
+        this.ascend_level += value
+
+        let diff = this.ascend_level - this.last_ascent_mastery_getting
+
+        while(diff >= 15){
+            this.last_ascent_mastery_getting += 15
+            this.masteries.push(Builder.createRandomMastery())
+            
+            diff = this.ascend_level - this.last_ascent_mastery_getting
+        }
     }
 
     public exitGrace(): void{
@@ -510,7 +545,7 @@ export default abstract class Character extends Unit {
             let previous = this.life_status
 
             if(previous >= this.max_life){
-                if(ignore_limit || this.canRegenMoreLife()){
+                if(previous === this.max_life && (ignore_limit || this.canRegenMoreLife())){
 
                 }
                 else{
@@ -553,9 +588,17 @@ export default abstract class Character extends Unit {
         if(options?.damage_value){
             value = options.damage_value
         }
+
+        if(value <= 0) {
+            return
+        }
        
         if(unit && unit.pierce > this.getTotalArmour() && Func.chance(unit.pierce - this.getTotalArmour())){
-            value = 2
+            value ++
+        }
+
+        if(Func.chance(this.fortify)){
+            value --
         }
 
         if(unit && Func.chance(unit.critical)){
@@ -567,11 +610,11 @@ export default abstract class Character extends Unit {
             console.log('player was fragle')
             value *= 2
         }
-        
-        if(this.fortify && Func.chance(this.fortify)){
-            value --
-        }
 
+        if(unit && Func.chance(unit.power)){
+            value ++
+        }
+      
         if(value > 0){
             this.last_time_get_hit = this.level.time
 
@@ -1068,10 +1111,6 @@ export default abstract class Character extends Unit {
     }
 
     public getState(): void {
-        if(this.using_ability){
-            this.using_ability.afterUse()
-        }
-        
         this.using_ability = undefined
         this.action_is_end = false
         this.attack_angle = undefined

@@ -21,6 +21,10 @@ import InnerPowerTrigger from "../../../Triggers/InnerPowerTrigger";
 import HeavenIntervention from "../../../Triggers/HeavenIntervention";
 import HeavenWrath from "../../../Abilities/Swordman/HeavenWrath";
 import Upgrade from "../../../Types/Upgrade";
+import FromDefendToAttackTrigger from "../../../Triggers/FromDefendToAttackTrigger";
+import WallOfWillTrigger from "../../../Triggers/WallOfWillTrigger";
+import FirstToStrikeTrigger from "../../../Triggers/FirstToStrikeTrigger";
+import PressingSteps from "../../../Status/PressingSteps";
 
 export default class Swordman extends Character{
     
@@ -59,6 +63,10 @@ export default class Swordman extends Character{
 
     succefullCast(){
         this.energy_by_hit_added = false
+    }
+
+    getPower(): number {
+        return this.power + this.might
     }
 
     getTargetsCount(){
@@ -197,7 +205,7 @@ export default class Swordman extends Character{
     }
 
     isBlock(crush: number = 0): boolean {
-        let b_chance = this.chance_to_block + this.perception * 3
+        let b_chance = this.chance_to_block + this.perception
 
         if(b_chance > 90){
             b_chance = 90
@@ -307,6 +315,39 @@ export default class Swordman extends Character{
         this.subLife(unit, options)
     }
 
+    getStatDescription(stat: string){
+        if(stat === 'might'){
+            return `Affects the number of targets that can be hit by your abilities.
+                        Affects the chance of not losing courage when receiving damage.
+                        Increases your power.`
+        }
+        if(stat === 'will'){
+            return `Increases your life regeneration rate.
+                       Increases the chance to skip the damage state.
+                       Reduces your cooldowns of your abilities.`
+        }
+        if(stat === 'agility'){
+            return `Increases your attack speed.
+                          Reduces speed penalty when defending.
+                          Increases pierce rating.`
+        }
+        if(stat === 'knowledge'){
+            return `Gives a chance to get additional energy.
+                            Increases status resistance.`
+        }
+        if(stat === 'durability'){
+            return `Gives a chance to gain extra life during regeneration.
+                             Increases your armour.`
+        }
+        if(stat === 'perception'){
+            return `Increases the block chance.
+                             Reduces penalty of speed when you attacking.
+                             Increases maximum of energy.`
+        }
+        
+        return ''
+    }
+
     getPenaltyByLifeStatus(){
         if(this.life_status === 2){
             return 10
@@ -332,7 +373,7 @@ export default class Swordman extends Character{
     }
 
     getPierce(){
-        return this.pierce + this.might
+        return this.pierce + this.agility
     }
 
     generateUpgrades(){
@@ -431,7 +472,12 @@ export default class Swordman extends Character{
     }
 
     getMoveSpeedPenaltyValue(){
-        return 70 - (this.perception * 3)
+        let pen = 70 - (this.perception * 2)
+        if(pen < 0){
+            pen = 0
+        } 
+
+        return pen  
     }
 
     getAttackSpeed() {
@@ -451,7 +497,10 @@ export default class Swordman extends Character{
             return
         }
         this.resource -= this.pay_to_cost
-        this.pay_to_cost = 0 
+        this.pay_to_cost = 0
+        if(this.resource < 0){
+            this.resource = 0
+        }
     }
 
     addResourse(count: number = 1, ignore_limit = false){

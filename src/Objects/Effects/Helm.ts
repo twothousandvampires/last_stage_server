@@ -21,7 +21,7 @@ export default class Helm extends Effect{
         this.level.players.forEach(elem => {
             let col = Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())
             if(col){
-                elem.ascend_level ++
+                elem.addAscent()
  
                 let r = Func.random(1,6)
                 if(r === 1){

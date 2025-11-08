@@ -18,16 +18,18 @@ export default class FirePresenceStatus extends Status{
 
     act(tick_time: number){
         if(tick_time > this.last_checked){
-            this.last_checked += 1500
+            this.last_checked += 2000
+
             if(!this.unit) return
+            let count = 3
             this.unit.level.enemies.forEach(elem => {
-                if(elem.ignited && Func.distance(this.unit, elem) <= 15){
+                if(count > 0 && elem.ignited && Func.distance(this.unit, elem) <= 15){
 
                     let e = new FireExplosion(elem.level)
                     e.setPoint(elem.x, elem.y)
 
                     elem.level.addEffect(e)
-
+                    count --
                     elem.level.enemies.forEach(elem2 => {
                         if(!elem2.is_dead && Func.distance(elem, elem2) <= 12){
                             elem2.takeDamage(this.unit, {

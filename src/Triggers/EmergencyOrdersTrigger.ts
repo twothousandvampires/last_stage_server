@@ -15,6 +15,7 @@ export default class EmergencyOrdersTrigger {
 
         let box = player.getBoxElipse()
         box.r = player.voice_radius
+        player.level.addSound('orders', player.x, player.y)
 
         player.level.players.forEach(elem => {
             if(Func.elipseCollision(box, elem.getBoxElipse())){

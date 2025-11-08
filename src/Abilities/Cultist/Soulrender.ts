@@ -9,11 +9,53 @@ export default class Soulrender extends CultistAbility{
     distance: number
     count: number = 0
     soul_fragments: boolean = false
+    prolifiration: number = 0
 
     constructor(owner: Cultist){
         super(owner)
         this.name = 'soulrender'
         this.distance = 25
+    }
+
+    tear(t){
+        this.owner.cast_speed += this.count * 150
+        this.count = 0
+
+        t.takeDamage(this.owner, {
+            instant_death: true,
+            explode: true
+        })
+
+        if(t.is_dead){
+            let count = 5
+
+            if(this.soul_fragments){
+                count += 2
+            }
+
+            let zones = 6.28 / count
+    
+            for(let i = 1; i <= count; i++){
+                let min_a = (i - 1) * zones
+                let max_a = i * zones
+    
+                let angle = Math.random() * (max_a - min_a) + min_a
+                let proj = new SoulShatterProj(this.owner.level)
+                proj.setStart(this.owner.level.time)
+                proj.setAngle(angle)
+                proj.setPoint(t.x, t.y)
+    
+                this.owner.level.projectiles.push(proj)
+            }
+        }
+
+        if(Func.chance(this.prolifiration)){
+            let possible = this.owner.level.enemies.filter(elem => !elem.is_dead && elem != t && Func.distance(t, elem) <= 8)[0]
+
+            if(possible){
+                this.tear(possible)
+            }
+        }
     }
 
     impact(){
@@ -52,38 +94,10 @@ export default class Soulrender extends CultistAbility{
                 this.owner.level.effects.push(e)
             }
             else{
-                this.owner.cast_speed += this.count * 150
-                this.count = 0
-
-                t.takeDamage(this.owner, {
-                    instant_death: true,
-                    explode: true
-                })
-
-                if(t.is_dead){
-                    let count = 5
-
-                    if(this.soul_fragments){
-                        count += 2
-                    }
-
-                    let zones = 6.28 / count
-            
-                    for(let i = 1; i <= count; i++){
-                        let min_a = (i - 1) * zones
-                        let max_a = i * zones
-            
-                        let angle = Math.random() * (max_a - min_a) + min_a
-                        let proj = new SoulShatterProj(this.owner.level)
-                        proj.setStart(this.owner.level.time)
-                        proj.setAngle(angle)
-                        proj.setPoint(t.x, t.y)
-            
-                        this.owner.level.projectiles.push(proj)
-                    }
-                }
+                this.tear(t)
             }
 
         }
+        this.afterUse()
     }
 }

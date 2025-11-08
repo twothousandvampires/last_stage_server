@@ -49,10 +49,6 @@ export default class Quake extends SwordmanAbility implements IUnitState{
         player.can_block = true
     }
 
-    use(){
-        this.owner.setState(this)
-    }
-
     update(player: Character){
         if(this.impact){
             let second = player.getSecondResource()
@@ -120,6 +116,7 @@ export default class Quake extends SwordmanAbility implements IUnitState{
             
             player.level.setStatus(player, status)
 
+            this.afterUse()
             player.getState() 
         }
         else{

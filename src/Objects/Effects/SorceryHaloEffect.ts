@@ -1,7 +1,7 @@
 import Level from "../../Level";
 import Effect from "./Effects";
 
-export default class SorceryHaloEffect extends Effect{
+export default class SorceryHaloEffect extends Effect {
     x: any
     y: any
   

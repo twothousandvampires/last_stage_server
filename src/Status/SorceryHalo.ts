@@ -17,8 +17,13 @@ export default class SorceryHalo extends Status{
     }
 
     clear(){
-        this.unit.level.deleted.push(this.effect.id)
-        this.unit.level.binded_effects = this.unit.level.binded_effects.filter(elem => elem != this.effect)
+        if(this.effect){
+            this.effect.delete()
+        } 
+    }
+
+    isExpired(tick_time: number){
+        return !this.unit || this.unit.is_dead
     }
 
     apply(unit: any){

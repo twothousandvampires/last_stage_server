@@ -16,6 +16,7 @@ export default class Fireball extends FlyerAbility {
     }
 
     impact(){
+        this.afterUse()
         this.owner.level.addSound('fire cast', this.owner.x, this.owner.y)
 
         let a = undefined                    

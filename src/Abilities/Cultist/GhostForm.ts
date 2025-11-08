@@ -26,10 +26,6 @@ export default class GhostForm extends CultistAbility implements IUnitState{
         this.type = Ability.TYPE_CUSTOM
     }
 
-    use(){
-        this.owner.setState(this)
-    }
-
     enter(player: Character){
         this.used = true
       
@@ -45,6 +41,7 @@ export default class GhostForm extends CultistAbility implements IUnitState{
 
     update(player: Character, time: number){
         if(player.action && !this.started){
+         
             this.start = player.level.time
             this.started = true
             this.owner.state = 'ghost'
@@ -57,6 +54,8 @@ export default class GhostForm extends CultistAbility implements IUnitState{
                 player.level.setStatus(this.owner, status)
             }
 
+            this.afterUse()
+            
             if(this.lead){
                 let r = this.owner.getBoxElipse()
                 r.r = 15

@@ -15,7 +15,7 @@ export default class GrimPile extends CultistAbility{
         this.increased_effect = false
         this.resistance = false
         this.distance = 25
-        this.cost = 2
+        this.cost = 3
         this.cd = 6000
     }
 
@@ -23,7 +23,7 @@ export default class GrimPile extends CultistAbility{
         let rel_distance = Math.sqrt(((this.owner.x - this.owner.c_x) ** 2) + ((this.owner.y - this.owner.c_y) ** 2))
 
         this.owner.level.sounds.push({
-                name:'dark cast',
+                name:'bone cast',
                 x: this.owner.x,
                 y: this.owner.y
         })
@@ -42,5 +42,7 @@ export default class GrimPile extends CultistAbility{
         pile.setPoint(hit_x, hit_y)
         
         this.owner.level.enemies.push(pile)
+
+        this.afterUse()
     }
 }

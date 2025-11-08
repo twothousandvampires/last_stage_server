@@ -60,5 +60,7 @@ export default class Slam extends CultistAbility {
         if(this.soul_extraction){
             this.owner.chance_to_create_grace -= 10
         }
+
+        this.afterUse()
     }
 }

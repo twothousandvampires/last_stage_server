@@ -13,7 +13,7 @@ export default class WeaponThrow extends SwordmanAbility {
 
     constructor(owner: Swordman){
         super(owner)
-        this.cd = 3000
+        this.cd = 2500
         this.light_grip = false
         this.returning = false
         this.shattering = false
@@ -38,8 +38,6 @@ export default class WeaponThrow extends SwordmanAbility {
             x: this.owner.x,
             y: this.owner.y
         })
-
-        this.used = true
 
         let proj = new ThrowedWeapon(this.owner.level)
         let second = this.owner.getSecondResource()
@@ -86,5 +84,7 @@ export default class WeaponThrow extends SwordmanAbility {
                 this.owner.level.projectiles.push(add_proj2)
             }
         }
+
+        this.afterUse()
     }
 }

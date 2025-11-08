@@ -176,7 +176,7 @@ export default class Flyer extends Character{
 
         if(passive){
             if(passive.name === 'disintegration'){
-                this.triggers_on_hit.push(new FragilityWhenHitTrigger(30))
+                this.triggers_on_hit.push(new FragilityWhenHitTrigger(10))
             }
             if(passive.name === 'accumulation'){
                 this.triggers_on_use_not_utility.push(new Accumulation())
@@ -208,7 +208,12 @@ export default class Flyer extends Character{
     }
 
     getMoveSpeedPenaltyValue(){
-        return 70 - (this.perception * 5);
+        let pen = 70 - (this.perception * 2)
+        if(pen < 0){
+            pen = 0
+        } 
+
+        return pen  
     }
 
     defendAct(){
@@ -368,6 +373,35 @@ export default class Flyer extends Character{
         this.check_recent_hits_timer = time + 1000
     }
 
+    getStatDescription(stat: string){
+        if(stat === 'might'){
+            return `Affects your abilities (increases AOE, number of projectiles, etc.).
+                        Reduces cooldowns of your abilities.`
+        }
+        if(stat === 'will'){
+            return `Gives a chance not to lose mana when block.
+                       Gives a chance to get additional energy.`
+        }
+        if(stat === 'agility'){
+            return `Increases your armour.
+                          - increases your move speed.`
+        }
+        if(stat === 'knowledge'){
+            return `Gives a chance not to spend mana when used.
+                            Affect to start maximum energy.
+                            Increases your power`
+        }
+        if(stat === 'durability'){
+            return `Gives a chance to avoid damage state.
+                             Increases life regeneration rate.`
+        }
+        if(stat === 'perception'){
+            return `Reduces penalty of speed when your cast.
+                             Gives a chance to get additional courage.`
+        }
+        
+        return ''
+    }
 
     regen(){
         if(this.level.time >= this.check_recent_hits_timer){
@@ -431,6 +465,10 @@ export default class Flyer extends Character{
         this.addCourage()
     }
 
+    getPower(): number {
+        return this.power + this.knowledge
+    }
+
     payCost(){
         if(this.pay_to_cost === 0) return
 
@@ -440,7 +478,7 @@ export default class Flyer extends Character{
             return
         }
         
-        let chance = this.knowledge * 2
+        let chance = this.knowledge
 
         if(chance > 70){
             chance = 70
@@ -451,7 +489,9 @@ export default class Flyer extends Character{
         }
         
         this.pay_to_cost = 0
-
+        if(this.resource < 0){
+            this.resource = 0
+        }
     }
 
     addCourage(){

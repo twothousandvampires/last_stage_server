@@ -86,8 +86,35 @@ import ExplosiveArmour from "../Items/Forgings/ExplosiveArmour"
 import ThunderStrikes from "../Items/Forgings/ThunderStrikes"
 import FirePresence from "../Items/Forgings/FirePresence"
 import StormPresence from "../Items/Forgings/StormPresence"
+import WindBarrier from "../Glyphs/WindBarrier"
+import VoidDevouring from "../Glyphs/VoidDevouring"
+import Recovery from "../Glyphs/Recovery"
+import Func from "../Func"
+import FallingStones from "../Glyphs/FallingStones"
+import WaveOfTransformation from "../Glyphs/WaveOfTransformation"
+import HolyStrike from "../Glyphs/HolyStrike"
+import TornadoLaunch from "../Glyphs/TornadoLaunch"
+import Power from "../Items/Forgings/Power"
+import InfernalGaze from "../Glyphs/InfernalGaze"
+import SwirlingIce from "../Glyphs/SwirlingIce"
+import LightningFury from "../Glyphs/LightningFury"
+import FlyingSwords from "../Glyphs/FlyingSwords"
 
 export default class Builder{
+
+    static masteryMap ={
+        'wind barrier': WindBarrier,
+        'devouring void': VoidDevouring,
+        'recovery': Recovery,
+        'falling stones': FallingStones,
+        'wave of trasformation': WaveOfTransformation,
+        'hole strike': HolyStrike,
+        // 'tornado launch': TornadoLaunch,
+        'infernal gaze': InfernalGaze,
+        'swirling ice': SwirlingIce,
+        'lightning fury': LightningFury,
+        'flying sword': FlyingSwords
+    }
 
     static itemMap = {
         'skull of first warrior': SkullOfFirstWarrior,
@@ -173,7 +200,8 @@ export default class Builder{
         'explosive armour': ExplosiveArmour,
         'thunder strikes': ThunderStrikes,
         'fire presence': FirePresence,
-        'storm presence': StormPresence 
+        'storm presence': StormPresence,
+        'power': Power
     }
 
     static createCharacter(client: Client, level: Level): Character{
@@ -216,7 +244,24 @@ export default class Builder{
         else{
             return new GlacialChain()
         }
-    }    
+    }   
+    
+    static createMastery(name: string){
+        let item_class = Builder.masteryMap[name.toLowerCase()]
+
+        if(item_class){
+            return new item_class()
+        }
+        else{
+            return new WindBarrier()
+        }
+    }
+
+    static createRandomMastery(){
+        let name = Func.getRandomFromArray(Array.from(Object.keys(Builder.masteryMap)))
+
+        return Builder.createMastery(name)
+    }
         
     static createForging(name: string, item: Item){
        let ItemClass = Builder.forgingMap[name.toLowerCase()]

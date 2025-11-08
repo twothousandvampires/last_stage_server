@@ -18,7 +18,26 @@ export default class UpgradeManager {
         })
     }
 
-    static  closeSuggest(player: Character){
+    static addMastery(player: Character, data: object){
+        let mastery = player.masteries.find(elem => elem.name === data.mastery)
+
+        if(!mastery) return
+
+        let abilities = [player.first_ability, player.second_ability, player.third_ability, player.utility]
+
+        let ability = abilities.find(elem => elem.name === data.ability)
+
+        if(!ability){
+            return
+        }
+        
+        mastery.apply(ability)
+        player.masteries = player.masteries.filter(elem => elem != mastery)
+
+        UpgradeManager.closeUpgrades(player)
+    }
+
+    static closeSuggest(player: Character){
         player.level.socket.to(player.id).emit('close_suggest')
     }
 
@@ -32,7 +51,7 @@ export default class UpgradeManager {
         UpgradeManager.closeSuggest(player)
     }
 
-    static  buyItem(id: number, player: Character){
+    static buyItem(id: number, player: Character){
         player.gold -= 100
 
         let item = player.items_to_buy[id]
@@ -120,6 +139,7 @@ export default class UpgradeManager {
             life: player.life_status,
             free: player.free_upgrade_count,
             stats: player.getStats(),
+            masteries: player.masteries
         })
     }
 
@@ -148,7 +168,7 @@ export default class UpgradeManager {
     static sacrifice(player: Character): void{
         player.spend_grace = true
         player.can_generate_upgrades = false
-         player.removeUpgrades()
+        player.removeUpgrades()
         let start = player.life_status
         player.takePureDamage(start - 1)
 

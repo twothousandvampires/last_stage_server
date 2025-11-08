@@ -23,7 +23,7 @@ export default class ItemDrop extends Effect{
        
         this.level.players.forEach(elem => {
             let col = Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())
-            if(elem.item.length < 6 && col){
+            if(elem.item.length < elem.max_items && col){
                 
                 for(let i = 0; i < 1; i++){
                     let item_name = Item.list[Math.floor(Math.random() * Item.list.length)].name
@@ -39,7 +39,7 @@ export default class ItemDrop extends Effect{
                     }
                 }
                 this.level.deleted.push(this.id)
-            this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
+                this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
                 
             }
             else if(elem.item.length >= 6 && col){

@@ -20,7 +20,7 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
 
     constructor(owner: Flyer){
         super(owner)
-        this.cd = 15000
+        this.cd = 3000
         this.name = 'teleportation'
     }
 
@@ -32,6 +32,7 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
         unit.is_attacking = true
 
         if(!unit.pressed.over_x  || !unit.pressed.over_y){
+            this.owner.using_ability = undefined
             unit.getState()
             return
         }
@@ -39,7 +40,8 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
         this.teleport_x = Math.round(unit.pressed.over_x + unit.x - 40)
         this.teleport_y = Math.round(unit.pressed.over_y + unit.y - 40)
 
-        if(unit.isOutOfMap(this.teleport_x, this.teleport_y)){
+        if(!this.teleport_x || !this.teleport_y || unit.isOutOfMap(this.teleport_x, this.teleport_y)){
+            this.owner.using_ability = undefined
             unit.getState()
             return
         }
@@ -53,22 +55,30 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
 
         unit.action_time = unit.getCastSpeed()
         unit.setImpactTime(85)
+
+          console.log('start of teleport')
     }
 
     exit(unit: Flyer){
         this.teleport_x = undefined
         this.teleport_y = undefined
-
+        console.log('exit state')
         this.state = Teleportation.TELEPOR_START_STATE
+        this.out_of_map_start = 0
+
         unit.can_be_damaged = true
+        
+        unit.can_be_controlled_by_player = true
     }
 
     update(unit: Flyer){
-        if(unit.action_is_end){
+        if(this.state != Teleportation.TELEPOR_OUT_STATE && unit.action_is_end){
             if(this.state === Teleportation.TELEPOR_START_STATE){
+                console.log('start out of map')
                 unit.x = 666
                 unit.y = 666
                 unit.can_be_damaged = false
+                unit.can_be_controlled_by_player = false
                 this.state = Teleportation.TELEPOR_OUT_STATE
                 this.out_of_map_start = unit.level.time
             }
@@ -79,8 +89,7 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
                 if(this.increased_gate){
                     box.r += 8
                 }
-                unit.can_be_damaged = true
-
+ 
                 unit.level.enemies.forEach((e) => {
                     if(!e.is_dead && Func.elipseCollision(box, e.getBoxElipse())){
                         e.takeDamage(unit, {
@@ -98,13 +107,16 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
 
                 this.state = 0
                 this.used = true
-
+                console.log('end of teleport')
+                this.afterUse()
                 unit.addCourage()
                 unit.getState()
             }
         }
         else if(this.state === Teleportation.TELEPOR_OUT_STATE){
             if(unit.level.time - this.out_of_map_start >= this.out_of_map_duration){
+                console.log('end out of map')
+                unit.can_be_controlled_by_player = true
                 unit.x = this.teleport_x
                 unit.y = this.teleport_y
                 unit.state = 'teleport end'

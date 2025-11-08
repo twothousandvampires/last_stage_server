@@ -26,7 +26,7 @@ export default class ExplodeEnemyWhenGetEnergy {
 
             if(!target) return
 
-            player.level.addSound('corpse explode', target.x, target.y)
+            player.level.addSound('from flesh', target.x, target.y)
 
             let e = new FireExplosion(player.level)
             e.setPoint(target.x, target.y)

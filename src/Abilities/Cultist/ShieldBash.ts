@@ -1,28 +1,38 @@
 import Func from "../../Func";
 import { Bone } from "../../Objects/Projectiles/Bone";
 import Cultist from "../../Objects/src/PlayerClasses/Cultist";
+import GoreAegis from "../../Status/GoreAegis";
 import Ability from "../Ability";
 import CultistAbility from "./CultistAbility";
 
 export default class ShieldBash extends CultistAbility {
 
-    deafening_wave: boolean
-    hate: boolean
-    coordination: boolean
+    deafening_wave: boolean = false
+    hate: boolean = false
+    coordination: boolean = false
+    gore_aegis: boolean = false
 
     constructor(owner: Cultist){
         super(owner)
         this.name = 'shield bash'
-        this.deafening_wave = false
-        this.hate = false
-        this.coordination = false
         this.cost = 4
         this.cd = 5000
         this.type = Ability.TYPE_ATTACK
-        this.state = 'shield hit'
+        this.state_sprite = 'shield hit'
     }
 
     afterUse(forced_cd: number | undefined = undefined) {
+
+        this.after_use_triggers.forEach(elem => {
+            elem.trigger(this.owner, this)
+        })
+        
+        if(this.need_to_pay){
+            this.owner.payCost()
+        }
+
+        this.owner.succefullCast()
+        
         if(this.cd === 0) return
         
         this.used = true
@@ -52,35 +62,44 @@ export default class ShieldBash extends CultistAbility {
         let filtered_to_damage = f.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
         let filtered_to_damage_players = p.filter(elem => Func.elipseCollision(attack_elipse, elem.getBoxElipse()))
 
-        filtered_to_damage.concat(filtered_to_damage_players).forEach(elem => {
-            if(this.hate && Func.chance(40)){
+        let kill_count = 0
 
+        filtered_to_damage.concat(filtered_to_damage_players).forEach(elem => {
+            let proc = this.hate && Func.chance(50)
             elem.takeDamage(this.owner, {
-                explode: true
+                explode: proc
             })
 
+            elem.takeDamage(this.owner)
+
             if(elem.is_dead){
-                let count = Func.random(1, 1 + second_resource)
+                kill_count ++
+                if(proc){
+                    let count = Func.random(1, 1 + second_resource)
                 
-                let zones = 6.28 / count
-        
-                for(let i = 1; i <= count; i++){
-                    let min_a = (i - 1) * zones
-                    let max_a = i * zones
-        
-                    let angle = Math.random() * (max_a - min_a) + min_a
-                    let proj = new Bone(this.owner.level)
-                    proj.setOwner(this.owner)
-                    proj.setAngle(angle)
-                    proj.setPoint(elem.x, elem.y)
-        
-                    this.owner.level.projectiles.push(proj)
+                    let zones = 6.28 / count
+            
+                    for(let i = 1; i <= count; i++){
+                        let min_a = (i - 1) * zones
+                        let max_a = i * zones
+            
+                        let angle = Math.random() * (max_a - min_a) + min_a
+                        let proj = new Bone(this.owner.level)
+                        proj.setOwner(this.owner)
+                        proj.setAngle(angle)
+                        proj.setPoint(elem.x, elem.y)
+            
+                        this.owner.level.projectiles.push(proj)
+                    }
                 }
             }
+
+            if(kill_count && this.gore_aegis){
+                let status = new GoreAegis(this.owner.level.time, kill_count)
+                status.setDuration(12000)
+
+                this.owner.level.setStatus(this.owner, status, true)
             }
-            else{
-                elem.takeDamage(this.owner)
-            }   
         })
 
         if(!this.hate){
@@ -98,11 +117,12 @@ export default class ShieldBash extends CultistAbility {
                 }
             })
         }
-
+     
         this.owner.level.sounds.push({
             name:'ground hit',
             x: this.owner.x,
             y: this.owner.y
         })
+        this.afterUse()
     }
 }

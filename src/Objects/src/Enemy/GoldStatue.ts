@@ -14,7 +14,7 @@ export default class GoldStatue extends Enemy {
         this.immune_to_freeze = true
         this.immune_to_stun = true
         this.immune_to_zap = true
-        this.life_status = 20
+        this.life_status = 15
         this.has_boby = false
     }
 }

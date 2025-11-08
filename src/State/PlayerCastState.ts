@@ -1,6 +1,5 @@
 import IUnitState from "../Interfaces/IUnitState";
 import Character from "../Objects/src/Character";
-import PlayerIdleState from "./PlayerIdleState";
 
 export default class PlayerCastState implements IUnitState<Character>{
 

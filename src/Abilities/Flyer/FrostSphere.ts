@@ -18,6 +18,7 @@ export default class FrostSphere extends FlyerAbility{
     }
 
     impact(){
+        this.afterUse()
         this.owner.level.addSound('cold cast', this.owner.x, this.owner.y)
         let a = undefined
         

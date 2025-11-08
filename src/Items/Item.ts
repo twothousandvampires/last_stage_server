@@ -51,7 +51,7 @@ export default abstract class Item {
         },
         {
             name: "wall of bones",
-            description: 'if you kill an enemy, you receive a bone charge that increases your armor. if you reach the maximum charge (default 10), there is a chance that the charges will explode and injure enemies'
+            description: 'if you get hit, you have a chance to receive a bone charge that increases your armor and fortification. If you reach the maximum charge (default 10), there is a chance that the charges will explode and injure enemies'
         },
         {
             name: "flame ring",
@@ -171,7 +171,8 @@ export default abstract class Item {
         'charisma',
         'impact',
         'penetrating',
-        'spirit'
+        'spirit',
+        'power'
     ]
 
     static forging_list_type_1 = [
@@ -184,7 +185,8 @@ export default abstract class Item {
         'frost shpere when kill',
         'stun when hit',
         'thunder strikes',
-        'storm presence'
+        'storm presence',
+        'dominance when critical'
     ]
 
     static forging_list_type_2 = [

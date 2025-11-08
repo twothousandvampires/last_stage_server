@@ -113,6 +113,12 @@ export default class Level{
         }  
     }
 
+    enemyMap(func: Function){
+        this.enemies.forEach(elem => {
+            func(elem)
+        })
+    }
+
     public playerDead(): void{
         this.players.forEach(p => p.playerDead())
 

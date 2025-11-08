@@ -40,7 +40,7 @@ export default class UltimatumText extends Effect implements IUltimatumChallenge
             return
         }
 
-        let portal: Grace = new Grace(this.level, 10000)
+        let portal: Grace = new Grace(this.level, 20000)
 
         portal.setPoint(this.x, this.y)
 

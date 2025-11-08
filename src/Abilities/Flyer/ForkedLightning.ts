@@ -17,6 +17,7 @@ export default class ForkedLightning extends FlyerAbility{
     }
 
     impact(){
+        this.afterUse()
         this.used = true
         this.owner.level.addSound('lightning cast', this.owner.x, this.owner.y)
 

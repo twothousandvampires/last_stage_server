@@ -9,6 +9,5 @@ export default class BoneArmour extends Effect {
     constructor(level: Level){
         super(level)
         this.name = 'bone armour'
-        this.x = undefined
     }
 }

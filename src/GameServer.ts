@@ -45,6 +45,16 @@ class GameServer{
         this.socket = socket
         this.redisClient = createClient()
         this.name = ''
+
+        process.on('uncaughtException', (error) => {
+            console.error(`[GameServer ${port}] Uncaught Exception:`, error);
+            // Не выходим сразу, даём время залогировать
+            setTimeout(() => process.exit(1), 1000);
+        });
+
+        process.on('unhandledRejection', (reason, promise) => {
+            console.error(`[GameServer ${port}] Unhandled Rejection:`, reason);
+        });
     }
 
     private async updateRedisLobby(): Promise<void> {
@@ -57,11 +67,11 @@ class GameServer{
         }
 
         if (process.send) {
-                process.send({
-                    type: 'update_lobby', 
-                    data: lobbyInfo
-                });
-            }
+            process.send({
+                type: 'update_lobby', 
+                data: lobbyInfo
+            });
+        }
     }
 
     private async initializeRedis(): Promise<void> {
@@ -116,8 +126,8 @@ class GameServer{
     }
 
     private createName(){
-        let first = ['brutal', 'grimy', 'cold', 'rotten', 'black', 'demented', 'gone', 'bloody', 'lifeless', 'stinking', 'frightening','gigantic', 'smashed', 'bleak', 'sinister', 'ominous']
-        let second = ['mace', 'head', 'mind', 'ceil', 'remains', 'ghoul', 'tree', 'corpse', 'gem', 'shards', 'bloat', 'phantom', 'melancholy', 'woe', 'maggot' ,'phlegm']
+        let first = ['miserable', 'brutal', 'grimy', 'cold', 'rotten', 'black', 'demented', 'gone', 'bloody', 'lifeless', 'stinking', 'frightening','gigantic', 'smashed', 'bleak', 'sinister', 'ominous']
+        let second = ['thing', 'tears', 'mace', 'head', 'mind', 'ceil', 'remains', 'ghoul', 'tree', 'corpse', 'gem', 'shards', 'bloat', 'phantom', 'melancholy', 'woe', 'maggot' ,'phlegm']
 
         this.name = first[Math.floor(Math.random() * first.length)] + ' ' + second[Math.floor(Math.random() * second.length)]
     }
@@ -310,6 +320,12 @@ class GameServer{
                     if(!client.character) return
 
                     client.character.setLastInputs(inputs)
+                })
+
+                socket.on('add_mastery', (data: object) => {   
+                    if(!client.character) return
+
+                    UpgradeManager.addMastery(client.character, data)
                 })
 
                 socket.on('buy', () => {   
