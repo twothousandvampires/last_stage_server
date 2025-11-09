@@ -32,8 +32,6 @@ class GameServer{
     private start_scenario_name: string | undefined = undefined
 
     db: any
-    public db_is_connected: boolean = false
-
     new_game_timeout: any
     httpServer: any
     port: any
@@ -46,9 +44,25 @@ class GameServer{
         this.redisClient = createClient()
         this.name = ''
 
+        this.db = mysql.createPool({
+            host: 'localhost',
+            user: 'myuser',
+            password: 'secure_password123',
+            database: 'last_stage',
+            connectionLimit: 10,
+            acquireTimeout: 60000,
+            timeout: 60000,
+            enableKeepAlive: true,
+            keepAliveInitialDelay: 0
+        });
+
+        // Обработчик ошибок пула
+        this.db.on('error', (err) => {
+            console.error(`[GameServer ${port}] Database pool error:`, err.message);
+        });
+
         process.on('uncaughtException', (error) => {
             console.error(`[GameServer ${port}] Uncaught Exception:`, error);
-            // Не выходим сразу, даём время залогировать
             setTimeout(() => process.exit(1), 1000);
         });
 
@@ -167,45 +181,55 @@ class GameServer{
     }
 
     async addRecord(name: string, id: string){
-       
-        let info = await this.redisClient.get(id)
-        info = JSON.parse(info)
-
-        if(info && name){
-            this.db.query( 'INSERT INTO game_stats (name, kills, waves, time, class) VALUES (?, ?, ?, ?, ?)',
-            [name, info.kill_count, info.waves, info.time, info.class],
-            (err, results) => {
+       try {
+            let info = await this.redisClient.get(id)
+            if (!info) {
                 this.removeLevel()
-            })
-        }
-        else{
-            this.removeLevel()
+                return
+            }
+            
+            info = JSON.parse(info)
+
+            if(info && name){
+                // ИСПОЛЬЗУЕМ ПРОМИСЫ И ОБРАБОТКУ ОШИБОК
+                const [results] = await this.db.promise().execute(
+                    'INSERT INTO game_stats (name, kills, waves, time, class) VALUES (?, ?, ?, ?, ?)',
+                    [name, info.kill_count, info.waves, info.time, info.class]
+                );
+                this.removeLevel()
+            }
+            else{
+                this.removeLevel()
+            }
+        } catch (err) {
+            console.error(`[GameServer ${this.port}] addRecord error:`, err.message);
+            this.removeLevel() // Всегда вызываем removeLevel даже при ошибке
         }
     }
 
-    public endOfLevel(): void{
-        if(this.db_is_connected && this.level?.players.length === 1){
-            this.db.query('SELECT * FROM game_stats WHERE class = ? ORDER BY kills DESC LIMIT 3', 
-            [this.level?.players[0].name], 
-            (err, results) => {
-                if (err) {
-                    return
-                }
+    public async endOfLevel(): void{
+        if(this.level?.players.length === 1){
+            try {
+                const [results] = await this.db.promise().execute(
+                    'SELECT * FROM game_stats WHERE class = ? ORDER BY kills DESC LIMIT 3', 
+                    [this.level?.players[0].name]
+                );
+                
                 let more = true
-
                 if(results.length > 2 && results.every(elem => elem.kills >= this.level?.kill_count)){
                     more = false
                 }
                 
                 if(more){
-                    this.suggetRecord(this.level?.players[0])
-                }
-                else{
+                    await this.suggetRecord(this.level?.players[0])
+                } else {
                     this.removeLevel()
                 }
-            })
-        }
-        else{
+            } catch (err) {
+                console.error(`[GameServer ${this.port}] endOfLevel query error:`, err.message);
+                this.removeLevel() // При ошибке БД просто завершаем уровень
+            }
+        } else {
             this.removeLevel()
         }
     }
@@ -214,20 +238,6 @@ class GameServer{
         this.createName()
         this.initializeRedis()
         
-        this.db = mysql.createConnection({
-            host: 'localhost',
-            user: 'myuser',
-            password: 'secure_password123',
-            database: 'last_stage'
-        })
-
-        this.db.connect((err) => {
-            if (err) {
-                return
-            }
-            this.db_is_connected = true
-        })
-
         this.socket.on('connection', (socket: Socket) => {
             socket.emit('connect_to_lobby')
  
@@ -246,7 +256,6 @@ class GameServer{
                 })
 
                 socket.on('add_record' ,(name) => {
-                  
                     this.addRecord(name, socket.id)
                 })
 
