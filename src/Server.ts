@@ -4,6 +4,20 @@ const mysql = require('mysql2')
 import * as fs from 'fs';
 import * as path from 'path';
 
+process.on('uncaughtException', (error) => {
+  const timestamp = new Date().toISOString();
+  const logMessage = `[${timestamp}] Uncaught Exception: ${error.message}\n`;
+  fs.appendFileSync(logPath, logMessage);
+  console.error('Uncaught Exception:', error);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  const timestamp = new Date().toISOString();
+  const logMessage = `[${timestamp}] Unhandled Rejection at: ${promise}, reason: ${reason}\n`;
+  fs.appendFileSync(logPath, logMessage);
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
 const logPath = path.join(__dirname, 'log.text');
 
 export default class MasterServer {
@@ -22,6 +36,23 @@ export default class MasterServer {
     this.logStream = fs.createWriteStream(logPath, { flags: 'a' });
     this.log('Master server started');
     this.redisClient = createClient()
+
+    this.db = mysql.createPool({
+      host: 'localhost',
+      user: 'myuser',
+      password: 'secure_password123',
+      database: 'last_stage',
+      connectionLimit: 10,
+      acquireTimeout: 60000,
+      timeout: 60000,
+      enableKeepAlive: true,
+      keepAliveInitialDelay: 0
+    });
+
+    // Обработчик ошибок пула
+    this.db.on('error', (err) => {
+      this.log(`Database pool error: ${err.message}`);
+    });
   }
 
   private log(message: string): void {
@@ -38,14 +69,6 @@ export default class MasterServer {
     this.setupSocketHandlers()
     this.setupMasterCleanup()
     this.setupRedisSubscriptions()
-    this.db = mysql.createConnection({
-        host: 'localhost',
-        user: 'myuser',
-        password: 'secure_password123',
-        database: 'last_stage'
-    })
-
-    this.db.connect()
   }
 
   private async setupRedisSubscriptions(): Promise<void> {
@@ -144,19 +167,19 @@ export default class MasterServer {
         socket.emit('lobbies_list', Array.from(this.lobbies.values()));
       })
 
-      socket.on('get_records', () => {
-        this.db.query(`SELECT * FROM (SELECT * FROM game_stats WHERE class = 'swordman' ORDER BY kills DESC LIMIT 3) AS swordman_top UNION ALL SELECT * FROM (SELECT * FROM game_stats WHERE class = 'flyer' ORDER BY kills DESC LIMIT 3) AS flyer_top UNION ALL SELECT * FROM (SELECT * FROM game_stats WHERE class = 'cultist' ORDER BY kills DESC LIMIT 3) AS cultist_top;`,
-        (err, results) => {
-                if(err){
-                    console.log(err)
-                }
-                else{
-                    socket.emit('records', JSON.stringify(results))
-                }
-            }
-        )
+      socket.on('get_records', async () => {
+        try {
+          // ИСПОЛЬЗОВАТЬ promise() для работы с async/await
+          const [results] = await this.db.promise().query(
+            `SELECT * FROM (SELECT * FROM game_stats WHERE class = 'swordman' ORDER BY kills DESC LIMIT 3) AS swordman_top UNION ALL SELECT * FROM (SELECT * FROM game_stats WHERE class = 'flyer' ORDER BY kills DESC LIMIT 3) AS flyer_top UNION ALL SELECT * FROM (SELECT * FROM game_stats WHERE class = 'cultist' ORDER BY kills DESC LIMIT 3) AS cultist_top;`
+          );
 
-        socket.emit('records',[])
+          socket.emit('records', JSON.stringify(results));
+        } catch (err) {
+          this.log(`Database query error: ${err.message}`);
+          // Отправляем пустой массив вместо падения
+          socket.emit('records', []);
+        }
       })
     })
   }
