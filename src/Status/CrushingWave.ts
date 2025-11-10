@@ -27,8 +27,6 @@ export default class CrushingWave extends Status{
                     e.setPoint(elem.x, elem.y)
 
                     elem.level.addEffect(e)
-
-                    console.log('crushing wave deal damage')
                     elem.takePureDamage(this.unit, {})
                 }
             })

@@ -41,9 +41,6 @@ export default class Fear extends Status {
             else{
                 this.unit.angle_for_forced_movement = Math.random() * 6.28
             }
-
-
-            console.log(this.unit.angle_for_forced_movement)
         }
     }
 

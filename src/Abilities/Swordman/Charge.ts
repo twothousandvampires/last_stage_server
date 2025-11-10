@@ -36,9 +36,7 @@ export default class Charge extends SwordmanAbility implements IUnitState<Charac
     update(player: Character){
         
         if(this.start_time != 0){
-            console.log(player.level.time - this.start_time)
             if(player.level.time - this.start_time >= this.distance){
-                console.log('her')
                 player.getState()
                 return
             }

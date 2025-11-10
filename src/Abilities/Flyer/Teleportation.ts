@@ -55,14 +55,12 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
 
         unit.action_time = unit.getCastSpeed()
         unit.setImpactTime(85)
-
-          console.log('start of teleport')
     }
 
     exit(unit: Flyer){
         this.teleport_x = undefined
         this.teleport_y = undefined
-        console.log('exit state')
+       
         this.state = Teleportation.TELEPOR_START_STATE
         this.out_of_map_start = 0
 
@@ -74,7 +72,7 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
     update(unit: Flyer){
         if(this.state != Teleportation.TELEPOR_OUT_STATE && unit.action_is_end){
             if(this.state === Teleportation.TELEPOR_START_STATE){
-                console.log('start out of map')
+            
                 unit.x = 666
                 unit.y = 666
                 unit.can_be_damaged = false
@@ -107,7 +105,7 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
 
                 this.state = 0
                 this.used = true
-                console.log('end of teleport')
+            
                 this.afterUse()
                 unit.addCourage()
                 unit.getState()
@@ -115,7 +113,6 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
         }
         else if(this.state === Teleportation.TELEPOR_OUT_STATE){
             if(unit.level.time - this.out_of_map_start >= this.out_of_map_duration){
-                console.log('end out of map')
                 unit.can_be_controlled_by_player = true
                 unit.x = this.teleport_x
                 unit.y = this.teleport_y

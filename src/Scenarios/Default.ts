@@ -59,7 +59,7 @@ export default class Default extends Scenario{
     add_e_fortify: number = 0
     add_e_elem_resist: number = 0
     minus_create_chance = 0
-    wave_boss_trashold: number = 85
+    wave_boss_trashold: number = 150
 
     monster_upgrades: any
     private need_to_check_grace: boolean = true
@@ -79,9 +79,9 @@ export default class Default extends Scenario{
                 pierce: 0,
             },
             major:{
-                attack_speed: 0,
+                attack_speed: 0,         
+                move_speed: 0,
                 life: 0,
-                move_speed: 0
             }
         }
     }
@@ -167,12 +167,12 @@ export default class Default extends Scenario{
         this.waves_created ++
       
         if(this.times === Default.TIMES_NORMAL && this.time_between_wave_ms < this.max_time_wave){
-            this.time_between_wave_ms += 30
+            this.time_between_wave_ms += 50
         }
 
-        let add_count = Math.floor(this.waves_created / 20)
+        let add_count = Math.floor(this.waves_created / 15)
 
-        let count = Func.random(1 + Math.floor(add_count / 2), 2 + add_count)
+        let count = Func.random(1 + Math.floor(add_count / 4), 2 + Math.floor(add_count / 2))
         
         count += (level.players.length - 1) * 2
 
@@ -350,16 +350,16 @@ export default class Default extends Scenario{
         let add = 0
 
         if(this.waves_created < 45){
-            add = 15
+            add = Func.random(10, 15)
         }
         else if(this.waves_created < 100){
-            add = 25
+            add = Func.random(15, 25)
         }
         else if(this.waves_created < 200){
-            add = 35
+            add = Func.random(25, 35)
         }
         else{
-            add = 50
+            add = Func.random(35, 45)
         }
 
         this.grace_trashold += add

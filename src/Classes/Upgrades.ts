@@ -564,10 +564,10 @@ export default class Upgrades{
                         return true
                     },
                     teach: (character: Character) => {
-                        character.pierce += 3
+                        character.pierce += 2
                     },
-                    cost: 2,
-                    desc: 'increases a pierce rating by 3'
+                    cost: 1,
+                    desc: 'increases a pierce rating'
                 },
                 {
                     name: 'critical hit',
@@ -577,7 +577,7 @@ export default class Upgrades{
                     teach: (character: Character) => {
                         character.critical += 2
                     },
-                    cost: 2,
+                    cost: 1,
                     desc: 'give a chance to deal double damage'
                 },
                 {
@@ -588,13 +588,13 @@ export default class Upgrades{
                     teach: (character: Character) => {
                         character.armour_rate += 3
                     },
-                    cost: 3,
+                    cost: 2,
                     desc: 'adds armour rate'
                 },
                 {
                     name: 'gamble',
                     canUse: (character: Character) => {
-                        return character.grace > 1
+                        return character.grace >= 1 && Func.chance(20)
                     },
                     teach: (character: Character) => {
                         if(Func.chance(50, character.is_lucky)){
@@ -613,9 +613,9 @@ export default class Upgrades{
                         return character.status_resistance < 80
                     },
                     teach: (character: Character) => {
-                        character.status_resistance += 3
+                        character.status_resistance += 2
                     },
-                    cost: 2,
+                    cost: 1,
                     desc: 'increases chance to resist status'
                 },
                 {
@@ -690,7 +690,7 @@ export default class Upgrades{
                     teach: (character: Character) => {
                         character.cooldown_redaction += 2
                     },
-                    cost: 4,
+                    cost: 3,
                     desc: 'reduces cooldowns'
                 },
                 {
@@ -809,7 +809,7 @@ export default class Upgrades{
                             character.spirit ++
                         }
                     },
-                    cost: 2,
+                    cost: 1,
                     desc: 'increases chance lose energy instead life when get damage'
                 },
                 {
@@ -1469,6 +1469,36 @@ export default class Upgrades{
                         cost: 1,
                         ascend: 5,
                         desc: 'increases radius of explosion'
+                    },
+                    {
+                        name: 'ice',
+                        type: 'frost sphere',
+                        canUse: (character: Character) => {
+                            return character instanceof Flyer && (character.first_ability instanceof FrostSphere) && !character.first_ability.ice
+                        },
+                        teach: (character: Character) => {
+                            if(character instanceof Flyer && character.first_ability instanceof FrostSphere){
+                                character.first_ability.ice = true
+                            }
+                        },
+                        cost: 3,
+                        ascend: 15,
+                        desc: 'deals damage not only to frozen enemies'
+                    },
+                    {
+                        name: 'shattering',
+                        type: 'frost sphere',
+                        canUse: (character: Character) => {
+                            return character instanceof Flyer && (character.first_ability instanceof FrostSphere) && !character.first_ability.shattering
+                        },
+                        teach: (character: Character) => {
+                            if(character instanceof Flyer && character.first_ability instanceof FrostSphere){
+                                character.first_ability.shattering = true
+                            }
+                        },
+                        cost: 2,
+                        ascend: 10,
+                        desc: 'deals doubled damage to frozen enemies'
                     },
                     {
                         name: 'reign of frost',
@@ -2153,14 +2183,14 @@ export default class Upgrades{
             {
                 name: 'attack speed',
                 canUse: (character: Character) => {
-                    return character.attack_speed > 1000
+                    return character.attack_speed > 600
                 },
                 teach: (character: Character) => {
                     if(character instanceof Swordman){
                         character.attack_speed -= 40
                     }
                 },
-                cost: 4,
+                cost: 3,
                 desc: 'increases attack speed'
             },
             {

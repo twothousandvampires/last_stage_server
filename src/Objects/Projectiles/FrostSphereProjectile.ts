@@ -21,6 +21,8 @@ export class FrostSphereProjectile extends Projectiles{
     reign_of_frost: boolean
     icicles_count: number = 0
     last_icicles_time: number = 0
+    ice: boolean = false
+    shattering: boolean = false
 
     constructor(level: Level){
         super(level)
@@ -138,13 +140,9 @@ export class FrostSphereProjectile extends Projectiles{
         this.level.players.forEach(p => {
             if(Func.elipseCollision(explosion, p.getBoxElipse())){
                 if(p !== this.owner){
-                    if(p.freezed){
-                        p.takeDamage(this.owner, {
-                            damage_value: 2
-                        })
-                    }
-                    else{
-                        p.setFreeze(freeze_duration)
+                    p.setFreeze(freeze_duration)
+                    if(p.freezed || this.ice){
+                        p.takeDamage(this.owner)
                     }
                 }    
             }
@@ -152,13 +150,18 @@ export class FrostSphereProjectile extends Projectiles{
         this.level.enemies.forEach(p => {
             if(Func.elipseCollision(explosion, p.getBoxElipse())){
                 if(p.freezed){
+                    p.setFreeze(freeze_duration)              
                     p.takeDamage(this.owner, {
-                        damage_value: 2
-                    })
+                        damage_value: this.shattering ? 2 : undefined
+                    })               
+                }
+                else if(this.ice){
+                    p.setFreeze(freeze_duration)                           
+                    p.takeDamage(this.owner)
                 }
                 else{
-                    p.setFreeze(freeze_duration)
-                }
+                    p.setFreeze(freeze_duration)  
+                }         
             }
         })
 
