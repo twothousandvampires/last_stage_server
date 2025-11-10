@@ -59,7 +59,6 @@ export default class MasterServer {
     const timestamp = new Date().toISOString();
     const logMessage = `[${timestamp}] ${message}\n`;
     
-    console.log(logMessage);
     this.logStream.write(logMessage);
   }
 
@@ -84,7 +83,6 @@ export default class MasterServer {
   private async setupRedis(): Promise<void> {
     this.redisClient.on('error', (err) => console.log('Redis Client Error'))
     await this.redisClient.connect()
-    console.log('Connected to Redis')
   }
 
   private setupMasterCleanup(): void {
@@ -106,9 +104,8 @@ export default class MasterServer {
     
     if (keys.length > 0) {
         await this.redisClient.del(keys)
-        console.log(`Removed ${keys.length} lobbies from Redis`)
     } else {
-        console.log('No lobbies to clean up')
+        
     }
   }
 
@@ -133,7 +130,7 @@ export default class MasterServer {
       gameProcess.on('message', (message) => {
           if (message.type === 'register_lobby') {
               this.lobbies.set(port, message.data);
-              console.log(`✅ Lobby registered: ${port}`);
+              console.log(`Lobby registered: ${port}`);
           }
           else if (message.type === 'update_lobby') {
               if (this.lobbies.has(port)) {

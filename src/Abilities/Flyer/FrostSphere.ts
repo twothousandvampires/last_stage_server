@@ -5,16 +5,16 @@ import FlyerAbility from "./FlyerAbility";
 
 export default class FrostSphere extends FlyerAbility{
 
-    frost_rich: boolean
-    reign_of_frost: boolean
+    frost_rich: boolean = false
+    reign_of_frost: boolean = false
     icicles: boolean = false
+    ice: boolean = false
+    shattering: boolean = false
 
     constructor(owner: Flyer){
         super(owner)
         this.cost = 1
         this.name = 'frost sphere'
-        this.frost_rich = false
-        this.reign_of_frost = false
     }
 
     impact(){
@@ -32,6 +32,8 @@ export default class FrostSphere extends FlyerAbility{
         let proj = new FrostSphereProjectile(this.owner.level)
         proj.frost_rich = this.frost_rich
         proj.reign_of_frost = this.reign_of_frost
+        proj.ice = this.ice
+        proj.shattering = this.shattering
         if(this.icicles){
             proj.icicles_count = this.owner.getSecondResource()
         }

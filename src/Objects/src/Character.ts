@@ -602,12 +602,10 @@ export default abstract class Character extends Unit {
         }
 
         if(unit && Func.chance(unit.critical)){
-            console.log('player was critical')
             value *= 2
         }
 
         if(this.fragility){
-            console.log('player was fragle')
             value *= 2
         }
 
@@ -795,7 +793,6 @@ export default abstract class Character extends Unit {
     }
 
     private directMove(): void{
-        console.log(this.angle_for_forced_movement)
         if(this.canMove()){
             this.incA()
             this.is_moving = true

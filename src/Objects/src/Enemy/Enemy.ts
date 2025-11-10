@@ -274,7 +274,6 @@ export default abstract class Enemy extends Unit {
         }
         
         if(this.crushing > 0){
-            console.log(this.name + ' ' + this.crushing)
             damage_value += this.crushing
         }
 

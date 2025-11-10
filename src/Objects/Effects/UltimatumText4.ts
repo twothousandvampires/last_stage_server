@@ -49,7 +49,6 @@ export default class UltimatumText4 extends Effect{
         }
 
         this.monster = statue
-        console.log(this.monster.x, this.monster.y)
         this.level.enemies.push(this.monster)
     }
 
