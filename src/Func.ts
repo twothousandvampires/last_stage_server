@@ -129,7 +129,7 @@ export default class Func{
             return chance <= s
         }
         else{
-            return chance < Func.random()
+            return chance <= Func.random()
         }
     }
 }

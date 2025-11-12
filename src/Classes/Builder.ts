@@ -99,6 +99,7 @@ import InfernalGaze from "../Glyphs/InfernalGaze"
 import SwirlingIce from "../Glyphs/SwirlingIce"
 import LightningFury from "../Glyphs/LightningFury"
 import FlyingSwords from "../Glyphs/FlyingSwords"
+import Vampiric from "../Items/Forgings/Vampiric"
 
 export default class Builder{
 
@@ -201,7 +202,8 @@ export default class Builder{
         'thunder strikes': ThunderStrikes,
         'fire presence': FirePresence,
         'storm presence': StormPresence,
-        'power': Power
+        'power': Power,
+        'vampiric': Vampiric
     }
 
     static createCharacter(client: Client, level: Level): Character{

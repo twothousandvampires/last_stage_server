@@ -14,7 +14,7 @@ export default class FrostShpereWhenKillTrigger {
     }
 
     trigger(player: Character, target: Unit){
-
+        if(!target) return
         if(Func.notChance(this.chance, player.is_lucky)) return
           
         if(player.level.time - this.last_trigger_time >= this.cd){
@@ -34,7 +34,7 @@ export default class FrostShpereWhenKillTrigger {
                 let proj = new FrostSphereProjectile(player.level)
                 proj.setOwner(player)
                 proj.setAngle(angle)
-                proj.setPoint(player.x, player.y)
+                proj.setPoint(target.x, target.y)
     
                 player.level.projectiles.push(proj)
             }

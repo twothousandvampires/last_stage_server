@@ -6,6 +6,8 @@ import CultistAbility from "./CultistAbility";
 
 export default class SoulShatter extends CultistAbility{
 
+    mark: boolean = false
+
     constructor(owner: Cultist){
         super(owner)
         this.name = 'soul shatter'
@@ -44,12 +46,13 @@ export default class SoulShatter extends CultistAbility{
         }
           
         if(targer){
-            if(Func.chance(50 + this.owner.getSecondResource() * 5)){
+            if(Func.chance(75) || this.mark){
+
                 targer.takeDamage(this.owner, {
                     explode: true
                 })
 
-                if(targer.is_dead){
+                if(targer.is_dead || this.mark){
                     let count = 3 + this.owner.getSecondResource()
                     let zones = 6.28 / count
             

@@ -380,7 +380,7 @@ class GameServer{
                 socket.on('donate', () => {   
                     if(!client.character) return
 
-                    client.character.gold -= 20
+                    client.character.gold -= 60
                     client.character.grace ++
                    
                     UpgradeManager.closeForgings(client.character)

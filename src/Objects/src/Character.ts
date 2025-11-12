@@ -20,6 +20,7 @@ import PlayerDefendState from "../../State/PlayerDefendState"
 import PlayerDyingState from "../../State/PlayerDyingState"
 import PlayerIdleState from "../../State/PlayerIdleState"
 import Status from "../../Status/Status"
+import LifeAfterKIllTrigger from "../../Triggers/LifeAfterKIllTrigger"
 import Sound from "../../Types/Sound"
 import Upgrade from "../../Types/Upgrade"
 import Effect from "../Effects/Effects"
@@ -90,7 +91,7 @@ export default abstract class Character extends Unit {
     spirit_strikes: boolean = false
     free_upgrade_count: number = 0
      
-    triggers_on_kill: any[] = []
+    triggers_on_kill: any[] = [new LifeAfterKIllTrigger()]
     triggers_on_hit: any[] = []
     triggers_on_use_not_utility: any[] = []
     triggers_on_near_dead: any[] = []
@@ -135,6 +136,7 @@ export default abstract class Character extends Unit {
     ascend_level: number = 0
     courage_expire_timer: number = 8000
     last_ascent_mastery_getting: number = 0
+    vampiric_rate: number = 0
 
     current_state: IUnitState<Character> | undefined
 
@@ -381,7 +383,7 @@ export default abstract class Character extends Unit {
             critical: 'Increases your chance to deal double damage.',
             crushing: 'Increases your chance to crush an enemy, every time when enemy being crushed they take additional damage next time.',
             power: 'Gives a chance to increase damage by 1 after all calculations',
-            fortification: 'Gives a chance to reduce damage by 1 before critical calculation    '
+            fortification: 'Gives a chance to reduce damage by 1 before multiplying of receiving damage'
         }
         return {
             stats: {

@@ -81,9 +81,9 @@ export default class Upgrades{
                     },
                     cost: 3,
                     ascend: 14,
-                    desc: 'when you get enlightenment you deal damage in big radius'
-                    },
-                    {
+                    desc: 'When you gain enlightenment, you deal damage in a large radius'
+                },
+                {
                     name: 'way of enlightenment',
                     canUse: (character: Character) => {
                         return character.enlightenment_threshold >= 6
@@ -93,10 +93,10 @@ export default class Upgrades{
                     },
                     cost: 3,
                     ascend: 14,
-                    desc: 'reduces amount of courage to get enlightenment'
+                    desc: 'Reduces the amount of courage required to achieve enlightenment'
                 },
                 {
-                    name: 'creator of matter',
+                    name: 'creator',
                     canUse: (character: Character) => {
                         return !character.level.status_pull.find(elem => elem.unit === character && elem instanceof Creator)
                     },
@@ -105,7 +105,7 @@ export default class Upgrades{
                     },
                     cost: 4,
                     ascend: 26,
-                    desc: 'you can create a sphere around you'
+                    desc: 'You can create a sphere around yourself'
                 },
                 {
                     name: 'pressing steps',
@@ -117,7 +117,7 @@ export default class Upgrades{
                     },
                     cost: 4,
                     ascend: 40,
-                    desc: 'if you moving 3 second you start deal damage to nearby enemies'
+                    desc: 'If you move for 3 seconds, you begin to deal damage to nearby enemies'
                 },
                 {
                     name: 'from defense to attack',
@@ -129,7 +129,7 @@ export default class Upgrades{
                     },
                     cost: 2,
                     ascend: 12,
-                    desc: 'when block you have a chance to increase your power'
+                    desc: 'When you block, you have a chance to increase your power'
                 },
                 {
                     name: 'wall of will',
@@ -141,7 +141,7 @@ export default class Upgrades{
                     },
                     cost: 4,
                     ascend: 20,
-                    desc: 'when block you have a chance to increase your block chance'
+                    desc: 'When you block, you have a chance to increase your block chance'
                 },
                 {
                     name: 'power',
@@ -153,7 +153,21 @@ export default class Upgrades{
                     },
                     cost: 1,
                     ascend: 12,
-                    desc: 'increases your power'
+                    desc: 'Increases your power'
+                },
+                {
+                    name: 'overpower',
+                    canUse: (character: Character) => {
+                        return character.power > 30
+                    },
+                    teach: (character: Character): void => {
+                        character.critical +=3
+                        character.impact += 3
+                        character.crushing += 3
+                    },
+                    cost: 2,
+                    ascend: 20,
+                    desc: 'Increases your critical, impact, crushing rating'
                 },
                 {
                     name: 'first to strike',
@@ -165,7 +179,7 @@ export default class Upgrades{
                     },
                     cost: 2,
                     ascend: 10,
-                    desc: 'when block you have a chance to increase your attack and cast speed'
+                    desc: 'When you block, you have a chance to increase your attack and cast speed'
                 },
                 {
                     name: 'divine forging',
@@ -200,7 +214,7 @@ export default class Upgrades{
                     },
                     cost: 3,
                     ascend: 30,
-                    desc: 'your random item get new forging, upgrade random one and increases maximum forgings'
+                    desc: 'Your random item gains a new forge, upgrading a random item and increasing the maximum number of forges'
                 },
                 {
                     name: 'luck',
@@ -214,7 +228,7 @@ export default class Upgrades{
                     },
                     cost: 2,
                     ascend: 12,
-                    desc: 'you become lucky for 30 seconds'
+                    desc: 'You become lucky for 30 seconds'
                 },
                
                 {
@@ -229,10 +243,10 @@ export default class Upgrades{
                     },
                     cost: 3,
                     ascend: 26,
-                    desc: 'every 2 seconds crushed nearby enemies get damage'
+                    desc: 'Every 2 seconds, nearby crushed enemies take damage'
                 },
                 {
-                    name: 'focus',
+                    name: 'bravery',
                     canUse: (character: Character) => {
                         return character.courage_expire_timer <= 15000
                     },
@@ -241,7 +255,7 @@ export default class Upgrades{
                     },
                     cost: 4,
                     ascend: 10,
-                    desc: 'your courage expires slower'
+                    desc: 'Your courage expires slower'
                 },
                 {
                     name: 'divine pack',
@@ -254,7 +268,7 @@ export default class Upgrades{
                     },
                     cost: 2,
                     ascend: 30,
-                    desc: 'gives additional item slot'
+                    desc: 'Gives additional item slot'
                 },
                 {
                     name: 'inspiration',
@@ -278,7 +292,7 @@ export default class Upgrades{
                     },
                     cost: 6,
                     ascend: 14,
-                    desc: 'gives a chance, depending on your might to create additional impacts'
+                    desc: 'Gives a chance, depending on your might to create additional impacts'
                 },
                 {
                     name: 'divine weapon',
@@ -290,7 +304,7 @@ export default class Upgrades{
                     },
                     cost: 8,
                     ascend: 20,
-                    desc: 'gives a chance, depending on your will to rain down pillars of light on enemies when you hit'
+                    desc: 'Gives a chance, depending on your will to rain down pillars of light on enemies when you hit'
                 },
                 {
                     name: 'unhuman fortitude',
@@ -302,7 +316,7 @@ export default class Upgrades{
                     },
                     cost: 8,
                     ascend: 14,
-                    desc: 'gives a 30% chance when you get damage add fortify equals your durability'
+                    desc: 'Grants a 30% chance to gain fortification equal to your durability when taking damage'
                 },
                 {
                     name: 'ressurection',
@@ -314,7 +328,7 @@ export default class Upgrades{
                     },
                     cost: 10,
                     ascend: 30,
-                    desc: 'returns you after dead'
+                    desc: 'Returns you after dead'
                 },
                 {
                     name: 'with storm',
@@ -329,7 +343,7 @@ export default class Upgrades{
                     },
                     cost: 3,
                     ascend: 5,
-                    desc: 'creates lightning periodically which shocks enemies, upgrade increases frequency and radius of searching enemies'
+                    desc: 'Creates lightning periodically which shocks enemies'
                 },
                 {
                     name: 'move speed',
@@ -341,9 +355,21 @@ export default class Upgrades{
                     },
                     cost: 5,
                     ascend: 15,
-                    desc: 'increases move speed'
+                    desc: 'Increases move speed'
                 },
-                 {
+                {
+                    name: 'vampiric strikes',
+                    canUse: (character: Character) => {
+                        return true
+                    },
+                    teach: (character: Character): void => {
+                        character.vampiric_rate += 2
+                    },
+                    cost: 2,
+                    ascend: 10,
+                    desc: 'Increases you vampiric rate'
+                },
+                {
                     name: 'lightning reflexes',
                     canUse: (character: Character) => {
                         return character.agility >= 10 && character.armour_rate < 200
@@ -353,7 +379,7 @@ export default class Upgrades{
                     },
                     cost: 5,
                     ascend: 20,
-                    desc: 'increases your armour by 10'
+                    desc: 'Increases your armour by 10'
                 },
                 {
                     name: 'titanic strikes',
@@ -365,7 +391,7 @@ export default class Upgrades{
                     },
                     cost: 5,
                     ascend: 20,
-                    desc: 'increases your impact rating by 20'
+                    desc: 'Increases your impact rating by 20'
                 },
                 {
                     name: 'clear mind',
@@ -377,7 +403,7 @@ export default class Upgrades{
                     },
                     cost: 7,
                     ascend: 22,
-                    desc: 'increases your cooldown redaction by 15'
+                    desc: 'Increases your cooldowns redaction by 15'
                 },
                 {
                     name: 'afterlight',
@@ -389,7 +415,7 @@ export default class Upgrades{
                     },
                     cost: 5,
                     ascend: 18,
-                    desc: 'you are getting 5 ward when you enlight'
+                    desc: 'You gain 5 wards when you gain enlightenment'
                 },
                  {
                     name: 'spirit strikes',
@@ -399,9 +425,9 @@ export default class Upgrades{
                     teach: (character: Character): void => {
                         character.spirit_strikes = true
                     },
-                    cost: 8,
+                    cost: 4,
                     ascend: 16,
-                    desc: 'impact rating increased by you ward count'
+                    desc: 'Impact rating increased by you value of ward'
                 },
                 {
                     name: 'immune to freeze',
@@ -413,7 +439,7 @@ export default class Upgrades{
                     },
                     cost: 20,
                     ascend: 50,
-                    desc: 'immune to freeze'
+                    desc: 'Immune to freeze'
                 },
                 {
                     name: 'ascending',
@@ -423,9 +449,9 @@ export default class Upgrades{
                     teach: (character: Character): void => {
                         character.addAscent(4)
                     },
-                    cost: 5,
+                    cost: 3,
                     ascend:5,
-                    desc: 'icreases ascend level by 5'
+                    desc: 'Icreases you ascension by 5'
                 },
                 {
                     name: 'with fire',
@@ -440,7 +466,7 @@ export default class Upgrades{
                     },
                     cost: 3,
                     ascend: 5,
-                    desc: 'creates flames periodically which burn enemies and players, upgrade increases size of flames and stop damaging players'
+                    desc: 'Creates a flame that periodically burns everything around it'
                 },
                 {
                     name: 'with cold',
@@ -455,7 +481,7 @@ export default class Upgrades{
                     },
                     cost: 3,
                     ascend: 5,
-                    desc: 'creates cold explosion periodically which freeze enemies and players, upgrade increases radius and frequency'
+                    desc: 'Periodically creates a cold blast that freezes enemies and players'
                 },
                 {
                     name: 'increase perception',
@@ -466,7 +492,7 @@ export default class Upgrades{
                         character.perception ++
                     },
                     cost: 1,
-                    desc: 'increases your perception'
+                    desc: 'Increases your perception'
                 },
                 {
                     name: 'increase knowledge',
@@ -477,7 +503,7 @@ export default class Upgrades{
                         character.knowledge ++
                     },
                     cost: 1,
-                    desc: 'increases your knowledge'
+                    desc: 'Increases your knowledge'
                 },
                 {
                     name: 'increase power',
@@ -488,10 +514,10 @@ export default class Upgrades{
                         character.might ++
                     },
                     cost: 1,
-                    desc: 'increases your might'
+                    desc: 'Increases your might'
                 },
                 {
-                    name: 'increase durability',
+                    name: 'Increase durability',
                     canUse: (character: Character) => {
                         return character.durability != undefined
                     },
@@ -499,7 +525,7 @@ export default class Upgrades{
                         character.durability ++
                     },
                     cost: 1,
-                    desc: 'increases your durability'
+                    desc: 'Increases your durability'
                 },
                 {
                     name: 'increase will',
@@ -510,7 +536,7 @@ export default class Upgrades{
                         character.will ++
                     },
                     cost: 1,
-                    desc: 'increases your will'
+                    desc: 'Increases your will'
                 },
                 {
                     name: 'increase agility',
@@ -521,7 +547,7 @@ export default class Upgrades{
                         character.agility ++
                     },
                     cost: 1,
-                    desc: 'increases your agility'
+                    desc: 'Increases your agility'
                 },
                 {
                     name: 'heal',
@@ -532,7 +558,7 @@ export default class Upgrades{
                         character.addLife(3, true, true)
                     },
                     cost: 1,
-                    desc: 'give a life'
+                    desc: 'Restore your life'
                 },
                 {
                     name: 'chosen one',
@@ -544,7 +570,7 @@ export default class Upgrades{
                     },
                     cost: 6,
                     ascend: 16,
-                    desc: 'increases your chance to get grace after enemy dead'
+                    desc: `Icreases your chance to gain grace after an enemy's death`
                 },
                 {
                     name: 'blessed',
@@ -555,11 +581,11 @@ export default class Upgrades{
                         character.blessed = true
                     },
                     cost: 4,
-                    ascend: 12,
-                    desc: 'bones killed by your have reduced chance to ressurect'
+                    ascend: 25,
+                    desc: 'Undead creatures you kill have a reduced chance of resurrecting'
                 },
                  {
-                    name: 'pressure',
+                    name: 'pierce',
                     canUse: (character: Character) => {
                         return true
                     },
@@ -567,7 +593,7 @@ export default class Upgrades{
                         character.pierce += 2
                     },
                     cost: 1,
-                    desc: 'increases a pierce rating'
+                    desc: 'Increases pierce rating'
                 },
                 {
                     name: 'critical hit',
@@ -578,7 +604,7 @@ export default class Upgrades{
                         character.critical += 2
                     },
                     cost: 1,
-                    desc: 'give a chance to deal double damage'
+                    desc: 'Increases chance to deal double damage'
                 },
                 {
                     name: 'armour',
@@ -589,7 +615,7 @@ export default class Upgrades{
                         character.armour_rate += 3
                     },
                     cost: 2,
-                    desc: 'adds armour rate'
+                    desc: 'Increases your armour'
                 },
                 {
                     name: 'gamble',
@@ -605,7 +631,7 @@ export default class Upgrades{
                         }
                     },
                     cost: 0,
-                    desc: 'lose or get grace'
+                    desc: 'Lose or win'
                 },
                 {
                     name: 'resist',
@@ -616,7 +642,7 @@ export default class Upgrades{
                         character.status_resistance += 2
                     },
                     cost: 1,
-                    desc: 'increases chance to resist status'
+                    desc: 'Increases your resist'
                 },
                 {
                     name: 'lust for life',
@@ -628,7 +654,7 @@ export default class Upgrades{
                     },
                     cost: 4,
                     ascend: 10,
-                    desc: 'you have a chance based of your courage to regen more than life status limit("good")'
+                    desc: 'Gives you a chance, based on your courage, to restore life more than the maximum'
                 },
                 {
                     name: 'vision',
@@ -639,7 +665,7 @@ export default class Upgrades{
                         character.light_r += 2
                     },
                     cost: 1,
-                    desc: 'increases your vision'
+                    desc: 'Increases your light radius'
                 },
                 {
                     name: 'touch',
@@ -652,9 +678,9 @@ export default class Upgrades{
                         status.setDuration(40000)
                         character.after_grace_statuses.push(status)
                     },
-                    cost: 3,
+                    cost: 1,
                     ascend: 20,
-                    desc: 'gives a buff after living grace which increases all stats by 10'
+                    desc: 'Grants a buff upon exiting a portal that increases all your stats by 10'
                 },
                 {
                     name: 'blessed armour',
@@ -667,9 +693,9 @@ export default class Upgrades{
                         status.setDuration(30000)
                         character.after_grace_statuses.push(status)
                     },
-                    cost: 3,
+                    cost: 1,
                     ascend: 10,
-                    desc: 'gives a buff after living grace which increases all stats by 10'
+                    desc: 'Grants a buff upon exiting a portal that give armour to you and your allies'
                 },
                 {
                     name: 'talkativeness',
@@ -680,7 +706,7 @@ export default class Upgrades{
                         character.chance_to_say_phrase ++
                     },
                     cost: 2,
-                    desc: 'increases a chance to say something'
+                    desc: 'Increases a chance to say something'
                 },
                 {
                     name: 'swiftness',
@@ -691,7 +717,7 @@ export default class Upgrades{
                         character.cooldown_redaction += 2
                     },
                     cost: 3,
-                    desc: 'reduces cooldowns'
+                    desc: 'Reduces cooldowns'
                 },
                 {
                     name: 'small ward',
@@ -703,7 +729,7 @@ export default class Upgrades{
                     },
                     cost: 1,
                     ascend: 6,
-                    desc: 'gives you 3 ward'
+                    desc: 'Gives you 3 ward'
                 },
                 {
                     name: 'strong ward',
@@ -715,7 +741,7 @@ export default class Upgrades{
                     },
                     cost: 4,
                     ascend: 25,
-                    desc: 'gives you 10 ward'
+                    desc: 'Gives you 10 ward'
                 },
                 {
                     name: 'redemption',
@@ -729,7 +755,7 @@ export default class Upgrades{
                     },
                     cost: 10,
                     ascend: 40,
-                    desc: 'may consumes a corpse to create sphere'
+                    desc: 'Consumes a corpse to create sphere'
                 },
                 {
                     name: 'flesh harvest',
@@ -743,21 +769,21 @@ export default class Upgrades{
                     },
                     cost: 10,
                     ascend: 30,
-                    desc: 'may consumes a corpse to heal you'
+                    desc: 'Consumes a corpse to heal you'
                 },
                 {
-                name: 'discipline',
-                canUse: (character: Character) => {
-                    return character.maximum_resources < 12
-                },
-                teach: (character: Character) => {
-                    if(character instanceof Character){
-                        character.maximum_resources ++
-                    }
-                },
-                cost: 6,
-                ascend: 16,
-                desc: 'increases maximum of energy'
+                    name: 'discipline',
+                    canUse: (character: Character) => {
+                        return character.maximum_resources < 12
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Character){
+                            character.maximum_resources ++
+                        }
+                    },
+                    cost: 6,
+                    ascend: 16,
+                    desc: 'Increases your maximum of energy'
                 },
                 {
                     name: 'impact',
@@ -771,7 +797,7 @@ export default class Upgrades{
                     },
                     cost: 1,
                     ascend: 6,
-                    desc: 'increases impact rating'
+                    desc: 'Increases impact rating'
                     },
                 {
                     name: 'crushing',
@@ -785,7 +811,7 @@ export default class Upgrades{
                     },
                     cost: 1,
                     ascend: 8,
-                    desc: 'increases crushing rating'
+                    desc: 'Increases crushing rating'
                 },
                 {
                     name: 'raising morale',
@@ -797,12 +823,12 @@ export default class Upgrades{
                     },
                     cost: 5,
                     ascend: 16,
-                    desc: 'when you speak there is a chance to give 1 life to you and alies'
+                    desc: 'When you speak, there is a chance to heal yourself and your allies'
                 },
                 {
                     name: 'spirit',
                     canUse: (character: Character) => {
-                        return character.spirit < 100
+                        return character.spirit < 90
                     },
                     teach: (character: Character) => {
                         if(character instanceof Character){
@@ -810,7 +836,7 @@ export default class Upgrades{
                         }
                     },
                     cost: 1,
-                    desc: 'increases chance lose energy instead life when get damage'
+                    desc: 'Increases your spirit'
                 },
                 {
                     name: 'shout',
@@ -824,7 +850,7 @@ export default class Upgrades{
                     },
                     cost: 2,
                     ascend: 6,
-                    desc: 'increases your voice radius'
+                    desc: 'Increases the radius of your phrases'
                 }
         ]
     }
@@ -844,7 +870,7 @@ export default class Upgrades{
                 },
                 cost: 5,
                 ascend: 15,
-                desc: 'you will create additional rune for each resourse but now it also increased cost by 1'
+                desc: 'You will create an additional rune for each energy, but it now costs 1 more'
             },
             {
                 name: 'explosive runes',
@@ -859,7 +885,7 @@ export default class Upgrades{
                 },
                 cost: 2,
                 ascend: 8,
-                desc: 'increases radius of explosion'
+                desc: 'Increases radius of explosion'
             },
             {
                 name: 'fast detonation',
@@ -874,10 +900,10 @@ export default class Upgrades{
                 },
                 cost: 3,
                 ascend: 20,
-                desc: 'increases detonation rate'
+                desc: 'Increases detonation rate'
             },
             {
-                name: 'second detanation',
+                name: 'Second detanation',
                 type: 'rune',
                 canUse: (character: Character) => {
                     return character.first_ability instanceof Rune && !character.first_ability.second_detanation
@@ -890,7 +916,7 @@ export default class Upgrades{
                 },
                 cost: 1,
                 ascend: 25,
-                desc: 'your runes have a chance to explode additional time but now it also increased cost by 1'
+                desc: 'Your runes have a chance to explode additional time but it now costs 1 more'
             },
             {
                 name: 'soul shatter',
@@ -906,7 +932,22 @@ export default class Upgrades{
                 },
                 cost: 4,
                 ascend: 10,
-                desc: 'hit the single enemy if they died, create a soul projectiles count them based of your resourses'
+                desc: 'Deals damage to a single target, if it dies there is a chance, souls are created, the number of which depends on courage'
+            },
+            {
+                name: 'mark of darkness',
+                type: 'soul shatter',
+                canUse: (character: Character) => {
+                    return character.first_ability instanceof SoulShatter && !character.first_ability.mark
+                },
+                teach: (character: Character) => {
+                    if(character.first_ability instanceof SoulShatter){
+                        character.first_ability.mark = true
+                    }
+                },
+                cost: 3,
+                ascend: 20,
+                desc: 'Always creates souls'
             },
             {
                 name: 'slaming',
@@ -921,7 +962,7 @@ export default class Upgrades{
                 },
                 cost: 1,
                 ascend: 6,
-                desc: 'increases the radius of slam hit'
+                desc: 'Increases the radius'
             },
             {
                 name: 'soul extraction',
@@ -936,7 +977,7 @@ export default class Upgrades{
                 },
                 cost: 2,
                 ascend: 20,
-                desc: 'increases the chance to get grace from killing enemies'
+                desc: 'Increases the chance to gain grace from killing enemies'
             },
             {
                 name: 'deafening wave',
@@ -954,7 +995,7 @@ export default class Upgrades{
                 },
                 cost: 2,
                 ascend: 10,
-                desc: 'increases duration and radius of stuning'
+                desc: 'Increases duration and radius of stunning'
             },
             {
                 name: 'gore aegis',
@@ -969,7 +1010,7 @@ export default class Upgrades{
                 },
                 cost: 2,
                 ascend: 16,
-                desc: 'when you kill an enemy with shield bash, you get gore aegis'
+                desc: 'When you kill an enemy with a shield bash, you gain Gore Aegis'
             },
             {
                 name: 'hate',
@@ -981,12 +1022,12 @@ export default class Upgrades{
                 },
                 teach: (character: Character) => {
                     if(character.second_ability && character.second_ability instanceof ShieldBash){
-                        character.second_ability.deafening_wave = true
+                        character.second_ability.hate = true
                     }
                 },
                 cost: 2,
                 ascend: 12,
-                desc: 'now your shield bash does not stun instead it has a chance to shatter enemy and to realise they bones that also can damage enemy'
+                desc: 'Your shield strike no longer stuns, but instead has a chance to shatter the enemy.'
             },
             {
                 name: 'coordination',
@@ -1002,7 +1043,7 @@ export default class Upgrades{
                 },
                 cost: 3,
                 ascend: 8,
-                desc: 'now your shield bash has a chance to reduce attack speed by 50% and now it has chance not to be used after using'
+                desc: 'Gives a chance to reduce cooldown by 50%'
             },
             {
                 name: 'increase grim pile effect',
@@ -1017,7 +1058,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 1,
-                desc: 'increases armour rate and move speed which it gives'
+                desc: 'Increases armour and move speed that it gives'
             },
             {
                 name: 'grim pile of will',
@@ -1033,7 +1074,7 @@ export default class Upgrades{
                 },
                 cost: 1,
                 ascend: 18,
-                desc: 'now it also increase status resist'
+                desc: 'Now also increase resist'
             },
             {
                 name: 'reign of pain',
@@ -1049,13 +1090,13 @@ export default class Upgrades{
                 },
                 cost: 1,
                 ascend: 25,
-                desc: 'increases radius for searching enemies and count of ghost warriors for each resourse'
+                desc: 'Increases the enemy search radius and the number of warriors - increases with courage.'
             },
             {
                 name: 'spreading',
                 type: 'self flagellation',
                 canUse: (character: Character) => {
-                     return character.utility instanceof SelfFlagellation &&
+                    return character.utility instanceof SelfFlagellation &&
                     !character.utility.spreading
                 },
                 teach: (character: Character) => {
@@ -1065,7 +1106,7 @@ export default class Upgrades{
                 },
                 cost: 2,
                 ascend: 12,
-                desc: 'deals damage in small radius'
+                desc: 'Deals damage in small radius to enemies'
             },
             {
                 name: 'restless warriors',
@@ -1081,7 +1122,7 @@ export default class Upgrades{
                 },
                 cost: 3,
                 ascend: 12,
-                desc: 'your ghost warriors from unleash pain ability deal 2 hits'
+                desc: 'Your ghost warriors make 2 hits'
             },
             {
                 name: 'ring of pain',
@@ -1097,7 +1138,7 @@ export default class Upgrades{
                 },
                 cost: 3,
                 ascend: 12,
-                desc: 'increases radius and frequency'
+                desc: 'Increases radius and frequency'
             },
             {
                 name: 'collection of bones',
@@ -1113,7 +1154,7 @@ export default class Upgrades{
                 },
                 cost: 1,
                 ascend: 9,
-                desc: 'after duration realise bones for each killed enemy'
+                desc: 'Upon expiration, releases bones for each enemy killed'
             },
             {
                 name: 'pack with dead',
@@ -1128,7 +1169,8 @@ export default class Upgrades{
                     }
                 },
                 cost: 1,
-                desc: 'you cannot die by ability'
+                ascend: 16,
+                desc: 'You cannot die by using'
             },
             {
                 name: 'lesson of pain' ,
@@ -1143,8 +1185,8 @@ export default class Upgrades{
                     }
                 },
                 cost: 1,
-                ascend: 20,
-                desc: 'increases move speed for short period after use'
+                ascend: 12,
+                desc: 'Increases move speed for short period after use'
             },
             {
                 name: 'leaded by shost',
@@ -1159,8 +1201,8 @@ export default class Upgrades{
                     }
                 },
                 cost: 1,
-                ascend: 15,
-                desc: 'your teammates also give buff'
+                ascend: 22,
+                desc: 'Your teammates also get buff'
             },
             {
                 name: 'afterlife cold',
@@ -1176,7 +1218,7 @@ export default class Upgrades{
                 },
                 cost: 1,
                 ascend: 12,
-                desc: 'freeze enemies on the way'
+                desc: 'Freeze enemies'
             },
             {
                 name: 'service',
@@ -1188,7 +1230,7 @@ export default class Upgrades{
                 },
                 cost: 2,
                 ascend: 20,
-                desc: 'you have a chance to get resourse when you regen life'
+                desc: 'You have a chance to get energy when you get life'
             },
             {
                 name: 'conduct of pain',
@@ -1200,7 +1242,7 @@ export default class Upgrades{
                 },
                 cost: 2,
                 ascend: 15,
-                desc: 'you have a chance to get resourse when you block hit'
+                desc: 'You have a chance to get energy when you block hit'
             },
             {
                 name: 'pain extract',
@@ -1212,7 +1254,7 @@ export default class Upgrades{
                 },
                 cost: 3,
                 ascend: 35,
-                desc: 'you have a chance to get resourse when you kill enemies'
+                desc: 'You have a chance to get resourse when you kill enemy'
             },
             {
                 name: 'burning circle',
@@ -1228,7 +1270,7 @@ export default class Upgrades{
                 },
                 cost: 5,
                 ascend: 15,
-                desc: 'creates a circle of fire by damaging youself in which enemies take damage, the frequency of receiving damage depends on courage'
+                desc: 'Creates a circle of fire in which enemies take damage, the frequency of receiving damage depends on courage'
             },
             {
                 name: 'all-consuming flame',
@@ -1243,7 +1285,7 @@ export default class Upgrades{
                 },
                 cost: 2,
                 ascend: 20,
-                desc: 'increases radius'
+                desc: 'Increases radius'
             },
             {
                 name: 'fire hatred',
@@ -1258,7 +1300,7 @@ export default class Upgrades{
                 },
                 cost: 1,
                 ascend: 15,
-                desc: 'gives a chance to create explode when your kill enemy'
+                desc: 'Gives a chance to create explode when your kill enemy'
             },
             {
                 name: 'devouring flame',
@@ -1273,7 +1315,7 @@ export default class Upgrades{
                 },
                 cost: 1,
                 ascend: 15,
-                desc: 'gives a chance to increase duration when you kill enemy'
+                desc: 'Gives a chance to increase duration when you kill enemy'
             },
             {
                 name: 'spiritual call',
@@ -1287,7 +1329,7 @@ export default class Upgrades{
                 },
                 cost: 1,
                 ascend: 12,
-                desc: 'when you block you can summon spirit warrior'
+                desc: 'When you block there is a chance to summon spirit warrior'
             },
             {
                 name: 'soul fragments',
@@ -1302,7 +1344,7 @@ export default class Upgrades{
                 },
                 cost: 1,
                 ascend: 10,
-                desc: 'increases the count of shards after tear enemy'
+                desc: 'Increases the count of shards after tear enemy'
             },
             {
                 name: 'dark prolifiration',
@@ -1317,533 +1359,533 @@ export default class Upgrades{
                 },
                 cost: 2,
                 ascend: 20,
-                desc: 'gives a chance to youe soulrender ability to tear additional nearby target'
+                desc: 'Gives a chance to your soulrender ability to tear additional nearby target'
             },
         ]
     }
     static getFlyerUpgrades(){
             return [
                 {
-                        name: 'fire spliting',
-                        type: 'fireball',
-                        canUse: (character: Character) => {
-                            return character.first_ability instanceof Fireball && !character.first_ability.fire_splitting
-                        },
-                        teach: (character: Character) => {
-                            if(character && character.first_ability instanceof Fireball){
-                                character.first_ability.fire_splitting = true
-                            }
-                        },
-                        cost: 3,
-                        ascend: 20,
-                        desc: 'your fireball has a chance to create additional projectiles based on your courage'
+                    name: 'fire spliting',
+                    type: 'fireball',
+                    canUse: (character: Character) => {
+                        return character.first_ability instanceof Fireball && !character.first_ability.fire_splitting
                     },
-                    {
-                        name: 'icicles',
-                        type: 'frost sphere',
-                        canUse: (character: Character) => {
-                            return character.first_ability instanceof FrostSphere && !character.first_ability.icicles
-                        },
-                        teach: (character: Character) => {
-                            if(character && character.first_ability instanceof FrostSphere){
-                                character.first_ability.icicles = true
-                            }
-                        },
-                        cost: 5,
-                        ascend: 16,
-                        desc: 'your frost sphere releases icicles while moving count depends on you courage'
+                    teach: (character: Character) => {
+                        if(character && character.first_ability instanceof Fireball){
+                            character.first_ability.fire_splitting = true
+                        }
                     },
-                    {
-                        name: 'magic flow',
-                        canUse: (character: Character) => {
-                            return !character.triggers_on_say.some(elem => elem instanceof MagicFlowTrigger)
-                        },
-                        teach: (character: Character) => {
-                            character.triggers_on_say.push(new MagicFlowTrigger())
-                        },
-                        cost: 2,
-                        ascend: 10,
-                        desc: 'when you speak there is a chance to give 1 energy to you and alies'
+                    cost: 3,
+                    ascend: 20,
+                    desc: 'Your fireball has a chance to create additional projectiles based on your courage'
+                },
+                {
+                    name: 'icicles',
+                    type: 'frost sphere',
+                    canUse: (character: Character) => {
+                        return character.first_ability instanceof FrostSphere && !character.first_ability.icicles
                     },
-                    {
-                        name: 'scorching',
-                        type: '(flame wall)',
-                        canUse: (character: Character) => {
-                            return character.second_ability instanceof FlameWall && !character.second_ability.scorching
-                        },
-                        teach: (character: Character) => {
-                            if(character && character.second_ability instanceof FlameWall){
-                                character.second_ability.scorching = true
-                            }
-                        },
-                        cost: 3,
-                        ascend: 5,
-                        desc: 'your flamewall burn faster'
+                    teach: (character: Character) => {
+                        if(character && character.first_ability instanceof FrostSphere){
+                            character.first_ability.icicles = true
+                        }
                     },
-                    {
-                        name: 'frendly flame',
-                        type: '(flame wall)',
-                        canUse: (character: Character) => {
-                            return character.second_ability instanceof FlameWall && !character.second_ability.frendly_flame
-                        },
-                        teach: (character: Character) => {
-                            if(character && character.second_ability instanceof FlameWall){
-                                character.second_ability.frendly_flame = true
-                            }
-                        },
-                        cost: 1,
-                        ascend: 10,
-                        desc: 'your flamewall does not damage to players'
+                    cost: 5,
+                    ascend: 16,
+                    desc: 'Your frost sphere releases icicles while moving, count depends on you courage'
+                },
+                {
+                    name: 'magic flow',
+                    canUse: (character: Character) => {
+                        return !character.triggers_on_say.some(elem => elem instanceof MagicFlowTrigger)
                     },
-                    {
-                        name: 'takeoff',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && !character.takeoff
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer){
-                                character.takeoff = true
-                            }
-                        },
-                        cost: 2,
-                        ascend: 8,
-                        desc: 'gives your phasing while you are defended'
+                    teach: (character: Character) => {
+                        character.triggers_on_say.push(new MagicFlowTrigger())
                     },
-                     {
-                        name: 'teeth',
-                        type: 'new ability',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && !(character.first_ability instanceof Teeth)
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer){
-                                character.first_ability = new Teeth(character)
-                                character.updateClientSkill()
-                            }
-                        },
-                        cost: 5,
-                        ascend: 10,
-                        desc: 'fires a sereral of teeth'
+                    cost: 2,
+                    ascend: 10,
+                    desc: 'When you speak there is a chance to get energy to you and allies'
+                },
+                {
+                    name: 'scorching',
+                    type: 'flame wall',
+                    canUse: (character: Character) => {
+                        return character.second_ability instanceof FlameWall && !character.second_ability.scorching
                     },
-                    {
-                        name: 'body melting',
-                        type: 'fireball',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.first_ability instanceof Fireball) && !character.first_ability.body_melting
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.first_ability instanceof Fireball){
-                                character.first_ability.body_melting = true
-                            }
-                        },
-                        cost: 2,
-                        ascend: 7,
-                        desc: 'gives your fireball a chance to pierce the enemy'
+                    teach: (character: Character) => {
+                        if(character && character.second_ability instanceof FlameWall){
+                            character.second_ability.scorching = true
+                        }
                     },
-                    {
-                        name: 'ignite',
-                        type: 'fireball',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.first_ability instanceof Fireball) && !character.first_ability.ignite
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.first_ability instanceof Fireball){
-                                character.first_ability.ignite = true
-                            }
-                        },
-                        cost: 3,
-                        ascend: 10,
-                        desc: 'your fireball ignites the floor after explosion'
+                    cost: 3,
+                    ascend: 5,
+                    desc: 'Fire wall deals damage more often'
+                },
+                {
+                    name: 'frendly flame',
+                    type: 'flame wall',
+                    canUse: (character: Character) => {
+                        return character.second_ability instanceof FlameWall && !character.second_ability.frendly_flame
                     },
-                    {
-                        name: 'hand of frost',
-                        type: 'frost sphere',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.first_ability instanceof FrostSphere) && !character.first_ability.frost_rich
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.first_ability instanceof FrostSphere){
-                                character.first_ability.frost_rich = true
-                            }
-                        },
-                        cost: 1,
-                        ascend: 5,
-                        desc: 'increases radius of explosion'
+                    teach: (character: Character) => {
+                        if(character && character.second_ability instanceof FlameWall){
+                            character.second_ability.frendly_flame = true
+                        }
                     },
-                    {
-                        name: 'ice',
-                        type: 'frost sphere',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.first_ability instanceof FrostSphere) && !character.first_ability.ice
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.first_ability instanceof FrostSphere){
-                                character.first_ability.ice = true
-                            }
-                        },
-                        cost: 3,
-                        ascend: 15,
-                        desc: 'deals damage not only to frozen enemies'
+                    cost: 1,
+                    ascend: 10,
+                    desc: 'Your flame wall does not damage to players'
+                },
+                {
+                    name: 'takeoff',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && !character.takeoff
                     },
-                    {
-                        name: 'shattering',
-                        type: 'frost sphere',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.first_ability instanceof FrostSphere) && !character.first_ability.shattering
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.first_ability instanceof FrostSphere){
-                                character.first_ability.shattering = true
-                            }
-                        },
-                        cost: 2,
-                        ascend: 10,
-                        desc: 'deals doubled damage to frozen enemies'
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer){
+                            character.takeoff = true
+                        }
                     },
-                    {
-                        name: 'reign of frost',
-                        type: 'frost sphere',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.first_ability instanceof FrostSphere) && !character.first_ability.reign_of_frost
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.first_ability instanceof FrostSphere){
-                                character.first_ability.reign_of_frost = true
-                            }
-                        },
-                        cost: 1,
-                        ascend: 5,
-                        desc: 'increases freeze duration'
+                    cost: 2,
+                    ascend: 8,
+                    desc: 'You are phased while defended'
+                },
+                {
+                    name: 'teeth',
+                    type: 'new ability',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && !(character.first_ability instanceof Teeth)
                     },
-                    {
-                        name: 'high voltage',
-                        type: 'lightning bolt',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.first_ability instanceof LightningBolt) && !character.first_ability.high_voltage
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.first_ability instanceof LightningBolt){
-                                character.first_ability.high_voltage = true
-                            }
-                        },
-                        cost: 2,
-                        ascend: 3,
-                        desc: 'now your lightning bolt does not apply shock and hit up to 3 targets by default also number of hitting enemies is increased by might'
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer){
+                            character.first_ability = new Teeth(character)
+                            character.updateClientSkill()
+                        }
                     },
-                    {
-                        name: 'storm',
-                        type: 'lightning bolt',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.first_ability instanceof LightningBolt) && !character.first_ability.storm
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.first_ability instanceof LightningBolt){
-                                character.first_ability.storm = true
-                                character.first_ability.cost += 1
-                            }
-                        },
-                        cost: 2,
-                        ascend: 10,
-                        desc: 'now your can create additional bolts depend on your courage but mana cost is increased'
+                    cost: 5,
+                    ascend: 10,
+                    desc: 'Fires a sereral of bone teeth'
+                },
+                {
+                    name: 'body melting',
+                    type: 'fireball',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.first_ability instanceof Fireball) && !character.first_ability.body_melting
                     },
-                    {
-                        name: 'conductivity',
-                        type: 'lightning bolt',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.first_ability instanceof LightningBolt) && !character.first_ability.conductivity
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.first_ability instanceof LightningBolt){
-                                character.first_ability.conductivity = true
-                            }
-                        },
-                        cost: 2,
-                        ascend: 6,
-                        desc: 'increases the radius'
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.first_ability instanceof Fireball){
+                            character.first_ability.body_melting = true
+                        }
                     },
-                    {
-                        name: 'improved chain reaction',
-                        type: 'forking lightning',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.second_ability instanceof ForkedLightning) && !character.second_ability.improved_chain_reaction
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.second_ability instanceof ForkedLightning){
-                                character.second_ability.improved_chain_reaction = true
-                            }
-                        },
-                        cost: 2,
-                        ascend: 5,
-                        desc: 'increases the chain chance'
+                    cost: 2,
+                    ascend: 7,
+                    desc: 'Gives your fireball a chance to pass through an enemy without exploding'
+                },
+                {
+                    name: 'ignite',
+                    type: 'fireball',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.first_ability instanceof Fireball) && !character.first_ability.ignite
                     },
-                    {
-                        name: 'fork',
-                        type: 'forking lightning',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.second_ability instanceof ForkedLightning) && !character.second_ability.fork
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.second_ability instanceof ForkedLightning){
-                                character.second_ability.fork = true
-                            }
-                        },
-                        cost: 5,
-                        ascend: 16,
-                        desc: 'increases the amount of creating lightnings when chain'
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.first_ability instanceof Fireball){
+                            character.first_ability.ignite = true
+                        }
                     },
-                    {
-                        name: 'lightning eye',
-                        type: 'forking lightning',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.second_ability instanceof ForkedLightning) && !character.second_ability.lightning_eye
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.second_ability instanceof ForkedLightning){
-                                character.second_ability.lightning_eye = true
-                            }
-                        },
-                        cost: 1,
-                        ascend: 3,
-                        desc: 'increases the target check radius for a chain'
+                    cost: 3,
+                    ascend: 10,
+                    desc: 'Your fireball create flame after explosion'
+                },
+                {
+                    name: 'hand of frost',
+                    type: 'frost sphere',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.first_ability instanceof FrostSphere) && !character.first_ability.frost_rich
                     },
-                    {
-                        name: 'lightning waves',
-                        type: 'light beacon',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.third_ability instanceof LightBeacon) && !character.third_ability.lightning_waves
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.third_ability instanceof LightBeacon){
-                                character.third_ability.lightning_waves = true
-                            }
-                        },
-                        cost: 4,
-                        ascend: 12,
-                        desc: 'now you crates wavas of electricity instead lightnings'
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.first_ability instanceof FrostSphere){
+                            character.first_ability.frost_rich = true
+                        }
                     },
-                    {
-                        name: 'air form',
-                        type: 'light beacon',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.third_ability instanceof LightBeacon) && !character.third_ability.air_form
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.third_ability instanceof LightBeacon){
-                                character.third_ability.air_form = true
-                            }
-                        },
-                        cost: 2,
-                        ascend: 8,
-                        desc: 'after cast you cant take damage for 3 seconds'
+                    cost: 1,
+                    ascend: 5,
+                    desc: 'Increases radius'
+                },
+                {
+                    name: 'ice',
+                    type: 'frost sphere',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.first_ability instanceof FrostSphere) && !character.first_ability.ice
                     },
-                    {
-                        name: 'ice genesis',
-                        type: 'frostnova',
-                        canUse: (character: Character) => {
-                            return character.third_ability instanceof Frostnova && !character.third_ability.ice_genesis
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.third_ability instanceof Frostnova){
-                                character.third_ability.ice_genesis = true
-                            }
-                        },
-                        cost: 5,
-                        ascend: 12,
-                        desc: 'if you kill the enemy there is a chance to create frost sphere'
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.first_ability instanceof FrostSphere){
+                            character.first_ability.ice = true
+                        }
                     },
-                    {
-                        name: 'cold spires',
-                        type: 'frostnova',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.third_ability instanceof Frostnova) && !character.third_ability.cold_spires
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.third_ability instanceof Frostnova){
-                                character.third_ability.cold_spires = true
-                            }
-                        },
-                        cost: 5,
-                        ascend: 10,
-                        desc: 'after cast you create a cold spires which freeze enemies and explodes'
+                    cost: 3,
+                    ascend: 15,
+                    desc: 'Deals damage not only to frozen enemies'
+                },
+                {
+                    name: 'shattering',
+                    type: 'frost sphere',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.first_ability instanceof FrostSphere) && !character.first_ability.shattering
                     },
-                    {
-                        name: 'hand cuffing',
-                        type: 'static field',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.utility instanceof StaticField) && !character.utility.hand_cuffing
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.utility instanceof StaticField){
-                                character.utility.hand_cuffing = true
-                            }
-                        },
-                        cost: 1,
-                        ascend: 6,
-                        desc: 'targets cant attack'
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.first_ability instanceof FrostSphere){
+                            character.first_ability.shattering = true
+                        }
                     },
-                    {
-                        name: 'collapse',
-                        type: 'static field',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.utility instanceof StaticField) && !character.utility.collapse
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.utility instanceof StaticField){
-                                character.utility.collapse = true
-                            }
-                        },
-                        cost: 1,
-                        ascend: 15,
-                        desc: 'targets take damage after duration'
+                    cost: 2,
+                    ascend: 10,
+                    desc: 'Deals doubled damage to frozen enemies'
+                },
+                {
+                    name: 'reign of frost',
+                    type: 'frost sphere',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.first_ability instanceof FrostSphere) && !character.first_ability.reign_of_frost
                     },
-                    {
-                        name: 'protected teleportation',
-                        type: 'teleportation',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.utility instanceof Teleportation) && !character.utility.protected
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.utility instanceof Teleportation){
-                                character.utility.protected = true
-                            }
-                        },
-                        cost: 1,
-                        ascend: 6,
-                        desc: 'you cannot take damage after you start teleportating'
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.first_ability instanceof FrostSphere){
+                            character.first_ability.reign_of_frost = true
+                        }
                     },
-                    {
-                        name: 'increased gate',
-                        type: 'teleportation',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && (character.utility instanceof Teleportation) && !character.utility.increased_gate
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && character.utility instanceof Teleportation){
-                                character.utility.increased_gate = true
-                            }
-                        },
-                        cost: 1,
-                        ascend: 3,
-                        desc: 'increases radius of end point'
+                    cost: 1,
+                    ascend: 5,
+                    desc: 'Increases freeze duration'
+                },
+                {
+                    name: 'high voltage',
+                    type: 'lightning bolt',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.first_ability instanceof LightningBolt) && !character.first_ability.high_voltage
                     },
-                    {
-                        name: 'mana regen while defend',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && !character.allow_mana_regen_while_def
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && !character.allow_mana_regen_while_def){
-                                character.allow_mana_regen_while_def = true
-                            }
-                        },
-                        cost: 5,
-                        ascend: 12,
-                        desc: 'you can regen mana while you are defended'
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.first_ability instanceof LightningBolt){
+                            character.first_ability.high_voltage = true
+                        }
                     },
-                    {
-                        name: 'charged shield',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && !character.charged_shield
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer && !character.charged_shield){
-                                character.charged_shield = true
-                            }
-                        },
-                        cost: 1,
-                        ascend: 4,
-                        desc: 'there is a chance to create lightning when you block damage while you are defended'
+                    cost: 2,
+                    ascend: 3,
+                    desc: 'Lightning bolt does not apply shock and hit up to 3 targets'
+                },
+                {
+                    name: 'storm',
+                    type: 'lightning bolt',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.first_ability instanceof LightningBolt) && !character.first_ability.storm
                     },
-                    {
-                        name: 'annihilator beam',
-                        type: 'new ability',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && !(character.second_ability instanceof AnnihilatorBeam)
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer){
-                                character.second_ability = new AnnihilatorBeam(character)
-                                character.updateClientSkill()
-                            }
-                        },
-                        cost: 3,
-                        ascend: 5,
-                        desc: 'creates a beam of energy which burn enemies'
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.first_ability instanceof LightningBolt){
+                            character.first_ability.storm = true
+                            character.first_ability.cost += 1
+                        }
                     },
-                    {
-                        name: 'light stream',
-                        type: 'annihilator beam',
-                        canUse: (character: Character) => {
-                            return character.second_ability instanceof AnnihilatorBeam && character.second_ability.cost >= 5
-                        },
-                        teach: (character: Character) => {
-                            if(character.second_ability instanceof AnnihilatorBeam){
-                                character.second_ability.cost -= 2
-                            }
-                        },
-                        cost: 1,
-                        ascend: 6,
-                        desc: 'reduses mana cost'
+                    cost: 2,
+                    ascend: 10,
+                    desc: 'Grants a chance to create additional bolts based on your courage, but the mana cost increases'
+                },
+                {
+                    name: 'conductivity',
+                    type: 'lightning bolt',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.first_ability instanceof LightningBolt) && !character.first_ability.conductivity
                     },
-                    {
-                        name: 'concentrating energy',
-                        type: 'annihilator beam',
-                        canUse: (character: Character) => {
-                            return character.second_ability instanceof AnnihilatorBeam && !character.second_ability.concentrating_energy
-                        },
-                        teach: (character: Character) => {
-                            if(character.second_ability instanceof AnnihilatorBeam) {
-                                character.second_ability.concentrating_energy = true
-                            }
-                        },
-                        cost: 1,
-                        ascend: 8,
-                        desc: 'now it ignores armour'
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.first_ability instanceof LightningBolt){
+                            character.first_ability.conductivity = true
+                        }
                     },
-                    {
-                        name: 'mental shield',
-                        canUse: (character: Character) => {
-                            return character instanceof Flyer && !character.mental_shield
-                        },
-                        teach: (character: Character) => {
-                            if(character instanceof Flyer){
-                                character.mental_shield = true
-                            }
-                        },
-                        cost: 1,
-                        ascend: 10,
-                        desc: 'courage increase your armour rate'
+                    cost: 2,
+                    ascend: 6,
+                    desc: 'Increases radius'
+                },
+                {
+                    name: 'improved chain reaction',
+                    type: 'forking lightning',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.second_ability instanceof ForkedLightning) && !character.second_ability.improved_chain_reaction
                     },
-                    {
-                        name: 'penetrating lightning',
-                        type: 'sparks',
-                        canUse: (character: Character) => {
-                            return character.third_ability instanceof Sparks && character.third_ability.pierce < 3
-                        },
-                        teach: (character: Character) => {
-                            if(character.third_ability instanceof Sparks){
-                                character.third_ability.pierce ++
-                            }
-                        },
-                        cost: 3,
-                        ascend: 8,
-                        desc: 'increases the number of enemies your sparks can pass through'
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.second_ability instanceof ForkedLightning){
+                            character.second_ability.improved_chain_reaction = true
+                        }
                     },
-                    {
-                        name: 'strong sparks',
-                        type: 'sparks',
-                        canUse: (character: Character) => {
-                            return character.third_ability instanceof Sparks && character.third_ability.ttl < 10000
-                        },
-                        teach: (character: Character) => {
-                            if(character.third_ability instanceof Sparks){
-                                character.third_ability.ttl += 2000
-                            }
-                        },
-                        cost: 3,
-                        ascend: 9,
-                        desc: 'increases the duration'
+                    cost: 2,
+                    ascend: 5,
+                    desc: 'Increases chain chance'
+                },
+                {
+                    name: 'fork',
+                    type: 'forking lightning',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.second_ability instanceof ForkedLightning) && !character.second_ability.fork
                     },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.second_ability instanceof ForkedLightning){
+                            character.second_ability.fork = true
+                        }
+                    },
+                    cost: 5,
+                    ascend: 16,
+                    desc: 'Increases the amount of creating lightnings when chain'
+                },
+                {
+                    name: 'lightning eye',
+                    type: 'forking lightning',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.second_ability instanceof ForkedLightning) && !character.second_ability.lightning_eye
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.second_ability instanceof ForkedLightning){
+                            character.second_ability.lightning_eye = true
+                        }
+                    },
+                    cost: 1,
+                    ascend: 3,
+                    desc: 'Increases the target check radius for a new one'
+                },
+                {
+                    name: 'lightning waves',
+                    type: 'light beacon',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.third_ability instanceof LightBeacon) && !character.third_ability.lightning_waves
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.third_ability instanceof LightBeacon){
+                            character.third_ability.lightning_waves = true
+                        }
+                    },
+                    cost: 4,
+                    ascend: 12,
+                    desc: 'Creates waves of electricity instead lightnings'
+                },
+                {
+                    name: 'air form',
+                    type: 'light beacon',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.third_ability instanceof LightBeacon) && !character.third_ability.air_form
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.third_ability instanceof LightBeacon){
+                            character.third_ability.air_form = true
+                        }
+                    },
+                    cost: 2,
+                    ascend: 8,
+                    desc: 'After cast, you cannot take damage for 3 seconds'
+                },
+                {
+                    name: 'ice genesis',
+                    type: 'frostnova',
+                    canUse: (character: Character) => {
+                        return character.third_ability instanceof Frostnova && !character.third_ability.ice_genesis
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.third_ability instanceof Frostnova){
+                            character.third_ability.ice_genesis = true
+                        }
+                    },
+                    cost: 5,
+                    ascend: 12,
+                    desc: 'If you kill the enemy there is a chance to create frost sphere'
+                },
+                {
+                    name: 'cold spires',
+                    type: 'frostnova',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.third_ability instanceof Frostnova) && !character.third_ability.cold_spires
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.third_ability instanceof Frostnova){
+                            character.third_ability.cold_spires = true
+                        }
+                    },
+                    cost: 5,
+                    ascend: 10,
+                    desc: 'Upon cast, you create icy spires that freeze enemies and explode'
+                },
+                {
+                    name: 'hand cuffing',
+                    type: 'static field',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.utility instanceof StaticField) && !character.utility.hand_cuffing
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.utility instanceof StaticField){
+                            character.utility.hand_cuffing = true
+                        }
+                    },
+                    cost: 1,
+                    ascend: 6,
+                    desc: 'Targets in static field cannot attack'
+                },
+                {
+                    name: 'collapse',
+                    type: 'static field',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.utility instanceof StaticField) && !character.utility.collapse
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.utility instanceof StaticField){
+                            character.utility.collapse = true
+                        }
+                    },
+                    cost: 1,
+                    ascend: 15,
+                    desc: 'Targets in static field will take damage after duration'
+                },
+                {
+                    name: 'protected teleportation',
+                    type: 'teleportation',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.utility instanceof Teleportation) && !character.utility.protected
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.utility instanceof Teleportation){
+                            character.utility.protected = true
+                        }
+                    },
+                    cost: 1,
+                    ascend: 6,
+                    desc: 'You cannot take damage after you start teleporting'
+                },
+                {
+                    name: 'increased gate',
+                    type: 'teleportation',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && (character.utility instanceof Teleportation) && !character.utility.increased_gate
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && character.utility instanceof Teleportation){
+                            character.utility.increased_gate = true
+                        }
+                    },
+                    cost: 1,
+                    ascend: 3,
+                    desc: 'Increases radius of end point'
+                },
+                {
+                    name: 'mana regen while defend',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && !character.allow_mana_regen_while_def
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && !character.allow_mana_regen_while_def){
+                            character.allow_mana_regen_while_def = true
+                        }
+                    },
+                    cost: 5,
+                    ascend: 12,
+                    desc: 'Allows you to restore mana while you are in defend state'
+                },
+                {
+                    name: 'charged shield',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && !character.charged_shield
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer && !character.charged_shield){
+                            character.charged_shield = true
+                        }
+                    },
+                    cost: 1,
+                    ascend: 4,
+                    desc: 'There is a chance to create lightning when you block'
+                },
+                {
+                    name: 'annihilator beam',
+                    type: 'new ability',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && !(character.second_ability instanceof AnnihilatorBeam)
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer){
+                            character.second_ability = new AnnihilatorBeam(character)
+                            character.updateClientSkill()
+                        }
+                    },
+                    cost: 3,
+                    ascend: 5,
+                    desc: 'Creates a beam of energy that burns enemies'
+                },
+                {
+                    name: 'light stream',
+                    type: 'annihilator beam',
+                    canUse: (character: Character) => {
+                        return character.second_ability instanceof AnnihilatorBeam && character.second_ability.cost >= 3
+                    },
+                    teach: (character: Character) => {
+                        if(character.second_ability instanceof AnnihilatorBeam){
+                            character.second_ability.cost -= 1
+                        }
+                    },
+                    cost: 2,
+                    ascend: 6,
+                    desc: 'Reduses mana cost'
+                },
+                {
+                    name: 'concentrating energy',
+                    type: 'annihilator beam',
+                    canUse: (character: Character) => {
+                        return character.second_ability instanceof AnnihilatorBeam && !character.second_ability.concentrating_energy
+                    },
+                    teach: (character: Character) => {
+                        if(character.second_ability instanceof AnnihilatorBeam) {
+                            character.second_ability.concentrating_energy = true
+                        }
+                    },
+                    cost: 1,
+                    ascend: 8,
+                    desc: 'Ignores armour'
+                },
+                {
+                    name: 'mental shield',
+                    canUse: (character: Character) => {
+                        return character instanceof Flyer && !character.mental_shield
+                    },
+                    teach: (character: Character) => {
+                        if(character instanceof Flyer){
+                            character.mental_shield = true
+                        }
+                    },
+                    cost: 1,
+                    ascend: 10,
+                    desc: 'Courage also increases your armour'
+                },
+                {
+                    name: 'penetrating lightning',
+                    type: 'sparks',
+                    canUse: (character: Character) => {
+                        return character.third_ability instanceof Sparks && character.third_ability.pierce < 3
+                    },
+                    teach: (character: Character) => {
+                        if(character.third_ability instanceof Sparks){
+                            character.third_ability.pierce ++
+                        }
+                    },
+                    cost: 3,
+                    ascend: 18,
+                    desc: 'Increases the number of enemies your sparks can pass through'
+                },
+                {
+                    name: 'strong sparks',
+                    type: 'sparks',
+                    canUse: (character: Character) => {
+                        return character.third_ability instanceof Sparks && character.third_ability.ttl < 10000
+                    },
+                    teach: (character: Character) => {
+                        if(character.third_ability instanceof Sparks){
+                            character.third_ability.ttl += 2000
+                        }
+                    },
+                    cost: 3,
+                    ascend: 9,
+                    desc: 'Increases duration'
+                },
             ]
     }
     static getSwordmanUpgrades(){
@@ -1861,7 +1903,7 @@ export default class Upgrades{
                 },
                 cost: 4,
                 ascend: 20,
-                desc: 'increase attack range and slash angle'
+                desc: 'Increase attack range and slash angle'
             },
             {
                 name: 'spirit weapon',
@@ -1873,7 +1915,7 @@ export default class Upgrades{
                 },
                 cost: 3,
                 ascend: 16,
-                desc: 'increases your attack range'
+                desc: 'Increases your attack range'
             },
             {
                 name: 'echo swing',
@@ -1888,10 +1930,10 @@ export default class Upgrades{
                 },
                 cost: 4,
                 ascend: 8,
-                desc: 'gives your weapon swing chance to land an additional swing after a short time'
+                desc: 'Gives your weapon swing chance to land an additional swing after a short time'
             },
             {
-                name: 'improved swing technology',
+                name: 'Improved swing technology',
                 type: 'weapon swing',
                 canUse: (character: Character) => {
                     return character.first_ability instanceof WeaponSwing && !character.first_ability.improved_swing_technology
@@ -1903,7 +1945,7 @@ export default class Upgrades{
                 },
                 cost: 4,
                 ascend: 12,
-                desc: 'gives your weapon swing chance to increase move and attack speed for a short period'
+                desc: 'Gives your weapon swing chance to increase move and attack speed for a short period'
             },
             {
                 name: 'light grip',
@@ -1918,7 +1960,7 @@ export default class Upgrades{
                 },
                 cost: 5,
                 ascend: 16,
-                desc: 'gives your weapon throw ability a chance to reduce cd time between uses by 50%'
+                desc: 'Gives your weapon throw ability a chance to reduce cd time between uses by 50%'
             },
             {
                 name: 'multiple blades',
@@ -1933,7 +1975,7 @@ export default class Upgrades{
                 },
                 cost: 8,
                 ascend: 20,
-                desc: 'can create additional copies your throwed weapon'
+                desc: 'Provide you a chance to create additional copies of your throwed weapon'
             },
             {
                 name: 'returning',
@@ -1948,7 +1990,7 @@ export default class Upgrades{
                 },
                 cost: 6,
                 ascend: 12,
-                desc: 'gives your weapon throw ability a chance to return'
+                desc: 'Thrown weapons have a chance to return'
             },
             {
                 name: 'while we alive',
@@ -1967,7 +2009,7 @@ export default class Upgrades{
                 },
                 cost: 3,
                 ascend: 30,
-                desc: 'your inner power passive also gives a fortify(40%)'
+                desc: 'Your inner power passive also gives fortify(40%)'
             },
             {
                 name: 'shattering',
@@ -1982,7 +2024,7 @@ export default class Upgrades{
                 },
                 cost: 6,
                 ascend: 12,
-                desc: 'gives your weapon throw ability a chance to shatter up to 3 shards'
+                desc: 'Thrown weapons have a chance to shatter and realise metal parts that hit enemies'
             },
             {
                 name: 'heavy landing',
@@ -1997,7 +2039,7 @@ export default class Upgrades{
                 },
                 cost: 4,
                 ascend: 12,
-                desc: 'after landing by jump ability your will get armour by each hited enemy'
+                desc: 'After landing by jump ability your will get armour by each hited enemy'
             },
              {
                 name: 'stomp',
@@ -2012,7 +2054,7 @@ export default class Upgrades{
                 },
                 cost: 5,
                 ascend: 26,
-                desc: 'increases the radius in which enemies will take damage'
+                desc: 'Increases radius'
             },
             {
                 name: 'destroyer',
@@ -2027,7 +2069,7 @@ export default class Upgrades{
                 },
                 cost: 4,
                 ascend: 12,
-                desc: 'gives a chance to deal damage by charge ability'
+                desc: 'Gives a chance to deal damage by charge ability'
             },
             {
                 name: 'vision of possibilities',
@@ -2042,7 +2084,7 @@ export default class Upgrades{
                 },
                 cost: 3,
                 ascend: 16,
-                desc: 'if you hit 3 or more enemies by charge ability you have a chance to get resourse'
+                desc: 'If you hit 3 or more enemies with the charge ability, you have a chance to gain Energy'
             },
             {
                 name: 'blood harvest',
@@ -2057,7 +2099,7 @@ export default class Upgrades{
                 },
                 cost: 8,
                 ascend: 30,
-                desc: 'after using whirlwind you have a chance to create blood sphere'
+                desc: 'After using the whirlwind, you have a chance to create a blood sphere'
             },
             {
                 name: 'fan of swords',
@@ -2072,7 +2114,7 @@ export default class Upgrades{
                 },
                 cost: 10,
                 ascend: 40,
-                desc: 'your whirlwind now fires fan of swords, inproves of weapon throw ability also works'
+                desc: 'Your whirlwind now shoots a fan of swords, and the weapon throwing ability upgrade also works'
             },
             {
                 name: 'consequences',
@@ -2087,7 +2129,7 @@ export default class Upgrades{
                 },
                 cost: 8,
                 ascend: 26,
-                desc: 'quake has a biger radius but incresed weakness duration'
+                desc: 'Quake has a larger radius but an increased weakness duration'
             },
             {
                 name: 'blast',
@@ -2102,7 +2144,7 @@ export default class Upgrades{
                 },
                 cost: 8,
                 ascend: 35,
-                desc: 'gives a chance to instant kill'
+                desc: 'Provide a chance to instant kill'
             },
             {
                 name: 'selfcare',
@@ -2117,9 +2159,8 @@ export default class Upgrades{
                 },
                 cost: 4,
                 ascend: 10,
-                desc: 'your quake ability does not deal damage to you'
+                desc: 'Your quake ability does not deal damage to you'
             },
-        
             {
                 name: 'drinker',
                 type: 'cursed weapon',
@@ -2133,7 +2174,7 @@ export default class Upgrades{
                 },
                 cost: 4,
                 ascend: 10,
-                desc: 'while you are affected by cursed weapon you have a chance to restore life after killing enemy'
+                desc: 'While you are affected by cursed weapon you have increased vampiric rate'
             },
             {
                 name: 'fast commands',
@@ -2148,7 +2189,7 @@ export default class Upgrades{
                 },
                 cost: 3,
                 ascend: 16,
-                desc: 'buff becomes shorter but stronger'
+                desc: 'Buff becomes shorter but stronger'
             },
             {
                 name: 'shattered weapon',
@@ -2164,7 +2205,7 @@ export default class Upgrades{
                 },
                 cost: 6,
                 ascend: 12,
-                desc: 'fires a magic fragments of your weapon when it hits walls or enemies it will returns and increases your armour rate'
+                desc: 'Fires fragments of your weapon that return to you when they hit walls or enemies, increasing your armor'
             },
             {
                 name: 'searching weapon',
@@ -2178,7 +2219,7 @@ export default class Upgrades{
                 },
                 cost: 4,
                 ascend: 8,
-                desc: 'increases attack range'
+                desc: 'Increases attack range'
             },
             {
                 name: 'attack speed',
@@ -2191,7 +2232,7 @@ export default class Upgrades{
                     }
                 },
                 cost: 3,
-                desc: 'increases attack speed'
+                desc: 'Increases attack speed'
             },
             {
                 name: 'heaven vengeance',
@@ -2207,7 +2248,7 @@ export default class Upgrades{
                 },
                 cost: 6,
                 ascend: 10,
-                desc: 'hits one enemy and strikes nearby enemies with lightning'
+                desc: 'Hits one enemy and strikes nearby enemies with lightning'
             },
             {
                 name: 'eye for eye',
@@ -2222,7 +2263,7 @@ export default class Upgrades{
                 },
                 cost: 5,
                 ascend: 12,
-                desc: 'increases radius of serching targets by your courage'
+                desc: 'Increases radius of serching targets by your courage'
             },
             {
                 name: 'heaven grace',
@@ -2238,7 +2279,7 @@ export default class Upgrades{
                 },
                 cost: 5,
                 ascend: 8,
-                desc: 'gives a chance when hit to clear skill cd'
+                desc: 'Gives a chance to reset cooldown when taking damage'
             },
             {
                 name: 'emergency orders',
@@ -2250,7 +2291,7 @@ export default class Upgrades{
                 },
                 cost: 3,
                 ascend: 16,
-                desc: 'when you speak can apply command ability buff'
+                desc: 'When speak, you a chance to grant you and your allies gain Command ability buff'
             },
             {
                 name: 'blocking technique',
@@ -2262,7 +2303,7 @@ export default class Upgrades{
                 },
                 cost: 5,
                 ascend: 20,
-                desc: 'when you block 5 hits the next three will be successfully blocked'
+                desc: 'When you block 5 hits the next three will be successfully blocked'
             },
             {
                 name: 'electrified dash',
@@ -2277,7 +2318,7 @@ export default class Upgrades{
                 },
                 cost: 8,
                 ascend: 25,
-                desc: 'dash now realises lightning when travel end number of which depends on hitted targets'
+                desc: 'Dash now spawns sparks upon completion of the move, the number of which depends on the targets hit'
             },
             {
                 name: 'pointed spines',
@@ -2292,7 +2333,7 @@ export default class Upgrades{
                 },
                 cost: 6,
                 ascend: 15,
-                desc: 'metal thorns crush enemies when hit'
+                desc: 'Metal thorns crush enemies when hit'
             },
             {
                 name: 'call of arms',
@@ -2307,7 +2348,7 @@ export default class Upgrades{
                 },
                 cost: 8,
                 ascend: 30,
-                desc: 'increases number of swords and their speed'
+                desc: 'Increases number of swords and their speed'
             },
         ]
     }   

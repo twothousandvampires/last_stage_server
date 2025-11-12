@@ -41,7 +41,7 @@ export default class SelfFlagellation extends CultistAbility {
             this.owner.move_speed_penalty += 25
             setTimeout(() => {
                 this.owner.move_speed_penalty -= 25
-            }, 5000)
+            }, 7000)
         }
 
         if(this.spreading){

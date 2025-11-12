@@ -26,7 +26,7 @@ export default class UnleashPain extends CultistAbility{
 
         let e = this.owner.getBoxElipse()
 
-        e.r = 18 + this.owner.getSecondResource()
+        e.r = 18 + (this.reign_of_pain ? 8 : 0)
 
         let enemy = this.owner.level.enemies.filter((elem) => {
             return Func.elipseCollision(elem.getBoxElipse(), e)

@@ -21,14 +21,8 @@ export default class CursedWeaponStatus extends Status{
             })
 
             if(this.drinker){
-                this.unit.triggers_on_kill.push(this)
+                this.unit.vampiric_rate += 20
             }
-        }
-    }
-
-    trigger(){
-        if(Func.chance(15, this.unit.is_lucky)){
-            this.unit.addLife(1)
         }
     }
 
@@ -42,7 +36,7 @@ export default class CursedWeaponStatus extends Status{
                 this.unit.chance_to_avoid_damage_state -= 100
             }
             if(this.drinker){
-                this.unit.triggers_on_kill = this.unit.triggers_on_kill.filter(elem => elem != this)
+                this.unit.vampiric_rate -= 20
             }
         }
     }
