@@ -1,13 +1,9 @@
 import Ability from "../Abilities/Ability"
-import Func from "../Func"
 import Character from "../Objects/src/Character"
 import FlyingSwordsStatus from "../Status/FlyingSwordsStatus"
 import Mastery from "./Mastery"
 
 export default class FlyingSwords extends Mastery {
-
-    base_chance: number = 3
-    
     constructor(){
         super()
         this.name = 'flying swords'
@@ -15,7 +11,7 @@ export default class FlyingSwords extends Mastery {
     }
 
     trigger(player: Character, ability: Ability){
-        if(Func.chance(this.base_chance + ability.cost * 7)){
+        if(ability.getMasteryChance()){
             let s = new FlyingSwordsStatus(player.level.time)
             s.setDuration(10000)
 

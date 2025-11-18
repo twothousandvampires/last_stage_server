@@ -15,6 +15,7 @@ export default class FlameWall extends FlyerAbility{
         this.frendly_flame = false
         this.name = 'flamewall'
         this.cd = 4000
+        this.mastery_chance = 45
     }
 
     impact(){

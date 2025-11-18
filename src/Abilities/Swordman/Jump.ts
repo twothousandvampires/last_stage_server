@@ -27,6 +27,7 @@ export default class Jump extends SwordmanAbility implements IUnitState<Swordman
         this.stomp = false
         this.name = 'jump'
         this.type = Ability.TYPE_CUSTOM
+        this.mastery_chance = 40
     }
 
     enter(player: Character){

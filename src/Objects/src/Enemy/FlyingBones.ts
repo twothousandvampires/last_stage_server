@@ -1,7 +1,7 @@
 import CurseOfDamnedAbility from "../../../EnemyAbilities.ts/CurseOfDamnedAbility";
 import FanOfBonesAbility from "../../../EnemyAbilities.ts/FanOfBonesAbility";
 import GhostGripAbility from "../../../EnemyAbilities.ts/GhostGripAbility";
-import LaunchBones from "../../../EnemyAbilities.ts/LaunchBones";
+import Func from "../../../Func";
 import Level from "../../../Level";
 import Undead from "./Undead";
 
@@ -39,5 +39,15 @@ export default class FlyingBones extends Undead {
             new FanOfBonesAbility(),
             new CurseOfDamnedAbility()
         ]
+    }
+
+    hitImpact(): void {
+        if(Func.chance(30)){
+            this.level.sounds.push({
+                x: this.x,
+                y: this.y,
+                name: 'flying bones cast'
+            })
+        }
     }
 }

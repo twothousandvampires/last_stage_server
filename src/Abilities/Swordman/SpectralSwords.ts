@@ -11,6 +11,8 @@ export default class SpectralSwords extends SwordmanAbility {
         this.name = 'spectral swords'
         this.cost = 8
         this.need_to_pay = true
+        this.mastery_chance = 50
+        this.cd = 8000
     }
 
     impact(){

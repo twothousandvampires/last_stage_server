@@ -12,6 +12,7 @@ export default class SoulShatter extends CultistAbility{
         super(owner)
         this.name = 'soul shatter'
         this.type = Ability.TYPE_ATTACK
+        this.mastery_chance = 5
     }
 
     impact(){

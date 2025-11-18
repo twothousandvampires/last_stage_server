@@ -35,6 +35,16 @@ export default class Solid extends Enemy{
         return new SolidDeadState()
     }
 
+     deadSound(): void {
+        if(Func.notChance(15)) return
+        
+        this.level.sounds.push({
+            x: this.x,
+            y: this.y,
+            name: 'solid dead'
+        })
+    }
+
     hitImpact(){
         let e = this.getBoxElipse()
         e.x = this.hit_x

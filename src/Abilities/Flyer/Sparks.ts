@@ -12,6 +12,8 @@ export default class Sparks extends FlyerAbility{
         this.cost = 8
         this.name = 'sparks'
         this.need_to_pay = true
+        this.mastery_chance = 75
+        this.cd = 6000
     }
     
     impact(){

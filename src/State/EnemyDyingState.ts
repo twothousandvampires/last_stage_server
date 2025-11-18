@@ -34,6 +34,7 @@ export default class EnemyDyingState implements IUnitState<Enemy>{
             enemy.state = 'explode'
         }
         else{
+            enemy.deadSound()
             enemy.state = 'dying'
         }
     }   

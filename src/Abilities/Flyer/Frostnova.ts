@@ -12,6 +12,8 @@ export default class Frostnova extends FlyerAbility{
         this.cost = 7
         this.name = 'frost nova'
         this.need_to_pay = true
+        this.mastery_chance = 60
+        this.cd = 8000
     }
 
     impact(){

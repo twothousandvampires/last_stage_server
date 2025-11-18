@@ -68,9 +68,9 @@ export default abstract class Character extends Unit {
 
     enlight_timer: number = 35000
     base_regeneration_time: number = 10000
-    grace: number = 1
+    grace: number = 122
     voice_radius: number = 20
-    gold: number = 0
+    gold: number = 1000
     cooldown_redaction: number = 0
     max_life: number = 4
     maximum_resources: number = 7
@@ -481,8 +481,8 @@ export default abstract class Character extends Unit {
 
         let diff = this.ascend_level - this.last_ascent_mastery_getting
 
-        while(diff >= 15){
-            this.last_ascent_mastery_getting += 15
+        while(diff >= 10){
+            this.last_ascent_mastery_getting += 10
             this.masteries.push(Builder.createRandomMastery())
             
             diff = this.ascend_level - this.last_ascent_mastery_getting

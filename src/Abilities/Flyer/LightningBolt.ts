@@ -15,6 +15,7 @@ export default class LightningBolt extends FlyerAbility{
         super(owner)
         this.cost = 1
         this.name = 'lightning bolt'
+        this.mastery_chance = 5
     }
 
     createLightning(x: number, y: number){

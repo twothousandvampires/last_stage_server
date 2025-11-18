@@ -27,6 +27,8 @@ export default class LightBeacon extends FlyerAbility implements IUnitState<Flye
         this.air_form = false
         this.need_to_pay = true
         this.type = Ability.TYPE_CUSTOM
+        this.mastery_chance = 75
+        this.cd = 10000
     }
 
     enter(unit: Flyer): void {

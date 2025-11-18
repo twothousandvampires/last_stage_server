@@ -15,6 +15,8 @@ export default class UnleashPain extends CultistAbility{
         this.restless_warriors = false
         this.cost = 7
         this.need_to_pay = true
+        this.mastery_chance = 85
+        this.cd = 10000
     }
 
     impact(){

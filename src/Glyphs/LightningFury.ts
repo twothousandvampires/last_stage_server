@@ -5,9 +5,6 @@ import Character from "../Objects/src/Character"
 import Mastery from "./Mastery"
 
 export default class LightningFury extends Mastery {
-
-    base_chance: number = 3
-    
     constructor(){
         super()
         this.name = 'lightning fury'
@@ -15,7 +12,7 @@ export default class LightningFury extends Mastery {
     }
 
     trigger(player: Character, ability: Ability){
-        if(Func.chance(this.base_chance + ability.cost * 7)){
+        if(ability.getMasteryChance()){
             let f = player.level.enemies.filter(elem => !elem.is_dead && Func.distance(player, elem) <= 8)[0]
 
             if(f){

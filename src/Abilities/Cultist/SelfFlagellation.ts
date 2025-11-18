@@ -15,6 +15,7 @@ export default class SelfFlagellation extends CultistAbility {
         this.cd = 6000
         this.name = 'self-flagellation'
         this.type = Ability.TYPE_INSTANT
+        this.mastery_chance = 25
     }
 
     impact(): void {

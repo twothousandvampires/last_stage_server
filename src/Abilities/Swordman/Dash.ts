@@ -22,6 +22,7 @@ export default class Dash extends SwordmanAbility implements IUnitState{
         this.name = 'dash'
         this.cd = 3000
         this.type = Ability.TYPE_CUSTOM
+        this.mastery_chance = 7
     }
 
     enter(player: Character){

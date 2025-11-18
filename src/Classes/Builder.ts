@@ -100,6 +100,11 @@ import SwirlingIce from "../Glyphs/SwirlingIce"
 import LightningFury from "../Glyphs/LightningFury"
 import FlyingSwords from "../Glyphs/FlyingSwords"
 import Vampiric from "../Items/Forgings/Vampiric"
+import Cleansing from "../Glyphs/Сleansing"
+import Insight from "../Glyphs/Insight"
+import Trinity from "../Glyphs/Trinity"
+import TurtleShell from "../Glyphs/TurtleShell"
+import Dismemberment from "../Glyphs/Dismemberment"
 
 export default class Builder{
 
@@ -114,7 +119,12 @@ export default class Builder{
         'infernal gaze': InfernalGaze,
         'swirling ice': SwirlingIce,
         'lightning fury': LightningFury,
-        'flying sword': FlyingSwords
+        'flying sword': FlyingSwords,
+        'cleansing': Cleansing,
+        'insight': Insight,
+        'trinity': Trinity,
+        'turtle shell': TurtleShell,
+        'dismemberment': Dismemberment
     }
 
     static itemMap = {

@@ -1,22 +1,22 @@
 import Ability from "../Abilities/Ability"
-import Heal from "../Objects/Effects/Heal"
+import ToothExplode from "../Objects/Effects/ToothExplode"
 import Character from "../Objects/src/Character"
 import Mastery from "./Mastery"
 
-export default class Recovery extends Mastery {
+export default class Insight extends Mastery {
     constructor(){
         super()
-        this.name = 'recovery'
-        this.description = 'When you start ability there is a chance to get life.'
+        this.name = 'insight'
+        this.description = 'When you start ability there is a chance to get energy.'
     }
 
     trigger(player: Character, ability: Ability){     
         if(ability.getMasteryChance()){
-            let e = new Heal(player.level)
+            let e = new ToothExplode(player.level)
             e.setPoint(player.x, player.y)
             player.level.addEffect(e)
 
-            player.addLife()
+            player.addResourse()
         } 
     }
 }

@@ -37,4 +37,14 @@ export class Flamy extends Enemy {
             this.level.projectiles.push(fb)
         }
     }
+
+     deadSound(): void {
+        if(Func.notChance(15)) return
+        
+        this.level.sounds.push({
+            x: this.x,
+            y: this.y,
+            name: 'flamy dead'
+        })
+    }
 }

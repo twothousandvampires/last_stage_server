@@ -15,6 +15,7 @@ export default class FrostSphere extends FlyerAbility{
         super(owner)
         this.cost = 1
         this.name = 'frost sphere'
+        this.mastery_chance = 4
     }
 
     impact(){

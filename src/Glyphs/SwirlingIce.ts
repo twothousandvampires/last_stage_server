@@ -5,9 +5,6 @@ import Character from "../Objects/src/Character"
 import Mastery from "./Mastery"
 
 export default class SwirlingIce extends Mastery {
-
-    base_chance: number = 5
-    
     constructor(){
         super()
         this.name = 'swirling ice'
@@ -15,7 +12,7 @@ export default class SwirlingIce extends Mastery {
     }
 
     trigger(player: Character, ability: Ability){
-        if(Func.chance(this.base_chance + ability.cost * 10)){
+        if(ability.getMasteryChance()){
 
             let proj1 = new SwirlingIceProj(player.level, Func.random(6, 9))
             proj1.setOwner(player)

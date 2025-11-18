@@ -170,12 +170,11 @@ export default class Default extends Scenario{
             this.time_between_wave_ms += 50
         }
 
-        let add_count = Math.floor(this.waves_created / 15)
+        let add_count = Math.floor(this.waves_created / 3)
+        add_count += (level.players.length - 1) * 2
 
         let count = Func.random(1 + Math.floor(add_count / 4), 2 + Math.floor(add_count / 2))
         
-        count += (level.players.length - 1) * 2
-
         if(this.times === Default.TIMES_BAD){
             count = Math.round(count * 1.2)
         }
@@ -421,8 +420,8 @@ export default class Default extends Scenario{
 
                 if(random){
                     let angle: number = Math.random() * 6.28
-                    let distance_x: number = Func.random(15, 25)
-                    let distance_y: number = Func.random(15, 25)
+                    let distance_x: number = Func.random(15, 20)
+                    let distance_y: number = Func.random(15, 20)
 
                     e.setPoint(random.x + Math.sin(angle) * distance_x, random.y + Math.cos(angle) * distance_y)
                 }
@@ -473,7 +472,7 @@ export default class Default extends Scenario{
             level.binded_effects.push(e)
         }
 
-        if(this.waves_created % 15 === 0){
+        if(this.waves_created % 3 === 0){
             let min = undefined
             let name = undefined
             for(let minor in this.monster_upgrades.minor){
@@ -498,7 +497,7 @@ export default class Default extends Scenario{
                     break;
             }
         }
-        if(this.waves_created % 25 === 0){
+        if(this.waves_created % 6 === 0){
             let min = undefined
             let name = undefined
             for(let major in this.monster_upgrades.major){

@@ -14,6 +14,7 @@ export default class Rune extends CultistAbility{
     constructor(owner: Cultist){
         super(owner)
         this.name = 'rune'
+        this.mastery_chance = 5
     }
 
     async impact(){

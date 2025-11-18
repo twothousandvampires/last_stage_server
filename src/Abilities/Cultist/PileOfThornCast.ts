@@ -15,6 +15,8 @@ export default class PileOfThornCast extends CultistAbility{
         this.distance = 25
         this.cost = 6
         this.need_to_pay = true
+        this.mastery_chance = 35
+        this.cd = 5000
     }
 
     impact(){

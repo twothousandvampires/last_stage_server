@@ -13,6 +13,7 @@ export default class AnnihilatorBeam extends FlyerAbility{
         this.name = 'annihilator beam'
         this.concentrating_energy = false
         this.cd = 3000
+        this.mastery_chance = 60
     }
 
     impact(){

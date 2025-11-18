@@ -5,9 +5,6 @@ import Character from "../Objects/src/Character"
 import Mastery from "./Mastery"
 
 export default class FallingStones extends Mastery {
-
-    base_chance: number = 10
-    
     constructor(){
         super()
         this.name = 'falling stones'
@@ -16,7 +13,7 @@ export default class FallingStones extends Mastery {
 
     async trigger(player: Character, ability: Ability){
         
-        if(Func.chance(this.base_chance + ability.cost * 10)){
+        if(ability.getMasteryChance()){
             let count = 3
 
             let zones = 6.28 / count

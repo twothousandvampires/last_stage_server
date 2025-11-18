@@ -507,8 +507,6 @@ export default class Swordman extends Character{
         if(!this.can_regen_resource) return
         this.playerGetResourse()
 
-        if(!this.can_regen_resource) return
-
         if(this.resource >= this.maximum_resources && !ignore_limit){
             return
         }

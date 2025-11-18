@@ -22,6 +22,8 @@ export default class Whirlwind extends SwordmanAbility implements IUnitState<Swo
         this.name = 'whirlwind'
         this.type = Ability.TYPE_CUSTOM
         this.need_to_pay = true
+        this.mastery_chance = 60
+        this.cd = 4000
     }
 
     impact(){

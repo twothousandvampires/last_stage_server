@@ -7,12 +7,13 @@ export default class Fireball extends FlyerAbility {
 
     body_melting: boolean = false
     ignite: boolean = false
-    fire_splitting: boolean = false
+    fire_splitting: boolean = true
 
     constructor(owner: Flyer){
         super(owner)
         this.cost = 1
         this.name = 'fireball'
+        this.mastery_chance = 4
     }
 
     impact(){
@@ -37,8 +38,7 @@ export default class Fireball extends FlyerAbility {
         this.owner.level.projectiles.push(proj)
 
         if(this.fire_splitting){
-        
-            let half = this.owner.getSecondResource()
+            let half = Math.floor(this.owner.getSecondResource() / 2)
             if(half){
                 for(let i = -half; i < half; i++){
                     if(i === 0) continue

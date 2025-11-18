@@ -38,6 +38,16 @@ export default class Specter extends Undead{
         ]
     }
 
+    deadSound(): void {
+        if(Func.notChance(15)) return
+        
+        this.level.sounds.push({
+            x: this.x,
+            y: this.y,
+            name: 'specter dead'
+        })
+    }
+
     getCastStateString(){
         return 'cast'
     }

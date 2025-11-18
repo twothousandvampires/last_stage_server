@@ -10,6 +10,7 @@ export default class CursedWeapon extends SwordmanAbility {
         super(owner)
         this.name = 'cursed weapon'
         this.cd = 12000
+        this.mastery_chance = 15
     }
 
     impact(){
