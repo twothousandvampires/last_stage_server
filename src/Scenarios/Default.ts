@@ -170,7 +170,7 @@ export default class Default extends Scenario{
             this.time_between_wave_ms += 50
         }
 
-        let add_count = Math.floor(this.waves_created / 3)
+        let add_count = Math.floor(this.waves_created / 15)
         add_count += (level.players.length - 1) * 2
 
         let count = Func.random(1 + Math.floor(add_count / 4), 2 + Math.floor(add_count / 2))

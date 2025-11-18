@@ -68,9 +68,9 @@ export default abstract class Character extends Unit {
 
     enlight_timer: number = 35000
     base_regeneration_time: number = 10000
-    grace: number = 122
+    grace: number = 1
     voice_radius: number = 20
-    gold: number = 1000
+    gold: number = 0
     cooldown_redaction: number = 0
     max_life: number = 4
     maximum_resources: number = 7
