@@ -31,6 +31,7 @@ export default class EnemyCastState implements IUnitState<Enemy>{
             let ability = Func.getRandomFromArray(abilities)
 
             if(ability){
+                enemy.hitImpact()
                 ability.use(enemy)
             }
         }

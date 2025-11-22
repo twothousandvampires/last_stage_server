@@ -17,6 +17,7 @@ export default class GrimPile extends CultistAbility{
         this.distance = 25
         this.cost = 3
         this.cd = 6000
+        this.mastery_chance = 35
     }
 
     impact(){

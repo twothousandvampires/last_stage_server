@@ -11,6 +11,7 @@ export default class Commands extends SwordmanAbility {
         super(owner)
         this.cd = 16000
         this.name = 'commands'
+        this.mastery_chance = 15
     }
 
     impact(){

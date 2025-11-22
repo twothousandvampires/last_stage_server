@@ -14,6 +14,7 @@ export default class Slam extends CultistAbility {
         this.slaming = false
         this.soul_extraction = false
         this.type = Ability.TYPE_ATTACK
+        this.mastery_chance = 5
     }
 
     impact(){

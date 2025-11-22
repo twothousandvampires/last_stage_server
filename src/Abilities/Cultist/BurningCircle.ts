@@ -16,6 +16,7 @@ export default class BurningCircle extends CultistAbility{
         this.hatred = false
         this.devouring = false
         this.cd = 25000
+        this.mastery_chance = 50
     }
 
     impact(){

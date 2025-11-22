@@ -25,7 +25,7 @@ export default class Solid extends Enemy{
         this.create_chance = 80
         this.create_chance = 80
         this.say_z = 18
-        this.gold_revard = 4
+        this.gold_revard = 6
         this.create_item_chance = 2
         this.dying_time = 1200
         this.dead_time = 1200
@@ -33,6 +33,16 @@ export default class Solid extends Enemy{
 
     getDeadStateInstance() {
         return new SolidDeadState()
+    }
+
+     deadSound(): void {
+        if(Func.notChance(15)) return
+        
+        this.level.sounds.push({
+            x: this.x,
+            y: this.y,
+            name: 'solid dead'
+        })
     }
 
     hitImpact(){

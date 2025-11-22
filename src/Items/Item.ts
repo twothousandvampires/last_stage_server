@@ -172,7 +172,8 @@ export default abstract class Item {
         'impact',
         'penetrating',
         'spirit',
-        'power'
+        'power',
+        'vampiric'
     ]
 
     static forging_list_type_1 = [

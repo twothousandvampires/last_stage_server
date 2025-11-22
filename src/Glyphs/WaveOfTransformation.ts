@@ -6,9 +6,6 @@ import Character from "../Objects/src/Character"
 import Mastery from "./Mastery"
 
 export default class WaveOfTransformation extends Mastery {
-
-    base_chance: number = 5
-    
     constructor(){
         super()
         this.name = 'wave of trasformation'
@@ -17,7 +14,7 @@ export default class WaveOfTransformation extends Mastery {
 
     trigger(player: Character, ability: Ability){
         
-        if(Func.chance(this.base_chance + ability.cost * 10)){
+        if(ability.getMasteryChance()){
             let e = new GoldNova(player.level)
             e.setPoint(player.x, player.y)
 

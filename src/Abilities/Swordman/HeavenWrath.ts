@@ -11,6 +11,8 @@ export default class HeavenWrath extends SwordmanAbility{
         this.name = 'heaven wrath'
         this.cost = 9
         this.need_to_pay = true
+        this.mastery_chance = 50
+        this.cd = 5000
     }
 
     impact(){

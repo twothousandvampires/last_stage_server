@@ -23,37 +23,39 @@ export default class WithColdStatus extends Status{
 
     act(tick_time: number){
         if(tick_time > this.last_checked){
-            this.last_checked += 5000 - this.power * 200
+            this.last_checked += 6000
 
-            let distance_x = Func.random(10, 20)
-            let distance_y = Func.random(10, 20)
+            let check_distance = 14
+                        
+            let area = this.unit.getBoxElipse()
+            area.r = check_distance
+
+            let targets = this.unit.level.enemies.filter(elem => Func.elipseCollision(elem.getBoxElipse(), area))
+            let random_target = targets[Math.round(Math.random() * targets.length)]
+
+            if(random_target){
+                let e = new FrostExplosionBig(this.unit.level)
+                e.setPoint(random_target.x, random_target.y)
+                this.unit.level.effects.push(e)
             
-            let angle = Math.random() * 6.28
+                let enemies = this.unit.level.enemies
+                let players = this.unit.level.players
 
-            let point = {
-                x: this.unit.x + Math.sin(angle) * distance_x,
-                y: this.unit.y + Math.sin(angle) * distance_y,
-                r: 3 + this.power
+                let point = random_target.getBoxElipse()
+                point.r = 7
+
+                enemies.forEach((elem) => {
+                    if(Func.elipseCollision(point, elem.getBoxElipse())){
+                        elem.setFreeze(1500)
+                    }
+                })
+
+                players.forEach((elem) => {
+                    if(elem != this.unit && Func.elipseCollision(point, elem.getBoxElipse())){
+                        elem.setFreeze(1500)
+                    }
+                })
             }
-
-            let e = new FrostExplosionBig(this.unit.level)
-            e.setPoint(point.x, point.y)
-            this.unit.level.effects.push(e)
-         
-            let enemies = this.unit.level.enemies
-            let players = this.unit.level.players
-
-            enemies.forEach((elem) => {
-                if(Func.elipseCollision(point, elem.getBoxElipse())){
-                    elem.setFreeze(1500)
-                }
-            })
-
-            players.forEach((elem) => {
-                if(elem != this.unit && Func.elipseCollision(point, elem.getBoxElipse())){
-                    elem.setFreeze(1500)
-                }
-            })
         }
     }
 }

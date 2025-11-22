@@ -15,10 +15,10 @@ export default class LightningBolt extends FlyerAbility{
         super(owner)
         this.cost = 1
         this.name = 'lightning bolt'
+        this.mastery_chance = 5
     }
 
     createLightning(x: number, y: number){
-        this.afterUse()
         let enemies = this.owner.level.enemies
         let players = this.owner.level.players
 
@@ -57,22 +57,21 @@ export default class LightningBolt extends FlyerAbility{
         }
 
         let l_effect = new LightningBoltEffect(this.owner.level)
-        l_effect.setPoint(this.owner.c_x, this.owner.c_y)
+        l_effect.setPoint(x, y)
 
-        this.owner.level.addSound('lightning bolt', this.owner.c_x, this.owner.c_y)
+        this.owner.level.addSound('lightning bolt', x, y)
         this.owner.level.effects.push(l_effect)
         
-        this.owner.target = undefined
-
         setTimeout(() => {
             let r_effect = new RocksFromCeil(this.owner.level)
-            r_effect.setPoint(this.owner.c_x, this.owner.c_y)
+            r_effect.setPoint(x, y)
             r_effect.setOwner(this)
             this.owner.level.effects.push(r_effect)
         }, 400)
     }
 
     async impact(){
+        this.afterUse()
         if(this.owner.target){
             let t = this.owner.level.enemies.find(elem => elem.id === this.owner.target)
             
@@ -88,9 +87,8 @@ export default class LightningBolt extends FlyerAbility{
         
         this.createLightning(this.owner.c_x, this.owner.c_y)
 
-
         if(this.storm){
-            let count = Math.floor(this.owner.getSecondResource() / 2)
+            let count = Math.floor(this.owner.getSecondResource() / 3)
 
             for(let i = 0; i < count; i++){
                 await Func.sleep(200)

@@ -229,6 +229,10 @@ export default abstract class Enemy extends Unit {
 
         this.life_status -= damage_value
     }
+
+    deadSound(){
+        
+    }
     
     takeDamage(unit: any = undefined, options: any = {}){
         if(this.is_dead) return

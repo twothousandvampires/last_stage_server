@@ -8,7 +8,7 @@ export class MasteryManifistation extends Manifistation {
     
         super(level)
         this.name = 'mastery manifistation'
-        this.count_to_activate = 10
+        this.count_to_activate = 8
     }
 
     activate(): void {

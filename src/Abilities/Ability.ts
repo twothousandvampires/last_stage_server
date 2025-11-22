@@ -1,3 +1,4 @@
+import Func from "../Func";
 import Character from "../Objects/src/Character";
 import Player from "../Objects/src/Character";
 import PlayerAttackState from "../State/PlayerAttackState";
@@ -18,6 +19,7 @@ export default abstract class Ability {
     need_to_pay: boolean = false
     type: number = Ability.TYPE_CAST
     state_sprite: string | undefined
+    mastery_chance: number = 10
 
     after_use_triggers: any[] = []
     before_use_triggers: any[] = []
@@ -28,6 +30,10 @@ export default abstract class Ability {
 
     abstract impact(): void
         
+    getMasteryChance(){
+        return Func.chance(this.mastery_chance)
+    }
+
     use(player: Character){
         if(this.type === Ability.TYPE_CAST){
             player.setState(new PlayerCastState())

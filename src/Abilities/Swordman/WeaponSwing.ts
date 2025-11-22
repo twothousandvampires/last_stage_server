@@ -14,6 +14,7 @@ export default class WeaponSwing extends SwordmanAbility {
         super(owner)
         this.name = 'swing'
         this.type = Ability.TYPE_ATTACK
+        this.mastery_chance = 5
     }
 
     impact(){

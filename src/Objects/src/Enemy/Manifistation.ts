@@ -75,7 +75,7 @@ export default abstract class Manifistation extends Effect {
                         else{
                             this.activated_by = this.hitted_by
                             this.activate()
-                            this.count_to_activate += 3
+                            this.count_to_activate += 2
                            
                             this.hitted_by = undefined
                             this.count = 0

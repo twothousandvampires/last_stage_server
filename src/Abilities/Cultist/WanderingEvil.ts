@@ -12,6 +12,8 @@ export default class WanderingEvil extends CultistAbility{
         this.distance = 25
         this.cost = 8
         this.need_to_pay = true
+        this.mastery_chance = 85
+        this.cd = 6000
     }
   
     impact(){

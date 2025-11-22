@@ -27,6 +27,8 @@ export default class Quake extends SwordmanAbility implements IUnitState{
         this.name = 'quake'
         this.need_to_pay = true
         this.type = Ability.TYPE_CUSTOM
+        this.mastery_chance = 75
+        this.cd = 6000
     }
 
     enter(player: Character){

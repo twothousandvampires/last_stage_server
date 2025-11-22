@@ -12,6 +12,9 @@ export default class ThunderStrikesTrigger {
     trigger(player: Character, enemy: any){
         if(Func.notChance(this.chance, player.is_lucky)) return
         if(!enemy) return
+        if(player.level.time - this.last_trigger_time < this.cd) return
+     
+        this.last_trigger_time = player.level.time
 
         let angle = Func.angle(player.x, player.y, enemy.x, enemy.y)
 

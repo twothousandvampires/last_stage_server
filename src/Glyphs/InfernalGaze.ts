@@ -4,9 +4,6 @@ import Character from "../Objects/src/Character"
 import Mastery from "./Mastery"
 
 export default class InfernalGaze extends Mastery {
-
-    base_chance: number = 5
-    
     constructor(){
         super()
         this.name = 'infernal gaze'
@@ -14,7 +11,7 @@ export default class InfernalGaze extends Mastery {
     }
 
     trigger(player: Character, ability: Ability){
-        if(Func.chance(this.base_chance + ability.cost * 10)){
+        if(ability.getMasteryChance()){
 
             player.level.addSound('fire explosion', player.x, player.y)
             let gaze_angle = 0

@@ -10,6 +10,7 @@ export default class Teeth extends FlyerAbility{
         this.cost = 1
         this.name = 'teeth'
         this.cd = 2000
+        this.mastery_chance = 7
     }
     
     impact(){

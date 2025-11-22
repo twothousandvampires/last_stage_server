@@ -15,6 +15,8 @@ export default class UnleashPain extends CultistAbility{
         this.restless_warriors = false
         this.cost = 7
         this.need_to_pay = true
+        this.mastery_chance = 85
+        this.cd = 10000
     }
 
     impact(){
@@ -26,7 +28,7 @@ export default class UnleashPain extends CultistAbility{
 
         let e = this.owner.getBoxElipse()
 
-        e.r = 18 + this.owner.getSecondResource()
+        e.r = 18 + (this.reign_of_pain ? 8 : 0)
 
         let enemy = this.owner.level.enemies.filter((elem) => {
             return Func.elipseCollision(elem.getBoxElipse(), e)

@@ -5,9 +5,6 @@ import Character from "../Objects/src/Character"
 import Mastery from "./Mastery"
 
 export default class TornadoLaunch extends Mastery {
-
-    base_chance: number = 5
-    
     constructor(){
         super()
         this.name = 'tornado launch'
@@ -15,7 +12,7 @@ export default class TornadoLaunch extends Mastery {
     }
 
     trigger(player: Character, ability: Ability){
-        if(Func.chance(this.base_chance + ability.cost * 10)){
+        if(ability.getMasteryChance()){
             let e = new Tornado(player.level)
             e.setPoint(player.x, player.y)
             e.setOwner(player)

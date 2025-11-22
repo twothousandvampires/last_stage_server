@@ -6,9 +6,6 @@ import Undead from "../Objects/src/Enemy/Undead"
 import Mastery from "./Mastery"
 
 export default class HolyStrike extends Mastery {
-
-    base_chance: number = 5
-    
     constructor(){
         super()
         this.name = 'holy strike'
@@ -17,7 +14,7 @@ export default class HolyStrike extends Mastery {
 
     trigger(player: Character, ability: Ability){
         
-        if(Func.chance(this.base_chance + ability.cost * 10)){
+        if(ability.getMasteryChance()){
             let x = player.x
             let y = player.y
             let distance = 15

@@ -20,6 +20,7 @@ export default class WeaponThrow extends SwordmanAbility {
         this.name = 'weapon throw'
         this.multiple = false
         this.type = Ability.TYPE_ATTACK
+        this.mastery_chance = 7
     }
 
     getCdValue(){

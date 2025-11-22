@@ -22,6 +22,7 @@ export default class Teleportation extends FlyerAbility implements IUnitState{
         super(owner)
         this.cd = 3000
         this.name = 'teleportation'
+        this.mastery_chance = 15
     }
 
     use(){

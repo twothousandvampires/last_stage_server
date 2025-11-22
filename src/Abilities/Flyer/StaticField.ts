@@ -13,6 +13,7 @@ export default class StaticField extends FlyerAbility {
         this.name = 'static field'
         this.hand_cuffing = false
         this.collapse = false
+        this.mastery_chance = 10
     }
 
     impact(){

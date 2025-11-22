@@ -15,6 +15,7 @@ export default class Soulrender extends CultistAbility{
         super(owner)
         this.name = 'soulrender'
         this.distance = 25
+        this.mastery_chance = 3
     }
 
     tear(t){

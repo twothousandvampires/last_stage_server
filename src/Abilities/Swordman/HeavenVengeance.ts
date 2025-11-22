@@ -14,6 +14,7 @@ export default class HeavenVengeance extends SwordmanAbility{
         this.name = 'heaven vengeance'
         this.cd = 3300
         this.type = Ability.TYPE_ATTACK
+        this.mastery_chance = 15
     }
 
     trigger(){

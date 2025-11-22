@@ -29,13 +29,23 @@ export default class Specter extends Undead{
         this.can_cast_seekers = true
         this.create_grace_chance = 90
         this.create_chance = 90
-        this.gold_revard = 5
+        this.gold_revard = 6
         this.create_item_chance = 6
 
         this.abilities = [
             new SoulVortex(),
             new SoulSeekers()
         ]
+    }
+
+    deadSound(): void {
+        if(Func.notChance(15)) return
+        
+        this.level.sounds.push({
+            x: this.x,
+            y: this.y,
+            name: 'specter dead'
+        })
     }
 
     getCastStateString(){

@@ -5,9 +5,6 @@ import Character from "../Objects/src/Character"
 import Mastery from "./Mastery"
 
 export default class VoidDevouring extends Mastery {
-
-    base_chance: number = 2
-    
     constructor(){
         super()
         this.name = 'devouring void'
@@ -16,8 +13,8 @@ export default class VoidDevouring extends Mastery {
 
     trigger(player: Character, ability: Ability){
         
-        if(Func.chance(this.base_chance + ability.cost * 10)){
-            
+        if(ability.getMasteryChance()){
+           
             for(let i = 0; i < player.level.enemies.length; i++){
                 let e = player.level.enemies[i]
 

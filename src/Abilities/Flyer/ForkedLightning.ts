@@ -14,6 +14,7 @@ export default class ForkedLightning extends FlyerAbility{
         this.cost = 4
         this.name = 'forked lightning'
         this.cd = 3500
+        this.mastery_chance = 25
     }
 
     impact(){

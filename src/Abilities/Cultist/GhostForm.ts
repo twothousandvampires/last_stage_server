@@ -24,6 +24,7 @@ export default class GhostForm extends CultistAbility implements IUnitState{
         this.name = 'ghost form'
         this.cd = 15000
         this.type = Ability.TYPE_CUSTOM
+        this.mastery_chance = 25
     }
 
     enter(player: Character){

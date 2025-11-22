@@ -19,8 +19,8 @@ export default class WithStormStatus extends Status{
     
     act(tick_time: number){
         if(tick_time > this.last_checked){
-            this.last_checked += 5000 - (this.power * 200)
-            let check_distance = 20 + this.power * 2
+            this.last_checked += 5000
+            let check_distance = 20 
 
             let area = this.unit.getBoxElipse()
             area.r = check_distance

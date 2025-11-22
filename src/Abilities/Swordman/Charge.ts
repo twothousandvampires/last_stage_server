@@ -21,6 +21,7 @@ export default class Charge extends SwordmanAbility implements IUnitState<Charac
         this.name = 'charge'
         this.cd = 8500
         this.type = Ability.TYPE_CUSTOM
+        this.mastery_chance = 50
     }
 
     enter(player: Character){

@@ -19,6 +19,7 @@ export default class ShieldBash extends CultistAbility {
         this.cd = 5000
         this.type = Ability.TYPE_ATTACK
         this.state_sprite = 'shield hit'
+        this.mastery_chance = 60
     }
 
     afterUse(forced_cd: number | undefined = undefined) {
