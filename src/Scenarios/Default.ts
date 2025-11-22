@@ -176,7 +176,7 @@ export default class Default extends Scenario{
         let count = Func.random(1 + Math.floor(add_count / 4), 2 + Math.floor(add_count / 2))
         
         if(this.times === Default.TIMES_BAD){
-            count = Math.round(count * 1.2)
+            count = Math.round(count * 1.5)
         }
 
         for(let i = 0; i < count; i++){

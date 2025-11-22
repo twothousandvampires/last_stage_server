@@ -517,7 +517,7 @@ export default class Upgrades{
                     desc: 'Increases your might'
                 },
                 {
-                    name: 'Increase durability',
+                    name: 'increase durability',
                     canUse: (character: Character) => {
                         return character.durability != undefined
                     },
@@ -698,9 +698,9 @@ export default class Upgrades{
                     desc: 'Grants a buff upon exiting a portal that give armour to you and your allies'
                 },
                 {
-                    name: 'talkativeness',
+                    name: 'charisma',
                     canUse: (character: Character) => {
-                        return character.chance_to_say_phrase < 3
+                        return character.chance_to_say_phrase < 8
                     },
                     teach: (character: Character) => {
                         character.chance_to_say_phrase ++

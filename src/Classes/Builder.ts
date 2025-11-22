@@ -170,7 +170,7 @@ export default class Builder{
         'bones when block': BonesWhenBlock, 
         'cast speed': CastSpeed,
         'chance': Chance,
-        'charisma': Charisma,
+        // 'charisma': Charisma,
         'cooldown reduction': CooldownReduction,
         'count': Count,
         'critical': Critical,
