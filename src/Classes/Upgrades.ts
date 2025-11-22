@@ -816,7 +816,7 @@ export default class Upgrades{
                 {
                     name: 'raising morale',
                     canUse: (character: Character) => {
-                        return !character.triggers_on_say.some(elem => elem instanceof RisingMoraleTrigger)
+                        return !character.triggers_on_say.some(elem => elem instanceof RisingMoraleTrigger) && character.chance_to_say_phrase >= 2
                     },
                     teach: (character: Character) => {
                         character.triggers_on_say.push(new RisingMoraleTrigger())
@@ -841,7 +841,7 @@ export default class Upgrades{
                 {
                     name: 'shout',
                     canUse: (character: Character) => {
-                        return character.level.players.length > 1
+                        return character.level.players.length > 1 && character.chance_to_say_phrase >= 2
                     },
                     teach: (character: Character) => {
                         if(character instanceof Character){
@@ -1528,7 +1528,7 @@ export default class Upgrades{
                     desc: 'Deals damage not only to frozen enemies'
                 },
                 {
-                    name: 'shattering',
+                    name: 'shattering ice',
                     type: 'frost sphere',
                     canUse: (character: Character) => {
                         return character instanceof Flyer && (character.first_ability instanceof FrostSphere) && !character.first_ability.shattering
