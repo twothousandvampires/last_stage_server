@@ -584,7 +584,7 @@ export default class Upgrades{
                     ascend: 25,
                     desc: 'Undead creatures you kill have a reduced chance of resurrecting'
                 },
-                 {
+                {
                     name: 'pierce',
                     canUse: (character: Character) => {
                         return true
