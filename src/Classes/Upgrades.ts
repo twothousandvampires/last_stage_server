@@ -698,9 +698,9 @@ export default class Upgrades{
                     desc: 'Grants a buff upon exiting a portal that give armour to you and your allies'
                 },
                 {
-                    name: 'charisma',
+                    name: 'talkativeness',
                     canUse: (character: Character) => {
-                        return character.chance_to_say_phrase < 8
+                        return character.chance_to_say_phrase < 8 && Func.chance(20)
                     },
                     teach: (character: Character) => {
                         character.chance_to_say_phrase ++
