@@ -243,8 +243,8 @@ export default abstract class Character extends Unit {
 
     toJSON(){
         return {
-            abilities: [this.first_ability.name, this.second_ability?.name, this.third_ability?.name, this.utility?.name],
-            can_use: [this.first_ability.canUse(), this.second_ability.canUse(), this.third_ability.canUse(), this.utility.canUse()],
+            abilities: [this.first_ability?.name, this.second_ability?.name, this.third_ability?.name, this.utility?.name],
+            can_use: [this.first_ability?.canUse(), this.second_ability?.canUse(), this.third_ability?.canUse(), this.utility?.canUse()],
             resource: this.resource,
             maximum_resources: this.maximum_resources,
             life_status: this.life_status,
