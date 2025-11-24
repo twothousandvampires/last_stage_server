@@ -7,11 +7,9 @@ export default class ThunderStrikesTrigger {
 
     cd: number = 1500
     last_trigger_time: number = 0
-    chance: number = 35
+    count: number = 0
 
     trigger(player: Character, enemy: any){
-        if(Func.notChance(this.chance, player.is_lucky)) return
-
         if(!enemy) return
 
         if(player.level.time - this.last_trigger_time < this.cd) return
@@ -20,22 +18,26 @@ export default class ThunderStrikesTrigger {
 
         let angle = Func.angle(player.x, player.y, enemy.x, enemy.y)
 
-        let l1 = new Lightning(player.level)
-        l1.setAngle(angle)
-        l1.setPoint(enemy.x + Math.sin(angle) * 4, enemy.y + Math.cos(angle) * 4)
+        for(let i = 0; i < this.count; i++){
+            let l = new Lightning(player.level)
+            l.setPoint(enemy.x + Math.sin(angle) * 4, enemy.y + Math.cos(angle) * 4)
 
-        player.level.projectiles.push(l1)
+            let u = 0
+            let d = 0
 
-        let l2 = new Lightning(player.level)
-        l2.setAngle(angle - 0.3)
-        l2.setPoint(enemy.x + Math.sin(angle) * 4, enemy.y + Math.cos(angle) * 4)
+            if(i === 0){
+                l.setAngle(angle)         
+            }
+            else if(i % 2 === 0){
+                u += 0.3
+                l.setAngle(angle - (0.3 * u))
+            }
+            else{
+                d += 0.3
+                l.setAngle(angle + (0.3 * d))
+            }
 
-        player.level.projectiles.push(l2)
-
-        let l3 = new Lightning(player.level)
-        l3.setAngle(angle + 0.3)
-        l3.setPoint(enemy.x + Math.sin(angle) * 4, enemy.y + Math.cos(angle) * 4)
-
-        player.level.projectiles.push(l3)
+            player.level.projectiles.push(l)
+        }
     }
 }
