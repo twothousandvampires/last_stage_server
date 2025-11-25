@@ -18,12 +18,12 @@ export default class ThunderStrikesTrigger {
 
         let angle = Func.angle(player.x, player.y, enemy.x, enemy.y)
 
+        let u = 0
+        let d = 0
+
         for(let i = 0; i < this.count; i++){
             let l = new Lightning(player.level)
             l.setPoint(enemy.x + Math.sin(angle) * 4, enemy.y + Math.cos(angle) * 4)
-
-            let u = 0
-            let d = 0
 
             if(i === 0){
                 l.setAngle(angle)         

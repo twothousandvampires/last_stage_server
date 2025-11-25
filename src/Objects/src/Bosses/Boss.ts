@@ -33,6 +33,7 @@ export default class Boss extends Undead {
         this.init()
         this.gold_revard = 30
         this.can_be_removed = false
+        this.can_be_burned = false
     }
 
     init(){

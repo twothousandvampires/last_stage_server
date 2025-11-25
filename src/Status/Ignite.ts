@@ -3,7 +3,7 @@ import FireExplosionSmall from "../Objects/Effects/FireExplosionSmall"
 import Character from "../Objects/src/Character"
 import Status from "./Status"
 
-export default class Ignite extends Status{
+export default class Ignite extends Status {
 
     last_checked: number
     provider: any = undefined

@@ -20,6 +20,8 @@ import SorcerersSkull from "./Objects/Effects/SorcerersSkull"
 import UpgradeManager from "./Classes/UpgradeManager"
 import Helm from "./Objects/Effects/Helm"
 import Message from "./Types/Message"
+import { Connection } from "mysql2/typings/mysql/lib/Connection"
+import Conversation from "./Scenarios/Conversation"
 
 export default class Level{
     static enemy_list = [
