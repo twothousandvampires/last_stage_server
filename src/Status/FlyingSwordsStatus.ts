@@ -23,8 +23,7 @@ export default class FlyingSwordsStatus extends Status{
 
     apply(unit: any){
         this.unit = unit
-        unit.gold_revard += 1
-        unit.life_status += 1
+ 
         let effect = new FlyingSwordsEffect(this.unit.level)
         effect.setOwner(this.unit)
         effect.setPoint(this.unit.x, this.unit.y)

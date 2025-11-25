@@ -176,7 +176,7 @@ export default class Default extends Scenario{
         let count = Func.random(1 + Math.floor(add_count / 4), 2 + Math.floor(add_count / 2))
         
         if(this.times === Default.TIMES_BAD){
-            count = Math.round(count * 1.2)
+            count = Math.round(count * 1.5)
         }
 
         for(let i = 0; i < count; i++){
@@ -472,7 +472,7 @@ export default class Default extends Scenario{
             level.binded_effects.push(e)
         }
 
-        if(this.waves_created % 3 === 0){
+        if(this.waves_created % 15 === 0){
             let min = undefined
             let name = undefined
             for(let minor in this.monster_upgrades.minor){
@@ -497,7 +497,7 @@ export default class Default extends Scenario{
                     break;
             }
         }
-        if(this.waves_created % 6 === 0){
+        if(this.waves_created % 25 === 0){
             let min = undefined
             let name = undefined
             for(let major in this.monster_upgrades.major){

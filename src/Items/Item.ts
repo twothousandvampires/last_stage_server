@@ -168,7 +168,7 @@ export default abstract class Item {
         'sacredness',
         'toughness',
         'gold find',
-        'charisma',
+        // 'charisma',
         'impact',
         'penetrating',
         'spirit',

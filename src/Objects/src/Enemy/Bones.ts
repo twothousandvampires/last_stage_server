@@ -18,7 +18,7 @@ export default class Bones extends Undead {
         this.spawn_time = 1600
         this.ressurect_chance = 60
         this.armour_rate = 10
-        this.gold_revard = 1
+        this.gold_revard = 2
         this.weapon_angle = 0.8
     }
 

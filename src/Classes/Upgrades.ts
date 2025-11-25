@@ -584,7 +584,7 @@ export default class Upgrades{
                     ascend: 25,
                     desc: 'Undead creatures you kill have a reduced chance of resurrecting'
                 },
-                 {
+                {
                     name: 'pierce',
                     canUse: (character: Character) => {
                         return true
@@ -700,7 +700,7 @@ export default class Upgrades{
                 {
                     name: 'talkativeness',
                     canUse: (character: Character) => {
-                        return character.chance_to_say_phrase < 3
+                        return character.chance_to_say_phrase < 8 && Func.chance(20)
                     },
                     teach: (character: Character) => {
                         character.chance_to_say_phrase ++
