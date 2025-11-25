@@ -6,7 +6,7 @@ export default class FromDefendToAttackTrigger {
 
     cd: number = 1000
     last_trigger_time: number = 0
-    chance: number= 30
+    chance: number = 30
 
     trigger(player: Character){
         if(player.level.time - this.last_trigger_time >= this.cd){
@@ -14,7 +14,7 @@ export default class FromDefendToAttackTrigger {
             if(Func.notChance(this.chance, player.is_lucky)) return
             
             let s = new Power(player.level.time)
-            s.setPower(5)
+            s.setPower(10)
             s.setDuration(8000)
 
             player.level.setStatus(player, s, true)

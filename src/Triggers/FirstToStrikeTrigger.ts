@@ -15,7 +15,7 @@ export default class FirstToStrikeTrigger {
             if(Func.notChance(this.chance, player.is_lucky)) return
             
             let s = new AttackAndCastSpeed(player.level.time)
-            s.setPower(30)
+            s.setPower(60)
             s.setDuration(8000)
 
             player.level.setStatus(player, s, true)

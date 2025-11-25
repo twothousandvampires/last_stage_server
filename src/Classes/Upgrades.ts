@@ -517,7 +517,7 @@ export default class Upgrades{
                     desc: 'Increases your might'
                 },
                 {
-                    name: 'Increase durability',
+                    name: 'increase durability',
                     canUse: (character: Character) => {
                         return character.durability != undefined
                     },
@@ -903,7 +903,7 @@ export default class Upgrades{
                 desc: 'Increases detonation rate'
             },
             {
-                name: 'Second detanation',
+                name: 'second detanation',
                 type: 'rune',
                 canUse: (character: Character) => {
                     return character.first_ability instanceof Rune && !character.first_ability.second_detanation
@@ -1933,7 +1933,7 @@ export default class Upgrades{
                 desc: 'Gives your weapon swing chance to land an additional swing after a short time'
             },
             {
-                name: 'Improved swing technology',
+                name: 'improved swing technology',
                 type: 'weapon swing',
                 canUse: (character: Character) => {
                     return character.first_ability instanceof WeaponSwing && !character.first_ability.improved_swing_technology
