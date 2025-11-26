@@ -10,7 +10,7 @@ export default class UnleashPain extends CultistAbility{
 
     constructor(owner: Cultist){
         super(owner)
-        this.name = 'unleash pain'
+        this.name = 'unleashing pain'
         this.reign_of_pain = false
         this.restless_warriors = false
         this.cost = 7

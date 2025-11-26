@@ -1078,7 +1078,7 @@ export default class Upgrades{
             },
             {
                 name: 'reign of pain',
-                type: "unleash pain",
+                type: "unleashing pain",
                 canUse: (character: Character) => {
                      return character.third_ability instanceof UnleashPain &&
                     !character.third_ability.reign_of_pain
@@ -1110,7 +1110,7 @@ export default class Upgrades{
             },
             {
                 name: 'restless warriors',
-                type: "unleash pain",
+                type: "unleashing pain",
                 canUse: (character: Character) => {
                      return character.third_ability instanceof UnleashPain &&
                     !character.third_ability.restless_warriors

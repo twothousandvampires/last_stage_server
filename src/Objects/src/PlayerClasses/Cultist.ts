@@ -110,7 +110,7 @@ export default class Cultist extends Character{
 
         let finisher_name = abilities.find(elem => elem.type === 3 && elem.selected).name
 
-        if(finisher_name === 'unleash pain'){
+        if(finisher_name === 'unleashing pain'){
             this.third_ability = new UnleashPain(this)
         }
         else if(finisher_name === 'pile of thorns'){
