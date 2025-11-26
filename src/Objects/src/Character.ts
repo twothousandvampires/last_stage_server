@@ -356,6 +356,14 @@ export default abstract class Character extends Unit {
             elem.trigger(this)
         })
 
+        this.level.players.forEach(elem => {
+            if(elem != this && Func.distance(elem, this) <= this.voice_radius){
+                setTimeout(() => {
+                    elem.sayPhrase()
+                }, 1500)
+            }
+        })
+
         this.level.effects.push(phrase)
     }
 

@@ -7,7 +7,7 @@ export default class Bonfire extends Effect {
     constructor(level: Level){
         super(level)
         this.name = 'bonfire'
-        this.light_r = 14
+        this.light_r = 20
         this.last = 0
     }
 
@@ -18,14 +18,14 @@ export default class Bonfire extends Effect {
             if(Func.chance(50)){
                 if(Func.chance(50)){
                     this.light_r --
-                    if(this.light_r < 12){
-                        this.light_r = 12
+                    if(this.light_r < 18){
+                        this.light_r = 18
                     }
                 }
                 else{
                     this.light_r ++
-                    if(this.light_r > 16){
-                        this.light_r = 16
+                    if(this.light_r > 22){
+                        this.light_r = 22
                     }
                 }
             }

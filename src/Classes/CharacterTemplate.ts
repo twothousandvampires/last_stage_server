@@ -322,7 +322,7 @@ export default class characterTemplate{
                 },
                 {
                     id: 5,
-                    name: 'unleash pain',
+                    name: 'unleashing pain',
                     type: 3,
                     selected: true,
                     desc: 'Summon a ghost warriors which will hit enemies.'
