@@ -1,5 +1,5 @@
-import SoulSeekers from "../../../EnemyAbilities.ts/SoulSeekers";
-import SoulVortex from "../../../EnemyAbilities.ts/SoulVortex";
+import SoulSeekers from "../../../EnemyAbilities/SoulSeekers";
+import SoulVortex from "../../../EnemyAbilities/SoulVortex";
 import Func from "../../../Func";
 import Level from "../../../Level";
 import Undead from "./Undead";

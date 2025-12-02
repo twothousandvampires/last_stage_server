@@ -4,14 +4,25 @@ import Effect from "./Effects";
 
 export default class Bonfire extends Effect {
     last: number
+    disabled: boolean = false
     constructor(level: Level){
         super(level)
         this.name = 'bonfire'
-        this.light_r = 20
+        this.light_r = 19
         this.last = 0
     }
-
+    
     act(time: number): void {
+        if(this.disabled){
+            this.light_r -= 0.2
+            if(this.light_r < 0){
+                this.light_r = 0
+            }
+            this.wasChanged()
+
+
+            return
+        }
         if(time - this.last > 150){
             this.last = time
 
@@ -24,8 +35,8 @@ export default class Bonfire extends Effect {
                 }
                 else{
                     this.light_r ++
-                    if(this.light_r > 22){
-                        this.light_r = 22
+                    if(this.light_r > 21){
+                        this.light_r = 21
                     }
                 }
             }

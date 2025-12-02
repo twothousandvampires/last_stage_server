@@ -1,5 +1,5 @@
-import DespairAbility from "../../../EnemyAbilities.ts/DespairAbility";
-import FrostBoltAbility from "../../../EnemyAbilities.ts/FrostBoltAbility";
+import DespairAbility from "../../../EnemyAbilities/DespairAbility";
+import FrostBoltAbility from "../../../EnemyAbilities/FrostBoltAbility";
 import Level from "../../../Level";
 import EnemyRangeIdleState from "../../../State/EnemyRangeIdleState";
 import Undead from "./Undead";

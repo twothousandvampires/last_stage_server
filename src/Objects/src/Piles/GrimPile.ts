@@ -1,4 +1,4 @@
-import GrimPileCast from "../../../EnemyAbilities.ts/GrimPileCast";
+import GrimPileCast from "../../../EnemyAbilities/GrimPileCast";
 import Level from "../../../Level";
 import Pile from "./Pile";
 

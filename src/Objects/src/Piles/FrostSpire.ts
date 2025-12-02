@@ -1,4 +1,4 @@
-import ColdSpireFrostNova from "../../../EnemyAbilities.ts/ColdSpireFrostNova";
+import ColdSpireFrostNova from "../../../EnemyAbilities/ColdSpireFrostNova";
 import Func from "../../../Func";
 import Level from "../../../Level";
 import FrostExplosionMedium from "../../Effects/FrostExplosionMedium";

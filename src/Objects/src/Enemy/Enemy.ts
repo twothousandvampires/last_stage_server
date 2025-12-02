@@ -362,7 +362,6 @@ export default abstract class Enemy extends Unit {
     }
 
     getState(): void {
-
         if(this.is_dead){
             this.setState(this.getDeadStateInstance())
         }
