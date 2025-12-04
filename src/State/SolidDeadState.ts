@@ -35,7 +35,7 @@ export default class SolidDeadState implements IUnitState<Enemy>{
             })
 
             enemy.wasChanged()
-            enemy.level.removeEnemy(enemy)
+            enemy.level.removeEnemy(enemy, false)
         }
     }
 

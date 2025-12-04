@@ -6,6 +6,8 @@ export default class InspirationTrigger {
 
     cd: number = 2000
     last_trigger_time: number = 0
+    name: string = 'inspiration'
+    description: string = 'Gives a chance depending on your perception get maximum energy when you get energy'
 
     constructor(){
         

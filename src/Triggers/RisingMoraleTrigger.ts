@@ -4,6 +4,8 @@ import Character from "../Objects/src/Character";
 export default class RisingMoraleTrigger {
 
     chance: number = 20
+    name: string = 'raising morale'
+    description: string = 'Gives a chance to heal yourself and your allies'
 
     constructor(){
 

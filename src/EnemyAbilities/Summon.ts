@@ -1,5 +1,4 @@
 import Enemy from "../Objects/src/Enemy/Enemy"
-import Default from "../Scenarios/Default"
 import EnemyAbility from "./EnemyAbility"
 
 export default class Summon extends EnemyAbility {
@@ -13,8 +12,7 @@ export default class Summon extends EnemyAbility {
     use(enemy: Enemy){
         this.last_used_time = enemy.level.time
         if(!enemy.target) return
-        if(!(enemy.level.script instanceof Default)) return
-
+       
         enemy.level.sounds.push({
             name:'cast',
             x: enemy.x,

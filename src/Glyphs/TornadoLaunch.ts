@@ -12,12 +12,12 @@ export default class TornadoLaunch extends Mastery {
     }
 
     trigger(player: Character, ability: Ability){
-        if(ability.getMasteryChance()){
+        
             let e = new Tornado(player.level)
             e.setPoint(player.x, player.y)
             e.setOwner(player)
 
             player.level.projectiles.push(e)
-        } 
+         
     }
 }

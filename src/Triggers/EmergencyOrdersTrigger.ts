@@ -5,6 +5,8 @@ import CommandsStatus from "../Status/CommandsStatus";
 export default class EmergencyOrdersTrigger {
 
     chance: number = 35
+    name: string = 'emergency orders'
+    description: string = 'Gives a chance to grant you and your allies gain Command ability buff'
 
     constructor(){
 

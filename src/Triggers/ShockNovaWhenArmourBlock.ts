@@ -9,6 +9,8 @@ export default class ShockNovaWhenArmourBlock {
     cd: number = 1200
     last_trigger_time: number = 0
     chance: number = 0
+    name: string = 'shock nova'
+    description: string = 'Chance to shock nearby enemies when you block damage by armour'
 
     trigger(player: Character, target: Unit){
         if(Func.notChance(this.chance, player.is_lucky)) return

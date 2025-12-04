@@ -1,9 +1,12 @@
-import Func from "../Func";
+import ITrigger from "../Interfaces/Itrigger";
 import Character from "../Objects/src/Character";
 import Devouring from "../Status/Devouring";
 import Item from "./Item";
 
-export default class DevouringAxe extends Item {
+export default class DevouringAxe extends Item implements ITrigger {
+
+    last_trigger_time: number = 0
+    cd: number = 0
 
     constructor(){
         super()
@@ -11,6 +14,10 @@ export default class DevouringAxe extends Item {
         this.name = 'devouring axe'
         this.type = 1
         this.description = 'give you a chance to get devouring after kill'
+    }
+
+    getTriggerChance(): number {
+        return this.chance
     }
 
     getSpecialForgings(): string[] {
@@ -25,17 +32,10 @@ export default class DevouringAxe extends Item {
         if(this.disabled) return
         if(!target) return
 
-        if(Func.chance(this.chance)){
-            let exist = character.level.status_pull.find(elem => elem instanceof Devouring && elem.unit === character)
-            
-            if(exist){
-                return
-            }
-
-            let s = new Devouring(character.level.time)
-            s.setDuration(6000 + this.duration)
-        
-            character.level.setStatus(character, s)
-        }
+        let s = new Devouring(character.level.time)
+        s.setDuration(6000 + this.duration)
+    
+        character.level.setStatus(character, s, true)
+    
     }
 }

@@ -11,12 +11,12 @@ export default class Recovery extends Mastery {
     }
 
     trigger(player: Character, ability: Ability){     
-        if(ability.getMasteryChance()){
+        
             let e = new Heal(player.level)
             e.setPoint(player.x, player.y)
             player.level.addEffect(e)
 
             player.addLife()
-        } 
+         
     }
 }

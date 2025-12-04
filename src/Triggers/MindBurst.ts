@@ -3,13 +3,13 @@ import { MagicShard } from "../Objects/Projectiles/MagicShard";
 import Character from "../Objects/src/Character";
 import Unit from "../Objects/src/Unit";
 
-export default class Accumulation {
+export default class MindBurst {
 
     cd: number = 1000
     last_trigger_time: number = 0
     count: number = 0
-    name: string = 'accumulation'
-    description: string = 'When you cast 10 spells, realise magick stars equals your courage'
+    name: string = 'mind burst'
+    description: string = 'When you cast 10 spells, fire mind bolts at nearby enemies equal to 5 times your courage'
     chance: number = 100
 
     constructor(){
@@ -20,9 +20,9 @@ export default class Accumulation {
 
         if(player.level.time - this.last_trigger_time >= this.cd){
             if(this.count >= 10){
-                let star_count = player.getSecondResource()
+                let star_count = player.getSecondResource() * 5
               
-                let targets = player.level.enemies.filter(elem => !elem.is_dead && Func.distance(player, elem) < 15).slice(0, star_count)
+                let targets = player.level.enemies.filter(elem => !elem.is_dead && Func.distance(player, elem) < 20).slice(0, star_count)
 
                 targets.forEach(element => {
                     let proj = new MagicShard(player.level)

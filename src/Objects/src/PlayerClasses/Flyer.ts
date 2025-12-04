@@ -373,6 +373,10 @@ export default class Flyer extends Character{
         this.check_recent_hits_timer = time + 1000
     }
 
+    isSecondTrigger(){
+        return this.chance_to_trigger_additional_time + this.will
+    }
+
     getStatDescription(stat: string){
         if(stat === 'might'){
             return `Affects your abilities (increases AOE, number of projectiles, etc.).
@@ -380,7 +384,8 @@ export default class Flyer extends Character{
         }
         if(stat === 'will'){
             return `Gives a chance not to lose mana when block.
-                       Gives a chance to get additional energy.`
+                       Gives a chance to get additional energy.
+                       Increases a chance that trigger trigered twice.`
         }
         if(stat === 'agility'){
             return `Increases your armour.

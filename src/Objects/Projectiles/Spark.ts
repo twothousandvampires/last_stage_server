@@ -12,6 +12,7 @@ export class Spark extends Projectiles{
     change_angle: number
     hitted: any[] = []
     by_enemy: boolean = false
+    shock = false
 
     constructor(level: Level, private pierce_count: number = 1, private ttl: number = 3000){
         super(level)
@@ -50,6 +51,9 @@ export class Spark extends Projectiles{
         this.level.players.forEach(elem => {
             if(elem != this.owner && !this.hitted.includes(elem.id) && !elem.is_dead && Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
                 elem.takeDamage(this.owner)
+                if(this.shock){
+                    elem.setZap(2000)
+                }
                 this.pierce_count --
                 if(this.pierce_count === 0){
                     this.impact()
@@ -64,6 +68,9 @@ export class Spark extends Projectiles{
              this.level.enemies.forEach(elem => {
                 if(!this.hitted.includes(elem.id) && !elem.is_dead && Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
                     elem.takeDamage()
+                    if(this.shock){
+                        elem.setZap(2000)
+                    }
                     this.pierce_count --
                     if(this.pierce_count === 0){
                         this.impact()

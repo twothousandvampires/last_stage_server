@@ -7,17 +7,17 @@ import EnemyAbility from "./EnemyAbility"
 
 export default class ExplodingSkulls extends EnemyAbility {
 
-    cooldown: number = 3000
+    cooldown: number = 20000
 
     canUse(enemy: Enemy){
-        return enemy.level.time - this.last_used_time >= this.cooldown
+        return enemy.level.time - this.last_used_time >= this.cooldown && enemy.target
     }
 
     use(enemy: Enemy){
         this.last_used_time = enemy.level.time
         if(!enemy.target) return
         
-        let count = enemy.level.enemies.filter(elem => !elem.is_dead && Func.distance(enemy.target, elem) <= 12 && (elem instanceof Flamy || elem instanceof Impy))
+        let count = enemy.level.enemies.filter(elem => !elem.is_dead && Func.distance(enemy.target, elem) <= 15 && (elem instanceof Flamy || elem instanceof Impy))
 
         if(count.length < 3) return
 
@@ -30,15 +30,19 @@ export default class ExplodingSkulls extends EnemyAbility {
         }
     
         let skull_count = Func.random(2, 4)
+        let ids = []
 
         for(let i = 0; i < skull_count; i++){
             let s = new ExplodingSkull(enemy.level)
             let a = Math.random() * 6.28
             s.setPoint(enemy.x + Func.random(3,6) * Math.sin(a), enemy.y + Func.random(3,6) * Math.cos(a))
+            let t = Func.getRandomFromArray(count.filter(elem =>  !ids.includes(elem.id)))
+            if(t){
+                s.target = t
+                ids.push(t.id)
 
-            s.target = Func.getRandomFromArray(count)
-
-            enemy.level.enemies.push(s)
+                enemy.level.enemies.push(s)
+            }
         }
     }   
 }

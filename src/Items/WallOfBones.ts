@@ -1,11 +1,14 @@
 import Func from "../Func";
+import ITrigger from "../Interfaces/Itrigger";
 import BoneArmour from "../Objects/Effects/BoneArmour";
 import BoneArmourExplosion from "../Objects/Effects/BoneArmourExplosion";
 import Character from "../Objects/src/Character";
 import Item from "./Item";
 
-    export default class WallOfBones extends Item {
+    export default class WallOfBones extends Item implements ITrigger {
 
+        cd: number = 0
+        last_trigger_time: number = 0
         end_timeout: any
         stack_count: number
         effect: BoneArmour | undefined
@@ -24,6 +27,10 @@ import Item from "./Item";
 
         equip(character: Character): void {
             character.triggers_on_get_hit.push(this)
+        }
+
+        getTriggerChance(): number {
+            return this.chance
         }
 
         getSpecialForgings(): string[] {
@@ -46,8 +53,7 @@ import Item from "./Item";
 
         trigger(character: Character){
             if(this.disabled) return  
-            if(Func.notChance(this.chance)) return
-
+        
             if(this.effect){
                 if(this.stack_count >= this.count && Func.chance(this.chance)){
                     this.remove(character)

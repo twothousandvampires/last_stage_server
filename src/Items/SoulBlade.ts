@@ -1,13 +1,13 @@
-import Func from "../Func";
+import ITrigger from "../Interfaces/Itrigger";
 import Soul from "../Objects/Effects/Soul";
 import Character from "../Objects/src/Character";
 import Enemy from "../Objects/src/Enemy/Enemy";
 import Item from "./Item";
 
-export default class SoulBlade extends Item{
+export default class SoulBlade extends Item implements ITrigger {
 
-    frequency: number = 4000
-    last_trigger: number = 0
+    cd: number = 4000
+    last_trigger_time: number = 0
     chance: number = 2
     max_chance: number = 10
 
@@ -16,6 +16,10 @@ export default class SoulBlade extends Item{
         this.name = 'soul blade'
         this.type = 1
         this.description = 'when you kill enemy there is a chance to get ward'
+    }
+
+    getTriggerChance(): number {
+        return this.chance
     }
     
     getSpecialForgings(): string[] {
@@ -28,16 +32,11 @@ export default class SoulBlade extends Item{
 
     trigger(player: Character, enemy: Enemy){
         if(this.disabled) return
-        if(Func.notChance(this.chance, player.is_lucky)) return
+       
+        let e = new Soul(player.level)
+        e.setPoint(enemy.x, enemy.y)
+        player.level.effects.push(e)
 
-        if(player.level.time - this.last_trigger >= this.frequency){
-            this.last_trigger = player.level.time
-
-            let e = new Soul(player.level)
-            e.setPoint(enemy.x, enemy.y)
-            player.level.effects.push(e)
-
-            player.addWard(1)
-        }
+        player.addWard(1)     
     }
 }

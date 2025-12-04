@@ -16,7 +16,7 @@ export default abstract class Item {
     public description: string = ''
     public disabled: boolean = false
     public suggested_forgings: Forging[] = []
-    public frequency = 5000
+    public cd = 5000
     max_chance: number = 90
 
     toJSON(){
@@ -202,6 +202,7 @@ export default abstract class Item {
         'shock nova when armour',
         'explosive armour',
         'fire presence',
+        'fortify when hit'
     ]
     
     static forging_list_type_3 = [

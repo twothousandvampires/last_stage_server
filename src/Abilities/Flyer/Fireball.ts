@@ -7,7 +7,7 @@ export default class Fireball extends FlyerAbility {
 
     body_melting: boolean = false
     ignite: boolean = false
-    fire_splitting: boolean = true
+    fire_splitting: boolean = false
 
     constructor(owner: Flyer){
         super(owner)

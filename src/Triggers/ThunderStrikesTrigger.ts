@@ -8,6 +8,9 @@ export default class ThunderStrikesTrigger {
     cd: number = 1500
     last_trigger_time: number = 0
     count: number = 0
+    name: string = 'thunder strikes'
+    description: string = 'Creates lightning bolts that strike behind the target'
+    chance: number = 100
 
     trigger(player: Character, enemy: any){
         if(!enemy) return

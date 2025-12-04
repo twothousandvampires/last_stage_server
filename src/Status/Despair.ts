@@ -1,14 +1,22 @@
+import ITrigger from "../Interfaces/Itrigger"
 import Character from "../Objects/src/Character"
 import Status from "./Status"
 
-export default class Despair extends Status{
+export default class Despair extends Status implements ITrigger{
    
     name: string
-    
+    cd: number = 0
+    last_trigger_time: number = 0
+    chance: number = 100
+
     constructor(public time: number){
         super(time)
         this.name = 'despair'
         this.need_to_check_resist = true
+    }
+
+    getTriggerChance(): number {
+        return this.chance
     }
 
     apply(unit: any){

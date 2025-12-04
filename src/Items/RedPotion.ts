@@ -11,6 +11,7 @@ import Item from "./Item";
             super()
             this.used = false
             this.name = 'red potion'
+            this.chance = 100
             this.duration = 1500
             this.type = 3
             this.forge = [

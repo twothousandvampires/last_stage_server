@@ -55,7 +55,7 @@ export default class Learning extends Scenario{
     start(level: Level){
         level.players.forEach(elem => {
             elem.grace = 1110
-            elem.gold = 1000
+            elem.gold = 10002
             elem.life_status = 4222
             elem.light_r = 18
         })

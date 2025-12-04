@@ -1,15 +1,17 @@
 import Func from "../../Func";
+import ITrigger from "../../Interfaces/Itrigger";
 import FrostNova from "../../Objects/Effects/FrostNova";
 import Character from "../../Objects/src/Character";
 import Unit from "../../Objects/src/Unit";
 import Item from "../Item";
 import Forging from "./Forging";
 
-export default class NovaThenHit extends Forging{
+export default class NovaThenHit extends Forging implements ITrigger {
 
     value: number = 0
-    freq: number = 2000
+    cd: number = 2000
     last_trigger_time: number = 0
+    chance: number = 0
 
     constructor(item: Item){
         super(item)
@@ -17,6 +19,10 @@ export default class NovaThenHit extends Forging{
         this.name = 'frost nova'
         this.description = 'gives a chance to cast frost nova when hit'
         this.gold_cost = 20
+    }
+
+    getTriggerChance(player: Character | undefined): number {
+        return this.chance
     }
 
     forge(player: Character){
@@ -27,35 +33,31 @@ export default class NovaThenHit extends Forging{
 
             this.payCost()
             this.value += 10
+            this.chance += 10
         }
     }
 
     getValue(){
-        return this.value
+        return this.value + '%'
     }
 
     trigger(player: Character, target: Unit){
-        if(Func.notChance(this.value, player.is_lucky)) return
+        let e = new FrostNova(player.level)
+        e.setPoint(target.x, target.y)
 
-        if(player.level.time - this.last_trigger_time >= this.freq){
-            this.last_trigger_time = player.level.time
+        let targets = player.level.enemies.concat(player.level.players.filter(elem => elem != player))
+        let box = target.getBoxElipse()
+        box.r = 12
 
-            let e = new FrostNova(player.level)
-            e.setPoint(target.x, target.y)
-
-            let targets = player.level.enemies.concat(player.level.players.filter(elem => elem != player))
-            let box = target.getBoxElipse()
-            box.r = 12
-
-            for(let i = 0; i < targets.length; i++){
-                let target = targets[i]
-                if(Func.elipseCollision(box, target.getBoxElipse())){
-                    target.setFreeze(2000)
-                }
+        for(let i = 0; i < targets.length; i++){
+            let target = targets[i]
+            if(Func.elipseCollision(box, target.getBoxElipse())){
+                target.setFreeze(2000)
             }
-
-            player.level.effects.push(e)
         }
+
+        player.level.effects.push(e)
+        
     }
 
     canBeForged(): boolean {

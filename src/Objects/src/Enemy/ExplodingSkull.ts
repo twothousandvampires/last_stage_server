@@ -20,7 +20,7 @@ export default class ExplodingSkull extends Enemy {
         this.has_boby = false
         this.is_spawning = false
         this.phasing = true
-        this.move_speed = 0.2
+        this.move_speed = 0.3
     }
 
     getIdleStateInstance(){

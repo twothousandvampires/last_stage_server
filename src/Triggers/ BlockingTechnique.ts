@@ -9,6 +9,8 @@ export default class BlockingTechnique {
     activated: boolean = false
     blocked: number = 0
     max_blocked: number = 3
+    name: string = 'blocking technique'
+    description: string = 'When you block 5 hits the next three will be successfully blocked'
 
     constructor(){
         

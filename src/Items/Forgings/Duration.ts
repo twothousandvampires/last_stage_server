@@ -21,6 +21,10 @@ export default class Duration extends Forging {
         }
     }
 
+    getValue(){
+        return this.value + 'ms'
+    }
+
     canBeForged(): boolean {
         return this.item.duration != undefined && this.value < this.max_value
     }

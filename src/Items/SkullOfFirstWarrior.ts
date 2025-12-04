@@ -1,12 +1,16 @@
+import ITrigger from "../Interfaces/Itrigger";
 import Character from "../Objects/src/Character";
 import Item from "./Item";
 
-export default class SkullOfFirstWarrior extends Item {
+export default class SkullOfFirstWarrior extends Item implements ITrigger{
 
     kill_count: number
     countable: boolean
     threshold: number
     add_might: number
+    cd: number = 1000
+    last_trigger_time: number = 0
+    chance: number = 100
 
     constructor(){
         super()
@@ -17,6 +21,10 @@ export default class SkullOfFirstWarrior extends Item {
         this.name = 'skull of first warrior'
         this.type = 3
         this.description = 'increases your might by 12 for 10 seconds after 12 kills'
+    }
+
+    getTriggerChance(): number {
+        return this.chance
     }
 
     getSpecialForgings(): string[] {
@@ -31,7 +39,8 @@ export default class SkullOfFirstWarrior extends Item {
         if(!this.countable) return
         if(this.disabled) return
         
-        this.kill_count++
+        this.kill_count ++
+
         if(this.kill_count >= this.threshold){
             character.might += this.add_might
            

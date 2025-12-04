@@ -8,6 +8,8 @@ export default class ExplodeWhenArmourHit {
     cd: number = 1500
     last_trigger_time: number = 0
     chance: number = 0
+    name: string = 'explosive armour'
+    description: string = 'Give a chance to create explode around you when you block hit by armour'
 
     trigger(player: Character){
         if(Func.notChance(this.chance, player.is_lucky)) return

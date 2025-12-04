@@ -12,7 +12,7 @@ export default class LightningFury extends Mastery {
     }
 
     trigger(player: Character, ability: Ability){
-        if(ability.getMasteryChance()){
+        
             let f = player.level.enemies.filter(elem => !elem.is_dead && Func.distance(player, elem) <= 8)[0]
 
             if(f){
@@ -39,6 +39,6 @@ export default class LightningFury extends Mastery {
                     player.level.projectiles.push(proj)
                 }
             }
-        } 
+         
     }
 }

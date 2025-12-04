@@ -5,9 +5,10 @@ import Character from "../Objects/src/Character";
 export default class CallWarriorWhenBlock {
 
     chance: number = 50
-    name: string = 'call warrior when block'
     cd: number = 1000
     last_trigger_time: number = 0
+    name: string = 'call warrior when block'
+    description: string = 'When you block there is a chance to summon spirit warrior'
 
     constructor(){
         

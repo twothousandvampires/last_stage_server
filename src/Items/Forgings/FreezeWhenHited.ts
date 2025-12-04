@@ -1,12 +1,13 @@
+import ITrigger from "../../Interfaces/Itrigger";
 import Character from "../../Objects/src/Character";
 import FreezeWhetHitedTrigger from "../../Triggers/FreezeWhetHitedTrigger";
 import Item from "../Item";
 import Forging from "./Forging";
 
-export default class FreezeWhenHited extends Forging {
+export default class FreezeWhenHited extends Forging{
 
     value: number = 0
-   
+    
     constructor(item: Item){
         super(item)
         this.max_value = 20

@@ -7,6 +7,8 @@ export default class HeavenIntervention {
     cd: number = 3000
     last_trigger_time: number = 0
     chance: number = 10
+    name: string = 'heaven intervention'
+    description: string = 'Gives a chance that the heavens will help you'
 
     constructor(){
         

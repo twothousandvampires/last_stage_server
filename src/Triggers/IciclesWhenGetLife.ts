@@ -8,6 +8,8 @@ export default class IciclesWhenGetLife {
     cd: number = 1500
     last_trigger_time: number = 0
     chance: number = 0
+    name: string = 'cold heart'
+    description: string = 'Creates icicles equal in number to your life'
 
     trigger(player: Character){
         if(Func.notChance(this.chance, player.is_lucky)) return

@@ -45,7 +45,6 @@ export default class FleshHarvest extends Status {
 
                     this.unit.addLife()
                     t.level.removeEnemy(t)
-                    t.level.deleted.push(t.id)
                 }
             }
         }

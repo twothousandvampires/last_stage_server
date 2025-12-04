@@ -13,7 +13,7 @@ export default class Cleansing extends Mastery {
     }
 
     trigger(player: Character, ability: Ability){
-        if(ability.getMasteryChance()){
+        
             let e = new Heal(player.level)
             e.setPoint(player.x, player.y)
 
@@ -27,6 +27,6 @@ export default class Cleansing extends Mastery {
                 player.level.status_pull[index].clear()
                 player.level.status_pull.splice(index, 1)
             }
-        } 
+         
     }
 }

@@ -19,7 +19,7 @@ export class FireballProjectile extends Projectiles {
     w: number
     hitted: any[]
     ignite: boolean
-    
+
     constructor(level: Level, public pierce: boolean = false){
         super(level)
         this.box_r = 1
@@ -59,7 +59,7 @@ export class FireballProjectile extends Projectiles {
 
         for(let i = 0; i < enemies.length; i++){
             let e = enemies[i]
-            if(Func.elipseCollision(this.getBoxElipse(), e.getBoxElipse()) &&!this.hitted.includes(e.id)){
+            if(Func.elipseCollision(this.getBoxElipse(), e.getBoxElipse()) && !this.hitted.includes(e.id)){
                 this.hitted.push(e.id)
                 this.impact()
                 return
@@ -145,7 +145,7 @@ export class FireballProjectile extends Projectiles {
             this.level.projectiles.push(fire)
         }
 
-        if(this.pierce && Func.chance(30)){
+        if(this.pierce && Func.chance(50)){
             
         }
         else{

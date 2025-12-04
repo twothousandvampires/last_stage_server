@@ -110,13 +110,13 @@ export default class Func{
     public static chance(chance: number, luck: boolean | undefined  = undefined){
         if(luck){
             let f = Func.random()
-            if(chance >= f) return true
+            if(chance > f) return true
 
             let s = Func.random()
-            return chance >= s
+            return chance > s
         }
         else{
-            return chance >= Func.random()
+            return chance > Func.random()
         }
     }
 

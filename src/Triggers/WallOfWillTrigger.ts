@@ -7,6 +7,8 @@ export default class WallOfWillTrigger {
     cd: number = 1000
     last_trigger_time: number = 0
     chance: number= 40
+    name: string = 'wall of will'
+    description: string = 'Gives a chance to increase your block chance'
 
     trigger(player: Character){
         if(player.level.time - this.last_trigger_time >= this.cd){

@@ -49,7 +49,6 @@ export default class Devouring extends Status {
             let t = Func.getRandomFromArray(targets)
 
             if(t){
-                this.unit?.level.deleted.push(t.id)
                 this.unit?.level.removeEnemy(t)
 
                 let e = new Devour(this.unit?.level)
@@ -64,13 +63,16 @@ export default class Devouring extends Status {
 
     update(status: any){
         if(!this.unit) return
-        this.time = Date.now()
-    
-        this.count ++
-        this.unit.move_speed_penalty += 1
-        this.unit.attack_speed -= 10
-        this.unit.cast_speed -= 10
 
+        this.time = Date.now()
+        
+        if(!status){
+            this.count ++
+            this.unit.move_speed_penalty += 1
+            this.unit.attack_speed -= 10
+            this.unit.cast_speed -= 10
+        }
+        
         this.unit.newStatus({
             name: 'devouring',
             duration: this.duration,

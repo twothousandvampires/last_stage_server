@@ -6,16 +6,16 @@ import EnemyAbility from "./EnemyAbility"
 
 export default class DemonicEmpowering extends EnemyAbility {
 
-    cooldown: number = 3000
+    cooldown: number = 30000
 
     canUse(enemy: Enemy){
-        return enemy.level.time - this.last_used_time >= this.cooldown
+        return enemy.level.time - this.last_used_time >= this.cooldown && enemy.target
     }
 
     use(enemy: Enemy){
         this.last_used_time = enemy.level.time
         
-        let count = enemy.level.enemies.filter(elem => !elem.is_dead && Func.distance(enemy, elem) <= 14 && (elem instanceof Flamy || elem instanceof Impy))
+        let count = enemy.level.enemies.filter(elem => !elem.is_dead && Func.distance(enemy, elem) <= 12 && (elem instanceof Flamy || elem instanceof Impy))
 
         if(count.length < 3) return
 

@@ -422,28 +422,12 @@ export default class Cultist extends Character{
         }
     }
 
-    succesefulKill(enemy){
-        this.triggers_on_kill.forEach(elem => {
-            elem.trigger(this, enemy)
-        })
+    succesefulKill(enemy: Unit){
+        super.succesefulKill(enemy)
 
         if(this.pain_extract && Func.chance(5, this.is_lucky)){
             this.addResourse()
         }
-    }
-
-    setDamagedAct(){
-        this.damaged = true
-        this.state = 'damaged'
-        this.can_be_controlled_by_player = false
-        this.stateAct = this.damagedAct
-
-        this.cancelAct = () => {
-            this.can_be_controlled_by_player = true
-            this.damaged = false
-        }
-
-        this.setTimerToGetState(300)
     }
 
     getStatDescription(stat: string){

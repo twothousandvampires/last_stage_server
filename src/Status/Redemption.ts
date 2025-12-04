@@ -45,7 +45,6 @@ export default class Redemption extends Status {
 
                     t.level.check(t)
                     t.level.removeEnemy(t)
-                    t.level.deleted.push(t.id)
                 }
             }
         }

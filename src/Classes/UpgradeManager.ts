@@ -15,6 +15,7 @@ export default class UpgradeManager {
             gold: player.gold,
             can_buy: player.purchased_items < 2,
             stats: player.getStats(),
+            triggers: player.getTriggersInfo()
         })
     }
 
@@ -139,7 +140,8 @@ export default class UpgradeManager {
             life: player.life_status,
             free: player.free_upgrade_count,
             stats: player.getStats(),
-            masteries: player.masteries
+            masteries: player.masteries,
+            triggers: player.getTriggersInfo()
         })
     }
 
@@ -151,7 +153,6 @@ export default class UpgradeManager {
         player.ascend_level -= 1
 
         player.upgrades = []
-        player.spend_grace = true
         UpgradeManager.closeUpgrades(player)
     }
 

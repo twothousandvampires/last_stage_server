@@ -1,13 +1,14 @@
 import Func from "../Func";
 import Character from "../Objects/src/Character";
 import AttackAndCastSpeed from "../Status/AttackAndCastSpeed";
-import Power from "../Status/Power";
 
 export default class FirstToStrikeTrigger {
 
     cd: number = 1000
     last_trigger_time: number = 0
-    chance: number= 30
+    chance: number = 30
+    name: string = 'first to strike'
+    description: string = 'You have a chance to increase your attack and cast speed'
 
     trigger(player: Character){
         if(player.level.time - this.last_trigger_time >= this.cd){

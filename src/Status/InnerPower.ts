@@ -2,7 +2,9 @@ import Character from "../Objects/src/Character"
 import Status from "./Status"
 
 export default class InnerPower extends Status{
- 
+    
+    
+
     constructor(public time: number){
         super(time)
         this.name = 'inner power'

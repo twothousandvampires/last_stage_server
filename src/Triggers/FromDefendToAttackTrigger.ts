@@ -7,6 +7,8 @@ export default class FromDefendToAttackTrigger {
     cd: number = 1000
     last_trigger_time: number = 0
     chance: number = 30
+    name: string = 'from defense to attack'
+    description: string = 'You have a chance to increase your power'
 
     trigger(player: Character){
         if(player.level.time - this.last_trigger_time >= this.cd){

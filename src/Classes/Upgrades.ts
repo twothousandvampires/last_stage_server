@@ -108,15 +108,42 @@ export default class Upgrades{
                     desc: 'You can create a sphere around yourself'
                 },
                 {
+                    name: 'metabolism',
+                    canUse: (character: Character) => {
+                        return character.base_regeneration_time > 5000
+                    },
+                    teach: (character: Character): void => {
+                        character.base_regeneration_time -= 500
+                    },
+                    cost: 1,
+                    ascend: 12,
+                    desc: 'Increases your life regeneration rate'
+                },
+                {
+                    name: 'masterliness',
+                    canUse: (character: Character) => {
+                        return Func.chance(30)
+                    },
+                    teach: (character: Character): void => {
+                        character.first_ability.mastery_chance += 1
+                        character.second_ability.mastery_chance += 5
+                        character.third_ability.mastery_chance += 10
+                        character.utility.mastery_chance += 5
+                    },
+                    cost: 2,
+                    ascend: 20,
+                    desc: 'Increases the chance of mastery proc in your skills'
+                },
+                {
                     name: 'pressing steps',
                     canUse: (character: Character) => {
-                        return !character.level.status_pull.find(elem => elem.unit === character && elem instanceof PressingSteps)
+                        return !character.level.status_pull.find(elem => elem.unit === character && elem instanceof PressingSteps) && character.power >= 20
                     },
                     teach: (character: Character): void => {
                         character.level.setStatus(character, new PressingSteps(character.level.time))
                     },
-                    cost: 4,
-                    ascend: 40,
+                    cost: 6,
+                    ascend: 60,
                     desc: 'If you move for 3 seconds, you begin to deal damage to nearby enemies'
                 },
                 {
@@ -217,9 +244,9 @@ export default class Upgrades{
                     desc: 'Your random item gains a new forge, upgrading a random item and increasing the maximum number of forges'
                 },
                 {
-                    name: 'luck',
+                    name: 'best day',
                     canUse: (character: Character) => {
-                        return !character.is_lucky
+                        return !character.after_grace_statuses.some(elem => elem instanceof Luck)
                     },
                     teach: (character: Character): void => {
                         let status = new Luck(character.level.time)
@@ -1463,9 +1490,39 @@ export default class Upgrades{
                             character.updateClientSkill()
                         }
                     },
-                    cost: 5,
+                    cost: 2,
                     ascend: 10,
                     desc: 'Fires a sereral of bone teeth'
+                },
+                {
+                    name: 'pulling out teeth',
+                    type: 'teeth',
+                    canUse: (character: Character) => {
+                        return character.first_ability instanceof Teeth && !character.first_ability.pulling
+                    },
+                    teach: (character: Character) => {
+                        if(character.first_ability instanceof Teeth){
+                            character.first_ability.pulling = true
+                        }
+                    },
+                    cost: 3,
+                    ascend: 10,
+                    desc: 'The number grows due to the corpses nearby'
+                },
+                {
+                    name: 'sharp teeth',
+                    type: 'teeth',
+                    canUse: (character: Character) => {
+                        return character.first_ability instanceof Teeth && !character.first_ability.sharp
+                    },
+                    teach: (character: Character) => {
+                        if(character.first_ability instanceof Teeth){
+                            character.first_ability.sharp = true
+                        }
+                    },
+                    cost: 3,
+                    ascend: 30,
+                    desc: 'Teeth pierce once'
                 },
                 {
                     name: 'body melting',
@@ -1870,6 +1927,21 @@ export default class Upgrades{
                     cost: 3,
                     ascend: 18,
                     desc: 'Increases the number of enemies your sparks can pass through'
+                },
+                {
+                    name: 'shocking sparks',
+                    type: 'sparks',
+                    canUse: (character: Character) => {
+                        return character.third_ability instanceof Sparks && !character.third_ability.shock
+                    },
+                    teach: (character: Character) => {
+                        if(character.third_ability instanceof Sparks){
+                            character.third_ability.shock = true
+                        }
+                    },
+                    cost: 2,
+                    ascend: 25,
+                    desc: 'Your sparks shocks enemies'
                 },
                 {
                     name: 'strong sparks',
@@ -2280,6 +2352,18 @@ export default class Upgrades{
                 cost: 5,
                 ascend: 8,
                 desc: 'Gives a chance to reset cooldown when taking damage'
+            },
+            {
+                name: 'moment replication',
+                canUse: (character: Character) => {
+                    return character.chance_to_trigger_additional_time <= 30
+                },
+                teach: (character: Character) => {
+                    character.chance_to_trigger_additional_time += 5
+                },
+                cost: 2,
+                ascend: 15,
+                desc: 'Gives a chance that a trigger triggered twice'
             },
             {
                 name: 'emergency orders',

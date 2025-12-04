@@ -1,15 +1,17 @@
 import Func from "../../Func";
+import ITrigger from "../../Interfaces/Itrigger";
 import QuakeEffect from "../../Objects/Effects/Quake";
 import Character from "../../Objects/src/Character";
 import Unit from "../../Objects/src/Unit";
 import Item from "../Item";
 import Forging from "./Forging";
 
-export default class StunWhenHit extends Forging{
+export default class StunWhenHit extends Forging implements ITrigger{
 
     value: number = 0
-    freq: number = 3000
+    cd: number = 3000
     last_trigger_time: number = 0
+    chance: number = 0
 
     constructor(item: Item){
         super(item)
@@ -19,43 +21,47 @@ export default class StunWhenHit extends Forging{
         this.gold_cost = 20
     }
 
+    getTriggerChance(player: Character | undefined): number {
+        return this.chance
+    }
+
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
-            if(!player.triggers_on_hit.some(elem => elem instanceof StunWhenHit)){
-                player.triggers_on_hit.push(this)
+            let exist = player.triggers_on_hit.find(elem => elem instanceof StunWhenHit)
+            if(exist){
+                exist.chance += 10
+                this.value += 10
             }
-
+            else{
+                player.triggers_on_hit.push(this)
+                this.value += 10
+                this.chance += 10
+            }
+           
             this.payCost()
-            this.value += 10
         }
     }
 
     getValue(){
-        return this.value + '%'
+        return this.chance + '%'
     }
 
-    trigger(player: Character, target: Unit){
-        if(Func.notChance(this.value, player.is_lucky)) return
-        if(!target) return
+    trigger(player: Character, target: Unit){  
+        let box = target.getBoxElipse()
+        box.r = 8
+
+        let effect = new QuakeEffect(player.level)
+        effect.setPoint(target.x, target.y)
+
+        player.level.effects.push(effect)
+
+        let targets = player.level.enemies.concat(player.level.players.filter(elem => elem != player)).filter(elem => !elem.is_dead && Func.elipseCollision(elem.getBoxElipse() ,box))
         
-        if(player.level.time - this.last_trigger_time >= this.freq){
-            this.last_trigger_time = player.level.time
-            let box = target.getBoxElipse()
-            box.r = 8
-
-            let effect = new QuakeEffect(player.level)
-            effect.setPoint(target.x, target.y)
-
-            player.level.effects.push(effect)
-
-            let targets = player.level.enemies.concat(player.level.players.filter(elem => elem != player)).filter(elem => !elem.is_dead && Func.elipseCollision(elem.getBoxElipse() ,box))
+        for(let i = 0; i < targets.length; i++){
+            let target = targets[i]
             
-            for(let i = 0; i < targets.length; i++){
-                let target = targets[i]
-                
-                target.setStun(3000)
-            }
-        }
+            target.setStun(3000)
+        }       
     }
 
     canBeForged(): boolean {

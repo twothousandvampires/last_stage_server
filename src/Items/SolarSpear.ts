@@ -5,11 +5,12 @@ import Character from "../Objects/src/Character";
 import { Enemy } from "../Objects/src/Enemy/Enemy";
 import Item from "./Item";
 
-export default class SolarSpear extends Item{
+export default class SolarSpear extends Item {
 
     frequency: number = 4000
     last_trigger: number = 0
-
+    chance: number = 100
+    
     constructor(){
         super()
         this.name = 'solar spear'

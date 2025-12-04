@@ -8,6 +8,8 @@ export default class SparksWhenBlockTrigger {
     cd: number = 1200
     last_trigger_time: number = 0
     chance: number = 0
+    name: string = 'charged shield'
+    description: string = 'Gives a chance to release sparks when block'
 
     constructor(){
         

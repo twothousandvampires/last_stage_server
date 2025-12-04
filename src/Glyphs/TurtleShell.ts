@@ -11,11 +11,11 @@ export default class TurtleShell extends Mastery {
     }
 
     trigger(player: Character, ability: Ability){     
-        if(ability.getMasteryChance()){
+        
             let status = new TurtleShellStatus(player.level.time)
 
             status.setDuration(8000)
             player.level.setStatus(player, status, true)
-        } 
+         
     }
 }

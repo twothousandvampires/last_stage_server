@@ -25,6 +25,9 @@ import FromDefendToAttackTrigger from "../../../Triggers/FromDefendToAttackTrigg
 import WallOfWillTrigger from "../../../Triggers/WallOfWillTrigger";
 import FirstToStrikeTrigger from "../../../Triggers/FirstToStrikeTrigger";
 import PressingSteps from "../../../Status/PressingSteps";
+import RingFlame from "../../../Triggers/RingFlame";
+import Hurricane from "../../../Triggers/Hurricane";
+import ChainLightning from "../../../Triggers/ChainLightningTrigger";
 
 export default class Swordman extends Character{
     
@@ -96,10 +99,8 @@ export default class Swordman extends Character{
         }
     }
 
-    succesefulKill(enemy){
-        this.triggers_on_kill.forEach(elem => {
-            elem.trigger(this, enemy)
-        })
+    succesefulKill(enemy: Unit){
+        super.succesefulKill(enemy)
 
         this.addCourage()   
     }

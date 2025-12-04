@@ -13,7 +13,7 @@ export default class Trinity extends Mastery {
     }
 
     async trigger(player: Character, ability: Ability){
-        if(ability.getMasteryChance()){
+        
             let count = 3
             let zones = 6.28 / count
             
@@ -44,6 +44,6 @@ export default class Trinity extends Mastery {
                     player.level.projectiles.push(proj)
                 }         
             }
-        } 
+         
     }
 }

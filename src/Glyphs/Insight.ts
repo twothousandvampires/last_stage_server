@@ -11,12 +11,12 @@ export default class Insight extends Mastery {
     }
 
     trigger(player: Character, ability: Ability){     
-        if(ability.getMasteryChance()){
+        
             let e = new ToothExplode(player.level)
             e.setPoint(player.x, player.y)
             player.level.addEffect(e)
 
             player.addResourse()
-        } 
+         
     }
 }

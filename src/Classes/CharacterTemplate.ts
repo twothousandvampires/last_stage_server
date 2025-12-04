@@ -165,7 +165,8 @@ export default class characterTemplate{
                             - affect to start amount of energy
                             - increases your power`,
                 will: `- gives a chance not to lose mana when block
-                       - gives a chance to get additional energy`,
+                       - gives a chance to get additional energy
+                       - increases a chance that trigger trigered twice`,
                 perception: `- reduces penalty of speed when your cast
                              - gives a chance to get additional courage`,
                 durability: `- gives a chance to avoid damage state

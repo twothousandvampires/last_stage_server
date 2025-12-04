@@ -7,6 +7,7 @@ export default class SearchingHeart extends Item{
     frequency: number = 10000
     hit_count: number = 0
     last_trigger_time: number = 0
+    chance: number = 100
 
     constructor(){
         super()

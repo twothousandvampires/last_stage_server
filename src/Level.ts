@@ -183,6 +183,7 @@ export default class Level{
 
     public toJSON(): any{
         let changed = Array.from(this.changed_actors.values())
+        
         return {
             actors: [...this.players, ...changed],
             deleted: this.deleted,
@@ -319,7 +320,7 @@ export default class Level{
         }
     }
 
-    removeEnemy(enemy: Enemy | undefined){
+    removeEnemy(enemy: Enemy | undefined, hard = true){
         if(!enemy) return   
 
         if(enemy.count_as_killed){
@@ -329,6 +330,8 @@ export default class Level{
         let index = this.enemies.indexOf(enemy)
         this.enemies.splice(index, 1)
 
-        this.deleted.push(enemy.id)
+        if(hard){
+            this.deleted.push(enemy.id)
+        } 
     }
 }
