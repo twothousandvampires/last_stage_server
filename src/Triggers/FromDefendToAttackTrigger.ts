@@ -1,8 +1,9 @@
 import Func from "../Func";
+import ITrigger from "../Interfaces/ITrigger";
 import Character from "../Objects/src/Character";
 import Power from "../Status/Power";
 
-export default class FromDefendToAttackTrigger {
+export default class FromDefendToAttackTrigger implements ITrigger{
 
     cd: number = 1000
     last_trigger_time: number = 0
@@ -10,16 +11,15 @@ export default class FromDefendToAttackTrigger {
     name: string = 'from defense to attack'
     description: string = 'You have a chance to increase your power'
 
-    trigger(player: Character){
-        if(player.level.time - this.last_trigger_time >= this.cd){
-            this.last_trigger_time = player.level.time
-            if(Func.notChance(this.chance, player.is_lucky)) return
-            
-            let s = new Power(player.level.time)
-            s.setPower(10)
-            s.setDuration(8000)
+    getTriggerChance(player: Character): number {
+        return this.chance
+    }
 
-            player.level.setStatus(player, s, true)
-        }
+    trigger(player: Character){           
+        let s = new Power(player.level.time)
+        s.setPower(10)
+        s.setDuration(8000)
+
+        player.level.setStatus(player, s, true)    
     }
 }

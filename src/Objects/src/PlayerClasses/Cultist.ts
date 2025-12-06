@@ -284,6 +284,8 @@ export default class Cultist extends Character{
             this.resource --
             return
         }
+
+        let is_armour_hit = this.isArmourHit(unit)
         
         if(this.isBlock()){
             this.level.sounds.push({
@@ -298,13 +300,17 @@ export default class Cultist extends Character{
 
             this.succesefulBlock(unit)
 
+            if(is_armour_hit){
+                this.succesefulArmourBlock(unit)
+            }
+
             return
         } 
 
         this.addResourse()
         this.addCourage()
 
-        if(this.isArmourHit(unit)){
+        if(is_armour_hit){
             this.level.sounds.push({
                 name: 'metal hit',
                 x: this.x,

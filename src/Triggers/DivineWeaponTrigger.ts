@@ -1,9 +1,9 @@
 import Func from "../Func";
-import ITrigger from "../Interfaces/Itrigger";
+import ITrigger from "../Interfaces/ITrigger";
 import HeavenRay from "../Objects/Effects/HeavenRay";
 import Character from "../Objects/src/Character";
 
-export default class DivineWeaponTrigger implements ITrigger{
+export default class DivineWeaponTrigger implements ITrigger {
 
     cd: number = 3000
     last_trigger_time: number = 0

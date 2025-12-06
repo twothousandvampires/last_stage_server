@@ -1,5 +1,4 @@
 import IUnitState from "../Interfaces/IUnitState";
-import Enemy from "../Objects/src/Enemy/Enemy";
 import Undead from "../Objects/src/Enemy/Undead";
 
 export default class UndeadRessurectState implements IUnitState<Undead>{
@@ -12,7 +11,7 @@ export default class UndeadRessurectState implements IUnitState<Undead>{
     }   
 
     update(enemy: Undead){
-        if(enemy.level.time - this.start >= 3000){
+        if(enemy.level.time - this.start >= 2000){
            enemy.is_dead = false
            enemy.getState()
         }

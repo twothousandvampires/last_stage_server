@@ -1,25 +1,21 @@
 import Func from "../Func";
+import ITrigger from "../Interfaces/ITrigger";
 import HeavenRay from "../Objects/Effects/HeavenRay";
 import Character from "../Objects/src/Character";
 
-export default class HeavenIntervention {
+export default class HeavenIntervention implements ITrigger {
 
-    cd: number = 3000
+    cd: number = 500
     last_trigger_time: number = 0
-    chance: number = 10
+    chance: number = 25
     name: string = 'heaven intervention'
-    description: string = 'Gives a chance that the heavens will help you'
-
-    constructor(){
-        
+    description: string = 'Gives a chance that the heavens will help you, chance is increased by your power'
+ 
+    getTriggerChance(player: Character): number {
+        return this.chance + player.power
     }
 
     trigger(player: Character){
-        if(player.level.time - this.last_trigger_time < this.cd) return
-        if(Func.notChance(this.chance)) return
-     
-        this.last_trigger_time = player.level.time
-
         let targets = player.level.enemies.filter(elem => !elem.is_dead && Func.distance(elem, player) <= 20)
 
         let random = targets[Math.floor(Math.random() * targets.length)]

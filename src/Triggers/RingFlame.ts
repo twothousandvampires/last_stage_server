@@ -1,20 +1,20 @@
-import Func from "../Func";
+import ITrigger from "../Interfaces/ITrigger";
 import { RingFlameProj } from "../Objects/Projectiles/RingFlame";
 import Character from "../Objects/src/Character";
 
-export default class RingFlame {
+export default class RingFlame implements ITrigger{
 
     chance: number = 5
     name: string = 'ring of flames'
     description: string = 'Creates 12 flames that spread out around you'
+    last_trigger_time: number = 0
+    cd: number = 0
 
-    constructor(){
-
+    getTriggerChance(player: Character | undefined): number {
+        return this.chance
     }
 
     trigger(player: Character){
-        if(Func.notChance(this.chance)) return
-
         let count = 12
         
         let zones = 6.28 / count

@@ -1,11 +1,11 @@
 
 import Func from "../Func";
-import ITrigger from "../Interfaces/Itrigger";
+import ITrigger from "../Interfaces/ITrigger";
 import Character from "../Objects/src/Character";
 import Unit from "../Objects/src/Unit";
 import Ignite from "../Status/Ignite";
 
-export default class IgniteWhenHitTrigger implements ITrigger{
+export default class IgniteWhenHitTrigger implements ITrigger {
 
     cd: number = 1200
     last_trigger_time: number = 0

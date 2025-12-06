@@ -1,8 +1,10 @@
-import Func from "../Func";
+import ITrigger from "../Interfaces/ITrigger";
 import Character from "../Objects/src/Character";
 import Item from "./Item";
 
-export default class WhiteShield extends Item{
+export default class WhiteShield extends Item implements ITrigger {
+
+    last_trigger_time: number = 0
 
     constructor(){
         super()
@@ -11,6 +13,11 @@ export default class WhiteShield extends Item{
         this.type = 2
         this.description = 'you have a chance to get ward when block'
     }
+
+    getTriggerChance(): number {
+        return this.chance
+    }
+
     getSpecialForgings(): string[] {
         return ['chance']
     }
@@ -22,8 +29,6 @@ export default class WhiteShield extends Item{
     trigger(character: Character){
         if(this.disabled) return
         
-        if(Func.chance(this.chance)){
-            character.addWard(1)
-        }
+        character.addWard(1)
     }
 }

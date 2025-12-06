@@ -1,8 +1,8 @@
-import Func from "../Func";
+import ITrigger from "../Interfaces/ITrigger";
 import Character from "../Objects/src/Character";
 import AttackAndCastSpeed from "../Status/AttackAndCastSpeed";
 
-export default class FirstToStrikeTrigger {
+export default class FirstToStrikeTrigger implements ITrigger {
 
     cd: number = 1000
     last_trigger_time: number = 0
@@ -10,16 +10,15 @@ export default class FirstToStrikeTrigger {
     name: string = 'first to strike'
     description: string = 'You have a chance to increase your attack and cast speed'
 
-    trigger(player: Character){
-        if(player.level.time - this.last_trigger_time >= this.cd){
-            this.last_trigger_time = player.level.time
-            if(Func.notChance(this.chance, player.is_lucky)) return
-            
-            let s = new AttackAndCastSpeed(player.level.time)
-            s.setPower(60)
-            s.setDuration(8000)
+    getTriggerChance(player: Character): number {
+        return this.chance
+    }
 
-            player.level.setStatus(player, s, true)
-        }
+    trigger(player: Character){
+        let s = new AttackAndCastSpeed(player.level.time)
+        s.setPower(60)
+        s.setDuration(8000)
+
+        player.level.setStatus(player, s, true)     
     }
 }

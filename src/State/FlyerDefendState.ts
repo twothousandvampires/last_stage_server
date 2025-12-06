@@ -7,8 +7,9 @@ export default class FlyerDefendState implements IUnitState<Flyer>{
     move_reduce_value = 0
 
     enter(player: Flyer){
+        player.startDefend()
         player.state = 'defend'
-        player.triggers_on_start_block.forEach(elem => elem.trigger(player))
+        
 
         player.can_regen_resource = player.allow_mana_regen_while_def
         

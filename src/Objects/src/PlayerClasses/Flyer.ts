@@ -188,25 +188,6 @@ export default class Flyer extends Character{
         return this.cooldown_redaction + this.might
     }
 
-    setDefend(){
-        this.state = 'defend'
-        this.stateAct = this.defendAct
-        this.triggers_on_start_block.forEach(elem => elem.trigger(this))
-
-        if(!this.allow_mana_regen_while_def){
-            this.can_regen_resource = false
-        }
-        
-        if(this.takeoff){
-            this.phasing = true
-        }
-
-        this.cancelAct = () => {
-            this.can_regen_resource = true
-            this.phasing = false
-        }
-    }
-
     getMoveSpeedPenaltyValue(){
         let pen = 70 - (this.perception * 2)
         if(pen < 0){
@@ -248,10 +229,11 @@ export default class Flyer extends Character{
     }
 
     public succesefulBlock(unit: Unit | undefined): void{
+        super.succesefulBlock(unit)
+
         if(Func.notChance(this.will * 4, this.is_lucky)){
             this.resource --
         }
-        this.triggers_on_block.forEach(elem => elem.trigger(this, unit))
     }
     
     takeDamage(unit: any = undefined, options: any){
@@ -295,6 +277,8 @@ export default class Flyer extends Character{
             return
         }
 
+        let is_armour_hit = this.isArmourHit(unit)
+
         if(this.isBlock()){
             if(this.charged_shield && Func.chance(75, this.is_lucky)){
                 let target = this.level.enemies[Math.floor(Math.random() * this.level.enemies.length)]
@@ -310,11 +294,15 @@ export default class Flyer extends Character{
             }
 
             this.succesefulBlock(unit)
+
+            if(is_armour_hit){
+                this.succesefulArmourBlock(unit)
+            }
             
             return
         }
 
-        if(this.isArmourHit(unit)){
+        if(is_armour_hit){
             let e = new Armour(this.level)
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)

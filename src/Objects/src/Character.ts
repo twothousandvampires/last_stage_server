@@ -118,7 +118,7 @@ export default abstract class Character extends Unit {
     chance_to_get_additional_gold: number = 0
     chance_to_block: number = 0
     chance_to_create_grace: number = 0
-    chance_to_trigger_additional_time = 50
+    chance_to_trigger_additional_time = 0
 
     enlightenment_threshold: number = 12
     can_get_courage: boolean = true
@@ -212,7 +212,25 @@ export default abstract class Character extends Unit {
     }
 
     succesefulArmourBlock(target: Unit){
-        this.triggers_on_armour_hit.forEach(elem => elem.trigger(this, target))
+        let time = this.level.time
+
+        this.triggers_on_armour_hit.forEach(elem => {
+            if(time - elem.last_trigger_time >= elem.cd){
+                if(Func.chance(elem.getTriggerChance(this), this.is_lucky)){
+        
+                    elem.trigger(this, target)
+
+                   
+
+                    if(Func.chance(this.isSecondTrigger())){
+                        elem.trigger(this, target)
+                            
+                    }
+
+                    elem.last_trigger_time = time
+                }
+            }
+        })
     }
 
     useAbility(ability: Ability){
@@ -224,8 +242,24 @@ export default abstract class Character extends Unit {
     }
 
     useNotUtility(): void{
+        let time = this.level.time
+
         this.triggers_on_use_not_utility.forEach(elem => {
-            elem.trigger(this)
+            if(time - elem.last_trigger_time >= elem.cd){
+                if(Func.chance(elem.getTriggerChance(this), this.is_lucky)){
+        
+                    elem.trigger(this)
+
+                   
+
+                    if(Func.chance(this.isSecondTrigger())){
+                        elem.trigger(this)
+                             
+                    }
+
+                    elem.last_trigger_time = time
+                }
+            }
         })
 
         this.last_time_the_skill_was_used = this.level.time
@@ -236,7 +270,7 @@ export default abstract class Character extends Unit {
         let base = this.impact
 
         if(this.spirit_strikes){
-            base += this.ward
+            base += this.ward * 3
         }
 
         return base
@@ -288,7 +322,25 @@ export default abstract class Character extends Unit {
     }
 
     public succesefulBlock(unit: Unit | undefined): void{
-        this.triggers_on_block.forEach(elem => elem.trigger(this, unit))
+        let time = this.level.time
+
+        this.triggers_on_block.forEach(elem => {
+            if(time - elem.last_trigger_time >= elem.cd){
+                if(Func.chance(elem.getTriggerChance(this), this.is_lucky)){
+        
+                    elem.trigger(this, unit)
+
+                   
+
+                    if(Func.chance(this.isSecondTrigger())){
+                        elem.trigger(this, unit)
+                              
+                    }
+
+                    elem.last_trigger_time = time
+                }
+            }
+        })
     }
 
     getResistValue(): number{
@@ -346,6 +398,27 @@ export default abstract class Character extends Unit {
         }
     }
 
+    onSayTriggers(){
+        let time = this.level.time
+
+        this.triggers_on_say.forEach(elem => {
+            if(time - elem.last_trigger_time >= elem.cd){
+                if(Func.chance(elem.getTriggerChance(this), this.is_lucky)){
+        
+                    elem.trigger(this)
+
+                    
+                    if(Func.chance(this.isSecondTrigger())){
+                        elem.trigger(this)
+                              
+                    }
+
+                    elem.last_trigger_time = time
+                }
+            }
+        })
+    }
+
     public sayPhrase(): void{
         if(!Func.chance(this.chance_to_say_phrase)) return
 
@@ -353,9 +426,7 @@ export default abstract class Character extends Unit {
         phrase.z = 12
         phrase.setPoint(this.x, this.y)
 
-        this.triggers_on_say.forEach(elem => {
-            elem.trigger(this)
-        })
+        this.onSayTriggers()
 
         this.level.players.forEach(elem => {
             if(elem != this && Func.distance(elem, this) <= this.voice_radius){
@@ -495,6 +566,28 @@ export default abstract class Character extends Unit {
         return result
     }
 
+    startDefend(){
+        let time = this.level.time
+
+        this.triggers_on_start_block.forEach(elem => {
+            if(time - elem.last_trigger_time >= elem.cd){
+                if(Func.chance(elem.getTriggerChance(this), this.is_lucky)){
+        
+                    elem.trigger(this)
+
+                 
+
+                    if(Func.chance(this.isSecondTrigger())){
+                        elem.trigger(this)
+                            
+                    }
+
+                    elem.last_trigger_time = time
+                }
+            }
+        })
+    }
+
     getTriggersInfo(){
         let result = {}
 
@@ -527,11 +620,11 @@ export default abstract class Character extends Unit {
     }
 
     public upgrade(upgrade_name: string): void{
-        console.log(upgrade_name)
+        
         let upgrade: Upgrade = this.upgrades.find(elem => elem.name === upgrade_name)
-        console.log(upgrade.name)
+        
         if(!upgrade) return
-        console.log('befire teach')
+        
         upgrade.teach(this)
         
         if(this.free_upgrade_count){
@@ -545,7 +638,7 @@ export default abstract class Character extends Unit {
                 this.addAscent()
             }
         }
-         console.log('after teach')
+        
         this.level.addSound('upgrade', this.x, this.y)
         
         this.removeUpgrades()
@@ -707,6 +800,9 @@ export default abstract class Character extends Unit {
 
                 this.life_status --
 
+                let penalty = -this.getPenaltyByLifeStatus()
+                this.addMoveSpeedPenalty(penalty) 
+
                 if(this.life_status === 1){
                     this.reachNearDead()
                 }
@@ -725,9 +821,6 @@ export default abstract class Character extends Unit {
                         this.setState(new PlayerDyingState())
                     }
                 }
-           
-                let penalty = -this.getPenaltyByLifeStatus()
-                this.addMoveSpeedPenalty(penalty) 
             }
 
             if(this.is_dead) return
@@ -766,11 +859,11 @@ export default abstract class Character extends Unit {
         
                     elem.trigger(this, unit)
 
-                    console.log(elem.name + ' triggered')
+                
 
                     if(Func.chance(this.isSecondTrigger())){
                         elem.trigger(this, unit)
-                        console.log(elem.name + ' triggered twice')        
+                             
                     }
 
                     elem.last_trigger_time = time
@@ -809,11 +902,11 @@ export default abstract class Character extends Unit {
         
                     elem.trigger(this, enemy)
 
-                    console.log(elem.name + ' triggered')
+                 
 
                     if(Func.chance(this.isSecondTrigger())){
                         elem.trigger(this, enemy)
-                        console.log(elem.name + ' triggered twice')        
+                     
                     }
 
                     elem.last_trigger_time = time
@@ -833,11 +926,9 @@ export default abstract class Character extends Unit {
         
                     elem.trigger(this, target)
 
-                    console.log(elem.name + ' triggered')
 
                     if(Func.chance(this.isSecondTrigger())){
-                        elem.trigger(this, target)
-                        console.log(elem.name + ' triggered twice')        
+                        elem.trigger(this, target)      
                     }
 
                     elem.last_trigger_time = time

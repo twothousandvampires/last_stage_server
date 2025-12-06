@@ -1,20 +1,21 @@
 import Func from "../Func";
+import ITrigger from "../Interfaces/ITrigger";
 import { SwirlingIceProj } from "../Objects/Projectiles/SwirlingIceProj";
 import Character from "../Objects/src/Character";
 
-export default class Hurricane {
+export default class Hurricane implements ITrigger {
 
     chance: number = 5
     name: string = 'hurricane'
     description: string = 'Creates 12 icicles'
+    last_trigger_time: number = 0
+    cd: number = 0
 
-    constructor(){
-
+    getTriggerChance(): number {
+        return this.chance
     }
 
     async trigger(player: Character){
-        if(Func.notChance(this.chance)) return
-
         let count = 12
         
         for(let i = 1; i <= count; i++){

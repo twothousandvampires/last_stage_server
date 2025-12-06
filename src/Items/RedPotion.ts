@@ -35,9 +35,13 @@ import Item from "./Item";
             let status = new Immortality(character.time)
             status.setDuration(this.duration)
 
+          
+
             character.level.setStatus(character, status, true)
             
             character.addLife(3)
+
+            
 
             character.level.addSound('potion', character.x, character.y)
             let e = new Heal(character.level)
