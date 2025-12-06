@@ -8,6 +8,8 @@ export default class ExplodeEnemyWhenGetEnergy {
     cd: number = 1200
     last_trigger_time: number = 0
     chance: number = 0
+    name: string = 'corpse explosion'
+    description: string = 'Give a chance to explode nearby corpse when you get energy'
 
     constructor(){
         

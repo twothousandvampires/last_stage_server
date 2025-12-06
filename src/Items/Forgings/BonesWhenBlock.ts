@@ -1,24 +1,28 @@
 import Func from "../../Func";
+import ITrigger from "../../Interfaces/ITrigger";
 import { Bone } from "../../Objects/Projectiles/Bone";
 import Character from "../../Objects/src/Character";
 import Unit from "../../Objects/src/Unit";
-import Ignite from "../../Status/Ignite";
 import Item from "../Item";
 import Forging from "./Forging";
 
-export default class BonesWhenBlock extends Forging{
+export default class BonesWhenBlock extends Forging implements ITrigger{
 
     value: number = 0
-    freq: number = 3000
     last_trigger_time: number = 0
-
-
+    chance: number = 10
+    cd: number = 3000
+    
     constructor(item: Item){
         super(item)
         this.max_value = 80
         this.name = 'bones when block'
         this.description = 'gives a chance to realise bones when you block which hurts enemies'
         this.gold_cost = 20
+    }
+
+    getTriggerChance(): number {
+        return this.chance
     }
 
     forge(player: Character){
@@ -29,6 +33,7 @@ export default class BonesWhenBlock extends Forging{
 
             this.payCost()
             this.value += 10
+            this.chance += 10
         }
     }
 
@@ -37,36 +42,30 @@ export default class BonesWhenBlock extends Forging{
     }
 
     trigger(player: Character, target: Unit){
-        if(!target) return
         if(this.item.disabled) return
-        if(Func.notChance(this.value, player.is_lucky)) return
+       
+        let angle = Func.angle(player.x, player.y, player.y, target.y)
 
-        if(player.level.time - this.last_trigger_time >= this.freq){
-            this.last_trigger_time = player.level.time
-           
-            let angle = Func.angle(player.x, player.y, player.y, target.y)
+        let proj = new Bone(player.level)
+        proj.setAngle(angle - 0.4)
+        proj.setPoint(player.x, player.y)
+        proj.setOwner(player)
 
-            let proj = new Bone(player.level)
-            proj.setAngle(angle - 0.4)
-            proj.setPoint(player.x, player.y)
-            proj.setOwner(player)
+        player.level.projectiles.push(proj)
 
-            player.level.projectiles.push(proj)
+        let proj2 = new Bone(player.level)
+        proj2.setAngle(angle)
+        proj2.setPoint(player.x, player.y)
+            proj2.setOwner(player)
 
-            let proj2 = new Bone(player.level)
-            proj2.setAngle(angle)
-            proj2.setPoint(player.x, player.y)
-             proj2.setOwner(player)
+        player.level.projectiles.push(proj2)
 
-            player.level.projectiles.push(proj2)
+        let proj3 = new Bone(player.level)
+        proj3.setAngle(angle + 0.4)
+        proj3.setPoint(player.x, player.y)
+            proj3.setOwner(player)
 
-            let proj3 = new Bone(player.level)
-            proj3.setAngle(angle + 0.4)
-            proj3.setPoint(player.x, player.y)
-             proj3.setOwner(player)
-
-            player.level.projectiles.push(proj3)
-        }
+        player.level.projectiles.push(proj3)       
     }
 
     canBeForged(): boolean {

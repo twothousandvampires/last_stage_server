@@ -6,6 +6,8 @@ export default class MassiveImpactTrigger {
 
     cd: number = 2000
     last_trigger_time: number = 0
+    name: string = 'massive impact'
+    description: string = 'Gives a chance, depending on your might to create additional impacts'
 
     constructor(){
         

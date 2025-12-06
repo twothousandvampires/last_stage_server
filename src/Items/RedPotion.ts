@@ -11,6 +11,7 @@ import Item from "./Item";
             super()
             this.used = false
             this.name = 'red potion'
+            this.chance = 100
             this.duration = 1500
             this.type = 3
             this.forge = [
@@ -34,9 +35,13 @@ import Item from "./Item";
             let status = new Immortality(character.time)
             status.setDuration(this.duration)
 
+          
+
             character.level.setStatus(character, status, true)
             
             character.addLife(3)
+
+            
 
             character.level.addSound('potion', character.x, character.y)
             let e = new Heal(character.level)

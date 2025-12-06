@@ -79,8 +79,14 @@ export default abstract class Ability {
     }
 
     afterUse(){
-        this.after_use_triggers.forEach(elem => {
-            elem.trigger(this.owner, this)
+        this.after_use_triggers.forEach((elem, index) => {
+            let chance = this.mastery_chance
+            let reduce = 1 + index
+            chance = Math.round(chance / reduce)
+
+            if(Func.chance(chance)){
+                elem.trigger(this.owner, this)
+            }      
         })
         
         if(this.need_to_pay){

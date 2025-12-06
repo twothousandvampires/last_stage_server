@@ -1,5 +1,4 @@
 import Character from "../../Objects/src/Character";
-import LightningWhenUseAbilityTrigger from "../../Triggers/LightningWhenUseAbilityTrigger";
 import SparksWhenBlockTrigger from "../../Triggers/SparksWhenBlockTrigger";
 import Item from "../Item";
 import Forging from "./Forging";

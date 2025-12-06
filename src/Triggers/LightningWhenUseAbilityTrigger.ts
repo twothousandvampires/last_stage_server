@@ -9,6 +9,8 @@ export default class LightningWhenUseAbilityTrigger {
     cd: number = 1200
     last_trigger_time: number = 0
     chance: number = 0
+    name: string = 'electrification'
+    description: string = 'Gives a chance to realise 3 lightnings'
 
     constructor(){
         

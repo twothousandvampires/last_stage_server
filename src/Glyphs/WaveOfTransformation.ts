@@ -14,7 +14,7 @@ export default class WaveOfTransformation extends Mastery {
 
     trigger(player: Character, ability: Ability){
         
-        if(ability.getMasteryChance()){
+        
             let e = new GoldNova(player.level)
             e.setPoint(player.x, player.y)
 
@@ -29,10 +29,9 @@ export default class WaveOfTransformation extends Mastery {
 
                     player.level.addEffect(effect)
 
-                    player.level.deleted.push(elem.id)
                     player.level.removeEnemy(elem)
                 }
             })
-        } 
+         
     }
 }

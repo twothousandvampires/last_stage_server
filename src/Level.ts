@@ -20,7 +20,6 @@ import SorcerersSkull from "./Objects/Effects/SorcerersSkull"
 import UpgradeManager from "./Classes/UpgradeManager"
 import Helm from "./Objects/Effects/Helm"
 import Message from "./Types/Message"
-import { Connection } from "mysql2/typings/mysql/lib/Connection"
 import Conversation from "./Scenarios/Conversation"
 
 export default class Level{
@@ -184,6 +183,7 @@ export default class Level{
 
     public toJSON(): any{
         let changed = Array.from(this.changed_actors.values())
+        
         return {
             actors: [...this.players, ...changed],
             deleted: this.deleted,
@@ -320,7 +320,7 @@ export default class Level{
         }
     }
 
-    removeEnemy(enemy: Enemy | undefined){
+    removeEnemy(enemy: Enemy | undefined, hard = true){
         if(!enemy) return   
 
         if(enemy.count_as_killed){
@@ -329,5 +329,9 @@ export default class Level{
 
         let index = this.enemies.indexOf(enemy)
         this.enemies.splice(index, 1)
+
+        if(hard){
+            this.deleted.push(enemy.id)
+        } 
     }
 }

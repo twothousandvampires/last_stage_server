@@ -11,11 +11,11 @@ export default class FlyingSwords extends Mastery {
     }
 
     trigger(player: Character, ability: Ability){
-        if(ability.getMasteryChance()){
+        
             let s = new FlyingSwordsStatus(player.level.time)
             s.setDuration(10000)
 
             player.level.setStatus(player, s, true)
-        }
+        
     }
 }

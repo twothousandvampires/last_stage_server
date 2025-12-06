@@ -25,6 +25,9 @@ import FromDefendToAttackTrigger from "../../../Triggers/FromDefendToAttackTrigg
 import WallOfWillTrigger from "../../../Triggers/WallOfWillTrigger";
 import FirstToStrikeTrigger from "../../../Triggers/FirstToStrikeTrigger";
 import PressingSteps from "../../../Status/PressingSteps";
+import RingFlame from "../../../Triggers/RingFlame";
+import Hurricane from "../../../Triggers/Hurricane";
+import ChainLightning from "../../../Triggers/ChainLightningTrigger";
 
 export default class Swordman extends Character{
     
@@ -96,10 +99,8 @@ export default class Swordman extends Character{
         }
     }
 
-    succesefulKill(enemy){
-        this.triggers_on_kill.forEach(elem => {
-            elem.trigger(this, enemy)
-        })
+    succesefulKill(enemy: Unit){
+        super.succesefulKill(enemy)
 
         this.addCourage()   
     }
@@ -273,6 +274,8 @@ export default class Swordman extends Character{
             return
         }
 
+        let is_armour_hit = this.isArmourHit(unit)
+
         if(this.isBlock()){
             this.level.sounds.push({
                 name: 'metal hit',
@@ -282,10 +285,14 @@ export default class Swordman extends Character{
 
             this.succesefulBlock(unit)
 
+            if(is_armour_hit){
+                this.succesefulArmourBlock(unit)
+            }
+
             return
         } 
         
-        if(this.isArmourHit(unit)){
+        if(is_armour_hit){
             this.level.sounds.push({
                 name: 'metal hit',
                 x: this.x,
@@ -532,22 +539,5 @@ export default class Swordman extends Character{
         }
 
         this.energy_by_hit_added = true
-    }
-
-    setDefend(){
-        this.state = 'defend'
-        this.stateAct = this.defendAct
-
-        this.triggers_on_start_block.forEach(elem => elem.trigger(this))
-    
-        let reduce = 80 - this.agility * 5
-        if(reduce < 0){
-            reduce = 0
-        }
-        this.addMoveSpeedPenalty(-reduce)
-
-        this.cancelAct = () => {
-            this.addMoveSpeedPenalty(reduce)
-        }
     }
 }

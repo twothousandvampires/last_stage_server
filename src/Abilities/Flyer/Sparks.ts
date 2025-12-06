@@ -6,6 +6,7 @@ export default class Sparks extends FlyerAbility{
 
     pierce: number = 1
     ttl: number = 3000
+    shock: boolean = false
   
     constructor(owner: Flyer){
         super(owner)
@@ -31,6 +32,7 @@ export default class Sparks extends FlyerAbility{
             let proj = new Spark(this.owner.level, this.pierce, this.ttl)
             
             proj.setAngle(angle)
+            proj.shock = this.shock
             proj.setPoint(this.owner.x, this.owner.y)
             proj.setOwner(this.owner)
 

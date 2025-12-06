@@ -1,4 +1,4 @@
-import FlyingMucusAbility from "../../../EnemyAbilities.ts/FlyingMucusAbility";
+import FlyingMucusAbility from "../../../EnemyAbilities/FlyingMucusAbility";
 import Func from "../../../Func";
 import Level from "../../../Level";
 import Corrosion from "../../../Status/Corrosion";

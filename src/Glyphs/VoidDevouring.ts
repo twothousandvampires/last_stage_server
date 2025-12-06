@@ -13,7 +13,7 @@ export default class VoidDevouring extends Mastery {
 
     trigger(player: Character, ability: Ability){
         
-        if(ability.getMasteryChance()){
+        
            
             for(let i = 0; i < player.level.enemies.length; i++){
                 let e = player.level.enemies[i]
@@ -21,7 +21,6 @@ export default class VoidDevouring extends Mastery {
                 if(!e.is_dead && e.can_be_removed && Func.distance(player, e) <= 10){
 
                     player.level.check(e)
-                    player.level.deleted.push(e.id)
                     player.level.removeEnemy(e)
 
                     let effect = new Devour(player.level)
@@ -32,6 +31,6 @@ export default class VoidDevouring extends Mastery {
                     return
                 }
             }
-        } 
+         
     }
 }

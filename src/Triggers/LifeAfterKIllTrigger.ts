@@ -1,19 +1,24 @@
 import Func from "../Func";
+import ITrigger from "../Interfaces/Itrigger";
 import GoingUpBlood from "../Objects/Effects/GoingUpBlood";
 import Character from "../Objects/src/Character";
 
-export default class LifeAfterKIllTrigger {
+export default class LifeAfterKIllTrigger implements ITrigger {
 
     cd: number = 1500
     last_trigger_time: number = 0
+    name: string = 'life after kill'
+    description: string = ''
+    hidden: boolean = true
+    chance: number = 0
+
+    getTriggerChance(player: Character): number {
+        return player.vampiric_rate
+    }
 
     trigger(player: Character, enemy: any){
-        if(Func.notChance(player.vampiric_rate)) return
         if(!enemy) return
-        if(player.level.time - this.last_trigger_time < this.cd) return
      
-        this.last_trigger_time = player.level.time
-
         player.addLife(1)
 
         let count = 5

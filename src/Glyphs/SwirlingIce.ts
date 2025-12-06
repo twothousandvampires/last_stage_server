@@ -12,7 +12,7 @@ export default class SwirlingIce extends Mastery {
     }
 
     trigger(player: Character, ability: Ability){
-        if(ability.getMasteryChance()){
+        
 
             let proj1 = new SwirlingIceProj(player.level, Func.random(6, 9))
             proj1.setOwner(player)
@@ -31,6 +31,6 @@ export default class SwirlingIce extends Mastery {
             proj3.setAngle(Math.random() * 6.28)
 
             player.level.projectiles.push(proj3)
-        } 
+         
     }
 }

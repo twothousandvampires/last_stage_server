@@ -6,6 +6,9 @@ export default class DamageInRadiusWhenEnlightnent {
 
     cd: number = 2000
     last_trigger_time: number = 0
+    name: string = 'fire burst'
+    description: string = 'Deals fire damage in a large radius'
+    chance: number = 100
 
     trigger(player: Character){
     

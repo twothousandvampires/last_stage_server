@@ -1,4 +1,4 @@
-import PileOfThornCast from "../../../EnemyAbilities.ts/PileOfThornCast";
+import PileOfThornCast from "../../../EnemyAbilities/PileOfThornCast";
 import Level from "../../../Level";
 import { Bone } from "../../Projectiles/Bone";
 import Pile from "./Pile";

@@ -14,7 +14,7 @@ export default class HolyStrike extends Mastery {
 
     trigger(player: Character, ability: Ability){
         
-        if(ability.getMasteryChance()){
+        
             let x = player.x
             let y = player.y
             let distance = 15
@@ -40,6 +40,6 @@ export default class HolyStrike extends Mastery {
                    elem.takeDamage(player, {})
                 }
             })
-        } 
+         
     }
 }

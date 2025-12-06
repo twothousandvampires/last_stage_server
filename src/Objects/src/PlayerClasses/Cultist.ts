@@ -284,6 +284,8 @@ export default class Cultist extends Character{
             this.resource --
             return
         }
+
+        let is_armour_hit = this.isArmourHit(unit)
         
         if(this.isBlock()){
             this.level.sounds.push({
@@ -298,13 +300,17 @@ export default class Cultist extends Character{
 
             this.succesefulBlock(unit)
 
+            if(is_armour_hit){
+                this.succesefulArmourBlock(unit)
+            }
+
             return
         } 
 
         this.addResourse()
         this.addCourage()
 
-        if(this.isArmourHit(unit)){
+        if(is_armour_hit){
             this.level.sounds.push({
                 name: 'metal hit',
                 x: this.x,
@@ -422,28 +428,12 @@ export default class Cultist extends Character{
         }
     }
 
-    succesefulKill(enemy){
-        this.triggers_on_kill.forEach(elem => {
-            elem.trigger(this, enemy)
-        })
+    succesefulKill(enemy: Unit){
+        super.succesefulKill(enemy)
 
         if(this.pain_extract && Func.chance(5, this.is_lucky)){
             this.addResourse()
         }
-    }
-
-    setDamagedAct(){
-        this.damaged = true
-        this.state = 'damaged'
-        this.can_be_controlled_by_player = false
-        this.stateAct = this.damagedAct
-
-        this.cancelAct = () => {
-            this.can_be_controlled_by_player = true
-            this.damaged = false
-        }
-
-        this.setTimerToGetState(300)
     }
 
     getStatDescription(stat: string){

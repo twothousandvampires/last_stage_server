@@ -11,11 +11,11 @@ export default class Dismemberment extends Mastery {
     }
 
     trigger(player: Character, ability: Ability){     
-        if(ability.getMasteryChance()){
-            let status = new DismembermentStatus(player.level.time)
+        
+        let status = new DismembermentStatus(player.level.time)
 
-            status.setDuration(8000)
-            player.level.setStatus(player, status, true)
-        } 
+        status.setDuration(8000)
+        player.level.setStatus(player, status, true)
+        
     }
 }

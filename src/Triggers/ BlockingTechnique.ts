@@ -1,6 +1,7 @@
+import ITrigger from "../Interfaces/ITrigger";
 import Character from "../Objects/src/Character";
 
-export default class BlockingTechnique {
+export default class BlockingTechnique implements ITrigger{
 
     cd: number = 1000
     last_trigger_time: number = 0
@@ -9,9 +10,12 @@ export default class BlockingTechnique {
     activated: boolean = false
     blocked: number = 0
     max_blocked: number = 3
+    name: string = 'blocking technique'
+    description: string = 'When you block 5 hits the next three will be successfully blocked'
+    chance: number = 100
 
-    constructor(){
-        
+    getTriggerChance(): number {
+        return this.chance
     }
 
     trigger(player: Character){

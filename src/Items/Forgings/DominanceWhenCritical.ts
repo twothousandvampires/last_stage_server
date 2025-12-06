@@ -10,7 +10,7 @@ export default class DominanceWhenCritical extends Forging{
     value: number = 0
     freq: number = 3000
     last_trigger_time: number = 0
-
+    chance: number = 0
 
     constructor(item: Item){
         super(item)
@@ -22,12 +22,18 @@ export default class DominanceWhenCritical extends Forging{
 
     forge(player: Character){
         if(this.canBeForged() && this.costEnough()){
-            if(!player.triggers_on_critical.some(elem => elem instanceof DominanceWhenCritical)){
-                player.triggers_on_critical.push(this)
+            let exist = player.triggers_on_critical.find(elem => elem instanceof DominanceWhenCritical)
+            if(exist){
+                exist.chance += 5
+                this.value += 5
             }
-
+            else{
+                player.triggers_on_critical.push(this)
+                this.value += 5
+                this.chance += 5
+            }
+           
             this.payCost()
-            this.value += 5
         }
     }
 
@@ -36,7 +42,7 @@ export default class DominanceWhenCritical extends Forging{
     }
 
     trigger(player: Character, target: Unit){
-        if(Func.notChance(this.value, player.is_lucky)) return
+        if(Func.notChance(this.chance, player.is_lucky)) return
 
         if(player.level.time - this.last_trigger_time >= this.freq){
             this.last_trigger_time = player.level.time

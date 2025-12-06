@@ -12,7 +12,7 @@ export default class WindBarrier extends Mastery {
     }
 
     trigger(player: Character, ability: Ability){     
-        if(ability.getMasteryChance()){
+        
             let e = new SingleTornado(player.level)
             e.setPoint(player.x, player.y)
 
@@ -22,6 +22,6 @@ export default class WindBarrier extends Mastery {
                     elem.impact()
                 }
             })
-        } 
+         
     }
 }

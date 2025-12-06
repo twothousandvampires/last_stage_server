@@ -10,6 +10,7 @@ import UltimatumText2 from "../Objects/Effects/UltimatumText2";
 import UltimatumText3 from "../Objects/Effects/UltimatumText3";
 import UltimatumText4 from "../Objects/Effects/UltimatumText4";
 import Character from "../Objects/src/Character";
+import Ancient from "../Objects/src/Enemy/Ancient";
 import { AscentManifistation } from "../Objects/src/Enemy/AscentManifistation";
 import Bones from "../Objects/src/Enemy/Bones";
 import Enemy from "../Objects/src/Enemy/Enemy";
@@ -46,7 +47,7 @@ export default class Default extends Scenario{
    
     last_checked: number
     time_between_wave_ms: number
-    max_time_wave: number = 9000
+    max_time_wave: number = 7500
     waves_created: number = 0
     times_count: number = 0
     add_e_life: number = 0
@@ -167,13 +168,13 @@ export default class Default extends Scenario{
         this.waves_created ++
       
         if(this.times === Default.TIMES_NORMAL && this.time_between_wave_ms < this.max_time_wave){
-            this.time_between_wave_ms += 50
+            this.time_between_wave_ms += 40
         }
 
-        let add_count = Math.floor(this.waves_created / 15)
+        let add_count = Math.floor(this.waves_created / 12)
         add_count += (level.players.length - 1) * 2
 
-        let count = Func.random(1 + Math.floor(add_count / 4), 2 + Math.floor(add_count / 2))
+        let count = Func.random(1 + Math.floor(add_count / 3), 2 + Math.floor(add_count / 2))
         
         if(this.times === Default.TIMES_BAD){
             count = Math.round(count * 1.5)
@@ -393,6 +394,20 @@ export default class Default extends Scenario{
     }
 
     checkUpgrade(level){
+        let players: Character = level.players.filter(elem => elem.zone_id === 0)
+
+        if(this.waves_created > 1 && this.waves_created % 25 === 0){
+            let a = new Ancient(level)
+            let random = Func.getRandomFromArray(players)
+
+            let angle: number = Math.random() * 6.28
+            let distance_x: number = Func.random(12, 17)
+            let distance_y: number = Func.random(12, 17)
+
+            a.setPoint(random.x + Math.sin(angle) * distance_x, random.y + Math.cos(angle) * distance_y)
+
+            level.enemies.push(a)
+        }
         if(this.waves_created % 10 === 0 && this.waves_created > 1){
             let e = undefined
             let r = Func.random(1, 5)
@@ -414,8 +429,6 @@ export default class Default extends Scenario{
             }
 
             while(e.isOutOfMap()){
-                let players: Character = level.players.filter(elem => elem.zone_id === 0)
-
                 let random = Func.getRandomFromArray(players)
 
                 if(random){
@@ -452,8 +465,6 @@ export default class Default extends Scenario{
             }
             
             while(e.isOutOfMap()){
-                let players: Character = level.players.filter(elem => elem.zone_id === 0)
-
                 let random = Func.getRandomFromArray(players)
 
                 if(random){
@@ -472,7 +483,7 @@ export default class Default extends Scenario{
             level.binded_effects.push(e)
         }
 
-        if(this.waves_created % 15 === 0){
+        if(this.waves_created % 12 === 0){
             let min = undefined
             let name = undefined
             for(let minor in this.monster_upgrades.minor){
@@ -497,7 +508,7 @@ export default class Default extends Scenario{
                     break;
             }
         }
-        if(this.waves_created % 25 === 0){
+        if(this.waves_created % 22 === 0){
             let min = undefined
             let name = undefined
             for(let major in this.monster_upgrades.major){

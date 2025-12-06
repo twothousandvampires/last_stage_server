@@ -1,4 +1,4 @@
-import GoldNovaAbility from "../../EnemyAbilities.ts/GoldNovaAbility";
+import GoldNovaAbility from "../../EnemyAbilities/GoldNovaAbility";
 import Func from "../../Func";
 import Level from "../../Level";
 import GoldStatue from "../src/Enemy/GoldStatue";

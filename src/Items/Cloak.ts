@@ -1,16 +1,24 @@
 import Func from "../Func";
+import ITrigger from "../Interfaces/Itrigger";
 import Character from "../Objects/src/Character";
 import Phase from "../Status/Phase";
 import Item from "./Item";
 
-export default class Cloak extends Item{
+export default class Cloak extends Item implements ITrigger {
     
+    cd = 0
+    last_trigger_time: number = 0;
+
     constructor(){
         super()
         this.chance = 40
         this.name = 'cloak'
         this.type = 2
         this.description = 'gives a chance to gain phasing when taking damage'
+    }
+
+    getTriggerChance(): number {
+        return this.chance
     }
 
     equip(character: Character): void {
@@ -24,11 +32,9 @@ export default class Cloak extends Item{
     trigger(character: Character){
         if(this.disabled) return
         
-        if(Func.chance(this.chance)){
-            let status = new Phase(character.level.time)
+        let status = new Phase(character.level.time)
 
-            status.setDuration(3000 + this.duration)
-            character.level.setStatus(character, status, true)
-        }
+        status.setDuration(3000 + this.duration)
+        character.level.setStatus(character, status, true)
     }
 }

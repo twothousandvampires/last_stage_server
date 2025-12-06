@@ -1,29 +1,28 @@
 
-import Func from "../Func";
+import ITrigger from "../Interfaces/Itrigger";
 import Character from "../Objects/src/Character";
 import Unit from "../Objects/src/Unit";
 import Fragility from "../Status/Fragility";
 
-export default class FragilityWhenHitTrigger {
+export default class FragilityWhenHitTrigger implements ITrigger{
 
     cd: number = 2000
     last_trigger_time: number = 0
+    name: string = 'disintegration'
+    description: string = 'Your hits have a chance to apply fragility on enemies'
 
     constructor(public chance: number = 100){
         
     }
 
+    getTriggerChance(player: Character | undefined): number {
+        return this.chance
+    }
+
     trigger(player: Character, target: Unit){
-        if(Func.notChance(this.chance, player.is_lucky)) return
-        if(!target) return
+        let s = new Fragility(player.level.time)
+        s.setDuration(4000)
 
-        if(player.level.time - this.last_trigger_time >= this.cd){
-            this.last_trigger_time = player.level.time
-            
-            let s = new Fragility(player.level.time)
-            s.setDuration(4000)
-
-            player.level.setStatus(target, s)
-        }
+        player.level.setStatus(target, s)      
     }
 }

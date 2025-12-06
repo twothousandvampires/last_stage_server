@@ -1,17 +1,16 @@
-import Func from "../../Func";
+import ITrigger from "../../Interfaces/Itrigger";
 import Character from "../../Objects/src/Character";
 import Unit from "../../Objects/src/Unit";
-import Dominance from "../../Status/Dominance";
 import Fortify from "../../Status/Fortify";
 import Item from "../Item";
 import Forging from "./Forging";
 
-export default class FortifyWhenHit extends Forging{
+export default class FortifyWhenHit extends Forging implements ITrigger{
 
     value: number = 0
-    freq: number = 3000
+    cd: number = 2000
     last_trigger_time: number = 0
-
+    chance: number = 0
 
     constructor(item: Item){
         super(item)
@@ -19,6 +18,10 @@ export default class FortifyWhenHit extends Forging{
         this.name = 'fortify'
         this.description = 'when you get hit there is a chance to get fortify'
         this.gold_cost = 12
+    }
+
+    getTriggerChance(): number {
+        return this.chance
     }
 
     forge(player: Character){
@@ -29,25 +32,20 @@ export default class FortifyWhenHit extends Forging{
 
             this.payCost()
             this.value += 5
+            this.chance += 5
         }
     }
 
     getValue(){
-        return this.value
+        return this.value + '%'
     }
 
-    trigger(player: Character, target: Unit){
-        if(Func.notChance(this.value, player.is_lucky)) return
+    trigger(player: Character, target: Unit){      
+        let s = new Fortify(player.level.time)
+        s.setDuration(5000)
+        s.setPower(15)
 
-        if(player.level.time - this.last_trigger_time >= this.freq){
-            this.last_trigger_time = player.level.time
-            
-            let s = new Fortify(player.level.time)
-            s.setDuration(5000)
-            s.setPower(15)
-
-            player.level.setStatus(player, s, true)
-        }
+        player.level.setStatus(player, s, true) 
     }
 
     canBeForged(): boolean {

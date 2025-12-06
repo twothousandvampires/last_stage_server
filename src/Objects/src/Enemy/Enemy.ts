@@ -182,6 +182,11 @@ export default abstract class Enemy extends Unit {
         }
     }
 
+    forceLethalDamage(){
+        this.life_status = 0
+        this.setState(new EnemyDyingState)
+    }
+
     takePureDamage(unit: any = undefined, options: any = {}){
         if(this.is_dead) return
         if(!this.can_be_damaged) return
@@ -207,6 +212,8 @@ export default abstract class Enemy extends Unit {
             }
         }
 
+        this.life_status -= damage_value
+
         if(this.life_status <= 0){
             this.is_dead = true
 
@@ -227,7 +234,6 @@ export default abstract class Enemy extends Unit {
             this.setState(new EnemyDyingState)
         }
 
-        this.life_status -= damage_value
     }
 
     deadSound(){
@@ -362,7 +368,6 @@ export default abstract class Enemy extends Unit {
     }
 
     getState(): void {
-
         if(this.is_dead){
             this.setState(this.getDeadStateInstance())
         }

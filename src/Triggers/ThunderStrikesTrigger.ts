@@ -8,6 +8,9 @@ export default class ThunderStrikesTrigger {
     cd: number = 1500
     last_trigger_time: number = 0
     count: number = 0
+    name: string = 'thunder strikes'
+    description: string = 'Creates lightning bolts that strike behind the target'
+    chance: number = 100
 
     trigger(player: Character, enemy: any){
         if(!enemy) return
@@ -29,12 +32,12 @@ export default class ThunderStrikesTrigger {
                 l.setAngle(angle)         
             }
             else if(i % 2 === 0){
-                u += 0.3
-                l.setAngle(angle - (0.3 * u))
+                u += 0.5
+                l.setAngle(angle - u)
             }
             else{
-                d += 0.3
-                l.setAngle(angle + (0.3 * d))
+                d += 0.5
+                l.setAngle(angle + d)
             }
 
             player.level.projectiles.push(l)

@@ -12,8 +12,9 @@ export class Tooth extends Projectiles{
     max_distance: number
     medium_distance: number
     min_distance: number
+    hited: any = []
 
-    constructor(level: Level){
+    constructor(level: Level, public sharp = false){
         super(level)
         this.box_r = 0.3
         this.name = 'tooth'
@@ -48,10 +49,16 @@ export class Tooth extends Projectiles{
         for(let i = 0; i < this.level.enemies.length; i++){
             let e = this.level.enemies[i]
 
-            if(!e.is_dead && e.z < this.w && Func.elipseCollision(this.getBoxElipse(), e.getBoxElipse())){
+            if(!e.is_dead && !this.hited.includes(e.id) && e.z < this.w && Func.elipseCollision(this.getBoxElipse(), e.getBoxElipse())){
+                this.hited.push(e.id)
                 e.takeDamage(this.owner)
-                this.impact()
-                return
+                if(this.sharp){
+                    this.sharp = false
+                }
+                else{
+                    this.impact()
+                    return
+                }            
             }
         }
 

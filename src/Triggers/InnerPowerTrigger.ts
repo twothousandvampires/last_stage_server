@@ -4,9 +4,12 @@ import InnerPower from "../Status/InnerPower";
 
 export default class InnerPowerTrigger {
 
-    cd: number = 2000
+    cd: number = 30000
     last_trigger_time: number = 0
     while_alive: boolean = false
+    name: string = 'inner power'
+    chance: number = 100
+    description: string = 'Gives a powerful buff that will help you survive. Has a long cooldown'
 
     trigger(player: Character){
         if(player.level.time - this.last_trigger_time < this.cd) return

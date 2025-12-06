@@ -1,3 +1,5 @@
+import DemonicEmpowering from "../../../EnemyAbilities/DemonicEmpowering";
+import ExplodingSkulls from "../../../EnemyAbilities/ExplodingSkulls";
 import Func from "../../../Func";
 import Level from "../../../Level";
 import SolidDeadState from "../../../State/SolidDeadState";
@@ -29,6 +31,10 @@ export default class Solid extends Enemy{
         this.create_item_chance = 2
         this.dying_time = 1200
         this.dead_time = 1200
+        this.abilities = [
+            new DemonicEmpowering(),
+            new ExplodingSkulls()
+        ]
     }
 
     getDeadStateInstance() {

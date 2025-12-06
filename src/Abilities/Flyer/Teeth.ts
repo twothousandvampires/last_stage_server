@@ -5,6 +5,9 @@ import FlyerAbility from "./FlyerAbility";
 
 export default class Teeth extends FlyerAbility{
     
+    pulling: boolean = false
+    sharp: boolean = false
+
     constructor(owner: Flyer){
         super(owner)
         this.cost = 1
@@ -30,8 +33,12 @@ export default class Teeth extends FlyerAbility{
 
         let count = 3 + this.owner.getAdditionalRadius()
 
-        if(count > 20){
-            count = 20
+        if(this.pulling){
+            count += this.owner.level.enemies.filter(elem => elem.is_dead && Func.distance(elem, this.owner) <= 16).length
+        }
+
+        if(count > 30){
+            count = 30
         }
         
         let zone_per_tooth = 0.2
@@ -43,7 +50,7 @@ export default class Teeth extends FlyerAbility{
             let max_a = a + (i * zone_per_tooth)
 
             let angle = Math.random() * (max_a - min_a) + min_a
-            let proj = new Tooth(this.owner.level)
+            let proj = new Tooth(this.owner.level, this.sharp)
             proj.setAngle(angle)
             proj.setPoint(this.owner.x, this.owner.y)
 
