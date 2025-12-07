@@ -1,10 +1,10 @@
 import Func from '../Func'
+import ITrigger from '../Interfaces/ITrigger'
 import FlamyRing from '../Objects/Effects/FlamyRing'
-import LightNova from '../Objects/Effects/LightNova'
 import Character from '../Objects/src/Character'
 import Item from './Item'
 
-export default class FlamyNimbus extends Item {
+export default class FlamyNimbus extends Item implements ITrigger {
     last_trigger_time: number = 0
     radius: number = 30
 
@@ -12,9 +12,13 @@ export default class FlamyNimbus extends Item {
         super()
         this.type = 3
         this.chance = 20
-        this.frequency = 4000
+        this.cd = 4000
         this.description = 'when you get maximum energy create a ring that burn enemies'
         this.name = 'flamy nimbus'
+    }
+
+    getTriggerChance(player: Character | undefined): number {
+        return this.chance
     }
 
     equip(character: Character): void {
@@ -29,26 +33,19 @@ export default class FlamyNimbus extends Item {
         if (this.disabled) return
         if (character.resource < character.maximum_resources) return
 
-        if (
-            character.level.time - this.last_trigger_time >= this.frequency &&
-            Func.chance(this.chance)
-        ) {
-            this.last_trigger_time = character.level.time
+        let e = new FlamyRing(character.level)
+        e.setPoint(character.x, character.y)
 
-            let e = new FlamyRing(character.level)
-            e.setPoint(character.x, character.y)
+        character.level.addEffect(e)
 
-            character.level.addEffect(e)
+        let enemies = character.level.enemies.filter(
+            elem => !elem.is_dead && Func.distance(character, elem) <= this.radius
+        )
 
-            let enemies = character.level.enemies.filter(
-                elem => !elem.is_dead && Func.distance(character, elem) <= this.radius
-            )
-
-            enemies.forEach(elem => {
-                elem.takeDamage(character, {
-                    burn: true,
-                })
+        enemies.forEach(elem => {
+            elem.takeDamage(character, {
+                burn: true,
             })
-        }
+        })
     }
 }

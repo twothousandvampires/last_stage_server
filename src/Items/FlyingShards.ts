@@ -11,7 +11,7 @@ export default class FlyingShards extends Item implements ITrigger {
         this.type = 3
         this.chance = 30
         this.count = 2
-        this.cd = 1000
+        this.cd = 800
         this.description =
             'When you block hit with armour there is a chance to realise metal shards to enemies'
         this.name = 'flying shards'

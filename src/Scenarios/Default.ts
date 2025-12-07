@@ -486,10 +486,10 @@ export default class Default extends Scenario {
                     this.add_cooldown_attack += 50
                     break
                 case 'pierce':
-                    this.add_e_pierce += 5
+                    this.add_e_pierce += 3
                     break
                 case 'armour':
-                    this.add_e_armour += 5
+                    this.add_e_armour += 3
                     break
             }
         }

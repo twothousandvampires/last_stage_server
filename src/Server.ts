@@ -160,23 +160,17 @@ export default class MasterServer {
 
     private setupSocketHandlers(): void {
         this.io.on('connection', async (socket: Socket) => {
-
             const query = `
                 INSERT INTO client_data (time, socket) 
                 VALUES (?, ?)
-            `;
-            
-            const values = [
-                socket.handshake.time,
-                socket.id
-            ];
-            
+            `
+
+            const values = [socket.handshake.time, socket.id]
+
             try {
-               await this.db.promise().query(query, values);
-            } catch (error) {
-                
-            }
-        
+                await this.db.promise().query(query, values)
+            } catch (error) {}
+
             socket.on('get_lobbies', async () => {
                 socket.emit('lobbies_list', Array.from(this.lobbies.values()))
             })

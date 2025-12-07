@@ -190,7 +190,21 @@ export default abstract class Character extends Unit {
     }
 
     playerGetResourse() {
-        this.triggers_on_get_energy.forEach(elem => elem.trigger(this))
+        let time = this.level.time
+
+        this.triggers_on_get_energy.forEach(elem => {
+            if (time - elem.last_trigger_time >= elem.cd) {
+                if (Func.chance(elem.getTriggerChance(this), this.is_lucky)) {
+                    elem.trigger(this)
+
+                    if (Func.chance(this.isSecondTrigger())) {
+                        elem.trigger(this)
+                    }
+
+                    elem.last_trigger_time = time
+                }
+            }
+        })
     }
 
     getCastSpeed() {
@@ -734,8 +748,20 @@ export default abstract class Character extends Unit {
     }
 
     public playerWasHealed(): void {
+        let time = this.level.time
+
         this.triggers_on_heal.forEach(elem => {
-            elem.trigger(this)
+            if (time - elem.last_trigger_time >= elem.cd) {
+                if (Func.chance(elem.getTriggerChance(this), this.is_lucky)) {
+                    elem.trigger(this)
+
+                    if (Func.chance(this.isSecondTrigger())) {
+                        elem.trigger(this)
+                    }
+
+                    elem.last_trigger_time = time
+                }
+            }
         })
     }
 
