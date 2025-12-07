@@ -161,8 +161,15 @@ export default class MasterServer {
     private setupSocketHandlers(): void {
         this.io.on('connection', async (socket: Socket) => {
 
-            const query = 'INSERT INTO client_data (time) VALUES (?)';
-            const values = [socket.handshake.time];
+            const query = `
+                INSERT INTO client_data (time, socket) 
+                VALUES (?, ?)
+            `;
+            
+            const values = [
+                socket.handshake.time,
+                socket.id
+            ];
             
             try {
                await this.db.promise().query(query, values);
