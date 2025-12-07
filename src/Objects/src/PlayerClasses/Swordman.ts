@@ -58,7 +58,7 @@ export default class Swordman extends Character {
         // this.pierce = 100
         this.attack_speed = 1450
 
-        this.base_regeneration_time = 9000
+        this.base_regeneration_time = 8500
         this.recent_kills = []
         this.chance_to_block = 50
     }
