@@ -1,6 +1,6 @@
 type Sound = {
-    name: string,
-    x: number,
+    name: string
+    x: number
     y: number
 }
 

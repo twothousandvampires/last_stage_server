@@ -1,9 +1,8 @@
-import Level from "../../../Level";
-import Enemy from "./Enemy";
+import Level from '../../../Level'
+import Enemy from './Enemy'
 
 export default class GoldStatue extends Enemy {
-
-    constructor(level: Level){
+    constructor(level: Level) {
         super(level)
         this.name = 'gold statue'
         this.box_r = 3

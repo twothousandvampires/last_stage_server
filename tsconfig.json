@@ -1,14 +1,14 @@
 {
-  "compilerOptions": {
-    "target": "ES2020",      
-    "module": "CommonJS",
-    "outDir": "./dist",    
-    "rootDir": "./src",       
-    "strict": true,      
-    "esModuleInterop": true,  // Совместимость с CommonJS/ESM
-    "skipLibCheck": true,     
-    "noEmitOnError": false 
-  },
-  "include": ["src/**/*"],    // Какие файлы компилировать
-  "exclude": ["node_modules"] // Что игнорировать
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "CommonJS",
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "strict": true,
+        "esModuleInterop": true, // Совместимость с CommonJS/ESM
+        "skipLibCheck": true,
+        "noEmitOnError": false
+    },
+    "include": ["src/**/*"], // Какие файлы компилировать
+    "exclude": ["node_modules"] // Что игнорировать
 }

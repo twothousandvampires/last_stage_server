@@ -1,14 +1,13 @@
-import ITrigger from "../../Interfaces/Itrigger";
-import Character from "../../Objects/src/Character";
-import FreezeWhetHitedTrigger from "../../Triggers/FreezeWhetHitedTrigger";
-import Item from "../Item";
-import Forging from "./Forging";
+import ITrigger from '../../Interfaces/Itrigger'
+import Character from '../../Objects/src/Character'
+import FreezeWhetHitedTrigger from '../../Triggers/FreezeWhetHitedTrigger'
+import Item from '../Item'
+import Forging from './Forging'
 
-export default class FreezeWhenHited extends Forging{
-
+export default class FreezeWhenHited extends Forging {
     value: number = 0
-    
-    constructor(item: Item){
+
+    constructor(item: Item) {
         super(item)
         this.max_value = 20
         this.name = 'icy halo'
@@ -16,31 +15,32 @@ export default class FreezeWhenHited extends Forging{
         this.gold_cost = 12
     }
 
-    forge(player: Character){
-        if(this.canBeForged() && this.costEnough()){
-            let trigger = player.triggers_on_get_hit.find(elem => elem instanceof FreezeWhetHitedTrigger)
+    forge(player: Character) {
+        if (this.canBeForged() && this.costEnough()) {
+            let trigger = player.triggers_on_get_hit.find(
+                elem => elem instanceof FreezeWhetHitedTrigger
+            )
 
-            if(trigger){
+            if (trigger) {
                 trigger.chance += 5
-            }
-            else{
+            } else {
                 let t = new FreezeWhetHitedTrigger()
                 t.chance = 5
 
                 player.triggers_on_get_hit.push(t)
             }
-           
+
             this.payCost()
             this.value += 5
         }
     }
 
-    getValue(){
+    getValue() {
         return this.value + '%'
     }
 
     canBeForged(): boolean {
-        if(!this.item || !this.item.player) return false
+        if (!this.item || !this.item.player) return false
 
         return this.value < this.max_value
     }

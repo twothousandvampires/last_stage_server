@@ -1,9 +1,8 @@
-import Item from "../Item";
-import Forging from "./Forging";
+import Item from '../Item'
+import Forging from './Forging'
 
 export default class Distance extends Forging {
-
-    constructor(item: Item){
+    constructor(item: Item) {
         super(item)
         this.max_value = 10
         this.name = 'distance'
@@ -11,8 +10,8 @@ export default class Distance extends Forging {
         this.gold_cost = 3
     }
 
-    forge(){
-        if(this.canBeForged() && this.costEnough()){
+    forge() {
+        if (this.canBeForged() && this.costEnough()) {
             this.value += 2
             this.item.distance += 2
             this.payCost()

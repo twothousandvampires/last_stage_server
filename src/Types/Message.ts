@@ -1,6 +1,6 @@
 type Message = {
-    text: string,
-    id?: string | number | undefined,
+    text: string
+    id?: string | number | undefined
 }
 
 export default Message

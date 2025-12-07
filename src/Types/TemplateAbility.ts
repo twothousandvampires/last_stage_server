@@ -1,8 +1,8 @@
 type TemplateAbility = {
-    name: string,
-    selected: boolean,
-    type: number,
-    id: number,
+    name: string
+    selected: boolean
+    type: number
+    id: number
     desc: string
 }
 

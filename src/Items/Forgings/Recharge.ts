@@ -1,9 +1,8 @@
-import Item from "../Item";
-import Forging from "./Forging";
+import Item from '../Item'
+import Forging from './Forging'
 
 export default class Recharge extends Forging {
-
-    constructor(item: Item){
+    constructor(item: Item) {
         super(item)
         this.max_value = 90
         this.name = 'recharge item'
@@ -11,14 +10,14 @@ export default class Recharge extends Forging {
         this.gold_cost = 5
     }
 
-    forge(){
-        if(this.canBeForged() && this.costEnough()){
+    forge() {
+        if (this.canBeForged() && this.costEnough()) {
             this.item.used = false
             this.payCost()
         }
     }
 
-    getValue(){
+    getValue() {
         return ''
     }
 

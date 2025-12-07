@@ -1,8 +1,7 @@
-import Character from "../Objects/src/Character"
-import Status from "./Status"
+import Character from '../Objects/src/Character'
+import Status from './Status'
 
-export default class Drained extends Status{
-    
+export default class Drained extends Status {
     might_drained: number
     perception_drained: number
     will_drained: number
@@ -10,62 +9,62 @@ export default class Drained extends Status{
     agility_drained: number
     durability_drained: number
     name: string
-    
-    constructor(public time: number){
-      super(time)
-      this.might_drained = 0
-      this.perception_drained = 0
-      this.will_drained = 0
-      this.knowledge_drained = 0
-      this.agility_drained = 0
-      this.durability_drained = 0
-      this.name = 'drained'
-      this.need_to_check_resist = true
+
+    constructor(public time: number) {
+        super(time)
+        this.might_drained = 0
+        this.perception_drained = 0
+        this.will_drained = 0
+        this.knowledge_drained = 0
+        this.agility_drained = 0
+        this.durability_drained = 0
+        this.name = 'drained'
+        this.need_to_check_resist = true
     }
 
-    drain(){
-        if(this.unit.might > 0 ){
-            this.unit.might --
-            this.might_drained ++
+    drain() {
+        if (this.unit.might > 0) {
+            this.unit.might--
+            this.might_drained++
         }
-        if(this.unit.perception > 0 ){
-            this.unit.perception --
-            this.perception_drained ++
+        if (this.unit.perception > 0) {
+            this.unit.perception--
+            this.perception_drained++
         }
-        if(this.unit.will > 0 ){
-            this.unit.will --
-            this.will_drained ++
+        if (this.unit.will > 0) {
+            this.unit.will--
+            this.will_drained++
         }
-        if(this.unit.knowledge > 0 ){
-            this.unit.knowledge --
-            this.knowledge_drained ++
+        if (this.unit.knowledge > 0) {
+            this.unit.knowledge--
+            this.knowledge_drained++
         }
-        if(this.unit.durability > 0 ){
-            this.unit.durability --
-            this.durability_drained ++
+        if (this.unit.durability > 0) {
+            this.unit.durability--
+            this.durability_drained++
         }
-        if(this.unit.agility > 0 ){
-            this.unit.agility --
-            this.agility_drained ++
+        if (this.unit.agility > 0) {
+            this.unit.agility--
+            this.agility_drained++
         }
     }
 
-    apply(unit: any){
+    apply(unit: any) {
         this.unit = unit
-        if(this.unit instanceof Character){
+        if (this.unit instanceof Character) {
             this.unit.statusWasApplied()
             this.drain()
 
             this.unit.newStatus({
                 name: 'drained',
                 duration: this.duration,
-                desc: 'your stats are decreased'
+                desc: 'your stats are decreased',
             })
         }
     }
 
-    clear(){
-        if(this.unit instanceof Character){
+    clear() {
+        if (this.unit instanceof Character) {
             this.unit.might += this.might_drained
             this.unit.perception += this.perception_drained
             this.unit.durability += this.durability_drained
@@ -75,7 +74,7 @@ export default class Drained extends Status{
         }
     }
 
-    update(status: any){
+    update(status: any) {
         this.time = Date.now()
         this.drain()
     }

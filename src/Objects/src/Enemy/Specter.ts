@@ -1,18 +1,17 @@
-import SoulSeekers from "../../../EnemyAbilities/SoulSeekers";
-import SoulVortex from "../../../EnemyAbilities/SoulVortex";
-import Func from "../../../Func";
-import Level from "../../../Level";
-import Undead from "./Undead";
+import SoulSeekers from '../../../EnemyAbilities/SoulSeekers'
+import SoulVortex from '../../../EnemyAbilities/SoulVortex'
+import Func from '../../../Func'
+import Level from '../../../Level'
+import Undead from './Undead'
 
-export default class Specter extends Undead{
-
+export default class Specter extends Undead {
     ressurect_chance: number
     want_to_cast: boolean
     spell_name: string | undefined
     can_cast_vortex: boolean
     can_cast_seekers: boolean
 
-    constructor(level: Level){
+    constructor(level: Level) {
         super(level)
         this.name = 'specter'
         this.box_r = 2.5
@@ -32,39 +31,39 @@ export default class Specter extends Undead{
         this.gold_revard = 6
         this.create_item_chance = 6
 
-        this.abilities = [
-            new SoulVortex(),
-            new SoulSeekers()
-        ]
+        this.abilities = [new SoulVortex(), new SoulSeekers()]
     }
 
     deadSound(): void {
-        if(Func.notChance(15)) return
-        
+        if (Func.notChance(15)) return
+
         this.level.sounds.push({
             x: this.x,
             y: this.y,
-            name: 'specter dead'
+            name: 'specter dead',
         })
     }
 
-    getCastStateString(){
+    getCastStateString() {
         return 'cast'
     }
 
-    hitImpact(){
-        if(this.target && this.attack_angle){
-        
+    hitImpact() {
+        if (this.target && this.attack_angle) {
             this.level.sounds.push({
                 x: this.x,
                 y: this.y,
-                name: 'specter attack'
+                name: 'specter attack',
             })
 
             let e = this.getBoxElipse()
             e.r = this.attack_radius
 
-            if(this.target.z < 5 && Func.checkAngle(this, this.target, this.attack_angle, 1.6) && Func.elipseCollision(e, this.target?.getBoxElipse())){
+            if (
+                this.target.z < 5 &&
+                Func.checkAngle(this, this.target, this.attack_angle, 1.6) &&
+                Func.elipseCollision(e, this.target?.getBoxElipse())
+            ) {
                 this.target.takeDamage(this, {})
             }
         }

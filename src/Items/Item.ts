@@ -1,9 +1,8 @@
-import Builder from "../Classes/Builder";
-import Character from "../Objects/src/Character";
-import Forging from "./Forgings/Forging";
+import Builder from '../Classes/Builder'
+import Character from '../Objects/src/Character'
+import Forging from './Forgings/Forging'
 
 export default abstract class Item {
-
     public forge: Forging[] = []
     public distance: number = 0
     public chance: number = 0
@@ -19,146 +18,161 @@ export default abstract class Item {
     public cd = 5000
     max_chance: number = 90
 
-    toJSON(){
+    toJSON() {
         return {
             forge: this.forge,
             name: this.name,
             description: this.description,
-            max_forgings: this.max_forgings
+            max_forgings: this.max_forgings,
         }
     }
 
-    static list = [
+    static readonly list = [
         {
-            name: "skull of first warrior",
-            description: 'increases your might by 12 for 10 seconds after 12 kills'
+            name: 'skull of first warrior',
+            description: 'increases your might by 12 for 10 seconds after 12 kills',
         },
         {
-            name: "glacial chain",
-            description: 'after using your non-utility skill you have a 25% chance to spell Frost Wave'
+            name: 'glacial chain',
+            description:
+                'after using your non-utility skill you have a 25% chance to spell Frost Wave',
         },
         {
-            name: "red potion",
-            description: 'when you reach 1 life, your life is restored to full and you gain immortality for a short period'
+            name: 'red potion',
+            description:
+                'when you reach 1 life, your life is restored to full and you gain immortality for a short period',
         },
         {
-            name: "soul accumulator",
-            description: 'when your teammate dies, you gain 5 to all stats'
+            name: 'soul accumulator',
+            description: 'when your teammate dies, you gain 5 to all stats',
         },
         {
-            name: "doom mantia",
-            description: 'when you take lethal damage, there is a chance to redirect your death to a nearby target'
+            name: 'doom mantia',
+            description:
+                'when you take lethal damage, there is a chance to redirect your death to a nearby target',
         },
         {
-            name: "wall of bones",
-            description: 'if you get hit, you have a chance to receive a bone charge that increases your armor and fortification. If you reach the maximum charge (default 10), there is a chance that the charges will explode and injure enemies'
+            name: 'wall of bones',
+            description:
+                'if you get hit, you have a chance to receive a bone charge that increases your armor and fortification. If you reach the maximum charge (default 10), there is a chance that the charges will explode and injure enemies',
         },
         {
-            name: "flame ring",
-            description: 'when you take damage, the nearest enemy takes damage'
-        },{
-            name: "sparkling helmet",
-            description: 'if you do not use any skills for 5 seconds, creates a shock ring'
+            name: 'flame ring',
+            description: 'when you take damage, the nearest enemy takes damage',
         },
         {
-            name: "glass sword",
-            description: 'always deal double damage, always take double damage'
+            name: 'sparkling helmet',
+            description: 'if you do not use any skills for 5 seconds, creates a shock ring',
         },
         {
-            name: "cloak",
-            description: 'gives a chance to gain phasing when taking damage'
+            name: 'glass sword',
+            description: 'always deal double damage, always take double damage',
         },
         {
-            name: "staff",
-            description: 'reduces cooldowns'
+            name: 'cloak',
+            description: 'gives a chance to gain phasing when taking damage',
         },
         {
-            name: "charged bow",
-            description: 'after hit enemy there is a chance to create lightnings with 2000 ms cd'
+            name: 'staff',
+            description: 'reduces cooldowns',
         },
         {
-            name: "dagger of smoke",
-            description: 'when you heal, there is a chance to create blood shards'
+            name: 'charged bow',
+            description: 'after hit enemy there is a chance to create lightnings with 2000 ms cd',
         },
         {
-            name: "yellow stone",
-            description: 'increases a chance to resist status, when you resist gain a ward'
+            name: 'dagger of smoke',
+            description: 'when you heal, there is a chance to create blood shards',
         },
         {
-            name: "white shield",
-            description: 'you have a chance to get ward when block'
+            name: 'yellow stone',
+            description: 'increases a chance to resist status, when you resist gain a ward',
         },
         {
-            name: "emerald knife",
-            description: 'increase a chance to get additional gold'
+            name: 'white shield',
+            description: 'you have a chance to get ward when block',
         },
         {
-            name: "whispering shield",
-            description: 'increases a chance to block and... whispers strange things sometimes'
+            name: 'emerald knife',
+            description: 'increase a chance to get additional gold',
         },
         {
-            name: "twilight gloves",
-            description: 'periodically create clots of energy on enemies'
+            name: 'whispering shield',
+            description: 'increases a chance to block and... whispers strange things sometimes',
         },
         {
-            name: "ring of transmutation",
-            description: 'when hitted by enemy there is a chance turn them into gold'
+            name: 'twilight gloves',
+            description: 'periodically create clots of energy on enemies',
         },
         {
-            name: "sword handle",
-            description: 'you are lucky'
+            name: 'ring of transmutation',
+            description: 'when hitted by enemy there is a chance turn them into gold',
         },
         {
-            name: "ice belt",
-            description: 'increases maximum of energy'
+            name: 'sword handle',
+            description: 'you are lucky',
         },
         {
-            name: "searching heart",
-            description: 'every 10 seconds releases fireballs, the number of which depends on the health lost during this time'
+            name: 'ice belt',
+            description: 'increases maximum of energy',
         },
         {
-            name: "charged armour",
-            description: 'when you get energy there is a chance that if it is not max - you get a ward, otherwise you lose the whole ward and get set on fire'
+            name: 'searching heart',
+            description:
+                'every 10 seconds releases fireballs, the number of which depends on the health lost during this time',
         },
         {
-            name: "molten helm",
-            description: 'when you start blocking you ignite enemies within a radius, the power of the burn depends on your armor. it has a 15-second cooldown'
+            name: 'charged armour',
+            description:
+                'when you get energy there is a chance that if it is not max - you get a ward, otherwise you lose the whole ward and get set on fire',
         },
         {
-            name: "soul blade",
-            description: 'when you kill enemy there is a chance to get ward'
+            name: 'molten helm',
+            description:
+                'when you start blocking you ignite enemies within a radius, the power of the burn depends on your armor. it has a 15-second cooldown',
         },
         {
-            name: "solar spear",
-            description: 'when you pierce enemy you create light nova which heals allies'
+            name: 'soul blade',
+            description: 'when you kill enemy there is a chance to get ward',
         },
         {
-            name: "crystal greaves",
-            description: 'You are fragile (15%) when you move, nearby enemies are frigile when you stand'
+            name: 'solar spear',
+            description: 'when you pierce enemy you create light nova which heals allies',
         },
         {
-            name: "flying shards",
-            description: 'When you block hit with armour there is a chance to realise metal shards to enemies'
+            name: 'crystal greaves',
+            description:
+                'You are fragile (15%) when you move, nearby enemies are frigile when you stand',
         },
         {
-            name: "pale blade",
-            description: 'when you hit enemy there is a chance to summon spectral blade which will fight on you side'
+            name: 'flying shards',
+            description:
+                'When you block hit with armour there is a chance to realise metal shards to enemies',
         },
         {
-            name: "crossbow",
-            description: 'when you lead critical damage there is a chance to crush nearby enemies'
+            name: 'pale blade',
+            description:
+                'when you hit enemy there is a chance to summon spectral blade which will fight on you side',
         },
         {
-            name: "royal mace",
-            description: 'increases impact, crushing and critical rating'
+            name: 'crossbow',
+            description: 'when you lead critical damage there is a chance to crush nearby enemies',
         },
         {
-            name: "devouring axe",
-            description: 'give you a chance to get devouring after kill'
+            name: 'royal mace',
+            description: 'increases impact, crushing and critical rating',
         },
         {
-            name: "flamy nimbus",
-            description: 'when you get maximum energy create a ring that burn enemies'
+            name: 'devouring axe',
+            description: 'give you a chance to get devouring after kill',
+        },
+        {
+            name: 'flamy nimbus',
+            description: 'when you get maximum energy create a ring that burn enemies',
+        },
+        {
+            name: 'distorter',
+            description: 'gives 5% chance that a trigger triggered twice',
         },
     ]
 
@@ -173,7 +187,7 @@ export default abstract class Item {
         'penetrating',
         'spirit',
         'power',
-        'vampiric'
+        'vampiric',
     ]
 
     static forging_list_type_1 = [
@@ -187,7 +201,7 @@ export default abstract class Item {
         'stun when hit',
         'thunder strikes',
         'storm presence',
-        'dominance when critical'
+        'dominance when critical',
     ]
 
     static forging_list_type_2 = [
@@ -202,9 +216,9 @@ export default abstract class Item {
         'shock nova when armour',
         'explosive armour',
         'fire presence',
-        'fortify when hit'
+        'fortify when hit',
     ]
-    
+
     static forging_list_type_3 = [
         'resist',
         'will',
@@ -216,16 +230,15 @@ export default abstract class Item {
         'lightning when use skill',
         'overcharge',
         'ice presence',
-        'cold heart'
+        'cold heart',
+        'echo',
     ]
 
     name: string = ''
 
-    constructor(){
-        
-    }
+    constructor() {}
 
-    getSpecialForgings(): string[] | []{
+    getSpecialForgings(): string[] | [] {
         return []
     }
 
@@ -233,24 +246,24 @@ export default abstract class Item {
 
     // abstract forge(character: Character): void
 
-    canBeForged(character: Character){
+    canBeForged(character: Character) {
         return true
     }
 
-    setPlayer(player: Character){
+    setPlayer(player: Character) {
         this.player = player
         this.equip(this.player)
     }
 
-    disable(){
+    disable() {
         this.disabled = true
     }
 
-    enable(){
+    enable() {
         this.disabled = false
     }
 
-    pick(id: number){
+    pick(id: number) {
         let forging = this.suggested_forgings[id]
 
         this.player.gold += forging.gold_cost
@@ -259,43 +272,40 @@ export default abstract class Item {
         this.forge.push(forging)
     }
 
-    public unlockForgings(): boolean{
-        if(this.forge.length >= this.max_forgings) return false
-        if(this.suggested_forgings.length != 0) return false
+    public unlockForgings(): boolean {
+        if (this.forge.length >= this.max_forgings) return false
+        if (this.suggested_forgings.length != 0) return false
 
-        for(let i = 0; i < 3; i++){
+        for (let i = 0; i < 3; i++) {
             let f = this.getRandomForging()
-            if(this.suggested_forgings.some(elem => elem.name === f.name)){
+            if (this.suggested_forgings.some(elem => elem.name === f.name)) {
                 i--
-            }
-            else{
+            } else {
                 this.suggested_forgings.push(f)
             }
         }
-        
+
         return true
     }
 
-    getRandomForging(){
+    getRandomForging() {
         let all = [...Item.forging_list_all]
-        
-        if(this.type === 1){
+
+        if (this.type === 1) {
             all = all.concat(...Item.forging_list_type_1)
-        }
-        else if(this.type === 2){
+        } else if (this.type === 2) {
             all = all.concat(...Item.forging_list_type_2)
-        }
-        else if(this.type === 3){
-             all = all.concat(...Item.forging_list_type_3)
+        } else if (this.type === 3) {
+            all = all.concat(...Item.forging_list_type_3)
         }
 
-        all =  all.concat(...this.getSpecialForgings())
+        all = all.concat(...this.getSpecialForgings())
 
         let random: string = all[Math.floor(Math.random() * all.length)]
 
         let forging = Builder.createForging(random, this)
 
-        while(this.forge.some(elem => elem instanceof forging.constructor)){
+        while (this.forge.some(elem => elem instanceof forging.constructor)) {
             random = all[Math.floor(Math.random() * all.length)]
 
             forging = Builder.createForging(random, this)

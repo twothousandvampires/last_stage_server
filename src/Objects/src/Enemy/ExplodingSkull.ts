@@ -1,12 +1,11 @@
-import Level from "../../../Level";
-import ExplodingSkullIdleState from "../../../State/ExplodingSkullIdleState";
-import Enemy from "./Enemy";
+import Level from '../../../Level'
+import ExplodingSkullIdleState from '../../../State/ExplodingSkullIdleState'
+import Enemy from './Enemy'
 
 export default class ExplodingSkull extends Enemy {
+    target: any
 
-    target: any;
-
-    constructor(level: Level){
+    constructor(level: Level) {
         super(level)
         this.name = 'exploding skull'
         this.box_r = 1.2
@@ -23,7 +22,7 @@ export default class ExplodingSkull extends Enemy {
         this.move_speed = 0.3
     }
 
-    getIdleStateInstance(){
+    getIdleStateInstance() {
         return new ExplodingSkullIdleState()
     }
 }

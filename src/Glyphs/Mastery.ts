@@ -1,18 +1,17 @@
-import Ability from "../Abilities/Ability"
+import Ability from '../Abilities/Ability'
 
 export default abstract class Mastery {
-
     name: string = 'mastery'
     description: string = ''
 
-    toJson(){
+    toJson() {
         return {
             name: this.name,
-            description: this.description
+            description: this.description,
         }
     }
 
-    apply(ability: Ability){
+    apply(ability: Ability) {
         ability.after_use_triggers.push(this)
-    } 
+    }
 }

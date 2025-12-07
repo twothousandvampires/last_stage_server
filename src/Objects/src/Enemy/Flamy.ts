@@ -1,14 +1,13 @@
-import Func from "../../../Func";
-import Level from "../../../Level";
-import EnemyRangeIdleState from "../../../State/EnemyRangeIdleState";
-import { FlamyFireBall } from "../../Projectiles/FlamyFireBall";
-import Enemy from "./Enemy";
+import Func from '../../../Func'
+import Level from '../../../Level'
+import EnemyRangeIdleState from '../../../State/EnemyRangeIdleState'
+import { FlamyFireBall } from '../../Projectiles/FlamyFireBall'
+import Enemy from './Enemy'
 
 export class Flamy extends Enemy {
-
     cooldown_attack: number = 4000
 
-    constructor(level: Level){
+    constructor(level: Level) {
         super(level)
         this.name = 'flamy'
         this.box_r = 2
@@ -22,12 +21,12 @@ export class Flamy extends Enemy {
         this.gold_revard = 2
     }
 
-    getIdleStateInstance(){
+    getIdleStateInstance() {
         return new EnemyRangeIdleState()
     }
 
-    hitImpact(){
-        if(this.target){
+    hitImpact() {
+        if (this.target) {
             let fb = new FlamyFireBall(this.level)
             fb.setPoint(this.x, this.y)
 
@@ -39,13 +38,13 @@ export class Flamy extends Enemy {
         }
     }
 
-     deadSound(): void {
-        if(Func.notChance(15)) return
-        
+    deadSound(): void {
+        if (Func.notChance(15)) return
+
         this.level.sounds.push({
             x: this.x,
             y: this.y,
-            name: 'flamy dead'
+            name: 'flamy dead',
         })
     }
 }

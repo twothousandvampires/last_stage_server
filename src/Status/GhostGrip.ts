@@ -1,24 +1,23 @@
-import Character from "../Objects/src/Character"
+import Character from '../Objects/src/Character'
 import GhostGripEffect from '../Objects/Effects/GhostGrip'
-import Status from "./Status"
+import Status from './Status'
 
-export default class GhostGrip extends Status{
-   
+export default class GhostGrip extends Status {
     effect: any
     name: string
 
-    constructor(public time: number){
+    constructor(public time: number) {
         super(time)
         this.name = 'ghost grip'
         this.need_to_check_resist = true
     }
 
-    apply(unit: any){
+    apply(unit: any) {
         this.unit = unit
-        if(this.unit instanceof Character){
+        if (this.unit instanceof Character) {
             this.unit.addMoveSpeedPenalty(-50)
             this.unit.statusWasApplied()
-            
+
             this.effect = new GhostGripEffect(this.unit.level)
             this.effect.setOwner(this.unit)
 
@@ -27,27 +26,29 @@ export default class GhostGrip extends Status{
             this.unit.newStatus({
                 name: 'ghost grip',
                 duration: this.duration,
-                desc: 'movement is highed reduced'
+                desc: 'movement is highed reduced',
             })
         }
     }
 
-    clear(){
-        if(this.unit instanceof Character){
+    clear() {
+        if (this.unit instanceof Character) {
             this.unit.addMoveSpeedPenalty(50)
 
             this.unit.level.deleted.push(this.effect.id)
-            this.unit.level.binded_effects = this.unit.level.binded_effects.filter(e => e != this.effect)
+            this.unit.level.binded_effects = this.unit.level.binded_effects.filter(
+                e => e != this.effect
+            )
         }
     }
 
-    update(status: any){
+    update(status: any) {
         this.time = Date.now()
 
         this.unit.newStatus({
             name: 'ghost grip',
             duration: this.duration,
-            desc: 'movement is highed reduced'
+            desc: 'movement is highed reduced',
         })
     }
 }

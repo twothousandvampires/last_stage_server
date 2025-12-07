@@ -1,16 +1,16 @@
-import Func from "../../Func";
-import Level from "../../Level";
-import Weakness from "../../Status/Weakness";
-import Effect from "./Effects";
+import Func from '../../Func'
+import Level from '../../Level'
+import Weakness from '../../Status/Weakness'
+import Effect from './Effects'
 
-export default class SpecterVortex extends Effect{
+export default class SpecterVortex extends Effect {
     x: any
     y: any
     last_check_time: number
     timer: number
     start: number
-  
-    constructor(level: Level){
+
+    constructor(level: Level) {
         super(level)
         this.name = 'specter vortex'
         this.x = undefined
@@ -21,17 +21,17 @@ export default class SpecterVortex extends Effect{
         this.start = Date.now()
     }
 
-    act(game_tick: number){
-        if(!this.owner || game_tick - this.start >= 5000){
+    act(game_tick: number) {
+        if (!this.owner || game_tick - this.start >= 5000) {
             this.delete()
             return
         }
 
-        if(game_tick - this.last_check_time >= this.timer){
+        if (game_tick - this.last_check_time >= this.timer) {
             this.last_check_time += this.timer
 
             this.level.players.forEach(elem => {
-                if(Func.elipseCollision(this.getBoxElipse(), elem.getBoxElipse())){
+                if (Func.elipseCollision(this.getBoxElipse(), elem.getBoxElipse())) {
                     let status = new Weakness(game_tick)
                     status.setDuration(1000)
 
@@ -39,12 +39,12 @@ export default class SpecterVortex extends Effect{
                 }
             })
         }
-        
+
         this.x = this.owner.x
         this.y = this.owner.y
     }
 
-    setOwner(character: any){
+    setOwner(character: any) {
         this.owner = character
     }
 }

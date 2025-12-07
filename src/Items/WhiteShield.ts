@@ -1,12 +1,11 @@
-import ITrigger from "../Interfaces/ITrigger";
-import Character from "../Objects/src/Character";
-import Item from "./Item";
+import ITrigger from '../Interfaces/ITrigger'
+import Character from '../Objects/src/Character'
+import Item from './Item'
 
 export default class WhiteShield extends Item implements ITrigger {
-
     last_trigger_time: number = 0
 
-    constructor(){
+    constructor() {
         super()
         this.chance = 40
         this.name = 'white shield'
@@ -26,9 +25,9 @@ export default class WhiteShield extends Item implements ITrigger {
         character.triggers_on_block.push(this)
     }
 
-    trigger(character: Character){
-        if(this.disabled) return
-        
+    trigger(character: Character) {
+        if (this.disabled) return
+
         character.addWard(1)
     }
 }

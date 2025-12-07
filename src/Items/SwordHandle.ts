@@ -1,9 +1,8 @@
-import Character from "../Objects/src/Character";
-import Item from "./Item";
+import Character from '../Objects/src/Character'
+import Item from './Item'
 
-export default class SwordHandle extends Item{
-
-    constructor(){
+export default class SwordHandle extends Item {
+    constructor() {
         super()
         this.name = 'sword handle'
         this.type = 1
@@ -17,15 +16,15 @@ export default class SwordHandle extends Item{
 
     disable(): void {
         this.disabled = true
-        if(this.player){
-             this.player.is_lucky = false
+        if (this.player) {
+            this.player.is_lucky = false
         }
     }
 
     enable(): void {
         this.disabled = false
-        if(this.player){
-             this.player.is_lucky = true
+        if (this.player) {
+            this.player.is_lucky = true
         }
     }
 }

@@ -1,11 +1,11 @@
-import Level from "../../Level";
-import Effect from "./Effects";
+import Level from '../../Level'
+import Effect from './Effects'
 
 export default class ReanimatorEffect extends Effect {
     x: any
     y: any
-  
-    constructor(level: Level){
+
+    constructor(level: Level) {
         super(level)
         this.name = 'reanimator'
         this.x = undefined

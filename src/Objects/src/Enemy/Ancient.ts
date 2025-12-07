@@ -1,26 +1,24 @@
-import Func from "../../../Func";
-import FlameRing from "../../../Items/FlameRing";
-import Level from "../../../Level";
-import AncientIdleState from "../../../State/AncientIdleState";
-import Accumulation from "../../../Triggers/Accumulation";
-import ChainLightningTrigger from "../../../Triggers/ChainLightningTrigger";
-import DivineWeaponTrigger from "../../../Triggers/DivineWeaponTrigger";
-import Hurricane from "../../../Triggers/Hurricane";
-import MindBurst from "../../../Triggers/MindBurst";
-import Soul from "../../Effects/Soul";
-import Character from "../Character";
-import Enemy from "./Enemy";
+import Func from '../../../Func'
+import FlameRing from '../../../Items/FlameRing'
+import Level from '../../../Level'
+import AncientIdleState from '../../../State/AncientIdleState'
+import ChainLightningTrigger from '../../../Triggers/ChainLightningTrigger'
+import DivineWeaponTrigger from '../../../Triggers/DivineWeaponTrigger'
+import Hurricane from '../../../Triggers/Hurricane'
+import MindBurst from '../../../Triggers/MindBurst'
+import Soul from '../../Effects/Soul'
+import Character from '../Character'
+import Enemy from './Enemy'
 
 export default class Ancient extends Enemy {
-
-    target: any;
+    target: any
     duration: number = 20000
     hitCount: any
     last_hit_time: number = 0
     chance: number = 7
-    statusPull:any = []
+    statusPull: any = []
 
-    constructor(level: Level){
+    constructor(level: Level) {
         super(level)
         this.name = 'ancient'
         this.box_r = 2
@@ -41,29 +39,29 @@ export default class Ancient extends Enemy {
             new FlameRing(),
             new ChainLightningTrigger(),
             new DivineWeaponTrigger(),
-            new MindBurst()
+            new MindBurst(),
         ]
     }
 
-    giveRevard(){
+    giveRevard() {
         let max = 0
         let id = undefined
 
-        while(this.hitCount.size > 0){
+        while (this.hitCount.size > 0) {
             for (let [char_id, hit_count] of this.hitCount) {
-                if(hit_count > max){
+                if (hit_count > max) {
                     max = hit_count
                     id = char_id
                 }
             }
 
-            if(id != undefined && Func.chance(max * this.chance)){
+            if (id != undefined && Func.chance(max * this.chance)) {
                 let t = Func.getRandomFromArray(this.statusPull)
                 let char = this.level.players.find(elem => elem.id === id)
 
-                if(char && t){
+                if (char && t) {
                     let chance = max
-                    if(chance < 5){
+                    if (chance < 5) {
                         chance = 5
                     }
 
@@ -71,27 +69,23 @@ export default class Ancient extends Enemy {
 
                     let r = Func.random(1, 4)
 
-                    if(r === 1){
+                    if (r === 1) {
                         char.triggers_on_block.push(t)
                         this.level.addMessedge('you have got new on block trigger', id)
-                    }
-                    else if(r === 2){
+                    } else if (r === 2) {
                         char.triggers_on_get_energy.push(t)
                         this.level.addMessedge('you have got new on get energy trigger', id)
-                    }
-                    else if(r === 3){
+                    } else if (r === 3) {
                         char.triggers_on_heal.push(t)
                         this.level.addMessedge('you have got new on heal trigger', id)
-                    }
-                    else if(r === 4){
+                    } else if (r === 4) {
                         char.triggers_on_get_hit.push(t)
                         this.level.addMessedge('you have got new on get hit trigger', id)
                     }
                 }
 
                 this.hitCount = new Map()
-            }
-            else{
+            } else {
                 this.hitCount.delete(id)
                 max = 0
                 id = undefined
@@ -100,10 +94,10 @@ export default class Ancient extends Enemy {
     }
 
     takeDamage(unit?: any, options?: any): void {
-        if(this.level.time - this.last_hit_time < 1000){
+        if (this.level.time - this.last_hit_time < 1000) {
             return
         }
-        if(unit && unit instanceof Character){
+        if (unit && unit instanceof Character) {
             this.last_hit_time = this.level.time
             this.move_speed_penalty += 10
 
@@ -113,17 +107,16 @@ export default class Ancient extends Enemy {
             this.level.addEffect(e)
             this.level.addSound('bone cast', this.x, this.y)
 
-            if(this.hitCount.has(unit.id)){
+            if (this.hitCount.has(unit.id)) {
                 let hits = this.hitCount.get(unit.id)
                 this.hitCount.set(unit.id, hits + 1)
-            }
-            else{
+            } else {
                 this.hitCount.set(unit.id, 1)
             }
         }
     }
-    
-    getIdleStateInstance(){
-       return new AncientIdleState()
-    }   
+
+    getIdleStateInstance() {
+        return new AncientIdleState()
+    }
 }

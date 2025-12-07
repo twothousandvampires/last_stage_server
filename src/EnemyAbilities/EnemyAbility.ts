@@ -1,5 +1,4 @@
 export default class EnemyAbility {
-
     static ability_list = [
         'blind',
         'frost nova',
@@ -22,7 +21,7 @@ export default class EnemyAbility {
     last_used_time = 0
     cooldown = 0
 
-    setCooldown(value){
+    setCooldown(value) {
         this.cooldown = value
     }
 }

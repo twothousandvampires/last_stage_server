@@ -1,4 +1,3 @@
-
 import Builder from './Classes/Builder'
 import Client from './Client'
 import item from './Items/Item'
@@ -16,12 +15,11 @@ import Default from './Scenarios/Default'
 let port = process.argv[2]
 let httpServer = createServer()
 let socket = new Server(httpServer, { cors: { origin: '*' } })
-     
+
 httpServer.listen(port)
 
-class GameServer{
-
-    static MAX_PLAYERS: number = 6
+class GameServer {
+    static MAX_PLAYERS: number = 4
 
     public socket: Server
     private level: Level | undefined = undefined
@@ -37,8 +35,8 @@ class GameServer{
     port: any
     redisClient: any
     name: string
-    
-    constructor(socket: any, port: any){
+
+    constructor(socket: any, port: any) {
         this.port = port
         this.socket = socket
         this.redisClient = createClient()
@@ -53,22 +51,22 @@ class GameServer{
             acquireTimeout: 60000,
             timeout: 60000,
             enableKeepAlive: true,
-            keepAliveInitialDelay: 0
-        });
+            keepAliveInitialDelay: 0,
+        })
 
         // Обработчик ошибок пула
-        this.db.on('error', (err) => {
-            console.error(`[GameServer ${port}] Database pool error:`, err.message);
-        });
+        this.db.on('error', err => {
+            console.error(`[GameServer ${port}] Database pool error:`, err.message)
+        })
 
-        process.on('uncaughtException', (error) => {
-            console.error(`[GameServer ${port}] Uncaught Exception:`, error);
-            setTimeout(() => process.exit(1), 1000);
-        });
+        process.on('uncaughtException', error => {
+            console.error(`[GameServer ${port}] Uncaught Exception:`, error)
+            setTimeout(() => process.exit(1), 1000)
+        })
 
         process.on('unhandledRejection', (reason, promise) => {
-            console.error(`[GameServer ${port}] Unhandled Rejection:`, reason);
-        });
+            console.error(`[GameServer ${port}] Unhandled Rejection:`, reason)
+        })
     }
 
     private async updateRedisLobby(): Promise<void> {
@@ -82,15 +80,15 @@ class GameServer{
 
         if (process.send) {
             process.send({
-                type: 'update_lobby', 
-                data: lobbyInfo
-            });
+                type: 'update_lobby',
+                data: lobbyInfo,
+            })
         }
     }
 
     private async initializeRedis(): Promise<void> {
         await this.redisClient.connect()
-        
+
         let lobbyInfo = {
             port: this.port.toString(),
             players: this.clients.size.toString(),
@@ -102,51 +100,91 @@ class GameServer{
         if (process.send) {
             process.send({
                 type: 'register_lobby',
-                data: lobbyInfo
-            });
+                data: lobbyInfo,
+            })
         }
     }
 
-    public start(): void{
-        if(!this.level) return
+    public start(): void {
+        if (!this.level) return
 
         this.level.start(this.start_scenario_name)
     }
 
-    getAllPlayersItems(data){
+    getAllPlayersItems(data) {
         let p_items: string[] = []
 
         data.forEach(elem => {
-            p_items.push(...elem.template.item.map((i => i.name)))
+            p_items.push(...elem.template.item.map(i => i.name))
         })
 
         return p_items
     }
 
-    private updateLobby(): void{
+    private updateLobby(): void {
         let data: Client[] = Array.from(this.clients.values())
-  
+
         let p_items = this.getAllPlayersItems(data)
         let list = item.list
         let available = []
 
         list.forEach(elem => {
-            if(!p_items.includes(elem.name)){
+            if (!p_items.includes(elem.name)) {
                 available.push(elem)
             }
         })
-        
+
         this.socket.emit('update_lobby_data', data, available)
     }
 
-    private createName(){
-        let first = ['miserable', 'brutal', 'grimy', 'cold', 'rotten', 'black', 'demented', 'gone', 'bloody', 'lifeless', 'stinking', 'frightening','gigantic', 'smashed', 'bleak', 'sinister', 'ominous']
-        let second = ['thing', 'tears', 'mace', 'head', 'mind', 'ceil', 'remains', 'ghoul', 'tree', 'corpse', 'gem', 'shards', 'bloat', 'phantom', 'melancholy', 'woe', 'maggot' ,'phlegm']
+    private createName() {
+        let first = [
+            'miserable',
+            'brutal',
+            'grimy',
+            'cold',
+            'rotten',
+            'black',
+            'demented',
+            'gone',
+            'bloody',
+            'lifeless',
+            'stinking',
+            'frightening',
+            'gigantic',
+            'smashed',
+            'bleak',
+            'sinister',
+            'ominous',
+        ]
+        let second = [
+            'thing',
+            'tears',
+            'mace',
+            'head',
+            'mind',
+            'ceil',
+            'remains',
+            'ghoul',
+            'tree',
+            'corpse',
+            'gem',
+            'shards',
+            'bloat',
+            'phantom',
+            'melancholy',
+            'woe',
+            'maggot',
+            'phlegm',
+        ]
 
-        this.name = first[Math.floor(Math.random() * first.length)] + ' ' + second[Math.floor(Math.random() * second.length)]
+        this.name =
+            first[Math.floor(Math.random() * first.length)] +
+            ' ' +
+            second[Math.floor(Math.random() * second.length)]
     }
 
-    private createNewClient(socket: Socket): Client{
+    private createNewClient(socket: Socket): Client {
         let client: Client = new Client(socket.id)
         this.clients.set(socket.id, client)
         this.updateLobby()
@@ -155,7 +193,7 @@ class GameServer{
         return client
     }
 
-    public removeLevel(){
+    public removeLevel() {
         this.level = undefined
         this.game_started = false
         this.start_scenario_name = undefined
@@ -163,16 +201,20 @@ class GameServer{
         this.socket.emit('game_is_over')
     }
 
-    async suggetRecord(player: Character){
-        if(!this.level) return
+    async suggetRecord(player: Character) {
+        if (!this.level) return
 
-        await this.redisClient.setEx(player.id, 60, JSON.stringify({
-            kill_count: this.level.kill_count,
-            waves: this.level.script instanceof Default ? this.level.script.waves_created : 0,
-            time: this.level.time - this.level.started,
-            class: player.name
-        }))
-        
+        await this.redisClient.setEx(
+            player.id,
+            60,
+            JSON.stringify({
+                kill_count: this.level.kill_count,
+                waves: this.level.script instanceof Default ? this.level.script.waves_created : 0,
+                time: this.level.time - this.level.started,
+                class: player.name,
+            })
+        )
+
         this.socket.to(player.id).emit('suggers_record', this.level.kill_count)
 
         setTimeout(() => {
@@ -180,53 +222,59 @@ class GameServer{
         }, 30000)
     }
 
-    async addRecord(name: string, id: string){
-       try {
+    async addRecord(name: string, id: string) {
+        try {
             let info = await this.redisClient.get(id)
             if (!info) {
                 this.removeLevel()
                 return
             }
-            
+
             info = JSON.parse(info)
 
-            if(info && name){
+            if (info && name) {
                 // ИСПОЛЬЗУЕМ ПРОМИСЫ И ОБРАБОТКУ ОШИБОК
-                const [results] = await this.db.promise().execute(
-                    'INSERT INTO game_stats (name, kills, waves, time, class) VALUES (?, ?, ?, ?, ?)',
-                    [name, info.kill_count, info.waves, info.time, info.class]
-                );
+                const [results] = await this.db
+                    .promise()
+                    .execute(
+                        'INSERT INTO game_stats (name, kills, waves, time, class) VALUES (?, ?, ?, ?, ?)',
+                        [name, info.kill_count, info.waves, info.time, info.class]
+                    )
                 this.removeLevel()
-            }
-            else{
+            } else {
                 this.removeLevel()
             }
         } catch (err) {
-            console.error(`[GameServer ${this.port}] addRecord error:`, err.message);
+            console.error(`[GameServer ${this.port}] addRecord error:`, err.message)
             this.removeLevel() // Всегда вызываем removeLevel даже при ошибке
         }
     }
 
-    public async endOfLevel(): void{
-        if(this.level?.players.length === 1){
+    public async endOfLevel(): void {
+        if (this.level?.players.length === 1) {
             try {
-                const [results] = await this.db.promise().execute(
-                    'SELECT * FROM game_stats WHERE class = ? ORDER BY kills DESC LIMIT 3', 
-                    [this.level?.players[0].name]
-                );
-                
+                const [results] = await this.db
+                    .promise()
+                    .execute(
+                        'SELECT * FROM game_stats WHERE class = ? ORDER BY kills DESC LIMIT 3',
+                        [this.level?.players[0].name]
+                    )
+
                 let more = true
-                if(results.length > 2 && results.every(elem => elem.kills >= this.level?.kill_count)){
+                if (
+                    results.length > 2 &&
+                    results.every(elem => elem.kills >= this.level?.kill_count)
+                ) {
                     more = false
                 }
-                
-                if(more){
+
+                if (more) {
                     await this.suggetRecord(this.level?.players[0])
                 } else {
                     this.removeLevel()
                 }
             } catch (err) {
-                console.error(`[GameServer ${this.port}] endOfLevel query error:`, err.message);
+                console.error(`[GameServer ${this.port}] endOfLevel query error:`, err.message)
                 this.removeLevel() // При ошибке БД просто завершаем уровень
             }
         } else {
@@ -237,175 +285,178 @@ class GameServer{
     initSocket() {
         this.createName()
         this.initializeRedis()
-        
+
         this.socket.on('connection', (socket: Socket) => {
             socket.emit('connect_to_lobby')
- 
+
             socket.emit('server_status', {
-                status: this.game_started || (this.clients.size >= GameServer.MAX_PLAYERS),
+                status: this.game_started || this.clients.size >= GameServer.MAX_PLAYERS,
                 realise: this.realise,
-                realise_name: this.realise_name
+                realise_name: this.realise_name,
             })
 
-            if(!this.game_started && this.clients.size < GameServer.MAX_PLAYERS){
+            if (!this.game_started && this.clients.size < GameServer.MAX_PLAYERS) {
                 let client: Client = this.createNewClient(socket)
 
                 socket.on('change_class', (class_name: string) => {
                     client.template.setTemplate(class_name)
-                    this.updateLobby()                
+                    this.updateLobby()
                 })
 
-                socket.on('add_record' ,(name) => {
+                socket.on('add_record', name => {
                     this.addRecord(name, socket.id)
                 })
 
-                socket.on('set_start_scenario', (start_scenario_name) => {
+                socket.on('set_start_scenario', start_scenario_name => {
                     this.start_scenario_name = start_scenario_name
                 })
 
                 socket.on('increase_stat', (stat: string) => {
                     client.template.increseStat(stat)
-                    this.updateLobby()                
+                    this.updateLobby()
                 })
 
                 socket.on('decrease_stat', (stat: string) => {
                     client.template.decreaseStat(stat)
-                    this.updateLobby()                
+                    this.updateLobby()
                 })
 
                 socket.on('get_lobby_data', () => {
-                    this.updateLobby()  
+                    this.updateLobby()
                 })
 
-                socket.on('forge_item', (data) => {
-                    if(!client.character) return
+                socket.on('forge_item', data => {
+                    if (!client.character) return
 
                     UpgradeManager.forgeItem(data, client.character)
-            
                 })
 
                 socket.on('pick_item', (item_name: string) => {
                     let data: Client[] = Array.from(this.clients.values())
                     let items = this.getAllPlayersItems(data)
-                    if(items.some(elem => elem === item_name)) return
+                    if (items.some(elem => elem === item_name)) return
 
                     let item = Builder.createItem(item_name)
 
-                    if(client.template.item.length >= client.template.max_items){
+                    if (client.template.item.length >= client.template.max_items) {
                         client.template.item.pop()
                     }
-        
+
                     client.template.item.push(item)
-                     
-                    this.updateLobby()                
+
+                    this.updateLobby()
                 })
 
                 socket.on('unpick_item', (item_name: string) => {
-                    client.template.item = client.template.item.filter(elem => elem.name != item_name)
-                    this.updateLobby()                
+                    client.template.item = client.template.item.filter(
+                        elem => elem.name != item_name
+                    )
+                    this.updateLobby()
                 })
 
                 socket.on('unlock_forging', (item_name: string) => {
-                    if(!client.character) return
+                    if (!client.character) return
 
-                    UpgradeManager.unlockForging(item_name, client.character) 
+                    UpgradeManager.unlockForging(item_name, client.character)
                 })
 
                 socket.on('select_skill', (skill_name: string) => {
-                    let selected: TemplateAbility | undefined = client.template.abilities.find(elem => elem.name === skill_name)
-                    if(!selected) return
+                    let selected: TemplateAbility | undefined = client.template.abilities.find(
+                        elem => elem.name === skill_name
+                    )
+                    if (!selected) return
 
                     let type: number = selected.type
-                    if(!type) return
+                    if (!type) return
 
-                    client.template.abilities.filter(elem => elem.type === type).forEach(elem => elem.selected = false)
-                    if(selected){
+                    client.template.abilities
+                        .filter(elem => elem.type === type)
+                        .forEach(elem => (elem.selected = false))
+                    if (selected) {
                         selected.selected = true
                     }
-                    this.updateLobby()                
+                    this.updateLobby()
                 })
 
-                socket.on('inputs', (inputs: object) => {   
-                    if(!client.character) return
+                socket.on('inputs', (inputs: object) => {
+                    if (!client.character) return
 
                     client.character.setLastInputs(inputs)
                 })
 
-                socket.on('add_mastery', (data: object) => {   
-                    if(!client.character) return
+                socket.on('add_mastery', (data: object) => {
+                    if (!client.character) return
 
                     UpgradeManager.addMastery(client.character, data)
                 })
 
-                socket.on('buy', () => {   
-                    if(!client.character) return
+                socket.on('buy', () => {
+                    if (!client.character) return
 
                     UpgradeManager.buyNewItem(client.character)
                 })
 
-                socket.on('load_template', (data) => {
-                    try{
+                socket.on('load_template', data => {
+                    try {
                         client.template.abilities = data.abilities
                         client.template.item = []
 
                         data.item.forEach(elem => {
-                            if(elem.name != ''){
+                            if (elem.name != '') {
                                 let item = Builder.createItem(elem.name)
                                 client.template.item.push(item)
                             }
-                            
                         })
                         client.template.stats = data.stats
                         client.template.stat_count = data.stat_count
 
                         this.updateLobby()
-                    } catch(e){
-                       
-                    }
-                    
+                    } catch (e) {}
                 })
 
-                socket.on('buy_item', (id) => {   
-                    if(!client.character) return
+                socket.on('buy_item', id => {
+                    if (!client.character) return
 
                     UpgradeManager.buyItem(id, client.character)
                 })
 
-                socket.on('pick_forging', (item_id, id) => {   
-                    if(!client.character) return
+                socket.on('pick_forging', (item_id, id) => {
+                    if (!client.character) return
 
                     UpgradeManager.pickForging(item_id, id, client.character)
                 })
 
-                socket.on('donate', () => {   
-                    if(!client.character) return
+                socket.on('donate', () => {
+                    if (!client.character) return
 
                     client.character.gold -= 60
-                    client.character.grace ++
-                   
+                    client.character.grace++
+
                     UpgradeManager.closeForgings(client.character)
                 })
 
                 socket.on('player_ready', () => {
-
                     client.ready = !client.ready
 
-                    if(this.allPlayersAreReady()){
+                    if (this.allPlayersAreReady()) {
                         clearTimeout(this.new_game_timeout)
-                        
+
                         this.new_game_timeout = setTimeout(() => {
                             let all_still_ready: boolean = this.allPlayersAreReady()
-                            if(all_still_ready){
+                            if (all_still_ready) {
                                 this.level = new Level(this)
 
                                 this.clients.forEach((value, key, map) => {
-                                    if(this.level){
-                                        let char: Character = Builder.createCharacter(value, this.level)
+                                    if (this.level) {
+                                        let char: Character = Builder.createCharacter(
+                                            value,
+                                            this.level
+                                        )
                                         value.character = char
                                         this.level.assignPlayer(char)
                                     }
                                 })
-                                
+
                                 this.game_started = true
                                 this.socket.emit('start', Array.from(this.clients.values()))
                                 this.level.start(this.start_scenario_name)
@@ -419,51 +470,49 @@ class GameServer{
 
                 socket.on('disconnect', () => {
                     this.clients.delete(socket.id)
-                    
-                    if(this.clients.size === 0){
-                        if(this.level){
+
+                    if (this.clients.size === 0) {
+                        if (this.level) {
                             clearImmediate(this.level.game_loop)
                             this.removeLevel()
                             this.createName()
-                            
                         }
-                    }
-                    else{
+                    } else {
                         this.updateLobby()
-                    }     
-                    this.updateRedisLobby()  
+                    }
+                    this.updateRedisLobby()
                 })
-                
-                socket.on('set_target', (id) => {
-                    if(!client.character) return
+
+                socket.on('set_target', id => {
+                    if (!client.character) return
                     client.character.setTarget(id)
                 })
 
-                socket.on('select_upgrade', (upgrade_name) => {
-                    if(!client.character) return
+                socket.on('select_upgrade', upgrade_name => {
+                    if (!client.character) return
 
                     client.character.upgrade(upgrade_name)
                 })
 
                 socket.on('hold_grace', () => {
-                    if(!client.character) return
+                    if (!client.character) return
 
                     UpgradeManager.holdGrace(client.character)
                 })
 
                 socket.on('hold_ascend', () => {
-                    if(!client.character) return
+                    if (!client.character) return
 
                     UpgradeManager.holdAscend(client.character)
                 })
 
                 socket.on('exit_grace', () => {
-                    if(!client.character) return
+                    if (!client.character) return
                     client.character.exitGrace()
                 })
 
                 socket.on('sacrifice', () => {
-                    if(!client.character) return
+                    if (!client.character) return
 
                     UpgradeManager.sacrifice(client.character)
                 })
@@ -471,8 +520,8 @@ class GameServer{
         })
     }
 
-    allPlayersAreReady(): boolean{
-        return Array.from((this.clients.values())).every(elem => elem.ready)
+    allPlayersAreReady(): boolean {
+        return Array.from(this.clients.values()).every(elem => elem.ready)
     }
 }
 

@@ -1,57 +1,53 @@
-import SearchingHeart from "../Items/SearchingHeart";
-import { FireballProjectile } from "../Objects/Projectiles/FireballProjectile";
-import Status from "./Status";
+import SearchingHeart from '../Items/SearchingHeart'
+import { FireballProjectile } from '../Objects/Projectiles/FireballProjectile'
+import Status from './Status'
 
-export default class SerchingHeartStatus extends Status{
-
+export default class SerchingHeartStatus extends Status {
     last_trigger_time: number
     public disabled: boolean = false
 
-    constructor(time: number, public item: SearchingHeart){
+    constructor(
+        time: number,
+        public item: SearchingHeart
+    ) {
         super(time)
         this.last_trigger_time = time
     }
 
-    unitDead(){
-        
-    }
+    unitDead() {}
 
-    apply(unit: any){
+    apply(unit: any) {
         this.unit = unit
     }
 
-    clear(){
-        
-    }
+    clear() {}
 
-    update(status: any){
-        
-    }
+    update(status: any) {}
 
-    checkResist(){
+    checkResist() {
         return false
     }
 
-    isExpired(){
+    isExpired() {
         return false
     }
 
-    act(tick_time: number){
-        if(tick_time - this.last_trigger_time >= this.item.frequency){
+    act(tick_time: number) {
+        if (tick_time - this.last_trigger_time >= this.item.frequency) {
             this.last_trigger_time = tick_time
             this.trigger()
         }
     }
 
-    trigger(){
-        if(this.item.disabled) return
-        if(this.item.hit_count === 0) return
-        
+    trigger() {
+        if (this.item.disabled) return
+        if (this.item.hit_count === 0) return
+
         let count = this.item.hit_count + this.item.count
-        
+
         let zones = 6.28 / count
-        
-        for(let i = 1; i <= count; i++){
+
+        for (let i = 1; i <= count; i++) {
             let min_a = (i - 1) * zones
             let max_a = i * zones
 

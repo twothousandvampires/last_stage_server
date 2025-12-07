@@ -1,9 +1,9 @@
-import Func from "../Func";
-import Character from "../Objects/src/Character";
-import Item from "./Item";
+import Func from '../Func'
+import Character from '../Objects/src/Character'
+import Item from './Item'
 
-export default class YellowStone extends Item{
-    constructor(){
+export default class YellowStone extends Item {
+    constructor() {
         super()
         this.count = 1
         this.name = 'yellow stone'
@@ -20,10 +20,8 @@ export default class YellowStone extends Item{
         character.triggers_on_status_resist.push(this)
     }
 
-    trigger(character: Character){
-        if(this.disabled) return
-        if(Func.notChance(this.chance, character.is_lucky))
-        
-        character.addWard(1)
+    trigger(character: Character) {
+        if (this.disabled) return
+        if (Func.notChance(this.chance, character.is_lucky)) character.addWard(1)
     }
 }

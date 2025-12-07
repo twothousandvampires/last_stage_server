@@ -1,14 +1,13 @@
-import Func from "../../Func";
-import WalkingGhostCultist from "../../Objects/Effects/WalkingGhostCultist";
-import Cultist from "../../Objects/src/PlayerClasses/Cultist";
-import CultistAbility from "./CultistAbility";
+import Func from '../../Func'
+import WalkingGhostCultist from '../../Objects/Effects/WalkingGhostCultist'
+import Cultist from '../../Objects/src/PlayerClasses/Cultist'
+import CultistAbility from './CultistAbility'
 
-export default class UnleashPain extends CultistAbility{
-    
+export default class UnleashPain extends CultistAbility {
     reign_of_pain: boolean
     restless_warriors: boolean
 
-    constructor(owner: Cultist){
+    constructor(owner: Cultist) {
         super(owner)
         this.name = 'unleashing pain'
         this.reign_of_pain = false
@@ -19,30 +18,30 @@ export default class UnleashPain extends CultistAbility{
         this.cd = 10000
     }
 
-    impact(){
+    impact() {
         this.owner.level.addSound({
-                name:'cast',
-                x: this.owner.x,
-                y: this.owner.y
+            name: 'cast',
+            x: this.owner.x,
+            y: this.owner.y,
         })
 
         let e = this.owner.getBoxElipse()
 
         e.r = 18 + (this.reign_of_pain ? 8 : 0)
 
-        let enemy = this.owner.level.enemies.filter((elem) => {
+        let enemy = this.owner.level.enemies.filter(elem => {
             return Func.elipseCollision(elem.getBoxElipse(), e)
         })
 
         let count = 7
 
-        if(this.reign_of_pain){
+        if (this.reign_of_pain) {
             count += this.owner.getSecondResource() * 3
         }
 
         let enemyw = enemy.slice(0, 30)
-        
-        enemyw.forEach((elem) => {
+
+        enemyw.forEach(elem => {
             let ghost = new WalkingGhostCultist(this.owner.level)
             ghost.target = elem
             ghost.restless = this.restless_warriors

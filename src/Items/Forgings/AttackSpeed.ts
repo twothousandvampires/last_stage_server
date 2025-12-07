@@ -1,12 +1,11 @@
-import Character from "../../Objects/src/Character";
-import Item from "../Item";
-import Forging from "./Forging";
+import Character from '../../Objects/src/Character'
+import Item from '../Item'
+import Forging from './Forging'
 
-export default class AttackSpeed extends Forging{
-
+export default class AttackSpeed extends Forging {
     value: number = 0
 
-    constructor(item: Item){
+    constructor(item: Item) {
         super(item)
         this.max_value = 200
         this.name = 'attack speed'
@@ -14,21 +13,20 @@ export default class AttackSpeed extends Forging{
         this.gold_cost = 7
     }
 
-    forge(player: Character){
-        if(this.canBeForged() && this.costEnough()){
+    forge(player: Character) {
+        if (this.canBeForged() && this.costEnough()) {
             this.value += 20
             this.item.player.attack_speed -= 20
             this.payCost()
         }
     }
 
-    getValue(){
+    getValue() {
         return this.value
     }
 
-
     canBeForged(): boolean {
-        if(!this.item || !this.item.player) return false
+        if (!this.item || !this.item.player) return false
 
         return this.value < this.max_value
     }

@@ -1,19 +1,18 @@
-import Func from "../../Func";
-import ITrigger from "../../Interfaces/Itrigger";
-import QuakeEffect from "../../Objects/Effects/Quake";
-import Character from "../../Objects/src/Character";
-import Unit from "../../Objects/src/Unit";
-import Item from "../Item";
-import Forging from "./Forging";
+import Func from '../../Func'
+import ITrigger from '../../Interfaces/Itrigger'
+import QuakeEffect from '../../Objects/Effects/Quake'
+import Character from '../../Objects/src/Character'
+import Unit from '../../Objects/src/Unit'
+import Item from '../Item'
+import Forging from './Forging'
 
-export default class StunWhenHit extends Forging implements ITrigger{
-
+export default class StunWhenHit extends Forging implements ITrigger {
     value: number = 0
     cd: number = 3000
     last_trigger_time: number = 0
     chance: number = 0
 
-    constructor(item: Item){
+    constructor(item: Item) {
         super(item)
         this.max_value = 80
         this.name = 'stun when hit'
@@ -25,28 +24,27 @@ export default class StunWhenHit extends Forging implements ITrigger{
         return this.chance
     }
 
-    forge(player: Character){
-        if(this.canBeForged() && this.costEnough()){
+    forge(player: Character) {
+        if (this.canBeForged() && this.costEnough()) {
             let exist = player.triggers_on_hit.find(elem => elem instanceof StunWhenHit)
-            if(exist){
+            if (exist) {
                 exist.chance += 10
                 this.value += 10
-            }
-            else{
+            } else {
                 player.triggers_on_hit.push(this)
                 this.value += 10
                 this.chance += 10
             }
-           
+
             this.payCost()
         }
     }
 
-    getValue(){
+    getValue() {
         return this.chance + '%'
     }
 
-    trigger(player: Character, target: Unit){  
+    trigger(player: Character, target: Unit) {
         let box = target.getBoxElipse()
         box.r = 8
 
@@ -55,17 +53,19 @@ export default class StunWhenHit extends Forging implements ITrigger{
 
         player.level.effects.push(effect)
 
-        let targets = player.level.enemies.concat(player.level.players.filter(elem => elem != player)).filter(elem => !elem.is_dead && Func.elipseCollision(elem.getBoxElipse() ,box))
-        
-        for(let i = 0; i < targets.length; i++){
+        let targets = player.level.enemies
+            .concat(player.level.players.filter(elem => elem != player))
+            .filter(elem => !elem.is_dead && Func.elipseCollision(elem.getBoxElipse(), box))
+
+        for (let i = 0; i < targets.length; i++) {
             let target = targets[i]
-            
+
             target.setStun(3000)
-        }       
+        }
     }
 
     canBeForged(): boolean {
-        if(!this.item || !this.item.player) return false
+        if (!this.item || !this.item.player) return false
 
         return this.value < this.max_value
     }

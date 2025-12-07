@@ -1,11 +1,10 @@
-import Item from "../Item";
-import Forging from "./Forging";
+import Item from '../Item'
+import Forging from './Forging'
 
-export default class Regen extends Forging{
-
+export default class Regen extends Forging {
     value: number = 0
 
-    constructor(item: Item){
+    constructor(item: Item) {
         super(item)
         this.max_value = 1200
         this.name = 'regeneration'
@@ -13,20 +12,20 @@ export default class Regen extends Forging{
         this.gold_cost = 8
     }
 
-    forge(){
-        if(this.canBeForged() && this.costEnough()){
+    forge() {
+        if (this.canBeForged() && this.costEnough()) {
             this.value += 200
             this.item.player.base_regeneration_time -= 200
-             this.payCost()
+            this.payCost()
         }
     }
 
-    getValue(){
+    getValue() {
         return this.value
     }
 
     canBeForged(): boolean {
-        if(!this.item || !this.item.player) return false
+        if (!this.item || !this.item.player) return false
 
         return this.value < this.max_value
     }

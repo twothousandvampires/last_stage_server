@@ -1,21 +1,18 @@
-import ColdSpireFrostNova from "../../../EnemyAbilities/ColdSpireFrostNova";
-import Func from "../../../Func";
-import Level from "../../../Level";
-import FrostExplosionMedium from "../../Effects/FrostExplosionMedium";
-import FrostNova from "../../Effects/FrostNova";
-import Pile from "./Pile";
+import ColdSpireFrostNova from '../../../EnemyAbilities/ColdSpireFrostNova'
+import Func from '../../../Func'
+import Level from '../../../Level'
+import FrostExplosionMedium from '../../Effects/FrostExplosionMedium'
+import FrostNova from '../../Effects/FrostNova'
+import Pile from './Pile'
 
 export default class FrostSpire extends Pile {
-
-    constructor(level: Level){
+    constructor(level: Level) {
         super(level)
         this.life_status = 1
         this.name = 'frost spire'
         this.duration = 6000
 
-        this.abilities = [
-            new ColdSpireFrostNova()
-        ]
+        this.abilities = [new ColdSpireFrostNova()]
     }
 
     afterDead(): void {
@@ -28,13 +25,13 @@ export default class FrostSpire extends Pile {
         e.r = 6
 
         this.level.enemies.forEach(elem => {
-            if(Func.elipseCollision(e, elem.getBoxElipse())){
+            if (Func.elipseCollision(e, elem.getBoxElipse())) {
                 elem.takeDamage()
             }
         })
 
         this.level.players.forEach(elem => {
-            if(Func.elipseCollision(e, elem.getBoxElipse())){
+            if (Func.elipseCollision(e, elem.getBoxElipse())) {
                 elem.takeDamage()
             }
         })

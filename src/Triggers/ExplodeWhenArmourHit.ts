@@ -1,11 +1,9 @@
-
-import Func from "../Func";
-import ITrigger from "../Interfaces/ITrigger";
-import FireExplosion from "../Objects/Effects/FireExplosion";
-import Character from "../Objects/src/Character";
+import Func from '../Func'
+import ITrigger from '../Interfaces/ITrigger'
+import FireExplosion from '../Objects/Effects/FireExplosion'
+import Character from '../Objects/src/Character'
 
 export default class ExplodeWhenArmourHit implements ITrigger {
-
     cd: number = 1500
     last_trigger_time: number = 0
     chance: number = 0
@@ -16,18 +14,18 @@ export default class ExplodeWhenArmourHit implements ITrigger {
         return this.chance
     }
 
-    trigger(player: Character){
+    trigger(player: Character) {
         let e = new FireExplosion(player.level)
         e.setPoint(player.x, player.y)
 
         player.level.addEffect(e)
 
         player.level.enemies.forEach(elem => {
-            if(!elem.is_dead && Func.distance(player, elem) <= 14){
+            if (!elem.is_dead && Func.distance(player, elem) <= 14) {
                 elem.takeDamage(player, {
-                    burn: true
+                    burn: true,
                 })
             }
-        })    
+        })
     }
 }

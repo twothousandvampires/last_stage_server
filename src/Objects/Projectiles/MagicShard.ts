@@ -1,12 +1,11 @@
+import Func from '../../Func'
+import Level from '../../Level'
+import Projectiles from './Projectiles'
 
-import Func from "../../Func";
-import Level from "../../Level";
-import Projectiles from "./Projectiles";
-
-export class MagicShard extends Projectiles{
+export class MagicShard extends Projectiles {
     w: number
 
-    constructor(level: Level){
+    constructor(level: Level) {
         super(level)
         this.box_r = 0.4
         this.name = 'magic star'
@@ -14,11 +13,15 @@ export class MagicShard extends Projectiles{
         this.w = 3
     }
 
-    act(): void { 
-        for(let i = 0; i < this.level.enemies.length; i++){
+    act(): void {
+        for (let i = 0; i < this.level.enemies.length; i++) {
             let p = this.level.enemies[i]
 
-            if(!p.is_dead && p.z < this.w && Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
+            if (
+                !p.is_dead &&
+                p.z < this.w &&
+                Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())
+            ) {
                 p.takeDamage(this.owner)
                 this.impact()
                 return

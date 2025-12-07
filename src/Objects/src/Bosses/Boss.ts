@@ -1,18 +1,17 @@
-import Builder from "../../../Classes/Builder";
-import BlindAbility from "../../../EnemyAbilities/BlindAbility";
-import DespairAbility from "../../../EnemyAbilities/DespairAbility";
-import FanOfBonesAbility from "../../../EnemyAbilities/FanOfBonesAbility";
-import UnholyTouch from "../../../EnemyAbilities/UnholyTouch";
-import Level from "../../../Level";
-import ApathyAura from "../../../Status/ApathyAura";
-import UnholyPower from "../../../Status/UnholyPower";
-import Undead from "../Enemy/Undead";
+import Builder from '../../../Classes/Builder'
+import BlindAbility from '../../../EnemyAbilities/BlindAbility'
+import DespairAbility from '../../../EnemyAbilities/DespairAbility'
+import FanOfBonesAbility from '../../../EnemyAbilities/FanOfBonesAbility'
+import UnholyTouch from '../../../EnemyAbilities/UnholyTouch'
+import Level from '../../../Level'
+import ApathyAura from '../../../Status/ApathyAura'
+import UnholyPower from '../../../Status/UnholyPower'
+import Undead from '../Enemy/Undead'
 
 export default class Boss extends Undead {
-
     static SPAWN_COUNT: number = 1
 
-    constructor(level: Level){
+    constructor(level: Level) {
         super(level)
         this.name = 'boss'
         this.box_r = 4
@@ -23,10 +22,7 @@ export default class Boss extends Undead {
         this.spawn_time = 2200
         this.phasing = true
         this.can_be_instant_killed = false
-        this.abilities = [
-            new UnholyTouch(),
-            new BlindAbility()
-        ]
+        this.abilities = [new UnholyTouch(), new BlindAbility()]
         this.immune_to_freeze = true
         this.immune_to_stun = true
 
@@ -36,10 +32,10 @@ export default class Boss extends Undead {
         this.can_be_burned = false
     }
 
-    init(){
+    init() {
         this.life_status = 30 * Boss.SPAWN_COUNT
 
-        Boss.SPAWN_COUNT ++
+        Boss.SPAWN_COUNT++
 
         let s = new UnholyPower(this.level.time)
 
@@ -48,10 +44,10 @@ export default class Boss extends Undead {
         this.level.setStatus(this, new ApathyAura(this.level.time))
     }
 
-    takeDamage(unit: any = undefined, options = {}){
+    takeDamage(unit: any = undefined, options = {}) {
         super.takeDamage(unit, options)
-      
-        if(this.life_status <= 0){
+
+        if (this.life_status <= 0) {
             this.level.players.forEach(elem => {
                 let mastery = Builder.createRandomMastery()
                 elem.masteries.push(mastery)

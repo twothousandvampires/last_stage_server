@@ -1,12 +1,10 @@
+import Func from '../Func'
+import ITrigger from '../Interfaces/ITrigger'
+import SmallShockNova from '../Objects/Effects/SmallShockNova'
+import Character from '../Objects/src/Character'
+import Unit from '../Objects/src/Unit'
 
-import Func from "../Func";
-import ITrigger from "../Interfaces/ITrigger";
-import SmallShockNova from "../Objects/Effects/SmallShockNova";
-import Character from "../Objects/src/Character";
-import Unit from "../Objects/src/Unit";
-
-export default class ShockNovaWhenArmourBlock implements ITrigger{
-
+export default class ShockNovaWhenArmourBlock implements ITrigger {
     cd: number = 1200
     last_trigger_time: number = 0
     chance: number = 0
@@ -17,8 +15,7 @@ export default class ShockNovaWhenArmourBlock implements ITrigger{
         return this.chance
     }
 
-    trigger(player: Character, target: Unit){
-        
+    trigger(player: Character, target: Unit) {
         let e = new SmallShockNova(player.level)
 
         e.setPoint(player.x, player.y)
@@ -35,15 +32,20 @@ export default class ShockNovaWhenArmourBlock implements ITrigger{
         player.level.addSound('static', player.x, player.y)
 
         let was_sound = false
-        targets.forEach((elem) => {
-            if(!elem.is_dead && elem.z < 1 && Func.elipseCollision(wave, elem.getBoxElipse()) && elem != player){
+        targets.forEach(elem => {
+            if (
+                !elem.is_dead &&
+                elem.z < 1 &&
+                Func.elipseCollision(wave, elem.getBoxElipse()) &&
+                elem != player
+            ) {
                 let timer = Func.random(200, 1400)
                 elem.setZap(timer)
-                if(!was_sound){
+                if (!was_sound) {
                     player.level.addSound('zap', elem.x, elem.y)
                     was_sound = true
                 }
             }
-        })       
+        })
     }
 }

@@ -1,15 +1,14 @@
-import Func from "../../Func";
-import Level from "../../Level";
-import Phase from "../../Status/Phase";
-import Effect from "./Effects";
+import Func from '../../Func'
+import Level from '../../Level'
+import Phase from '../../Status/Phase'
+import Effect from './Effects'
 
-export default class ChargedSphere extends Effect{
-
+export default class ChargedSphere extends Effect {
     x: any
     y: any
     time: number
-    
-    constructor(level: Level){
+
+    constructor(level: Level) {
         super(level)
         this.name = 'charged sphere'
         this.x = undefined
@@ -18,15 +17,15 @@ export default class ChargedSphere extends Effect{
         this.time = Date.now()
     }
 
-    act(time: number){
-        if(time - this.time >= 10000){
+    act(time: number) {
+        if (time - this.time >= 10000) {
             this.delete()
             return
         }
 
         this.level.players.forEach(elem => {
-            if(Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
-                if(elem.can_regen_resource){
+            if (Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())) {
+                if (elem.can_regen_resource) {
                     elem.addResourse(2)
                 }
 
@@ -36,7 +35,7 @@ export default class ChargedSphere extends Effect{
 
                 this.level.deleted.push(this.id)
                 this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
-            } 
+            }
         })
     }
 }

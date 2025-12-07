@@ -1,14 +1,14 @@
-import Func from "../../Func";
-import Level from "../../Level";
-import FrostExplosionBig from "../Effects/FrostExplosionBig";
-import FrostExplosionMedium from "../Effects/FrostExplosionMedium";
-import FrostExplosionSmall from "../Effects/FrostExplosionSmall";
-import Flyer from "../src/PlayerClasses/Flyer";
-import { Icicle } from "./Icicle";
-import Projectiles from "./Projectiles";
-import { Tooth } from "./Tooth";
+import Func from '../../Func'
+import Level from '../../Level'
+import FrostExplosionBig from '../Effects/FrostExplosionBig'
+import FrostExplosionMedium from '../Effects/FrostExplosionMedium'
+import FrostExplosionSmall from '../Effects/FrostExplosionSmall'
+import Flyer from '../src/PlayerClasses/Flyer'
+import { Icicle } from './Icicle'
+import Projectiles from './Projectiles'
+import { Tooth } from './Tooth'
 
-export class FrostSphereProjectile extends Projectiles{
+export class FrostSphereProjectile extends Projectiles {
     size: number
     start_x: number | undefined
     start_y: number | undefined
@@ -24,7 +24,7 @@ export class FrostSphereProjectile extends Projectiles{
     ice: boolean = false
     shattering: boolean = false
 
-    constructor(level: Level){
+    constructor(level: Level) {
         super(level)
         this.box_r = 1
         this.name = 'big frost sphere'
@@ -39,37 +39,36 @@ export class FrostSphereProjectile extends Projectiles{
         this.reign_of_frost = false
     }
 
-    setPoint(x: number = 0, y: number = 0): void{
+    setPoint(x: number = 0, y: number = 0): void {
         this.start_x = x
         this.start_y = y
         this.x = x
         this.y = y
     }
 
-    act(time: number): void { 
+    act(time: number): void {
         let enemies = this.level.enemies
         let players = this.level.players
 
-        for(let i = 0; i < players.length; i++){
+        for (let i = 0; i < players.length; i++) {
             let p = players[i]
-            if(p === this.owner || this.w < p.z) continue
-            if(p.is_dead) continue
+            if (p === this.owner || this.w < p.z) continue
+            if (p.is_dead) continue
 
-            if(Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
+            if (Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())) {
                 this.impact()
                 return
             }
         }
 
-        for(let i = 0; i < enemies.length; i++){
+        for (let i = 0; i < enemies.length; i++) {
             let e = enemies[i]
-            if(!e.is_dead && Func.elipseCollision(this.getBoxElipse(), e.getBoxElipse())){
+            if (!e.is_dead && Func.elipseCollision(this.getBoxElipse(), e.getBoxElipse())) {
                 this.impact()
                 return
             }
         }
-        if(this.icicles_count > 0 && time - this.last_icicles_time > 500){
-
+        if (this.icicles_count > 0 && time - this.last_icicles_time > 500) {
             let proj = new Icicle(this.level)
             proj.setOwner(this.owner)
             proj.setAngle(Math.random() * 6.28)
@@ -78,112 +77,106 @@ export class FrostSphereProjectile extends Projectiles{
             this.level.projectiles.push(proj)
 
             this.last_icicles_time = time
-            this.icicles_count --
+            this.icicles_count--
         }
-        this.traveled = Math.sqrt(((this.x - this.start_x) ** 2) + ((this.y - this.start_y) ** 2))
+        this.traveled = Math.sqrt((this.x - this.start_x) ** 2 + (this.y - this.start_y) ** 2)
 
-        if(this.traveled >= this.max_distance){
+        if (this.traveled >= this.max_distance) {
             this.level.projectiles = this.level.projectiles.filter(elem => elem != this)
             this.level.deleted.push(this.id)
             return
-        }
-        else if(this.traveled > this.medium_distance && this.size === 2){
+        } else if (this.traveled > this.medium_distance && this.size === 2) {
             this.size = 1
             this.name = 'small frost sphere'
-        }
-        else if(this.traveled > this.min_distance && this.size === 3){
+        } else if (this.traveled > this.min_distance && this.size === 3) {
             this.size = 2
             this.name = 'medium frost sphere'
         }
-            
+
         this.moveAct()
     }
 
-    impact(){
+    impact() {
         let effect = undefined
         let explosion_radius = 0
         let add_radius = 0
-        
-        if(this.owner instanceof Flyer){
+
+        if (this.owner instanceof Flyer) {
             add_radius = this.owner.getAdditionalRadius()
         }
-    
-        if(this.size === 3){
+
+        if (this.size === 3) {
             effect = new FrostExplosionBig(this.level)
             explosion_radius = 6 + add_radius
-        }
-        else if(this.size === 2){
+        } else if (this.size === 2) {
             effect = new FrostExplosionMedium(this.level)
             explosion_radius = 4 + add_radius
-        }
-        else{
+        } else {
             effect = new FrostExplosionSmall(this.level)
             explosion_radius = 2 + add_radius
         }
 
-        if(this.frost_rich){
+        if (this.frost_rich) {
             explosion_radius += 3
         }
 
         effect.setPoint(this.x, this.y)
         this.level.effects.push(effect)
-       
+
         let explosion = this.getBoxElipse()
         explosion.r = explosion_radius
 
         let freeze_duration = 2000
 
-        if(this.reign_of_frost){
+        if (this.reign_of_frost) {
             freeze_duration += 1000
         }
 
         this.level.players.forEach(p => {
-            if(Func.elipseCollision(explosion, p.getBoxElipse())){
-                if(p !== this.owner){
+            if (Func.elipseCollision(explosion, p.getBoxElipse())) {
+                if (p !== this.owner) {
                     p.setFreeze(freeze_duration)
-                    if(p.freezed || this.ice){
+                    if (p.freezed || this.ice) {
                         p.takeDamage(this.owner)
                     }
-                }    
+                }
             }
         })
         this.level.enemies.forEach(p => {
-            if(Func.elipseCollision(explosion, p.getBoxElipse())){
-                if(p.freezed){
-                    p.setFreeze(freeze_duration)              
+            if (Func.elipseCollision(explosion, p.getBoxElipse())) {
+                if (p.freezed) {
+                    p.setFreeze(freeze_duration)
                     p.takeDamage(this.owner, {
-                        damage_value: this.shattering ? 2 : undefined
-                    })               
-                }
-                else if(this.ice){
-                    p.setFreeze(freeze_duration)                           
+                        damage_value: this.shattering ? 2 : undefined,
+                    })
+                } else if (this.ice) {
+                    p.setFreeze(freeze_duration)
                     p.takeDamage(this.owner)
+                } else {
+                    p.setFreeze(freeze_duration)
                 }
-                else{
-                    p.setFreeze(freeze_duration)  
-                }         
             }
         })
 
-        if(this.icicles_count > 0){
+        if (this.icicles_count > 0) {
             let count = this.icicles_count
-            
+
             let zones = 6.28 / count
-    
-            for(let i = 1; i <= count; i++){
+
+            for (let i = 1; i <= count; i++) {
                 let min_a = (i - 1) * zones
                 let max_a = i * zones
-    
+
                 let angle = Math.random() * (max_a - min_a) + min_a
                 let proj = new Icicle(this.level)
                 proj.setOwner(this.owner)
                 proj.setAngle(angle)
                 proj.setPoint(this.x, this.y)
-    
+
                 this.level.projectiles.push(proj)
             }
         }
-        
+
         this.level.deleted.push(this.id)
         this.level.projectiles = this.level.projectiles.filter(elem => elem != this)
     }

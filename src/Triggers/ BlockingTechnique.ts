@@ -1,12 +1,11 @@
-import ITrigger from "../Interfaces/ITrigger";
-import Character from "../Objects/src/Character";
+import ITrigger from '../Interfaces/ITrigger'
+import Character from '../Objects/src/Character'
 
-export default class BlockingTechnique implements ITrigger{
-
+export default class BlockingTechnique implements ITrigger {
     cd: number = 1000
     last_trigger_time: number = 0
     proc_count: number = 0
-    trashhold:number = 5
+    trashhold: number = 5
     activated: boolean = false
     blocked: number = 0
     max_blocked: number = 3
@@ -18,22 +17,21 @@ export default class BlockingTechnique implements ITrigger{
         return this.chance
     }
 
-    trigger(player: Character){
-        if(this.activated){
-            this.blocked ++
+    trigger(player: Character) {
+        if (this.activated) {
+            this.blocked++
 
-            if(this.blocked >= this.max_blocked){
+            if (this.blocked >= this.max_blocked) {
                 this.activated = false
                 player.chance_to_block -= 100
                 this.blocked = 0
 
                 player.emitStatusEnd('blocking technique')
             }
-        }
-        else{
-            this.proc_count ++
+        } else {
+            this.proc_count++
 
-            if(this.proc_count >= this.trashhold){
+            if (this.proc_count >= this.trashhold) {
                 this.proc_count = 0
                 player.chance_to_block += 100
                 this.activated = true
@@ -41,7 +39,7 @@ export default class BlockingTechnique implements ITrigger{
                 player.newStatus({
                     name: 'blocking technique',
                     duration: undefined,
-                    desc: 'you will block any hit'
+                    desc: 'you will block any hit',
                 })
             }
         }

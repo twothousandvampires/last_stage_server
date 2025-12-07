@@ -1,13 +1,12 @@
-import BigFrostNova from "../../Objects/Effects/BigFrostNova";
-import Flyer from "../../Objects/src/PlayerClasses/Flyer";
-import FlyerAbility from "./FlyerAbility";
+import BigFrostNova from '../../Objects/Effects/BigFrostNova'
+import Flyer from '../../Objects/src/PlayerClasses/Flyer'
+import FlyerAbility from './FlyerAbility'
 
-export default class Frostnova extends FlyerAbility{
-
+export default class Frostnova extends FlyerAbility {
     ice_genesis: boolean = false
     cold_spires: boolean = false
-   
-    constructor(owner: Flyer){
+
+    constructor(owner: Flyer) {
         super(owner)
         this.cost = 7
         this.name = 'frost nova'
@@ -16,12 +15,12 @@ export default class Frostnova extends FlyerAbility{
         this.cd = 8000
     }
 
-    impact(){
+    impact() {
         this.afterUse()
         this.owner.level.sounds.push({
             name: 'frost nova',
             x: this.owner.x,
-            y: this.owner.y
+            y: this.owner.y,
         })
 
         let e = new BigFrostNova(this.owner.level)

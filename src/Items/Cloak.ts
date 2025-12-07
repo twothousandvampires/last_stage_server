@@ -1,15 +1,14 @@
-import Func from "../Func";
-import ITrigger from "../Interfaces/Itrigger";
-import Character from "../Objects/src/Character";
-import Phase from "../Status/Phase";
-import Item from "./Item";
+import Func from '../Func'
+import ITrigger from '../Interfaces/Itrigger'
+import Character from '../Objects/src/Character'
+import Phase from '../Status/Phase'
+import Item from './Item'
 
 export default class Cloak extends Item implements ITrigger {
-    
     cd = 0
-    last_trigger_time: number = 0;
+    last_trigger_time: number = 0
 
-    constructor(){
+    constructor() {
         super()
         this.chance = 40
         this.name = 'cloak'
@@ -24,14 +23,14 @@ export default class Cloak extends Item implements ITrigger {
     equip(character: Character): void {
         character.triggers_on_get_hit.push(this)
     }
-    
+
     getSpecialForgings(): string[] {
         return ['chance', 'duration']
     }
 
-    trigger(character: Character){
-        if(this.disabled) return
-        
+    trigger(character: Character) {
+        if (this.disabled) return
+
         let status = new Phase(character.level.time)
 
         status.setDuration(3000 + this.duration)

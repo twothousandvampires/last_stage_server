@@ -1,3 +1,1 @@
-export default interface IStatus{
-
-}
+export default interface IStatus {}

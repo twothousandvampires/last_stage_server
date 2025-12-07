@@ -1,18 +1,16 @@
-import Func from "../../../Func";
-import Level from "../../../Level";
-import EnemyDeadState from "../../../State/EnemyDeadState";
-import EnemyDyingState from "../../../State/EnemyDyingState";
-import EnemyMeleeIdleState from "../../../State/EnemyMeleeIdleState";
-import EnemySpawnState from "../../../State/EnemySpawnState";
-import Armour from "../../Effects/Armour";
-import QuakeEffect from "../../Effects/Quake";
-import SmallTextLanguage2 from "../../Effects/SmallTextLanguage2";
-import Character from "../Character";
-import Unit from "../Unit";
+import Func from '../../../Func'
+import Level from '../../../Level'
+import EnemyDeadState from '../../../State/EnemyDeadState'
+import EnemyDyingState from '../../../State/EnemyDyingState'
+import EnemyMeleeIdleState from '../../../State/EnemyMeleeIdleState'
+import EnemySpawnState from '../../../State/EnemySpawnState'
+import Armour from '../../Effects/Armour'
+import QuakeEffect from '../../Effects/Quake'
+import SmallTextLanguage2 from '../../Effects/SmallTextLanguage2'
+import Character from '../Character'
+import Unit from '../Unit'
 
 export default abstract class Enemy extends Unit {
-
-    
     is_spawning: boolean = true
     target: Character | undefined
     check_timer: any
@@ -36,7 +34,6 @@ export default abstract class Enemy extends Unit {
     create_sorcerers_skull_chance: number = 0
     create_helm_of_ascendence_chance: number = 1
 
-
     create_chance: number = 15
     last_action: number = 0
 
@@ -46,61 +43,63 @@ export default abstract class Enemy extends Unit {
     can_be_burned: boolean = true
     abilities: any[] = []
     dead_time: number = 5000
-    
-    
-    constructor(level: Level){
+
+    constructor(level: Level) {
         super(level)
         this.name = 'enemy'
     }
 
-    hitImpact(){
+    hitImpact() {}
 
-    }
+    whenDead() {}
 
-    whenDead(){
-
-    }
-
-    getCastStateString(){
+    getCastStateString() {
         return 'attack'
     }
 
-    isAbilityToUse(){
-        if(this.abilities.length === 0) return false
+    isAbilityToUse() {
+        if (this.abilities.length === 0) return false
 
         return this.abilities.some(elem => elem.canUse(this))
     }
 
-    getDeadStateInstance(){
+    getDeadStateInstance() {
         return new EnemyDeadState()
     }
 
-    checkPlayer(){
-        if(this.can_check_player){
-           if(!this.target){
+    checkPlayer() {
+        if (this.can_check_player) {
+            if (!this.target) {
                 this.can_check_player = false
-            
-                let p = this.level.players.filter(elem => Func.distance(this, elem) <= this.player_check_radius && !elem.is_dead && elem.z < 5)
+
+                let p = this.level.players.filter(
+                    elem =>
+                        Func.distance(this, elem) <= this.player_check_radius &&
+                        !elem.is_dead &&
+                        elem.z < 5
+                )
 
                 p.sort((a, b) => {
                     return Func.distance(a, this) - Func.distance(b, this)
                 })
 
                 this.target = p[0]
-            }
-            else{
-                if(Func.distance(this, this.target) > this.player_check_radius || this.target.is_dead){
+            } else {
+                if (
+                    Func.distance(this, this.target) > this.player_check_radius ||
+                    this.target.is_dead
+                ) {
                     this.target = undefined
                 }
             }
-            
+
             setTimeout(() => {
                 this.can_check_player = true
             }, 2000)
         }
     }
 
-    getTotalWeights(){
+    getTotalWeights() {
         return [
             ['grace', this.create_grace_chance],
             ['energy', this.create_energy_chance],
@@ -108,46 +107,44 @@ export default abstract class Enemy extends Unit {
             ['intervention', this.create_intervention_chance],
             ['item', this.create_item_chance],
             ['skull', this.create_sorcerers_skull_chance],
-            ['helm', this.create_helm_of_ascendence_chance],  
+            ['helm', this.create_helm_of_ascendence_chance],
         ]
     }
 
-    setImpactTime(c: number){
-        if(!this.action_time) return
+    setImpactTime(c: number) {
+        if (!this.action_time) return
 
         c += Func.chance(50) ? 5 : -5
-        this.action_impact = this.level.time + (this.action_time * (c / 100))
-        this.action_end_time =  this.level.time + this.action_time
+        this.action_impact = this.level.time + this.action_time * (c / 100)
+        this.action_end_time = this.level.time + this.action_time
         this.last_action = this.level.time + this.action_time
     }
 
-    enemyCanAtack(){
+    enemyCanAtack() {
         return this.level.time - this.last_action >= this.cooldown_attack
     }
 
-    act(time: number){
-        if(!this.current_state){
+    act(time: number) {
+        if (!this.current_state) {
             this.getState()
         }
 
-        if(this.current_state){
+        if (this.current_state) {
             this.current_state.update(this)
         }
-        
-        if(this.action_impact && time >= this.action_impact){
-            if(!this.action){
+
+        if (this.action_impact && time >= this.action_impact) {
+            if (!this.action) {
                 this.action = true
-            }
-            else{
+            } else {
                 this.action = false
                 this.action_impact = 0
             }
         }
-        if(this.action_end_time && time >= this.action_end_time){
-            if(!this.action_is_end){
+        if (this.action_end_time && time >= this.action_end_time) {
+            if (!this.action_is_end) {
                 this.action_is_end = true
-            }
-            else{
+            } else {
                 this.action_is_end = false
                 this.action_end_time = 0
             }
@@ -155,19 +152,17 @@ export default abstract class Enemy extends Unit {
     }
 
     // todo
-    afterDead(){
+    afterDead() {}
 
-    }
-
-    getExplodedSound(){
+    getExplodedSound() {
         return {
             name: 'corpse explode',
             x: this.x,
-            y: this.y
+            y: this.y,
         }
     }
 
-    toJSON(){
+    toJSON() {
         return {
             x: this.x,
             y: this.y,
@@ -178,20 +173,20 @@ export default abstract class Enemy extends Unit {
             z: this.z,
             action: this.action,
             action_time: this.action_time,
-            invisible: this.invisible
+            invisible: this.invisible,
         }
     }
 
-    forceLethalDamage(){
+    forceLethalDamage() {
         this.life_status = 0
-        this.setState(new EnemyDyingState)
+        this.setState(new EnemyDyingState())
     }
 
-    takePureDamage(unit: any = undefined, options: any = {}){
-        if(this.is_dead) return
-        if(!this.can_be_damaged) return
+    takePureDamage(unit: any = undefined, options: any = {}) {
+        if (this.is_dead) return
+        if (!this.can_be_damaged) return
 
-        if(this.checkArmour(unit)){
+        if (this.checkArmour(unit)) {
             return
         }
 
@@ -199,65 +194,66 @@ export default abstract class Enemy extends Unit {
 
         let damage_value = 1
 
-        if(options?.damage_value){
-           damage_value = options.damage_value
+        if (options?.damage_value) {
+            damage_value = options.damage_value
         }
 
-        if(is_player_deal_hit){
+        if (is_player_deal_hit) {
             let pierce = unit.getPierce()
             let is_pierce = Func.chance(pierce - this.armour_rate)
 
-            if(is_pierce){
-                damage_value ++
+            if (is_pierce) {
+                damage_value++
             }
         }
 
         this.life_status -= damage_value
 
-        if(this.life_status <= 0){
+        if (this.life_status <= 0) {
             this.is_dead = true
 
-            if(options?.explode){
+            if (options?.explode) {
                 this.exploded = true
                 this.level.addSound(this.getExplodedSound())
-            }
-            else if(options?.burn && this.can_be_burned){
+            } else if (options?.burn && this.can_be_burned) {
                 this.burned = true
             }
 
-            if(is_player_deal_hit){
+            if (is_player_deal_hit) {
                 this.create_grace_chance += unit.chance_to_create_grace
                 unit.succesefulKill(this)
                 unit.addGold(this.gold_revard)
             }
-         
-            this.setState(new EnemyDyingState)
+
+            this.setState(new EnemyDyingState())
         }
-
     }
 
-    deadSound(){
-        
-    }
-    
-    takeDamage(unit: any = undefined, options: any = {}){
-        if(this.is_dead) return
-        if(!this.can_be_damaged) return
-        
+    deadSound() {}
+
+    takeDamage(unit: any = undefined, options: any = {}) {
+        if (this.is_dead) return
+        if (!this.can_be_damaged) return
+
         let is_player_deal_hit = unit instanceof Character
 
-        let instantly = options?.instant_death || (unit && unit.chance_to_instant_kill && Func.chance(unit.chance_to_instant_kill)) && this.can_be_instant_killed
+        let instantly =
+            options?.instant_death ||
+            (unit &&
+                unit.chance_to_instant_kill &&
+                Func.chance(unit.chance_to_instant_kill) &&
+                this.can_be_instant_killed)
 
-        if(instantly){
+        if (instantly) {
             this.life_status = 1
             this.armour_rate = 0
         }
 
-        if(this.checkArmour(unit)){
+        if (this.checkArmour(unit)) {
             this.level.addSound({
                 name: 'metal hit',
                 x: this.x,
-                y: this.y
+                y: this.y,
             })
 
             let e = new Armour(this.level)
@@ -269,76 +265,75 @@ export default abstract class Enemy extends Unit {
 
         let damage_value = 1
 
-        if(options?.damage_value){
-           damage_value = options.damage_value
+        if (options?.damage_value) {
+            damage_value = options.damage_value
         }
 
-        if(is_player_deal_hit){
+        if (is_player_deal_hit) {
             let pierce = unit.getPierce()
             let is_pierce = Func.chance(pierce - this.armour_rate)
 
-            if(is_pierce){
-                damage_value ++
+            if (is_pierce) {
+                damage_value++
                 unit.succesefulPierce(this)
             }
         }
-        
-        if(this.crushing > 0){
+
+        if (this.crushing > 0) {
             damage_value += this.crushing
         }
 
-        if(is_player_deal_hit && unit.isCrushing()){
-            this.crushing ++
+        if (is_player_deal_hit && unit.isCrushing()) {
+            this.crushing++
         }
 
-        if(Func.chance(this.fortify)){
-            damage_value --
+        if (Func.chance(this.fortify)) {
+            damage_value--
         }
-       
-        if(unit && unit?.critical && Func.chance(unit.critical)){
+
+        if (unit && unit?.critical && Func.chance(unit.critical)) {
             damage_value *= 2
-            if(is_player_deal_hit){
+            if (is_player_deal_hit) {
                 unit.succesefulCritical(this)
             }
         }
 
-        if(this.fragility){
+        if (this.fragility) {
             damage_value *= 2
         }
 
-        if(is_player_deal_hit && Func.chance(unit.getPower())){
-            damage_value ++
+        if (is_player_deal_hit && Func.chance(unit.getPower())) {
+            damage_value++
         }
 
         this.life_status -= damage_value
- 
-        if(is_player_deal_hit){
+
+        if (is_player_deal_hit) {
             unit.succesefulHit(this)
         }
 
-        if(this.life_status <= 0){
+        if (this.life_status <= 0) {
             this.is_dead = true
 
-            if(options?.explode){
+            if (options?.explode) {
                 this.exploded = true
                 this.level.addSound(this.getExplodedSound())
-            }
-            else if(options?.burn && this.can_be_burned){
+            } else if (options?.burn && this.can_be_burned) {
                 this.burned = true
             }
 
-            if(is_player_deal_hit){
+            if (is_player_deal_hit) {
                 this.create_grace_chance += unit.chance_to_create_grace
                 unit.succesefulKill(this)
                 unit.addGold(this.gold_revard)
             }
-         
-            this.setState(new EnemyDyingState)
+
+            this.setState(new EnemyDyingState())
         }
-        
-        if(is_player_deal_hit && unit.level.time - unit.last_impact_time >= unit.impact_cooldown){
-            let impact_rating = unit.getImpactRating() 
-            if(Func.chance(impact_rating)){
+
+        if (is_player_deal_hit && unit.level.time - unit.last_impact_time >= unit.impact_cooldown) {
+            let impact_rating = unit.getImpactRating()
+            if (Func.chance(impact_rating)) {
                 this.level.addSound('impact', this.x, this.y)
                 unit.last_impact_time = unit.level.time
                 let e = new QuakeEffect(this.level)
@@ -347,45 +342,43 @@ export default abstract class Enemy extends Unit {
                 this.level.effects.push(e)
                 unit.impactHit(this, damage_value)
                 this.level.enemies.forEach(elem => {
-                    if(Func.distance(this, elem) <= 10 && !elem.is_dead && elem != this){
+                    if (Func.distance(this, elem) <= 10 && !elem.is_dead && elem != this) {
                         elem.takeDamage(undefined, {
-                            damage_value: damage_value
+                            damage_value: damage_value,
                         })
                     }
                 })
             }
-        } 
+        }
 
         this.level.addSound(this.getWeaponHitedSound())
     }
 
-    getWeaponHitedSound(){
-        return  {
+    getWeaponHitedSound() {
+        return {
             name: 'sword hit',
-            x:this.x,
-            y:this.y
+            x: this.x,
+            y: this.y,
         }
     }
 
     getState(): void {
-        if(this.is_dead){
+        if (this.is_dead) {
             this.setState(this.getDeadStateInstance())
-        }
-        else if(this.is_spawning){
+        } else if (this.is_spawning) {
             this.setState(new EnemySpawnState())
-        }
-        else{
+        } else {
             this.sayPhrase()
             this.setState(this.getIdleStateInstance())
         }
     }
 
-    getIdleStateInstance(){
+    getIdleStateInstance() {
         return new EnemyMeleeIdleState()
     }
 
-    public sayPhrase(): void{
-        if(!Func.chance(1)) return
+    public sayPhrase(): void {
+        if (!Func.chance(1)) return
 
         let phrase = new SmallTextLanguage2(this.level)
         phrase.z = this.say_z

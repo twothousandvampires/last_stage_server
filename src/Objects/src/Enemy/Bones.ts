@@ -1,12 +1,11 @@
-import EnemyBuilder from "../../../Classes/EnemyBuilder";
-import Func from "../../../Func";
-import Level from "../../../Level";
-import Poison from "../../../Status/Poison";
-import Undead from "./Undead";
+import EnemyBuilder from '../../../Classes/EnemyBuilder'
+import Func from '../../../Func'
+import Level from '../../../Level'
+import Poison from '../../../Status/Poison'
+import Undead from './Undead'
 
 export default class Bones extends Undead {
-
-    constructor(level: Level){
+    constructor(level: Level) {
         super(level)
         this.name = 'bones'
         this.box_r = 2.2
@@ -29,22 +28,26 @@ export default class Bones extends Undead {
         this.level.enemies.push(skull)
     }
 
-    hitImpact(){
-        if(!this.target || !this.attack_angle) return
-     
+    hitImpact() {
+        if (!this.target || !this.attack_angle) return
+
         this.level.sounds.push({
             x: this.x,
             y: this.y,
-            name: 'short sword swing'
+            name: 'short sword swing',
         })
 
         let e = this.getBoxElipse()
         e.r = this.attack_radius
 
-        if(this.target?.z < 5 && Func.elipseCollision(e, this.target?.getBoxElipse()) && Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle)){
+        if (
+            this.target?.z < 5 &&
+            Func.elipseCollision(e, this.target?.getBoxElipse()) &&
+            Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle)
+        ) {
             this.target.takeDamage(this, {})
 
-            if(Func.chance(25)){
+            if (Func.chance(25)) {
                 let status = new Poison(Date.now())
                 status.setDuration(6000)
                 this.level.setStatus(this.target, status)
