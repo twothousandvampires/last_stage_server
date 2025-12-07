@@ -1,19 +1,18 @@
-import Character from "../Objects/src/Character"
-import Status from "./Status"
+import Character from '../Objects/src/Character'
+import Status from './Status'
 
-export default class Touch extends Status{
-   
+export default class Touch extends Status {
     name: string
-    
-    constructor(public time: number){
+
+    constructor(public time: number) {
         super(time)
         this.name = 'touch'
     }
 
-    apply(unit: any){
+    apply(unit: any) {
         this.unit = unit
 
-        if(this.unit instanceof Character){
+        if (this.unit instanceof Character) {
             this.unit.might += 10
             this.unit.perception += 10
             this.unit.knowledge += 10
@@ -26,7 +25,7 @@ export default class Touch extends Status{
             this.unit.newStatus({
                 name: 'grace',
                 duration: this.duration,
-                desc: 'stats increased by 10'
+                desc: 'stats increased by 10',
             })
         }
     }
@@ -35,13 +34,13 @@ export default class Touch extends Status{
         this.time = Date.now()
 
         this.unit.newStatus({
-                name: 'grace',
-                duration: this.duration,
+            name: 'grace',
+            duration: this.duration,
         })
     }
 
-    clear(){
-        if(this.unit instanceof Character){
+    clear() {
+        if (this.unit instanceof Character) {
             this.unit.might -= 10
             this.unit.perception -= 10
             this.unit.knowledge -= 10

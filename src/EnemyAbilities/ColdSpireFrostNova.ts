@@ -1,19 +1,18 @@
-import Func from "../Func"
-import FrostNova from "../Objects/Effects/FrostNova"
-import Enemy from "../Objects/src/Enemy/Enemy"
-import EnemyAbility from "./EnemyAbility"
+import Func from '../Func'
+import FrostNova from '../Objects/Effects/FrostNova'
+import Enemy from '../Objects/src/Enemy/Enemy'
+import EnemyAbility from './EnemyAbility'
 
 export default class ColdSpireFrostNova extends EnemyAbility {
-
     cooldown: number = 2000
 
-    canUse(enemy: Enemy){
+    canUse(enemy: Enemy) {
         return true
     }
 
-    use(enemy: Enemy){
+    use(enemy: Enemy) {
         this.last_used_time = enemy.level.time
-  
+
         let e = enemy.getBoxElipse()
         e.r = 12
 
@@ -23,7 +22,7 @@ export default class ColdSpireFrostNova extends EnemyAbility {
         enemy.level.effects.push(ef)
 
         enemy.level.enemies.forEach(elem => {
-            if(Func.elipseCollision(e, elem.getBoxElipse())){
+            if (Func.elipseCollision(e, elem.getBoxElipse())) {
                 elem.setFreeze(2000)
             }
         })

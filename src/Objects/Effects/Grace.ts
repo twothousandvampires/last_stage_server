@@ -1,21 +1,24 @@
-import UpgradeManager from "../../Classes/UpgradeManager";
-import Func from "../../Func";
-import Level from "../../Level";
-import TimeStoped from "../../Status/TimeStoped";
-import Character from "../src/Character";
-import Effect from "./Effects";
-import Forger from "./Forger";
-import Gate from "./Gate";
-import Star from "./Star";
-import Teacher from "./Teacher";
+import UpgradeManager from '../../Classes/UpgradeManager'
+import Func from '../../Func'
+import Level from '../../Level'
+import TimeStoped from '../../Status/TimeStoped'
+import Character from '../src/Character'
+import Effect from './Effects'
+import Forger from './Forger'
+import Gate from './Gate'
+import Star from './Star'
+import Teacher from './Teacher'
 
-export default class Grace extends Effect{
+export default class Grace extends Effect {
     time: number
     gatedPlayers: any
     not_deserving: any
     leaved: any
 
-    constructor(level: Level, private duration = 60000){
+    constructor(
+        level: Level,
+        private duration = 60000
+    ) {
         super(level)
         this.name = 'grace'
         this.time = Date.now()
@@ -25,26 +28,28 @@ export default class Grace extends Effect{
         this.not_deserving = []
     }
 
-    act(time: number){
-        if(time - this.time >= this.duration){
+    act(time: number) {
+        if (time - this.time >= this.duration) {
             this.closeGate()
             return
         }
 
         this.level.players.forEach(elem => {
-            if(!this.leaved.includes(elem.id) && Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
-                if(elem.grace <= 0 && !this.not_deserving.includes(elem.id)){
+            if (
+                !this.leaved.includes(elem.id) &&
+                Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())
+            ) {
+                if (elem.grace <= 0 && !this.not_deserving.includes(elem.id)) {
                     this.level.addSound('not deserving', elem.x, elem.y)
                     this.not_deserving.push(elem.id)
-                }
-                else if(elem.grace > 0){
-                    if(this.gatedPlayers.length === 0){
+                } else if (elem.grace > 0) {
+                    if (this.gatedPlayers.length === 0) {
                         this.generateEffects()
                     }
                     this.gatedPlayers.push({
                         x: elem.x,
                         y: elem.y,
-                        player: elem
+                        player: elem,
                     })
 
                     let status = new TimeStoped(elem.time)
@@ -55,26 +60,26 @@ export default class Grace extends Effect{
                     elem.setZone(1, 180, 60)
                     elem.light_r = 32
                 }
-            } 
+            }
         })
     }
 
-    deleteStatus(player: Character){
-        for(let i = 0; i < this.level.status_pull.length; i++){
+    deleteStatus(player: Character) {
+        for (let i = 0; i < this.level.status_pull.length; i++) {
             let s = this.level.status_pull[i]
 
-            if(s.unit === player && s.name === 'time stoped'){
+            if (s.unit === player && s.name === 'time stoped') {
                 s.clear()
                 this.level.status_pull.splice(i, 1)
                 break
             }
-        }   
+        }
     }
 
-    playerLeave(player: Character){
+    playerLeave(player: Character) {
         let player_data = this.gatedPlayers.find(elem => elem.player.id === player.id)
 
-        if(!player_data)  return
+        if (!player_data) return
 
         player.light_r = 16
         player.removeUpgrades()
@@ -85,7 +90,7 @@ export default class Grace extends Effect{
 
         this.gatedPlayers = this.gatedPlayers.filter(elem => elem.player.id != player.id)
         this.leaved.push(player.id)
-        
+
         this.deleteStatus(player)
 
         player.after_grace_statuses.forEach(status => {
@@ -94,14 +99,14 @@ export default class Grace extends Effect{
 
         player.after_grace_statuses = []
 
-        if(this.gatedPlayers.length === 0) {
+        if (this.gatedPlayers.length === 0) {
             this.deleteEffects()
         }
     }
 
-    closeGate(){
+    closeGate() {
         this.gatedPlayers.forEach(player_data => {
-            if(!this.leaved.includes(player_data.player.id)){
+            if (!this.leaved.includes(player_data.player.id)) {
                 player_data.player.light_r = 16
                 player_data.player.removeUpgrades()
                 UpgradeManager.closeUpgrades(player_data.player)
@@ -117,19 +122,17 @@ export default class Grace extends Effect{
                 player_data.player.after_grace_statuses = []
             }
         })
-    
+
         this.deleteEffects()
     }
 
-    generateEffects(){
+    generateEffects() {
         let teacher = new Teacher(this.level)
         this.level.binded_effects.push(teacher)
-
 
         let forger = new Forger(this.level)
         this.level.binded_effects.push(forger)
 
-        
         let exit = new Gate(this.level)
         this.level.binded_effects.push(exit)
 
@@ -137,26 +140,27 @@ export default class Grace extends Effect{
         let centr_x = 180
         let centr_y = 60
 
-        for(let i = 0; i < stars_count; i++){
+        for (let i = 0; i < stars_count; i++) {
             let angle = Math.random() * 6.28
 
             let star = new Star(this.level)
-            star.setZone(1,
-                        Math.round(centr_x + Math.sin(angle) * Func.random(12, 80)),
-                        Math.round(centr_y + Math.cos(angle) * Func.random(12, 80))
-                        )
-    
+            star.setZone(
+                1,
+                Math.round(centr_x + Math.sin(angle) * Func.random(12, 80)),
+                Math.round(centr_y + Math.cos(angle) * Func.random(12, 80))
+            )
+
             this.level.binded_effects.push(star)
         }
     }
 
-    deleteEffects(){
+    deleteEffects() {
         let to_delete = this.level.binded_effects.filter(elem => elem.zone_id === 1)
 
         to_delete.forEach(elem => {
             this.level.deleted.push(elem.id)
         })
-        
+
         this.level.binded_effects = this.level.binded_effects.filter(elem => elem.zone_id != 1)
 
         this.level.deleted.push(this.id)

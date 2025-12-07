@@ -1,12 +1,11 @@
-import Character from "../../Objects/src/Character";
-import Item from "../Item";
-import Forging from "./Forging";
+import Character from '../../Objects/src/Character'
+import Item from '../Item'
+import Forging from './Forging'
 
-export default class Durability extends Forging{
-
+export default class Durability extends Forging {
     value: number = 0
 
-    constructor(item: Item){
+    constructor(item: Item) {
         super(item)
         this.max_value = 5
         this.name = 'durability'
@@ -14,20 +13,20 @@ export default class Durability extends Forging{
         this.gold_cost = 5
     }
 
-    forge(player: Character){
-        if(this.canBeForged() && this.costEnough()){
+    forge(player: Character) {
+        if (this.canBeForged() && this.costEnough()) {
             this.value += 1
             this.item.player.durability += 1
             this.payCost()
         }
     }
 
-    getValue(){
+    getValue() {
         return this.value
     }
 
     canBeForged(): boolean {
-        if(!this.item || !this.item.player) return false
+        if (!this.item || !this.item.player) return false
 
         return this.value < this.max_value
     }

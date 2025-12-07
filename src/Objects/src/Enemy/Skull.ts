@@ -1,10 +1,9 @@
-import Func from "../../../Func";
-import Level from "../../../Level";
-import Undead from "./Undead";
+import Func from '../../../Func'
+import Level from '../../../Level'
+import Undead from './Undead'
 
 export default class Skull extends Undead {
-
-    constructor(level: Level){
+    constructor(level: Level) {
         super(level)
         this.name = 'skull'
         this.box_r = 0.8
@@ -21,17 +20,18 @@ export default class Skull extends Undead {
         this.has_boby = false
     }
 
-    hitImpact(){
-        if(!this.target || !this.attack_angle) return
-    
+    hitImpact() {
+        if (!this.target || !this.attack_angle) return
+
         let e = this.getBoxElipse()
         e.r = this.attack_radius
 
-        if(this.target.z < 5 &&
-           Func.elipseCollision(e, this.target.getBoxElipse()) && 
-           Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle))
-           {
-                this.target.takeDamage(this, {})
-           }
+        if (
+            this.target.z < 5 &&
+            Func.elipseCollision(e, this.target.getBoxElipse()) &&
+            Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle)
+        ) {
+            this.target.takeDamage(this, {})
+        }
     }
 }

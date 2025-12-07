@@ -1,17 +1,16 @@
-import Func from "../../Func";
-import { ThrowedWeapon } from "../../Objects/Projectiles/ThrowedWeapon";
-import Swordman from "../../Objects/src/PlayerClasses/Swordman";
-import Ability from "../Ability";
-import SwordmanAbility from "./SwordmanAbility";
+import Func from '../../Func'
+import { ThrowedWeapon } from '../../Objects/Projectiles/ThrowedWeapon'
+import Swordman from '../../Objects/src/PlayerClasses/Swordman'
+import Ability from '../Ability'
+import SwordmanAbility from './SwordmanAbility'
 
 export default class WeaponThrow extends SwordmanAbility {
-   
     light_grip: boolean
     returning: boolean
     shattering: boolean
     multiple: boolean
 
-    constructor(owner: Swordman){
+    constructor(owner: Swordman) {
         super(owner)
         this.cd = 2500
         this.light_grip = false
@@ -23,21 +22,21 @@ export default class WeaponThrow extends SwordmanAbility {
         this.mastery_chance = 7
     }
 
-    getCdValue(){
+    getCdValue() {
         let cd_time = this.cd
-       
-        if(this.light_grip && Func.chance(50, this.owner.is_lucky)){
+
+        if (this.light_grip && Func.chance(50, this.owner.is_lucky)) {
             cd_time = Math.round(cd_time / 2)
         }
 
         return cd_time
     }
 
-    impact(){
+    impact() {
         this.owner.level.sounds.push({
             name: 'sword swing',
             x: this.owner.x,
-            y: this.owner.y
+            y: this.owner.y,
         })
 
         let proj = new ThrowedWeapon(this.owner.level)
@@ -45,27 +44,30 @@ export default class WeaponThrow extends SwordmanAbility {
 
         let is_returning = !this.shattering && this.returning && Func.chance(40 + second * 5)
 
-        if(is_returning){
+        if (is_returning) {
             proj.returned = true
-        }
-        else{
+        } else {
             let is_shatter = this.shattering && !this.returning && Func.chance(40 + second * 5)
-            if(is_shatter){
+            if (is_shatter) {
                 proj.shattered = true
             }
         }
 
         let target = this.owner.getTarget()
 
-        proj.setAngle(target ? Func.angle(this.owner.x, this.owner.y, target.x, target.y) : this.owner.attack_angle)
+        proj.setAngle(
+            target
+                ? Func.angle(this.owner.x, this.owner.y, target.x, target.y)
+                : this.owner.attack_angle
+        )
         proj.setOwner(this.owner)
         proj.setPoint(this.owner.x, this.owner.y)
 
         this.owner.level.projectiles.push(proj)
-    
-        if(this.multiple){
+
+        if (this.multiple) {
             let chance = Func.chance(50 + second * 5)
-            if(chance){
+            if (chance) {
                 let add_proj = new ThrowedWeapon(this.owner.level)
                 add_proj.shattered = proj.shattered
                 add_proj.returned = proj.returned

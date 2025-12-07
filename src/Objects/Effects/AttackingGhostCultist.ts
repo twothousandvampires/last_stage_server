@@ -1,10 +1,9 @@
-import Func from "../../Func";
-import Level from "../../Level";
-import Effect from "./Effects";
-import WalkingGhostCultist from "./WalkingGhostCultist";
+import Func from '../../Func'
+import Level from '../../Level'
+import Effect from './Effects'
+import WalkingGhostCultist from './WalkingGhostCultist'
 
 export default class AttackingGhostCultist extends Effect {
-
     target: any
     flipped: boolean
     start: number | undefined
@@ -13,7 +12,10 @@ export default class AttackingGhostCultist extends Effect {
     hit_y: number | undefined
     restless: boolean
 
-    constructor(level: Level, public start_power: number = 0){
+    constructor(
+        level: Level,
+        public start_power: number = 0
+    ) {
         super(level)
         this.name = 'attacking ghost cultist'
         this.move_speed = 0
@@ -23,7 +25,7 @@ export default class AttackingGhostCultist extends Effect {
         this.restless = false
     }
 
-     toJSON(){
+    toJSON() {
         return {
             x: this.x,
             y: this.y,
@@ -32,41 +34,39 @@ export default class AttackingGhostCultist extends Effect {
             z: this.z,
             light_r: this.light_r,
             flipped: this.flipped,
-            action_time: this.action_time
+            action_time: this.action_time,
         }
     }
 
-    explode(){
-        if(this.restless){
+    explode() {
+        if (this.restless) {
             let ghost = new WalkingGhostCultist(this.level)
-            if(this.target && !this.target.is_dead){
+            if (this.target && !this.target.is_dead) {
                 ghost.target = this.target
-            }
-            else{
+            } else {
                 let e = this.getBoxElipse()
                 e.r = 15
-                let enemy = this.level.enemies.filter((elem) => {
+                let enemy = this.level.enemies.filter(elem => {
                     return Func.elipseCollision(elem.getBoxElipse(), e)
                 })
 
                 ghost.target = enemy[Math.floor(Math.random() * enemy.length)]
             }
-           
-            if(ghost.target){
+
+            if (ghost.target) {
                 ghost.setPoint(this.x, this.y)
                 this.level.binded_effects.push(ghost)
             }
 
             this.delete()
-        }
-        else{
-            this.delete()    
+        } else {
+            this.delete()
         }
     }
 
-    act(time: number){
-        if(time - this.start >= this.action_time){
-            if(!this.hit_x || !this.hit_y) return
+    act(time: number) {
+        if (time - this.start >= this.action_time) {
+            if (!this.hit_x || !this.hit_y) return
 
             let e = this.getBoxElipse()
             e.r = 8
@@ -74,11 +74,11 @@ export default class AttackingGhostCultist extends Effect {
             e.y = this.hit_y
 
             this.level.enemies.forEach(elem => {
-                if(Func.elipseCollision(elem.getBoxElipse(), e)){
+                if (Func.elipseCollision(elem.getBoxElipse(), e)) {
                     elem.takeDamage()
                 }
             })
-            
+
             this.explode()
         }
     }

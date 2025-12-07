@@ -1,11 +1,10 @@
-import Func from "../Func";
-import { SmokeDaggerShard } from "../Objects/Projectiles/SmokeDaggerShard";
-import Character from "../Objects/src/Character";
-import Item from "./Item";
+import Func from '../Func'
+import { SmokeDaggerShard } from '../Objects/Projectiles/SmokeDaggerShard'
+import Character from '../Objects/src/Character'
+import Item from './Item'
 
-export default class DaggerOfSmoke extends Item{
-    
-    constructor(){
+export default class DaggerOfSmoke extends Item {
+    constructor() {
         super()
         this.chance = 40
         this.name = 'dagger of smoke'
@@ -17,34 +16,34 @@ export default class DaggerOfSmoke extends Item{
     equip(character: Character): void {
         character.triggers_on_heal.push(this)
     }
-    
+
     getSpecialForgings(): string[] {
         return ['chance', 'count']
     }
 
-    trigger(character: Character){
-        if(this.disabled) return
-        
-        if(Func.chance(this.chance)){
+    trigger(character: Character) {
+        if (this.disabled) return
+
+        if (Func.chance(this.chance)) {
             character.level.addSound('blood', character.x, character.y)
 
             let box = character.getBoxElipse()
             box.r = 9
 
             let count = this.count
-            
+
             let zones = 6.28 / count
-    
-            for(let i = 1; i <= count; i++){
+
+            for (let i = 1; i <= count; i++) {
                 let min_a = (i - 1) * zones
                 let max_a = i * zones
-    
+
                 let angle = Math.random() * (max_a - min_a) + min_a
                 let proj = new SmokeDaggerShard(character.level)
                 proj.setAngle(angle)
                 proj.setPoint(character.x, character.y)
                 proj.setOwner(character)
-    
+
                 character.level.projectiles.push(proj)
             }
         }

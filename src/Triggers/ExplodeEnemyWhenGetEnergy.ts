@@ -1,32 +1,30 @@
-import Func from "../Func";
-import FireExplosion from "../Objects/Effects/FireExplosion";
-import Character from "../Objects/src/Character";
-import Unit from "../Objects/src/Unit";
+import Func from '../Func'
+import FireExplosion from '../Objects/Effects/FireExplosion'
+import Character from '../Objects/src/Character'
+import Unit from '../Objects/src/Unit'
 
 export default class ExplodeEnemyWhenGetEnergy {
-
     cd: number = 1200
     last_trigger_time: number = 0
     chance: number = 0
     name: string = 'corpse explosion'
     description: string = 'Give a chance to explode nearby corpse when you get energy'
 
-    constructor(){
-        
-    }
+    constructor() {}
 
-    trigger(player: Character, target: Unit){
+    trigger(player: Character, target: Unit) {
+        if (Func.notChance(this.chance, player.is_lucky)) return
 
-        if(Func.notChance(this.chance, player.is_lucky)) return
-          
-        if(player.level.time - this.last_trigger_time >= this.cd){
+        if (player.level.time - this.last_trigger_time >= this.cd) {
             this.last_trigger_time = player.level.time
-          
-            let targets = player.level.enemies.filter(elem => elem.is_corpse && Func.distance(elem, player) <= 20)
+
+            let targets = player.level.enemies.filter(
+                elem => elem.is_corpse && Func.distance(elem, player) <= 20
+            )
 
             let target = Func.getRandomFromArray(targets)
 
-            if(!target) return
+            if (!target) return
 
             player.level.addSound('from flesh', target.x, target.y)
 
@@ -39,7 +37,7 @@ export default class ExplodeEnemyWhenGetEnergy {
             box.r = 12
 
             player.level.enemies.forEach(elem => {
-                if(!elem.is_dead && Func.elipseCollision(elem.getBoxElipse(), box)){
+                if (!elem.is_dead && Func.elipseCollision(elem.getBoxElipse(), box)) {
                     elem.takeDamage(undefined, {})
                 }
             })

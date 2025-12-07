@@ -1,55 +1,48 @@
-import Func from "../Func";
-import BigShockNova from "../Objects/Effects/BigShockNova";
-import Status from "./Status";
+import Func from '../Func'
+import BigShockNova from '../Objects/Effects/BigShockNova'
+import Status from './Status'
 
-export default class SparklingHelmetStatus extends Status{
-
+export default class SparklingHelmetStatus extends Status {
     time_beetween_proc: number = 5000
     last_trigger_time: number
     public disabled: boolean = false
 
-    constructor(time: number){
+    constructor(time: number) {
         super(time)
         this.last_trigger_time = time
     }
 
-    unitDead(){
-        
-    }
+    unitDead() {}
 
-    apply(unit: any){
+    apply(unit: any) {
         this.unit = unit
     }
 
-    clear(){
-        
-    }
+    clear() {}
 
-    update(status: any){
-        
-    }
+    update(status: any) {}
 
-    checkResist(){
+    checkResist() {
         return false
     }
 
-    isExpired(){
+    isExpired() {
         return false
     }
 
-    act(tick_time: number){
-        if(!this.unit) return
+    act(tick_time: number) {
+        if (!this.unit) return
 
-        if(tick_time - this.unit.last_time_the_skill_was_used >= this.time_beetween_proc){
-            if(tick_time >= this.last_trigger_time){
+        if (tick_time - this.unit.last_time_the_skill_was_used >= this.time_beetween_proc) {
+            if (tick_time >= this.last_trigger_time) {
                 this.trigger()
                 this.last_trigger_time = tick_time + this.time_beetween_proc
             }
         }
     }
 
-    trigger(){
-        if(this.disabled) return
+    trigger() {
+        if (this.disabled) return
 
         let e = new BigShockNova(this.unit.level)
 
@@ -67,11 +60,16 @@ export default class SparklingHelmetStatus extends Status{
 
         this.unit.level.addSound('static', this.unit.x, this.unit.y)
         let was_sound = false
-        targets.forEach((elem) => {
-            if(!elem.is_dead && elem.z < 1 && Func.elipseCollision(wave, elem.getBoxElipse()) && elem != this.unit){
+        targets.forEach(elem => {
+            if (
+                !elem.is_dead &&
+                elem.z < 1 &&
+                Func.elipseCollision(wave, elem.getBoxElipse()) &&
+                elem != this.unit
+            ) {
                 let timer = Func.random(500, 2500)
                 elem.setZap(timer)
-                if(!was_sound){
+                if (!was_sound) {
                     this.unit.level.addSound('zap', elem.x, elem.y)
                     was_sound = true
                 }

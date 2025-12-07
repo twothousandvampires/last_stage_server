@@ -1,11 +1,10 @@
-import Item from "../Item";
-import Forging from "./Forging";
+import Item from '../Item'
+import Forging from './Forging'
 
 export default class Duration extends Forging {
-    
     value: number = 0
 
-    constructor(item: Item){
+    constructor(item: Item) {
         super(item)
         this.name = 'duration'
         this.description = 'increases duration of item effects'
@@ -13,15 +12,15 @@ export default class Duration extends Forging {
         this.max_value = 1500
     }
 
-    forge(){
-        if(this.canBeForged() && this.costEnough()){
+    forge() {
+        if (this.canBeForged() && this.costEnough()) {
             this.value += 250
             this.item.duration += 250
             this.payCost()
         }
     }
 
-    getValue(){
+    getValue() {
         return this.value + 'ms'
     }
 

@@ -1,12 +1,11 @@
-import Status from "./Status"
+import Status from './Status'
 
-export default class BannerOfArmourStatus extends Status{
-
-    constructor(public time: number){
+export default class BannerOfArmourStatus extends Status {
+    constructor(public time: number) {
         super(time)
     }
 
-    apply(unit: any){
+    apply(unit: any) {
         this.unit = unit
         unit.armour_rate += 15
         unit.fortify += 10

@@ -1,9 +1,9 @@
-import CurseOfDamnedAbility from "../../../EnemyAbilities/CurseOfDamnedAbility";
-import FanOfBonesAbility from "../../../EnemyAbilities/FanOfBonesAbility";
-import GhostGripAbility from "../../../EnemyAbilities/GhostGripAbility";
-import Func from "../../../Func";
-import Level from "../../../Level";
-import Undead from "./Undead";
+import CurseOfDamnedAbility from '../../../EnemyAbilities/CurseOfDamnedAbility'
+import FanOfBonesAbility from '../../../EnemyAbilities/FanOfBonesAbility'
+import GhostGripAbility from '../../../EnemyAbilities/GhostGripAbility'
+import Func from '../../../Func'
+import Level from '../../../Level'
+import Undead from './Undead'
 
 export default class FlyingBones extends Undead {
     spell_name: string | undefined
@@ -14,7 +14,7 @@ export default class FlyingBones extends Undead {
     ressurect_chance: number
     want_to_cast: boolean
 
-    constructor(level: Level){
+    constructor(level: Level) {
         super(level)
         this.name = 'flying bones'
         this.box_r = 2.2
@@ -37,16 +37,16 @@ export default class FlyingBones extends Undead {
         this.abilities = [
             new GhostGripAbility(),
             new FanOfBonesAbility(),
-            new CurseOfDamnedAbility()
+            new CurseOfDamnedAbility(),
         ]
     }
 
     hitImpact(): void {
-        if(Func.chance(30)){
+        if (Func.chance(30)) {
             this.level.sounds.push({
                 x: this.x,
                 y: this.y,
-                name: 'flying bones cast'
+                name: 'flying bones cast',
             })
         }
     }

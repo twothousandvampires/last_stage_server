@@ -1,9 +1,8 @@
-import Func from "../Func";
-import ITrigger from "../Interfaces/ITrigger";
-import Character from "../Objects/src/Character";
+import Func from '../Func'
+import ITrigger from '../Interfaces/ITrigger'
+import Character from '../Objects/src/Character'
 
-export default class RisingMoraleTrigger implements ITrigger{
-
+export default class RisingMoraleTrigger implements ITrigger {
     chance: number = 20
     name: string = 'raising morale'
     description: string = 'Gives a chance to heal yourself and your allies'
@@ -14,12 +13,12 @@ export default class RisingMoraleTrigger implements ITrigger{
         return this.chance
     }
 
-    trigger(player: Character){
+    trigger(player: Character) {
         let box = player.getBoxElipse()
         box.r = player.voice_radius
 
         player.level.players.forEach(elem => {
-            if(Func.elipseCollision(box, elem.getBoxElipse())){
+            if (Func.elipseCollision(box, elem.getBoxElipse())) {
                 elem.addLife()
             }
         })

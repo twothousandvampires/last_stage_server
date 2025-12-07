@@ -1,9 +1,8 @@
-import Character from "../Objects/src/Character";
-import Item from "./Item";
+import Character from '../Objects/src/Character'
+import Item from './Item'
 
-export default class IceBelt extends Item{
-    
-    constructor(){
+export default class IceBelt extends Item {
+    constructor() {
         super()
         this.name = 'ice belt'
         this.type = 2
@@ -11,20 +10,20 @@ export default class IceBelt extends Item{
     }
 
     equip(character: Character): void {
-        character.maximum_resources ++
+        character.maximum_resources++
     }
 
     disable(): void {
         this.disabled = true
-        if(this.player){
-            this.player.maximum_resources --
+        if (this.player) {
+            this.player.maximum_resources--
         }
     }
 
     enable(): void {
         this.disabled = false
-        if(this.player){
-            this.player.maximum_resources ++
+        if (this.player) {
+            this.player.maximum_resources++
         }
     }
 }

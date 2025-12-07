@@ -1,58 +1,56 @@
-import Func from "../Func";
-import Level from "../Level";
-import ClosedGate from "../Objects/Effects/ClosedGate";
-import Forger from "../Objects/Effects/Forger";
-import GraceShard from "../Objects/Effects/GraceShard";
-import Teacher from "../Objects/Effects/Teacher";
-import Bones from "../Objects/src/Enemy/Bones";
-import { Flamy } from "../Objects/src/Enemy/Flamy";
-import FlyingBones from "../Objects/src/Enemy/FlyingBones";
-import Gifter from "../Objects/src/Enemy/Gifter";
-import Impy from "../Objects/src/Enemy/Impy";
-import Solid from "../Objects/src/Enemy/Solid";
-import Specter from "../Objects/src/Enemy/Specter";
-import PileOfDead from "../Objects/src/Piles/PileOfDead";
-import PileOfEvil from "../Objects/src/Piles/PileOfEvil";
-import PileOfFrost from "../Objects/src/Piles/PileOfFrost";
-import PileOfStorm from "../Objects/src/Piles/PileOfStorm";
-import PileOfSummoning from "../Objects/src/Piles/PileOfSummoning";
-import PileOfVeil from "../Objects/src/Piles/PileOfVeil";
-import BannerOfArmour from "../Status/BannerOfArmour";
-import Bleed from "../Status/Bleed";
-import Blind from "../Status/Blind";
-import Curse from "../Status/Curse";
-import Drained from "../Status/Drained";
-import Fragility from "../Status/Fragility";
-import GhostGrip from "../Status/GhostGrip";
-import Grace from "../Status/Grace";
-import Immortality from "../Status/Immortality";
-import Phase from "../Status/Phase";
-import Poison from "../Status/Poison";
-import Precision from "../Status/Precision";
-import ShockStatus from "../Status/ShockStatus";
-import Touch from "../Status/Touch";
-import Weakness from "../Status/Weakness";
-import BossFight from "./BossFight";
-import Scenario from "./Scenario";
+import Func from '../Func'
+import Level from '../Level'
+import ClosedGate from '../Objects/Effects/ClosedGate'
+import Forger from '../Objects/Effects/Forger'
+import GraceShard from '../Objects/Effects/GraceShard'
+import Teacher from '../Objects/Effects/Teacher'
+import Bones from '../Objects/src/Enemy/Bones'
+import { Flamy } from '../Objects/src/Enemy/Flamy'
+import FlyingBones from '../Objects/src/Enemy/FlyingBones'
+import Gifter from '../Objects/src/Enemy/Gifter'
+import Impy from '../Objects/src/Enemy/Impy'
+import Solid from '../Objects/src/Enemy/Solid'
+import Specter from '../Objects/src/Enemy/Specter'
+import PileOfDead from '../Objects/src/Piles/PileOfDead'
+import PileOfEvil from '../Objects/src/Piles/PileOfEvil'
+import PileOfFrost from '../Objects/src/Piles/PileOfFrost'
+import PileOfStorm from '../Objects/src/Piles/PileOfStorm'
+import PileOfSummoning from '../Objects/src/Piles/PileOfSummoning'
+import PileOfVeil from '../Objects/src/Piles/PileOfVeil'
+import BannerOfArmour from '../Status/BannerOfArmour'
+import Bleed from '../Status/Bleed'
+import Blind from '../Status/Blind'
+import Curse from '../Status/Curse'
+import Drained from '../Status/Drained'
+import Fragility from '../Status/Fragility'
+import GhostGrip from '../Status/GhostGrip'
+import Grace from '../Status/Grace'
+import Immortality from '../Status/Immortality'
+import Phase from '../Status/Phase'
+import Poison from '../Status/Poison'
+import Precision from '../Status/Precision'
+import ShockStatus from '../Status/ShockStatus'
+import Touch from '../Status/Touch'
+import Weakness from '../Status/Weakness'
+import BossFight from './BossFight'
+import Scenario from './Scenario'
 import Portal from '../Objects/Effects/Grace'
-import ChargedSphere from "../Objects/Effects/ChargedSphere";
-import Split from "../Objects/Effects/Split";
-import Armour from "../Objects/Effects/Armour";
+import ChargedSphere from '../Objects/Effects/ChargedSphere'
+import Split from '../Objects/Effects/Split'
+import Armour from '../Objects/Effects/Armour'
 
-export default class Learning extends Scenario{ 
-
+export default class Learning extends Scenario {
     last_checked: number
     time_between_wave_ms: number
     waves_created: number = 0
 
-    constructor(){
+    constructor() {
         super()
         this.last_checked = 0
         this.time_between_wave_ms = 4000
-
     }
 
-    start(level: Level){
+    start(level: Level) {
         level.players.forEach(elem => {
             elem.grace = 1110
             elem.gold = 10002
@@ -61,9 +59,7 @@ export default class Learning extends Scenario{
         })
 
         let portal = new Portal(level)
-        portal.act = () => {
-
-        }
+        portal.act = () => {}
         portal.setPoint(70, 20)
         level.binded_effects.push(portal)
 
@@ -129,8 +125,6 @@ export default class Learning extends Scenario{
         //             this.level.setStatus(elem, s)
         //         }
 
-               
-               
         //     })
         //      if(this.curse_num === 10){
         //         this.curse_num = 1
@@ -140,7 +134,6 @@ export default class Learning extends Scenario{
         //     }
 
         //     if(this.is_dead) return
-                    
 
         //     if(options?.instant_death){
         //         unit?.succesefulKill()
@@ -148,43 +141,42 @@ export default class Learning extends Scenario{
         //         this.setdyingAct()
         //         return
         //     }
-    
+
         //     if(this.checkArmour(unit)){
-    
+
         //         this.level.addSound({
         //             name: 'metal hit',
         //             x: this.x,
         //             y: this.y
         //         })
-    
+
         //         let e = new Armour(this.level)
         //         e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
         //         e.z = Func.random(2, 8)
         //         this.level.effects.push(e)
         //         return
         //     }
-    
+
         //     let damage_value = 1
-    
+
         //     if(options?.damage_value){
         //         damage_value = options.damage_value
         //     }
-            
+
         //     if(unit && unit?.critical && Func.chance(unit.critical)){
         //         damage_value *= 2
         //     }
-    
+
         //     if(this.fragility){
         //         damage_value *= 2
         //     }
-    
+
         //     this.life_status -= damage_value
 
         //     if(unit){
         //         unit?.succesefulHit(this)
         //     }
-            
-            
+
         //     if(this.life_status <= 0){
         //         if(options?.explode){
         //             this.dead_type = 'explode'
@@ -195,65 +187,56 @@ export default class Learning extends Scenario{
         //             this.dead_type = 'burn_dying'
         //             this.is_corpse = true
         //         }
-                
+
         //         this.is_dead = true
         //         this.create_grace_chance += unit?.chance_to_create_grace ? unit?.chance_to_create_grace : 0
         //         unit?.succesefulKill()
         //         //todo
         //         unit?.addGold(this.gold_revard)
-    
+
         //         this.setdyingAct()
         //     }
         // }
 
-        function buff(unit: any = undefined, options: any = {}){
+        function buff(unit: any = undefined, options: any = {}) {
             // this.super.takeDamage(unit, options)
 
-            if(unit){
+            if (unit) {
                 unit?.succesefulHit()
             }
-            
 
-            if(this.life_status <= 0 && unit?.blessed){
+            if (this.life_status <= 0 && unit?.blessed) {
                 this.ressurect_chance = Math.round(this.ressurect_chance / 2)
             }
 
-            if(!this.curse_num){
+            if (!this.curse_num) {
                 this.curse_num = 1
             }
             this.level.players.forEach(elem => {
                 let d = 10000
                 let s = undefined
 
-                if(this.curse_num === 1){
+                if (this.curse_num === 1) {
                     s = new Grace(level.time)
-                }
-                else if(this.curse_num === 2){
+                } else if (this.curse_num === 2) {
                     s = new Precision(level.time)
-                }
-                else if(this.curse_num === 3){
+                } else if (this.curse_num === 3) {
                     s = new Phase(level.time)
-                }
-                else if(this.curse_num === 4){
+                } else if (this.curse_num === 4) {
                     s = new Immortality(level.time)
-                }
-                else if(this.curse_num === 5){
+                } else if (this.curse_num === 5) {
                     s = new Touch(level.time)
                 }
-               
-                if(s != undefined){
+
+                if (s != undefined) {
                     s.setDuration(10000)
                     this.level.setStatus(elem, s)
                 }
-
-               
-               
             })
-             if(this.curse_num === 5){
+            if (this.curse_num === 5) {
                 this.curse_num = 1
-            }
-            else{
-                this.curse_num ++
+            } else {
+                this.curse_num++
             }
         }
 
@@ -269,12 +252,12 @@ export default class Learning extends Scenario{
         // }
 
         // bones.takeDamage = buff
-        
+
         // level.enemies.push(bones)
 
         setInterval(() => {
             let shard = level.binded_effects.find(elem => elem.name === 'grace shard')
-            if(!shard){
+            if (!shard) {
                 shard = new GraceShard(level)
                 shard.setPoint(70, 60)
 
@@ -282,7 +265,7 @@ export default class Learning extends Scenario{
             }
 
             let sphere = level.binded_effects.find(elem => elem.name === 'charged sphere')
-            if(!sphere){
+            if (!sphere) {
                 sphere = new ChargedSphere(level)
                 sphere.setPoint(55, 60)
 
@@ -290,17 +273,14 @@ export default class Learning extends Scenario{
             }
 
             let entity = level.binded_effects.find(elem => elem.name === 'split')
-            if(!entity){
+            if (!entity) {
                 entity = new Split(level)
                 entity.setPoint(40, 60)
 
                 level.binded_effects.push(entity)
             }
         }, 2000)
-
     }
 
-    checkTime(level: Level){
-        
-    }
+    checkTime(level: Level) {}
 }

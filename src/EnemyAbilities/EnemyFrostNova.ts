@@ -1,24 +1,23 @@
-import Func from "../Func"
-import FrostNova from "../Objects/Effects/FrostNova"
-import Enemy from "../Objects/src/Enemy/Enemy"
-import EnemyAbility from "./EnemyAbility"
+import Func from '../Func'
+import FrostNova from '../Objects/Effects/FrostNova'
+import Enemy from '../Objects/src/Enemy/Enemy'
+import EnemyAbility from './EnemyAbility'
 
 export default class EnemyFrostNova extends EnemyAbility {
-
     cooldown: number = 12000
 
-    canUse(enemy: Enemy){
+    canUse(enemy: Enemy) {
         return enemy.level.time - this.last_used_time >= this.cooldown && enemy.target
     }
 
-    use(enemy: Enemy){
+    use(enemy: Enemy) {
         this.last_used_time = enemy.level.time
-        if(!enemy.target) return
+        if (!enemy.target) return
 
         enemy.level.sounds.push({
-            name:'dark cast',
+            name: 'dark cast',
             x: enemy.x,
-            y: enemy.y
+            y: enemy.y,
         })
 
         let e = enemy.getBoxElipse()
@@ -30,7 +29,7 @@ export default class EnemyFrostNova extends EnemyAbility {
         enemy.level.effects.push(ef)
 
         enemy.level.players.forEach(elem => {
-            if(Func.elipseCollision(e, elem.getBoxElipse())){
+            if (Func.elipseCollision(e, elem.getBoxElipse())) {
                 elem.setFreeze(2000)
             }
         })

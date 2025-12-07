@@ -1,20 +1,19 @@
-import Func from "../Func";
-import IUnitState from "../Interfaces/IUnitState";
-import Enemy from "../Objects/src/Enemy/Enemy";
-import EnemyAttackState from "./EnemyAttackState";
-import EnemyCastState from "./EnemyCastState";
-import EnemyMoveAct from "./EnemyMoveState";
+import Func from '../Func'
+import IUnitState from '../Interfaces/IUnitState'
+import Enemy from '../Objects/src/Enemy/Enemy'
+import EnemyAttackState from './EnemyAttackState'
+import EnemyCastState from './EnemyCastState'
+import EnemyMoveAct from './EnemyMoveState'
 
-export default class EnemyMeleeIdleState implements IUnitState<Enemy>{
-
-    enter(enemy: Enemy){
+export default class EnemyMeleeIdleState implements IUnitState<Enemy> {
+    enter(enemy: Enemy) {
         enemy.state = 'idle'
     }
 
-    update(enemy: Enemy){
+    update(enemy: Enemy) {
         enemy.checkPlayer()
-               
-        if(!enemy.target){
+
+        if (!enemy.target) {
             return
         }
 
@@ -23,18 +22,14 @@ export default class EnemyMeleeIdleState implements IUnitState<Enemy>{
 
         let is_collision = Func.elipseCollision(a_e, enemy.target.getBoxElipse())
 
-        if(enemy.enemyCanAtack() && is_collision){
+        if (enemy.enemyCanAtack() && is_collision) {
             enemy.setState(new EnemyAttackState())
-        }   
-        else if(enemy.enemyCanAtack() && enemy.isAbilityToUse()){
+        } else if (enemy.enemyCanAtack() && enemy.isAbilityToUse()) {
             enemy.setState(new EnemyCastState())
-        }
-        else if(!is_collision){
+        } else if (!is_collision) {
             enemy.setState(new EnemyMoveAct())
         }
     }
 
-    exit(player: Enemy){
-
-    }
+    exit(player: Enemy) {}
 }

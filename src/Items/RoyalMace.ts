@@ -1,9 +1,8 @@
-import Character from "../Objects/src/Character";
-import Item from "./Item";
+import Character from '../Objects/src/Character'
+import Item from './Item'
 
-export default class RoyalMace extends Item{
-    
-    constructor(){
+export default class RoyalMace extends Item {
+    constructor() {
         super()
         this.name = 'royal mace'
         this.type = 1
@@ -18,7 +17,7 @@ export default class RoyalMace extends Item{
 
     disable(): void {
         this.disabled = true
-        if(this.player){
+        if (this.player) {
             this.player.impact -= 5
             this.player.crushing_rating -= 5
             this.player.critical -= 5
@@ -27,7 +26,7 @@ export default class RoyalMace extends Item{
 
     enable(): void {
         this.disabled = false
-        if(this.player){
+        if (this.player) {
             this.player.impact += 5
             this.player.crushing_rating += 5
             this.player.critical += 5

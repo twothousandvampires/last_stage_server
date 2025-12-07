@@ -1,9 +1,8 @@
-import ITrigger from "../Interfaces/Itrigger";
-import Character from "../Objects/src/Character";
-import Item from "./Item";
+import ITrigger from '../Interfaces/Itrigger'
+import Character from '../Objects/src/Character'
+import Item from './Item'
 
-export default class SkullOfFirstWarrior extends Item implements ITrigger{
-
+export default class SkullOfFirstWarrior extends Item implements ITrigger {
     kill_count: number
     countable: boolean
     threshold: number
@@ -12,7 +11,7 @@ export default class SkullOfFirstWarrior extends Item implements ITrigger{
     last_trigger_time: number = 0
     chance: number = 100
 
-    constructor(){
+    constructor() {
         super()
         this.kill_count = 0
         this.countable = true
@@ -30,27 +29,27 @@ export default class SkullOfFirstWarrior extends Item implements ITrigger{
     getSpecialForgings(): string[] {
         return ['duration']
     }
-    
+
     equip(character: Character): void {
         character.triggers_on_kill.push(this)
     }
 
-    trigger(character: Character){
-        if(!this.countable) return
-        if(this.disabled) return
-        
-        this.kill_count ++
+    trigger(character: Character) {
+        if (!this.countable) return
+        if (this.disabled) return
 
-        if(this.kill_count >= this.threshold){
+        this.kill_count++
+
+        if (this.kill_count >= this.threshold) {
             character.might += this.add_might
-           
+
             this.kill_count = 0
             this.countable = false
 
             character.newStatus({
                 name: 'skull of first warrior',
                 duration: 10000 + this.duration,
-                desc: 'might increased'
+                desc: 'might increased',
             })
 
             setTimeout(() => {

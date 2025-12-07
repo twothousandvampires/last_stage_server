@@ -1,9 +1,9 @@
-import Func from "../../Func";
-import Level from "../../Level";
-import Effect from "./Effects";
+import Func from '../../Func'
+import Level from '../../Level'
+import Effect from './Effects'
 
-export default class Gate extends Effect{
-    constructor(level: Level){
+export default class Gate extends Effect {
+    constructor(level: Level) {
         super(level)
         this.name = 'gate'
 
@@ -13,11 +13,11 @@ export default class Gate extends Effect{
         this.y = 50
     }
 
-    act(time: number){
+    act(time: number) {
         this.level.players.forEach(elem => {
-            if(Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
+            if (Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())) {
                 elem.exitGrace()
-            } 
+            }
         })
     }
 }

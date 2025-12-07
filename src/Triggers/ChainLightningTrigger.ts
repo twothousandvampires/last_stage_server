@@ -1,10 +1,9 @@
-import Func from "../Func";
-import ITrigger from "../Interfaces/ITrigger";
-import { ChainLightning } from "../Objects/Projectiles/ChainLightning";
-import Character from "../Objects/src/Character";
+import Func from '../Func'
+import ITrigger from '../Interfaces/ITrigger'
+import { ChainLightning } from '../Objects/Projectiles/ChainLightning'
+import Character from '../Objects/src/Character'
 
 export default class ChainLightningTrigger implements ITrigger {
-
     chance: number = 5
     name: string = 'chain lightning'
     description: string = 'Creates a lightning that hit enemy and jupms to another 15 times'
@@ -15,7 +14,7 @@ export default class ChainLightningTrigger implements ITrigger {
         return this.chance
     }
 
-    async trigger(player: Character){
+    async trigger(player: Character) {
         let l = new ChainLightning(player.level)
 
         l.setOwner(player)

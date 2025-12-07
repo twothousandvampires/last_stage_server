@@ -1,17 +1,16 @@
-import ITrigger from "../Interfaces/Itrigger";
-import Soul from "../Objects/Effects/Soul";
-import Character from "../Objects/src/Character";
-import Enemy from "../Objects/src/Enemy/Enemy";
-import Item from "./Item";
+import ITrigger from '../Interfaces/Itrigger'
+import Soul from '../Objects/Effects/Soul'
+import Character from '../Objects/src/Character'
+import Enemy from '../Objects/src/Enemy/Enemy'
+import Item from './Item'
 
 export default class SoulBlade extends Item implements ITrigger {
-
     cd: number = 4000
     last_trigger_time: number = 0
     chance: number = 2
     max_chance: number = 10
 
-    constructor(){
+    constructor() {
         super()
         this.name = 'soul blade'
         this.type = 1
@@ -21,7 +20,7 @@ export default class SoulBlade extends Item implements ITrigger {
     getTriggerChance(): number {
         return this.chance
     }
-    
+
     getSpecialForgings(): string[] {
         return ['frequency', 'chance']
     }
@@ -30,13 +29,13 @@ export default class SoulBlade extends Item implements ITrigger {
         character.triggers_on_kill.push(this)
     }
 
-    trigger(player: Character, enemy: Enemy){
-        if(this.disabled) return
-       
+    trigger(player: Character, enemy: Enemy) {
+        if (this.disabled) return
+
         let e = new Soul(player.level)
         e.setPoint(enemy.x, enemy.y)
         player.level.effects.push(e)
 
-        player.addWard(1)     
+        player.addWard(1)
     }
 }

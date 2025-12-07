@@ -1,13 +1,12 @@
-import Character from "../Objects/src/Character";
-import SparklingHelmetStatus from "../Status/SparklingHelmetStatus";
-import Item from "./Item";
+import Character from '../Objects/src/Character'
+import SparklingHelmetStatus from '../Status/SparklingHelmetStatus'
+import Item from './Item'
 
 export default class SparklingHelmet extends Item {
-
     unit: any
     status: SparklingHelmetStatus | undefined
 
-    constructor(){
+    constructor() {
         super()
         this.name = 'sparkling helmet'
         this.type = 2
@@ -18,21 +17,21 @@ export default class SparklingHelmet extends Item {
         let status = new SparklingHelmetStatus(character.level.time)
         this.status = status
         status.setPower(1)
-        
+
         character.level.setStatus(character, status)
     }
 
     disable(): void {
         this.disabled = true
-        if(this.status){
-             this.status.disabled = true
+        if (this.status) {
+            this.status.disabled = true
         }
     }
 
     enable(): void {
         this.disabled = false
-        if(this.status){
-             this.status.disabled = false
+        if (this.status) {
+            this.status.disabled = false
         }
     }
 }

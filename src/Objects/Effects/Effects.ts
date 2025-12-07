@@ -1,26 +1,25 @@
-import Level from "../../Level";
-import GameObject from "../src/GameObject";
+import Level from '../../Level'
+import GameObject from '../src/GameObject'
 
 export default abstract class Effect extends GameObject {
-    
     owner: any
     producer: any
-    
-    constructor(level: Level){
+
+    constructor(level: Level) {
         super(level)
     }
 
-    act(time: number){
-        if(!this.owner){
+    act(time: number) {
+        if (!this.owner) {
             return
-        }  
-        
+        }
+
         this.x = this.owner.x
         this.y = this.owner.y
         this.wasChanged()
     }
 
-    toJSON(){
+    toJSON() {
         return {
             x: this.x,
             y: this.y,
@@ -28,15 +27,15 @@ export default abstract class Effect extends GameObject {
             name: this.name,
             z: this.z,
             light_r: this.light_r,
-            invisible: this.invisible
+            invisible: this.invisible,
         }
     }
 
-    setOwner(owner: any){
+    setOwner(owner: any) {
         this.owner = owner
     }
 
-    delete(){
+    delete() {
         this.level.deleted.push(this.id)
         this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
     }

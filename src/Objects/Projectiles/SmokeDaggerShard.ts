@@ -1,11 +1,11 @@
-import Func from "../../Func";
-import Level from "../../Level";
-import Projectiles from "./Projectiles";
+import Func from '../../Func'
+import Level from '../../Level'
+import Projectiles from './Projectiles'
 
-export class SmokeDaggerShard extends Projectiles{
+export class SmokeDaggerShard extends Projectiles {
     w: number
 
-    constructor(level: Level){
+    constructor(level: Level) {
         super(level)
         this.box_r = 1
         this.name = 'blood shard'
@@ -13,21 +13,26 @@ export class SmokeDaggerShard extends Projectiles{
         this.w = 2
     }
 
-    act(): void { 
-        for(let i = 0; i < this.level.players.length; i++){
+    act(): void {
+        for (let i = 0; i < this.level.players.length; i++) {
             let p = this.level.players[i]
 
-            if(p != this.owner && !p.is_dead && p.z < this.w && Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())){
+            if (
+                p != this.owner &&
+                !p.is_dead &&
+                p.z < this.w &&
+                Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())
+            ) {
                 p.takeDamage(this.owner)
                 this.impact()
                 return
             }
         }
 
-        for(let i = 0; i < this.level.enemies.length; i++){
+        for (let i = 0; i < this.level.enemies.length; i++) {
             let e = this.level.enemies[i]
 
-            if(!e.is_dead && Func.elipseCollision(this.getBoxElipse(), e.getBoxElipse())){
+            if (!e.is_dead && Func.elipseCollision(this.getBoxElipse(), e.getBoxElipse())) {
                 e.takeDamage(this.owner)
                 this.impact()
                 return

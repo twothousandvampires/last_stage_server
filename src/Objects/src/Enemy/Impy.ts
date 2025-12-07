@@ -1,11 +1,10 @@
-import Func from "../../../Func";
-import Level from "../../../Level";
-import Bleed from "../../../Status/Bleed";
-import Enemy from "./Enemy";
+import Func from '../../../Func'
+import Level from '../../../Level'
+import Bleed from '../../../Status/Bleed'
+import Enemy from './Enemy'
 
 export default class Impy extends Enemy {
-
-    constructor(level: Level){
+    constructor(level: Level) {
         super(level)
         this.name = 'impy'
         this.box_r = 2
@@ -18,24 +17,28 @@ export default class Impy extends Enemy {
         this.weapon_angle = 0.7
     }
 
-    hitImpact(){
-        if(!this.target || !this.attack_angle) return
+    hitImpact() {
+        if (!this.target || !this.attack_angle) return
 
         let e = this.getBoxElipse()
         e.r = this.attack_radius
 
-        if(this.target.z < 5 && Func.elipseCollision(e, this.target.getBoxElipse()) && Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle)){
+        if (
+            this.target.z < 5 &&
+            Func.elipseCollision(e, this.target.getBoxElipse()) &&
+            Func.checkAngle(this, this.target, this.attack_angle, this.weapon_angle)
+        ) {
             this.target.takeDamage(this, {})
-            
-            if(Func.chance(30)){
+
+            if (Func.chance(30)) {
                 this.level.sounds.push({
                     x: this.x,
                     y: this.y,
-                    name: 'impy'
+                    name: 'impy',
                 })
             }
 
-            if(Func.chance(5)){
+            if (Func.chance(5)) {
                 let status = new Bleed(this.level.time)
                 status.setDuration(4000)
                 this.level.setStatus(this.target, status)

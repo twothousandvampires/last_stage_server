@@ -1,13 +1,16 @@
-import Func from "../../Func";
-import Level from "../../Level";
-import { BloodShard } from "../Projectiles/BloodShard";
-import Effect from "./Effects";
+import Func from '../../Func'
+import Level from '../../Level'
+import { BloodShard } from '../Projectiles/BloodShard'
+import Effect from './Effects'
 
-export default class BloodSphere extends Effect{
+export default class BloodSphere extends Effect {
     time: number
     pool: any
 
-    constructor(level: Level, public start_power: number = 0){
+    constructor(
+        level: Level,
+        public start_power: number = 0
+    ) {
         super(level)
         this.name = 'blood sphere'
         this.time = Date.now()
@@ -16,12 +19,12 @@ export default class BloodSphere extends Effect{
         this.z = 8
     }
 
-    explode(){
+    explode() {
         let count = this.start_power + this.pool.length
 
         let zones = 6.28 / count
 
-        for(let i = 1; i <= count; i++){
+        for (let i = 1; i <= count; i++) {
             let min_a = (i - 1) * zones
             let max_a = i * zones
 
@@ -34,17 +37,21 @@ export default class BloodSphere extends Effect{
         }
     }
 
-    act(time: number){
-        if(time - this.time >= 5000){
+    act(time: number) {
+        if (time - this.time >= 5000) {
             this.explode()
             this.delete()
             return
         }
 
         this.level.enemies.forEach(elem => {
-            if(elem.is_dead && !this.pool.includes(elem.id) && Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())){
+            if (
+                elem.is_dead &&
+                !this.pool.includes(elem.id) &&
+                Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())
+            ) {
                 this.pool.push(elem.id)
-            } 
+            }
         })
     }
 }

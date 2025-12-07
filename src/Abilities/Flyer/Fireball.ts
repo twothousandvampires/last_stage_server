@@ -1,29 +1,28 @@
-import Func from "../../Func";
-import { FireballProjectile } from "../../Objects/Projectiles/FireballProjectile";
-import Flyer from "../../Objects/src/PlayerClasses/Flyer";
-import FlyerAbility from "./FlyerAbility";
+import Func from '../../Func'
+import { FireballProjectile } from '../../Objects/Projectiles/FireballProjectile'
+import Flyer from '../../Objects/src/PlayerClasses/Flyer'
+import FlyerAbility from './FlyerAbility'
 
 export default class Fireball extends FlyerAbility {
-
     body_melting: boolean = false
     ignite: boolean = false
     fire_splitting: boolean = false
 
-    constructor(owner: Flyer){
+    constructor(owner: Flyer) {
         super(owner)
         this.cost = 1
         this.name = 'fireball'
         this.mastery_chance = 4
     }
 
-    impact(){
+    impact() {
         this.afterUse()
         this.owner.level.addSound('fire cast', this.owner.x, this.owner.y)
 
-        let a = undefined                    
+        let a = undefined
         let target = this.owner.getTarget()
-        
-        if(target){
+
+        if (target) {
             a = Func.angle(this.owner.x, this.owner.y, target.x, target.y)
         }
 
@@ -37,13 +36,13 @@ export default class Fireball extends FlyerAbility {
 
         this.owner.level.projectiles.push(proj)
 
-        if(this.fire_splitting){
+        if (this.fire_splitting) {
             let half = Math.floor(this.owner.getSecondResource() / 2)
-            if(half){
-                for(let i = -half; i < half; i++){
-                    if(i === 0) continue
+            if (half) {
+                for (let i = -half; i < half; i++) {
+                    if (i === 0) continue
 
-                    let angle = a + (i * 0.45)
+                    let angle = a + i * 0.45
 
                     let proj = new FireballProjectile(this.owner.level, this.body_melting)
                     proj.ignite = this.ignite

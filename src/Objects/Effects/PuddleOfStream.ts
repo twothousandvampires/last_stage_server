@@ -1,16 +1,16 @@
-import Func from "../../Func";
-import Level from "../../Level";
-import Stream from "../../Status/Stream";
-import Effect from "./Effects";
+import Func from '../../Func'
+import Level from '../../Level'
+import Stream from '../../Status/Stream'
+import Effect from './Effects'
 
-export default class PuddleOfStream extends Effect{
+export default class PuddleOfStream extends Effect {
     x: any
     y: any
     last_check_time: number
     timer: number
     start: number
-  
-    constructor(level: Level){
+
+    constructor(level: Level) {
         super(level)
         this.name = 'puddle of stream'
         this.x = undefined
@@ -21,17 +21,17 @@ export default class PuddleOfStream extends Effect{
         this.start = Date.now()
     }
 
-    act(game_tick: number){
-        if(game_tick - this.start >= 10000){
+    act(game_tick: number) {
+        if (game_tick - this.start >= 10000) {
             this.delete()
             return
         }
 
-        if(game_tick - this.last_check_time >= this.timer){
+        if (game_tick - this.last_check_time >= this.timer) {
             this.last_check_time += this.timer
 
             this.level.players.forEach(elem => {
-                if(Func.elipseCollision(this.getBoxElipse(), elem.getBoxElipse())){
+                if (Func.elipseCollision(this.getBoxElipse(), elem.getBoxElipse())) {
                     let status = new Stream(game_tick)
                     status.setDuration(3000)
 

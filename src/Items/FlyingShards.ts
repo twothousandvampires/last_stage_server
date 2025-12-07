@@ -1,19 +1,19 @@
-import ITrigger from "../Interfaces/ITrigger";
-import { ThrowedWeaponShard } from "../Objects/Projectiles/ThrowedWeaponShard";
-import Character from "../Objects/src/Character";
-import Item from "./Item";
+import ITrigger from '../Interfaces/ITrigger'
+import { ThrowedWeaponShard } from '../Objects/Projectiles/ThrowedWeaponShard'
+import Character from '../Objects/src/Character'
+import Item from './Item'
 
-export default class FlyingShards extends Item implements ITrigger{
-      
+export default class FlyingShards extends Item implements ITrigger {
     last_trigger_time: number = 0
-    
-    constructor(){
+
+    constructor() {
         super()
         this.type = 3
         this.chance = 30
         this.count = 2
         this.cd = 1000
-        this.description = 'When you block hit with armour there is a chance to realise metal shards to enemies'
+        this.description =
+            'When you block hit with armour there is a chance to realise metal shards to enemies'
         this.name = 'flying shards'
     }
 
@@ -29,14 +29,14 @@ export default class FlyingShards extends Item implements ITrigger{
         return ['chance', 'count', 'frequency']
     }
 
-    trigger(character: Character, target: any){
-        if(this.disabled) return
+    trigger(character: Character, target: any) {
+        if (this.disabled) return
 
-        let count =  this.count
-        
+        let count = this.count
+
         let zones = 6.28 / count
 
-        for(let i = 1; i <= count; i++){
+        for (let i = 1; i <= count; i++) {
             let min_a = (i - 1) * zones
             let max_a = i * zones
 
@@ -47,6 +47,6 @@ export default class FlyingShards extends Item implements ITrigger{
             proj.setOwner(character)
 
             character.level.projectiles.push(proj)
-        }       
+        }
     }
 }

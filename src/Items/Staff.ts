@@ -1,9 +1,8 @@
-import Character from "../Objects/src/Character";
-import Item from "./Item";
+import Character from '../Objects/src/Character'
+import Item from './Item'
 
-export default class Staff extends Item{
-
-    constructor(){
+export default class Staff extends Item {
+    constructor() {
         super()
         this.name = 'staff'
         this.type = 1
@@ -16,15 +15,15 @@ export default class Staff extends Item{
 
     disable(): void {
         this.disabled = true
-        if(this.player){
-             this.player.cooldown_redaction -= 12
+        if (this.player) {
+            this.player.cooldown_redaction -= 12
         }
     }
 
     enable(): void {
         this.disabled = false
-        if(this.player){
-             this.player.cooldown_redaction += 12
+        if (this.player) {
+            this.player.cooldown_redaction += 12
         }
     }
 }

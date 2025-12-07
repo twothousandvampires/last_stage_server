@@ -1,15 +1,13 @@
-import Func from "../../../Func";
-import Level from "../../../Level";
-import EnemyRangeIdleState from "../../../State/EnemyRangeIdleState";
-import MentalCorrosion from "../../../Status/MentalCorrosion";
-import PuddleOfStream from "../../Effects/PuddleOfStream";
-import { EnemyLightning } from "../../Projectiles/EnemyLightning";
-import Enemy from "./Enemy";
+import Func from '../../../Func'
+import Level from '../../../Level'
+import EnemyRangeIdleState from '../../../State/EnemyRangeIdleState'
+import MentalCorrosion from '../../../Status/MentalCorrosion'
+import PuddleOfStream from '../../Effects/PuddleOfStream'
+import { EnemyLightning } from '../../Projectiles/EnemyLightning'
+import Enemy from './Enemy'
 
 export default class MagicSlime extends Enemy {
-
-    constructor(level: Level){
-        
+    constructor(level: Level) {
         super(level)
         this.name = 'magic slime'
         this.box_r = 3
@@ -28,7 +26,7 @@ export default class MagicSlime extends Enemy {
         this.gold_revard = 3
     }
 
-    afterDead(){
+    afterDead() {
         let e = new PuddleOfStream(this.level)
         e.setPoint(this.x, this.y)
 
@@ -38,36 +36,36 @@ export default class MagicSlime extends Enemy {
     takeDamage(unit?: any, options?: any): void {
         super.takeDamage(unit, options)
 
-        if(unit && Func.distance(this, unit) < 10 && Func.chance(50)){
+        if (unit && Func.distance(this, unit) < 10 && Func.chance(50)) {
             let s = new MentalCorrosion(this.level.time)
             s.setDuration(5000)
             this.level.setStatus(unit, s)
         }
     }
 
-    hitImpact(){
-        if(this.target){
+    hitImpact() {
+        if (this.target) {
             this.hit = true
-                
+
             let l = new EnemyLightning(this.level)
             l.setPoint(this.x, this.y)
 
             l.setAngle(Func.angle(this.x, this.y, this.target.x, this.target.y))
             l.setOwner(this)
-      
+
             this.level.projectiles.push(l)
         }
     }
 
-    getWeaponHitedSound(){
-        return  {
+    getWeaponHitedSound() {
+        return {
             name: 'goo',
-            x:this.x,
-            y:this.y
+            x: this.x,
+            y: this.y,
         }
     }
 
-    getIdleStateInstance(){
+    getIdleStateInstance() {
         return new EnemyRangeIdleState()
     }
 }

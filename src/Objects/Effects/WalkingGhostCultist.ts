@@ -1,15 +1,17 @@
-import Func from "../../Func";
-import Level from "../../Level";
-import AttackingGhostCultist from "./AttackingGhostCultist";
-import Effect from "./Effects";
+import Func from '../../Func'
+import Level from '../../Level'
+import AttackingGhostCultist from './AttackingGhostCultist'
+import Effect from './Effects'
 
 export default class WalkingGhostCultist extends Effect {
-
     target: any
     flipped: boolean
     restless: boolean
 
-    constructor(level: Level, public start_power: number = 0){
+    constructor(
+        level: Level,
+        public start_power: number = 0
+    ) {
         super(level)
         this.name = 'walking ghost cultist'
         this.move_speed = 0.4
@@ -18,7 +20,7 @@ export default class WalkingGhostCultist extends Effect {
         this.restless = false
     }
 
-     toJSON(){
+    toJSON() {
         return {
             x: this.x,
             y: this.y,
@@ -26,16 +28,16 @@ export default class WalkingGhostCultist extends Effect {
             name: this.name,
             z: this.z,
             light_r: this.light_r,
-            flipped: this.flipped
+            flipped: this.flipped,
         }
     }
 
-    delete(){
+    delete() {
         this.level.deleted.push(this.id)
         this.level.binded_effects = this.level.binded_effects.filter(elem => elem != this)
     }
 
-    explode(time: number){
+    explode(time: number) {
         let sprite = new AttackingGhostCultist(this.level)
         sprite.restless = this.restless
         sprite.start = time
@@ -47,17 +49,16 @@ export default class WalkingGhostCultist extends Effect {
         this.delete()
     }
 
-    act(time: number){
-        if(this.target.is_dead){
+    act(time: number) {
+        if (this.target.is_dead) {
             this.delete()
             return
         }
-        if(Func.elipseCollision(this.getBoxElipse(), this.target.getBoxElipse())){
+        if (Func.elipseCollision(this.getBoxElipse(), this.target.getBoxElipse())) {
             this.explode(time)
-        }
-        else{
+        } else {
             let angle = Func.angle(this.x, this.y, this.target.x, this.target.y)
-            let l = 1 - Math.abs(0.5 * Math.cos(angle))    
+            let l = 1 - Math.abs(0.5 * Math.cos(angle))
 
             let n_x = Math.sin(angle) * l
             let n_y = Math.cos(angle) * l
@@ -65,10 +66,9 @@ export default class WalkingGhostCultist extends Effect {
             n_x *= this.move_speed
             n_y *= this.move_speed
 
-            if(n_x < 0){
+            if (n_x < 0) {
                 this.flipped = true
-            }
-            else{
+            } else {
                 this.flipped = false
             }
 

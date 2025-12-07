@@ -1,9 +1,8 @@
-import ITrigger from "../Interfaces/ITrigger";
-import WalkingGhostCultist from "../Objects/Effects/WalkingGhostCultist";
-import Character from "../Objects/src/Character";
+import ITrigger from '../Interfaces/ITrigger'
+import WalkingGhostCultist from '../Objects/Effects/WalkingGhostCultist'
+import Character from '../Objects/src/Character'
 
 export default class CallWarriorWhenBlock implements ITrigger {
-
     chance: number = 50
     cd: number = 1000
     last_trigger_time: number = 0
@@ -14,9 +13,9 @@ export default class CallWarriorWhenBlock implements ITrigger {
         return this.chance
     }
 
-    trigger(player: Character, target: any){
-        if(!target) return
-        
+    trigger(player: Character, target: any) {
+        if (!target) return
+
         let ghost = new WalkingGhostCultist(player.level)
         ghost.target = target
         ghost.restless = player.third_ability.restless_warriors

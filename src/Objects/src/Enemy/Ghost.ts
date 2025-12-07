@@ -1,8 +1,8 @@
-import DespairAbility from "../../../EnemyAbilities/DespairAbility";
-import FrostBoltAbility from "../../../EnemyAbilities/FrostBoltAbility";
-import Level from "../../../Level";
-import EnemyRangeIdleState from "../../../State/EnemyRangeIdleState";
-import Undead from "./Undead";
+import DespairAbility from '../../../EnemyAbilities/DespairAbility'
+import FrostBoltAbility from '../../../EnemyAbilities/FrostBoltAbility'
+import Level from '../../../Level'
+import EnemyRangeIdleState from '../../../State/EnemyRangeIdleState'
+import Undead from './Undead'
 
 export default class Ghost extends Undead {
     spell_name: string | undefined
@@ -12,7 +12,7 @@ export default class Ghost extends Undead {
     can_cast_despair: boolean = true
     can_cast_frost_bolts: boolean = true
 
-    constructor(level: Level){
+    constructor(level: Level) {
         super(level)
         this.name = 'ghost'
         this.box_r = 2.2
@@ -31,13 +31,10 @@ export default class Ghost extends Undead {
         this.phasing = true
         this.create_item_chance = 3
 
-        this.abilities = [
-            new DespairAbility(),
-            new FrostBoltAbility()
-        ]
+        this.abilities = [new DespairAbility(), new FrostBoltAbility()]
     }
 
-    getIdleStateInstance(){
+    getIdleStateInstance() {
         return new EnemyRangeIdleState()
     }
 }

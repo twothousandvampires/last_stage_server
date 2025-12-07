@@ -1,15 +1,15 @@
-import Func from "../Func";
-import Character from "../Objects/src/Character";
-import Ignite from "../Status/Ignite";
-import Item from "./Item";
+import Func from '../Func'
+import Character from '../Objects/src/Character'
+import Ignite from '../Status/Ignite'
+import Item from './Item'
 
-export default class ChargedArmour extends Item{
-    
-    constructor(){
+export default class ChargedArmour extends Item {
+    constructor() {
         super()
         this.name = 'charged armour'
         this.type = 2
-        this.description = 'when you get energy there is a chance that if it is not max - you get a ward, otherwise you lose the whole ward and get set on fire'
+        this.description =
+            'when you get energy there is a chance that if it is not max - you get a ward, otherwise you lose the whole ward and get set on fire'
         this.chance = 15
     }
 
@@ -21,14 +21,13 @@ export default class ChargedArmour extends Item{
         return ['chance']
     }
 
-    trigger(character: Character){
-        if(this.disabled) return
-        if(Func.notChance(this.chance)) return
+    trigger(character: Character) {
+        if (this.disabled) return
+        if (Func.notChance(this.chance)) return
 
-        if(character.resource < character.maximum_resources){
+        if (character.resource < character.maximum_resources) {
             character.addWard(1)
-        }
-        else{
+        } else {
             character.loseWard(111111)
 
             let s = new Ignite(character.level.time)

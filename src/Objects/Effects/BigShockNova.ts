@@ -1,8 +1,8 @@
-import Level from "../../Level";
-import Effect from "./Effects";
+import Level from '../../Level'
+import Effect from './Effects'
 
 export default class BigShockNova extends Effect {
-    constructor(level: Level){
+    constructor(level: Level) {
         super(level)
         this.name = 'big shocknova'
     }

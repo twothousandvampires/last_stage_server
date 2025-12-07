@@ -1,19 +1,19 @@
-import Character from "../Objects/src/Character";
-import SerchingHeartStatus from "../Status/SerchingHeartStatus";
-import Item from "./Item";
+import Character from '../Objects/src/Character'
+import SerchingHeartStatus from '../Status/SerchingHeartStatus'
+import Item from './Item'
 
-export default class SearchingHeart extends Item{
-
+export default class SearchingHeart extends Item {
     frequency: number = 10000
     hit_count: number = 0
     last_trigger_time: number = 0
     chance: number = 100
 
-    constructor(){
+    constructor() {
         super()
         this.name = 'searching heart'
         this.type = 3
-        this.description = 'every 10 seconds releases fireballs, the number of which depends on the health lost during this time'
+        this.description =
+            'every 10 seconds releases fireballs, the number of which depends on the health lost during this time'
     }
 
     getSpecialForgings() {
@@ -27,9 +27,9 @@ export default class SearchingHeart extends Item{
         character.level.setStatus(character, s)
     }
 
-    trigger(character: Character){
-        if(this.disabled) return
+    trigger(character: Character) {
+        if (this.disabled) return
 
-        this.hit_count ++
+        this.hit_count++
     }
 }

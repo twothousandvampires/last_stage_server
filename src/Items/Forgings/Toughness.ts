@@ -1,11 +1,10 @@
-import Item from "../Item";
-import Forging from "./Forging";
+import Item from '../Item'
+import Forging from './Forging'
 
-export default class Toughness extends Forging{
-
+export default class Toughness extends Forging {
     value: number = 0
 
-    constructor(item: Item){
+    constructor(item: Item) {
         super(item)
         this.max_value = 20
         this.name = 'toughness'
@@ -13,20 +12,20 @@ export default class Toughness extends Forging{
         this.gold_cost = 5
     }
 
-    forge(){
-        if(this.canBeForged() && this.costEnough()){
+    forge() {
+        if (this.canBeForged() && this.costEnough()) {
             this.value += 2
             this.item.player.chance_to_avoid_damage_state += 2
             this.payCost()
         }
     }
 
-    getValue(){
+    getValue() {
         return this.value
     }
 
-     canBeForged(): boolean {
-        if(!this.item || !this.item.player) return false
+    canBeForged(): boolean {
+        if (!this.item || !this.item.player) return false
 
         return this.value < this.max_value
     }

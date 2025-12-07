@@ -1,36 +1,33 @@
-import Level from "../../Level";
-import GameObject from "../src/GameObject";
-import Unit from "../src/Unit";
-
+import Level from '../../Level'
+import GameObject from '../src/GameObject'
+import Unit from '../src/Unit'
 
 export default abstract class Projectiles extends GameObject {
-
     angle: number | undefined
     owner: Unit | undefined
     flipped: boolean
     light_r: number
-  
-    constructor(level: Level){
+
+    constructor(level: Level) {
         super(level)
         this.flipped = false
         this.light_r = 0
     }
-    
-    impact(){
+
+    impact() {
         this.level.deleted.push(this.id)
         this.level.projectiles = this.level.projectiles.filter(elem => elem != this)
     }
 
-    setAngle(angle: number){
+    setAngle(angle: number) {
         this.angle = angle
     }
 
-    setOwner(owner: Unit){
+    setOwner(owner: Unit) {
         this.owner = owner
     }
 
-    moveAct(){
-    
+    moveAct() {
         let l = 1 - Math.abs(0.5 * Math.cos(this.angle))
 
         let n_x = Math.sin(this.angle) * l
@@ -39,24 +36,22 @@ export default abstract class Projectiles extends GameObject {
         n_x *= this.move_speed
         n_y *= this.move_speed
 
-        if(this.isOutOfMap(this.x + n_x, this.y + n_y)){
+        if (this.isOutOfMap(this.x + n_x, this.y + n_y)) {
             this.impact()
             return
-        }
-        else{
-            if(n_x < 0){
+        } else {
+            if (n_x < 0) {
                 this.flipped = true
-            }
-            else{
+            } else {
                 this.flipped = false
             }
 
             this.addToPoint(n_x, n_y)
         }
-         this.wasChanged() 
+        this.wasChanged()
     }
 
-    toJSON(){
+    toJSON() {
         return {
             x: this.x,
             y: this.y,
@@ -64,7 +59,7 @@ export default abstract class Projectiles extends GameObject {
             name: this.name,
             z: this.z,
             flipped: this.flipped,
-            light_r: this.light_r
+            light_r: this.light_r,
         }
     }
 }

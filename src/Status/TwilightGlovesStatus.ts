@@ -1,65 +1,63 @@
-import Func from "../Func";
-import Item from "../Items/Item";
-import ShadowDrop from "../Objects/Effects/ShadowDrop";
-import Character from "../Objects/src/Character";
-import Status from "./Status";
+import Func from '../Func'
+import Item from '../Items/Item'
+import ShadowDrop from '../Objects/Effects/ShadowDrop'
+import Character from '../Objects/src/Character'
+import Status from './Status'
 
-export default class TwilightGlovesStatus extends Status{
-
+export default class TwilightGlovesStatus extends Status {
     unit: Character | undefined
     last_trigger_time: number
     public disabled: boolean = false
 
-    constructor(time: number, public item: Item){
+    constructor(
+        time: number,
+        public item: Item
+    ) {
         super(time)
         this.last_trigger_time = time
     }
 
-    unitDead(){
-        
-    }
+    unitDead() {}
 
-    apply(unit: any){
+    apply(unit: any) {
         this.unit = unit
     }
 
-    clear(){
-        
-    }
+    clear() {}
 
-    update(status: any){
-        
-    }
+    update(status: any) {}
 
-    checkResist(){
+    checkResist() {
         return false
     }
 
-    isExpired(){
+    isExpired() {
         return false
     }
 
-    act(tick_time: number){
-        if(tick_time - this.last_trigger_time >= this.item.frequency){
+    act(tick_time: number) {
+        if (tick_time - this.last_trigger_time >= this.item.frequency) {
             this.trigger()
             this.last_trigger_time = tick_time
         }
     }
 
-    trigger(){
-        if(this.item.disabled) return
-        if(!this.unit) return
+    trigger() {
+        if (this.item.disabled) return
+        if (!this.unit) return
 
-        if(Func.notChance(this.item.chance, this.unit.is_lucky)) return
+        if (Func.notChance(this.item.chance, this.unit.is_lucky)) return
 
         let count = this.item.count
         let b = this.unit.getBoxElipse()
         b.r = this.item.distance
 
-        let t = this.unit?.level.enemies.filter(elem => !elem.is_dead && Func.elipseCollision(elem.getBoxElipse(), b))
+        let t = this.unit?.level.enemies.filter(
+            elem => !elem.is_dead && Func.elipseCollision(elem.getBoxElipse(), b)
+        )
 
-        if(t && t.length){
-            for(let i = 0; i < count; i++){
+        if (t && t.length) {
+            for (let i = 0; i < count; i++) {
                 let r = t[Math.floor(Math.random() * t?.length)]
 
                 let e = new ShadowDrop(this.unit?.level)
@@ -70,8 +68,7 @@ export default class TwilightGlovesStatus extends Status{
                 setTimeout(() => {
                     r.takeDamage(this.unit)
                 }, 150)
-                
             }
-        }  
+        }
     }
 }
