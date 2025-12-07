@@ -55,7 +55,7 @@ export default class Cultist extends Character {
         this.hit_y = undefined
         this.enlightenment_threshold = 7
 
-        this.base_regeneration_time = 8500
+        this.base_regeneration_time = 8000
         this.service = false
         this.conduct_of_pain = false
         this.pain_extract = false
