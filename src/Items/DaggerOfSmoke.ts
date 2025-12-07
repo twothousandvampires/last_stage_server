@@ -1,9 +1,11 @@
 import Func from '../Func'
+import ITrigger from '../Interfaces/ITrigger'
 import { SmokeDaggerShard } from '../Objects/Projectiles/SmokeDaggerShard'
 import Character from '../Objects/src/Character'
 import Item from './Item'
 
-export default class DaggerOfSmoke extends Item {
+export default class DaggerOfSmoke extends Item implements ITrigger {
+    last_trigger_time: number = 0
     constructor() {
         super()
         this.chance = 40
@@ -11,6 +13,10 @@ export default class DaggerOfSmoke extends Item {
         this.type = 1
         this.count = 3
         this.description = 'when you heal, there is a chance to create blood shards'
+    }
+
+    getTriggerChance(player: Character | undefined): number {
+        return this.chance
     }
 
     equip(character: Character): void {
@@ -24,28 +30,26 @@ export default class DaggerOfSmoke extends Item {
     trigger(character: Character) {
         if (this.disabled) return
 
-        if (Func.chance(this.chance)) {
-            character.level.addSound('blood', character.x, character.y)
+        character.level.addSound('blood', character.x, character.y)
 
-            let box = character.getBoxElipse()
-            box.r = 9
+        let box = character.getBoxElipse()
+        box.r = 9
 
-            let count = this.count
+        let count = this.count
 
-            let zones = 6.28 / count
+        let zones = 6.28 / count
 
-            for (let i = 1; i <= count; i++) {
-                let min_a = (i - 1) * zones
-                let max_a = i * zones
+        for (let i = 1; i <= count; i++) {
+            let min_a = (i - 1) * zones
+            let max_a = i * zones
 
-                let angle = Math.random() * (max_a - min_a) + min_a
-                let proj = new SmokeDaggerShard(character.level)
-                proj.setAngle(angle)
-                proj.setPoint(character.x, character.y)
-                proj.setOwner(character)
+            let angle = Math.random() * (max_a - min_a) + min_a
+            let proj = new SmokeDaggerShard(character.level)
+            proj.setAngle(angle)
+            proj.setPoint(character.x, character.y)
+            proj.setOwner(character)
 
-                character.level.projectiles.push(proj)
-            }
+            character.level.projectiles.push(proj)
         }
     }
 }

@@ -2,7 +2,7 @@ import ITrigger from '../Interfaces/ITrigger'
 import { Lightning } from '../Objects/Projectiles/Lightning'
 import Character from '../Objects/src/Character'
 
-export default class LightningWhenUseAbilityTrigger implements ITrigger{
+export default class LightningWhenUseAbilityTrigger implements ITrigger {
     cd: number = 600
     last_trigger_time: number = 0
     chance: number = 0
@@ -29,5 +29,5 @@ export default class LightningWhenUseAbilityTrigger implements ITrigger{
 
             player.level.projectiles.push(proj)
         }
-    } 
+    }
 }

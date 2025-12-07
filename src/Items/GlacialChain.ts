@@ -46,6 +46,6 @@ export default class GlacialChain extends Item implements ITrigger {
             if (Func.elipseCollision(box, target.getBoxElipse())) {
                 target.setFreeze(2000)
             }
-        }      
+        }
     }
 }

@@ -3,16 +3,15 @@ import ITrigger from '../Interfaces/ITrigger'
 import HeavenRay from '../Objects/Effects/HeavenRay'
 import Character from '../Objects/src/Character'
 
-export default class DivineWeaponTrigger implements ITrigger {
+export default class Wrath implements ITrigger {
     cd: number = 3000
     last_trigger_time: number = 0
-    name: string = 'divine weapon'
+    name: string = 'wrath'
     chance: number = 0
-    description: string =
-        'Gives a chance, depending on your will to rain down pillars of light on enemies when you hit'
+    description: string = 'Gives a chance to rain down divine wrath on enemies'
 
     getTriggerChance(player: Character): number {
-        return Math.round(player.will * 1.5)
+        return this.chance
     }
 
     trigger(player: Character, target: any) {
@@ -20,11 +19,11 @@ export default class DivineWeaponTrigger implements ITrigger {
         if (target) {
             targets = player.level.enemies
                 .filter(elem => !elem.is_dead && Func.distance(elem, target) <= 20)
-                .slice(0, 3)
+                .slice(0, 12)
         } else {
             targets = player.level.enemies
                 .filter(elem => !elem.is_dead && Func.distance(elem, player) <= 20)
-                .slice(0, 3)
+                .slice(0, 12)
         }
 
         targets.forEach(elem => {

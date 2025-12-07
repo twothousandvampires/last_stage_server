@@ -29,9 +29,7 @@ export default class Quake extends SwordmanAbility implements IUnitState<Charact
         this.cd = 6000
     }
 
-    impact(): void {
-        
-    }
+    impact(): void {}
 
     enter(player: Character) {
         player.prepareToAction()

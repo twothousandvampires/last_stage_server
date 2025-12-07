@@ -3,9 +3,9 @@ import FlameRing from '../../../Items/FlameRing'
 import Level from '../../../Level'
 import AncientIdleState from '../../../State/AncientIdleState'
 import ChainLightningTrigger from '../../../Triggers/ChainLightningTrigger'
-import DivineWeaponTrigger from '../../../Triggers/DivineWeaponTrigger'
 import Hurricane from '../../../Triggers/Hurricane'
 import MindBurst from '../../../Triggers/MindBurst'
+import Wrath from '../../../Triggers/Wrath'
 import Soul from '../../Effects/Soul'
 import Character from '../Character'
 import Enemy from './Enemy'
@@ -38,7 +38,7 @@ export default class Ancient extends Enemy {
             new Hurricane(),
             new FlameRing(),
             new ChainLightningTrigger(),
-            new DivineWeaponTrigger(),
+            new Wrath(),
             new MindBurst(),
         ]
     }
