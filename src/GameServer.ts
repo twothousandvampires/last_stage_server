@@ -250,19 +250,12 @@ class GameServer {
 
     public async endOfLevel(): void {
         if (this.level?.players.length === 1 && this.level?.players[0].id) {
-                try {
-                    const query = `
-                    INSERT INTO client_data (time, socket) 
-                    VALUES (?, ?)
-                `
-
-                const values = [Date.now(), this.level?.players[0].id]
-
-                try {
-                    await this.db.promise().execute(query, values)
-                } catch (error) {
-
-                }
+                await this.db
+                    .promise()
+                    .execute(
+                        'INSERT INTO game_stats (name, kills, waves, time, class) VALUES (?, ?, ?, ?, ?)',
+                        ['unknown', this.level.kill_count, this.level.script instanceof Default ? this.level.script.waves_created : 0, this.level.time - this.level.started, this.level?.players[0].name]
+                    )
 
                 const [results] = await this.db
                     .promise()
