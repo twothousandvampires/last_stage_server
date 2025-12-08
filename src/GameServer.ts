@@ -217,7 +217,7 @@ class GameServer {
         this.socket.to(player.id).emit('suggers_record', this.level.kill_count)
 
         setTimeout(() => {
-            this.addRecord('unknown warrior', player.id)
+            this.addRecord('unknown challenger', player.id)
         }, 30000)
     }
 
@@ -248,16 +248,20 @@ class GameServer {
         }
     }
 
+    public async saveData(player: Character){
+        if(!this.level || !player) return 
+
+        await this.db
+            .promise()
+            .execute(
+                'INSERT INTO game_stats (name, kills, waves, time, class) VALUES (?, ?, ?, ?, ?)',
+                ['unknown', this.level.kill_count, this.level.script instanceof Default ? this.level.script.waves_created : 0, this.level.time - this.level.started, player.name]
+            )
+    }
+
     public async endOfLevel(): void {
         if (this.level?.players.length === 1 && this.level?.players[0].id) {
             try{
-                await this.db
-                    .promise()
-                    .execute(
-                        'INSERT INTO game_stats (name, kills, waves, time, class) VALUES (?, ?, ?, ?, ?)',
-                        ['unknown', this.level.kill_count, this.level.script instanceof Default ? this.level.script.waves_created : 0, this.level.time - this.level.started, this.level?.players[0].name]
-                    )
-
                 const [results] = await this.db
                     .promise()
                     .execute(
