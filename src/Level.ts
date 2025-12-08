@@ -124,8 +124,11 @@ export default class Level {
 
         let are_all_dead: boolean = this.players.every(elem => elem.is_dead)
         if (are_all_dead) {
+            this.players.forEach(elem => {
+                this.server.saveData(elem)
+            })
             setTimeout(() => {
-                if (this.players.length) {
+                if(this.players.length) {
                     clearImmediate(this.game_loop)
                     this.server.endOfLevel()
                 }
