@@ -107,6 +107,7 @@ import TurtleShell from '../Glyphs/TurtleShell'
 import Dismemberment from '../Glyphs/Dismemberment'
 import Distorter from '../Items/Distorter'
 import Echo from '../Items/Forgings/Echo'
+import BlessedLife from '../Items/Forgings/BlessedLife'
 
 export default class Builder {
     static masteryMap = {
@@ -217,6 +218,7 @@ export default class Builder {
         power: Power,
         vampiric: Vampiric,
         echo: Echo,
+        'blessed life': BlessedLife
     }
 
     static createCharacter(client: Client, level: Level): Character {
