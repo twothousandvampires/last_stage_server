@@ -54,7 +54,6 @@ class GameServer {
             keepAliveInitialDelay: 0,
         })
 
-        // Обработчик ошибок пула
         this.db.on('error', err => {
             console.error(`[GameServer ${port}] Database pool error:`, err.message)
         })
@@ -233,8 +232,7 @@ class GameServer {
             info = JSON.parse(info)
 
             if (info && name) {
-                // ИСПОЛЬЗУЕМ ПРОМИСЫ И ОБРАБОТКУ ОШИБОК
-                const [results] = await this.db
+                await this.db
                     .promise()
                     .execute(
                         'INSERT INTO game_stats (name, kills, waves, time, class) VALUES (?, ?, ?, ?, ?)',
@@ -251,8 +249,21 @@ class GameServer {
     }
 
     public async endOfLevel(): void {
-        if (this.level?.players.length === 1) {
-            try {
+        if (this.level?.players.length === 1 && this.level?.players[0].id) {
+                try {
+                    const query = `
+                    INSERT INTO client_data (time, socket) 
+                    VALUES (?, ?)
+                `
+
+                const values = [Date.now(), this.level?.players[0].id]
+
+                try {
+                    await this.db.promise().execute(query, values)
+                } catch (error) {
+
+                }
+
                 const [results] = await this.db
                     .promise()
                     .execute(
