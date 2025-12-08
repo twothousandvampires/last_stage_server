@@ -34,7 +34,7 @@ export default abstract class Enemy extends Unit {
     create_sorcerers_skull_chance: number = 0
     create_helm_of_ascendence_chance: number = 1
 
-    create_chance: number = 15
+    create_chance: number = 17
     last_action: number = 0
 
     count_as_killed: boolean = true
