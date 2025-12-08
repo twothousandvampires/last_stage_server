@@ -250,6 +250,7 @@ class GameServer {
 
     public async endOfLevel(): void {
         if (this.level?.players.length === 1 && this.level?.players[0].id) {
+            try{
                 await this.db
                     .promise()
                     .execute(
@@ -278,7 +279,6 @@ class GameServer {
                     this.removeLevel()
                 }
             } catch (err) {
-                console.error(`[GameServer ${this.port}] endOfLevel query error:`, err.message)
                 this.removeLevel() // При ошибке БД просто завершаем уровень
             }
         } else {
