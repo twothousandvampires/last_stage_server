@@ -103,7 +103,7 @@ export default abstract class Character extends Unit {
     triggers_on_armour_hit: any = []
     triggers_on_critical: any[] = []
     triggers_on_enlight: any[] = []
-    triggers_on_impact: any[] = [new MassiveImpactTrigger()]
+    triggers_on_impact: any[] = []
 
     chance_to_instant_kill: number = 0
     chance_to_avoid_damage_state: number = 0
