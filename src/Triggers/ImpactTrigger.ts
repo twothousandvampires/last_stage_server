@@ -34,9 +34,6 @@ export default class ImpactTrigger implements ITrigger {
                     damage_value: damage_value,
                 })
             }
-        })
-
-        console.log('impact triggered')
-        
+        })  
     }
 }
