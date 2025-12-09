@@ -111,7 +111,7 @@ export default abstract class Character extends Unit {
     chance_to_get_additional_gold: number = 0
     chance_to_block: number = 0
     chance_to_create_grace: number = 0
-    chance_to_trigger_additional_time = 30
+    chance_to_trigger_additional_time = 0
 
     enlightenment_threshold: number = 12
     can_get_courage: boolean = true

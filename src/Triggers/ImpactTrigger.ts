@@ -29,7 +29,7 @@ export default class ImpactTrigger implements ITrigger {
         player.impactHit(enemy, damage_value)
 
         player.level.enemies.forEach(elem => {
-            if (Func.distance(enemy, elem) <= player.impact_radius && !elem.is_dead && elem != enemy) {
+            if (!elem.is_dead && Func.distance(enemy, elem) <= player.impact_radius && elem != enemy) {
                 elem.takeDamage(player, {
                     damage_value: damage_value,
                 })
