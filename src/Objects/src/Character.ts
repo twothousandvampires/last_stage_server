@@ -13,7 +13,9 @@ import PlayerDefendState from '../../State/PlayerDefendState'
 import PlayerDyingState from '../../State/PlayerDyingState'
 import PlayerIdleState from '../../State/PlayerIdleState'
 import Status from '../../Status/Status'
+import ImpactTrigger from '../../Triggers/ImpactTrigger'
 import LifeAfterKIllTrigger from '../../Triggers/LifeAfterKIllTrigger'
+import MassiveImpactTrigger from '../../Triggers/MassiveImpactTrigger'
 import Sound from '../../Types/Sound'
 import Upgrade from '../../Types/Upgrade'
 import Effect from '../Effects/Effects'
@@ -46,10 +48,10 @@ export default abstract class Character extends Unit {
     end_move_time: number = 0
     last_time_the_skill_was_used: number | undefined
     last_steps_time: number = 0
-    last_impact_time: number = 0
     last_hit_time: number = 0
     last_time_get_hit: number = 0
     dead_time: number = 0
+    impact_radius:number = 10
 
     knowledge: number = 0
     perception: number = 0
@@ -71,7 +73,6 @@ export default abstract class Character extends Unit {
     crushing_cd: number = 2000
     last_crashing_time = 0
     impact: number = 0
-    impact_cooldown: number = 2000
     cast_speed: number = 2000
     status_resistance: number = 5
     spirit: number = 0
@@ -84,7 +85,7 @@ export default abstract class Character extends Unit {
     free_upgrade_count: number = 0
 
     triggers_on_kill: any[] = [new LifeAfterKIllTrigger()]
-    triggers_on_hit: any[] = []
+    triggers_on_hit: any[] = [new ImpactTrigger()]
     triggers_on_use_not_utility: any[] = []
     triggers_on_near_dead: any[] = []
     triggers_on_player_dead: any[] = []
@@ -102,7 +103,7 @@ export default abstract class Character extends Unit {
     triggers_on_armour_hit: any = []
     triggers_on_critical: any[] = []
     triggers_on_enlight: any[] = []
-    triggers_on_impact: any[] = []
+    triggers_on_impact: any[] = [new MassiveImpactTrigger()]
 
     chance_to_instant_kill: number = 0
     chance_to_avoid_damage_state: number = 0
@@ -110,7 +111,7 @@ export default abstract class Character extends Unit {
     chance_to_get_additional_gold: number = 0
     chance_to_block: number = 0
     chance_to_create_grace: number = 0
-    chance_to_trigger_additional_time = 0
+    chance_to_trigger_additional_time = 30
 
     enlightenment_threshold: number = 12
     can_get_courage: boolean = true
@@ -929,7 +930,7 @@ export default abstract class Character extends Unit {
         })
     }
 
-    public succesefulHit(target = undefined): void {
+    public succesefulHit(target = undefined, damage_value = 1): void {
         if (!target) return
 
         let time = this.level.time
@@ -937,10 +938,10 @@ export default abstract class Character extends Unit {
         this.triggers_on_hit.forEach(elem => {
             if (time - elem.last_trigger_time >= elem.cd) {
                 if (Func.chance(elem.getTriggerChance(this), this.is_lucky)) {
-                    elem.trigger(this, target)
+                    elem.trigger(this, target, damage_value)
 
                     if (Func.chance(this.isSecondTrigger())) {
-                        elem.trigger(this, target)
+                        elem.trigger(this, target, damage_value)
                     }
 
                     elem.last_trigger_time = time
