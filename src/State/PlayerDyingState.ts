@@ -20,6 +20,7 @@ export default class PlayerDyingState implements IUnitState<Character> {
             player.level.playerDead()
         } else if (player.exploded) {
             player.state = 'explode'
+            
             player.level.playerDead()
         } else {
             player.state = 'dying'

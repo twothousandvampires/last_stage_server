@@ -6,6 +6,7 @@ import EnemyAbility from './EnemyAbility'
 
 export default class DemonicEmpowering extends EnemyAbility {
     cooldown: number = 30000
+    last_used_time: number = Date.now()
 
     canUse(enemy: Enemy) {
         return enemy.level.time - this.last_used_time >= this.cooldown && enemy.target

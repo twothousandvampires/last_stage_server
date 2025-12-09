@@ -7,7 +7,7 @@ export default class Durability extends Forging {
 
     constructor(item: Item) {
         super(item)
-        this.max_value = 5
+        this.max_value = 8
         this.name = 'durability'
         this.description = 'increases your durability'
         this.gold_cost = 5

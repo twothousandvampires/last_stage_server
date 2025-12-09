@@ -6,7 +6,7 @@ export default class Agility extends Forging {
 
     constructor(item: Item) {
         super(item)
-        this.max_value = 5
+        this.max_value = 8
         this.name = 'agility'
         this.description = 'increases your agility'
         this.gold_cost = 5
