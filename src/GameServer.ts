@@ -254,7 +254,7 @@ class GameServer {
         await this.db
             .promise()
             .execute(
-                'INSERT INTO game_stats (name, kills, waves, time, class, socket) VALUES (?, ?, ?, ?, ?. ?)',
+                'INSERT INTO game_stats (name, kills, waves, time, class, socket) VALUES (?, ?, ?, ?, ?, ?)',
                 ['unknown', this.level.kill_count, this.level.script instanceof Default ? this.level.script.waves_created : 0, this.level.time - this.level.started, player.name, player.id]
             )
     }
