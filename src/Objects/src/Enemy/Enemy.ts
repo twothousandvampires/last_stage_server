@@ -203,7 +203,7 @@ export default abstract class Enemy extends Unit {
             let is_pierce = Func.chance(pierce - this.armour_rate)
 
             if (is_pierce) {
-                damage_value++
+                damage_value ++
             }
         }
 
@@ -309,7 +309,7 @@ export default abstract class Enemy extends Unit {
         this.life_status -= damage_value
 
         if (is_player_deal_hit) {
-            unit.succesefulHit(this)
+            unit.succesefulHit(this, damage_value)
         }
 
         if (this.life_status <= 0) {
@@ -329,26 +329,6 @@ export default abstract class Enemy extends Unit {
             }
 
             this.setState(new EnemyDyingState())
-        }
-
-        if (is_player_deal_hit && unit.level.time - unit.last_impact_time >= unit.impact_cooldown) {
-            let impact_rating = unit.getImpactRating()
-            if (Func.chance(impact_rating)) {
-                this.level.addSound('impact', this.x, this.y)
-                unit.last_impact_time = unit.level.time
-                let e = new QuakeEffect(this.level)
-                e.setPoint(this.x, this.y)
-
-                this.level.effects.push(e)
-                unit.impactHit(this, damage_value)
-                this.level.enemies.forEach(elem => {
-                    if (Func.distance(this, elem) <= 10 && !elem.is_dead && elem != this) {
-                        elem.takeDamage(undefined, {
-                            damage_value: damage_value,
-                        })
-                    }
-                })
-            }
         }
 
         this.level.addSound(this.getWeaponHitedSound())

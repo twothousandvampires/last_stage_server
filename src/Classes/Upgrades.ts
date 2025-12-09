@@ -68,6 +68,7 @@ import WallOfWillTrigger from '../Triggers/WallOfWillTrigger'
 import FirstToStrikeTrigger from '../Triggers/FirstToStrikeTrigger'
 import PressingSteps from '../Status/PressingSteps'
 import ScreamTrigger from '../Triggers/ScreamTrigger'
+import ImpactTrigger from '../Triggers/ImpactTrigger'
 
 export default class Upgrades {
     static getAllUpgrades(): Upgrade[] {
@@ -354,6 +355,26 @@ export default class Upgrades {
                 cost: 3,
                 ascend: 14,
                 desc: 'Gives a chance, depending on your might to create additional impacts',
+            },
+            {
+                name: 'impactor',
+                canUse: (character: Character) => {
+                    return (
+                        character.impact >= 10 &&
+                        character.impact_radius < 16
+                    )
+                },
+                teach: (character: Character): void => {
+                    character.impact_radius += 2
+                    character.impact ++
+                    let t = character.triggers_on_hit.find(elem => elem instanceof ImpactTrigger)
+                    if(t){
+                        t.cd -= 150
+                    }
+                },
+                cost: 2,
+                ascend: 12,
+                desc: 'Increases impact radius and reduces cd',
             },
             {
                 name: 'divine weapon',
