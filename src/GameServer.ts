@@ -220,7 +220,9 @@ class GameServer {
         this.socket.to(player.id).emit('suggers_record', this.level.kill_count)
 
         setTimeout(() => {
-            this.socket.emit('game_is_over')
+            if(this.level && this.level.players.some(elem => elem.id == player.id)){
+                this.socket.emit('game_is_over')
+            }    
         }, 20000)
     }
 
@@ -231,7 +233,9 @@ class GameServer {
                 .execute(
                     'UPDATE game_stats set name = ? where socket = ?',
                     [name || null, id || null]
-                )    
+                )  
+                
+            this.socket.emit('game_is_over')
         } catch (err) {
 
         }
