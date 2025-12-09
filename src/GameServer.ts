@@ -193,11 +193,14 @@ class GameServer {
     }
 
     public removeLevel() {
-        this.level = undefined
+        if(this.level){
+            clearImmediate(this.level.game_loop)
+            this.level = undefined
+        }
+
         this.game_started = false
         this.start_scenario_name = undefined
         this.clients = new Map()
-        this.socket.emit('game_is_over')
     }
 
     async suggetRecord(player: Character) {
@@ -215,6 +218,10 @@ class GameServer {
         )
 
         this.socket.to(player.id).emit('suggers_record', this.level.kill_count)
+
+        setTimeout(() => {
+            this.socket.emit('game_is_over')
+        }, 20000)
     }
 
     async addRecord(name: string, id: string) {
@@ -261,13 +268,15 @@ class GameServer {
 
                 if (more) {
                     await this.suggetRecord(this.level?.players[0])
+                } else{
+                    this.socket.emit('game_is_over')
                 }
             } catch (err) {
                 
             }
-        } 
-
-        this.removeLevel() 
+        } else {
+            this.socket.emit('game_is_over')
+        }      
     }
 
     initSocket() {
@@ -460,11 +469,8 @@ class GameServer {
                     this.clients.delete(socket.id)
 
                     if (this.clients.size === 0) {
-                        if (this.level) {
-                            clearImmediate(this.level.game_loop)
-                            this.removeLevel()
-                            this.createName()
-                        }
+                        this.removeLevel()
+                        this.createName()
                     } else {
                         this.updateLobby()
                     }
