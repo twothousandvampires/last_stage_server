@@ -217,7 +217,7 @@ class GameServer {
         this.socket.to(player.id).emit('suggers_record', this.level.kill_count)
 
         setTimeout(() => {
-            this.addRecord('unknown challenger', player.id)
+            this.removeLevel()
         }, 30000)
     }
 
@@ -235,8 +235,8 @@ class GameServer {
                 await this.db
                     .promise()
                     .execute(
-                        'INSERT INTO game_stats (name, kills, waves, time, class) VALUES (?, ?, ?, ?, ?)',
-                        [name, info.kill_count, info.waves, info.time, info.class]
+                        'UPDATE game_stats set name = ? where socket = ?',
+                        [name || null, id || null]
                     )
                 this.removeLevel()
             } else {
@@ -254,8 +254,8 @@ class GameServer {
         await this.db
             .promise()
             .execute(
-                'INSERT INTO game_stats (name, kills, waves, time, class) VALUES (?, ?, ?, ?, ?)',
-                ['unknown', this.level.kill_count, this.level.script instanceof Default ? this.level.script.waves_created : 0, this.level.time - this.level.started, player.name]
+                'INSERT INTO game_stats (name, kills, waves, time, class, socket) VALUES (?, ?, ?, ?, ?. ?)',
+                ['unknown', this.level.kill_count, this.level.script instanceof Default ? this.level.script.waves_created : 0, this.level.time - this.level.started, player.name, player.id]
             )
     }
 
