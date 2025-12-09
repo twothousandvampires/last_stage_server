@@ -215,36 +215,18 @@ class GameServer {
         )
 
         this.socket.to(player.id).emit('suggers_record', this.level.kill_count)
-
-        setTimeout(() => {
-            this.removeLevel()
-        }, 30000)
     }
 
     async addRecord(name: string, id: string) {
         try {
-            let info = await this.redisClient.get(id)
-            if (!info) {
-                this.removeLevel()
-                return
-            }
-
-            info = JSON.parse(info)
-
-            if (info && name) {
-                await this.db
-                    .promise()
-                    .execute(
-                        'UPDATE game_stats set name = ? where socket = ?',
-                        [name || null, id || null]
-                    )
-                this.removeLevel()
-            } else {
-                this.removeLevel()
-            }
+            await this.db
+                .promise()
+                .execute(
+                    'UPDATE game_stats set name = ? where socket = ?',
+                    [name || null, id || null]
+                )    
         } catch (err) {
-            console.error(`[GameServer ${this.port}] addRecord error:`, err.message)
-            this.removeLevel() // Всегда вызываем removeLevel даже при ошибке
+
         }
     }
 
@@ -279,15 +261,13 @@ class GameServer {
 
                 if (more) {
                     await this.suggetRecord(this.level?.players[0])
-                } else {
-                    this.removeLevel()
                 }
             } catch (err) {
-                this.removeLevel() // При ошибке БД просто завершаем уровень
+                
             }
-        } else {
-            this.removeLevel()
-        }
+        } 
+
+        this.removeLevel() 
     }
 
     initSocket() {
@@ -529,7 +509,8 @@ class GameServer {
     }
 
     allPlayersAreReady(): boolean {
-        return Array.from(this.clients.values()).every(elem => elem.ready)
+        let a = Array.from(this.clients.values())
+        return a.length != 0 && a.every(elem => elem.ready)
     }
 }
 
