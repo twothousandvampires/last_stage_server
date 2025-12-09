@@ -7,6 +7,7 @@ import EnemyAbility from './EnemyAbility'
 
 export default class ExplodingSkulls extends EnemyAbility {
     cooldown: number = 20000
+    last_used_time: number = Date.now()
 
     canUse(enemy: Enemy) {
         return enemy.level.time - this.last_used_time >= this.cooldown && enemy.target

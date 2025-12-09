@@ -1,5 +1,5 @@
 import Func from '../Func'
-import ITrigger from '../Interfaces/ITrigger'
+import ITrigger from '../Interfaces/Itrigger'
 import { MagicShard } from '../Objects/Projectiles/MagicShard'
 import Character from '../Objects/src/Character'
 import Unit from '../Objects/src/Unit'
@@ -13,7 +13,7 @@ export default class MindBurst implements ITrigger {
     chance: number = 100
 
     getTriggerChance(): number {
-        return this.chance
+        return 100
     }
 
     trigger(player: Character, target: Unit) {

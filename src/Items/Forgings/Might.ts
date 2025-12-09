@@ -7,7 +7,7 @@ export default class Might extends Forging {
 
     constructor(item: Item) {
         super(item)
-        this.max_value = 5
+        this.max_value = 8
         this.name = 'might'
         this.description = 'increases your might'
         this.gold_cost = 5
