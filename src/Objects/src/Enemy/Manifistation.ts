@@ -118,8 +118,8 @@ export default abstract class Manifistation extends Effect {
         while (this.isOutOfMap()) {
             let angle = Math.random() * 6.28
 
-            let distance_x = Func.random(25, 60)
-            let distance_y = Func.random(25, 60)
+            let distance_x = Func.random(20, 45)
+            let distance_y = Func.random(20, 45)
 
             this.x = this.previous_x + Math.sin(angle) * distance_x
             this.y = this.previous_y + Math.cos(angle) * distance_y

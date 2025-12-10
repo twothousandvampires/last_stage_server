@@ -80,13 +80,11 @@ export class MasterManifestation extends Manifistation {
 
         let random = Func.getRandomFromArray(filtered)
 
-        while (this.activated_by.upgrades.some(elem => elem instanceof random.constructor)) {
-            random = Func.getRandomFromArray(filtered)
-        }
+        if(!random) return
 
-        if (random) {
-            random.teach(this.activated_by)
-            this.level.addMessedge('you learned: ' + random.name, this.activated_by.id)
-        }
+        this.activated_by.removeUpgrades()
+ 
+        random.teach(this.activated_by)
+        this.level.addMessedge('you learned: ' + random.name, this.activated_by.id)
     }
 }

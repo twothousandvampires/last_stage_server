@@ -7,7 +7,7 @@ export default class SwordHandle extends Item {
         this.name = 'sword handle'
         this.type = 1
         this.description = 'you are lucky'
-        this.max_forgings = 1
+        this.max_forgings = 0
     }
 
     equip(character: Character): void {

@@ -513,7 +513,7 @@ export default class Default extends Scenario {
                     break
                 case 'move_speed':
                     this.add_e_speed += 5
-                    this.minus_create_chance++
+                    this.minus_create_chance += 3
                     break
                 case 'life':
                     this.add_e_life += 1
@@ -526,7 +526,7 @@ export default class Default extends Scenario {
 
             level.addSound('evel upgrade', 40, 40)
         }
-        if (this.waves_created % 90 === 0 && this.max_time_wave > 4000) {
+        if (this.waves_created > 50 && this.waves_created % 60 === 0 && this.max_time_wave > 4000) {
             this.max_time_wave -= 500
             if (this.time_between_wave_ms > this.max_time_wave) {
                 this.time_between_wave_ms = this.max_time_wave

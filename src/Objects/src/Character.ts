@@ -59,6 +59,7 @@ export default abstract class Character extends Unit {
     will: number = 0
     durability: number = 0
     might: number = 0
+    upgrades_generated: number = 5
 
     enlight_timer: number = 35000
     base_regeneration_time: number = 10000
@@ -168,6 +169,10 @@ export default abstract class Character extends Unit {
     abstract addCourage(): void
     abstract getRegenTimer(): number
     abstract getPower(): number
+
+    generateUpgrades(){
+        this.upgrades_generated ++
+    }
 
     succesefulPierce(enemy: Unit): void {
         this.triggers_on_pierce.forEach(elem => elem.trigger(this, enemy))

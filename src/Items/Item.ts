@@ -276,7 +276,13 @@ export default abstract class Item {
         if (this.forge.length >= this.max_forgings) return false
         if (this.suggested_forgings.length != 0) return false
 
-        for (let i = 0; i < 3; i++) {
+        let count = 5 - this.forge.length
+
+        if(count < 2){
+            count = 2
+        }
+
+        for (let i = 0; i < count; i++) {
             let f = this.getRandomForging()
             if (this.suggested_forgings.some(elem => elem.name === f.name)) {
                 i--

@@ -374,6 +374,7 @@ export default class Swordman extends Character {
         if (!this.can_generate_upgrades) return
         if (this.upgrades.length) return
 
+        super.generateUpgrades()
         //get all upgrades for this class
         let p = Upgrades.getAllUpgrades()
         let all: Upgrade[] = Upgrades.getSwordmanUpgrades().concat(p)
@@ -403,9 +404,32 @@ export default class Swordman extends Character {
         let part2 = filtered.slice(part_size, part_size * 2)
         let part3 = filtered.slice(part_size * 2)
 
-        this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part1))
-        this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part2))
-        this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part3))
+        if(this.upgrades_generated % 5 === 0){
+            console.log('here')
+            let upgrade = Func.getRandomFromArray(part1)
+            this.upgrades = this.upgrades.concat(upgrade)
+            part1 = part1.filter(elem => upgrade.name != elem.name)
+
+            upgrade = Func.getRandomFromArray(part1)
+            this.upgrades = this.upgrades.concat(upgrade)
+            part1 = part1.filter(elem => upgrade.name != elem.name)
+
+            upgrade = Func.getRandomFromArray(part1)
+            this.upgrades = this.upgrades.concat(upgrade)
+            part1 = part1.filter(elem => upgrade.name != elem.name)
+
+            if(this.upgrades.length < 3){
+                this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part2))
+                if(this.upgrades.length < 3){
+                    this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part3))
+                }
+            }
+        }
+        else{
+            this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part1))
+            this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part2))
+            this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part3))
+        }
 
         this.upgrades = this.upgrades.filter(elem => elem)
     }
