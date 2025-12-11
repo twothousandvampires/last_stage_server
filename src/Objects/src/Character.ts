@@ -7,6 +7,9 @@ import IUnitState from '../../Interfaces/IUnitState'
 import Item from '../../Items/Item'
 import item from '../../Items/Item'
 import Level from '../../Level'
+import AnnihilationMutator from '../../Mutators/AnnihilationMutator'
+import CuttingMutator from '../../Mutators/CuttingMutator'
+import { Mutator } from '../../Mutators/Mittor'
 import PlayerDamagedState from '../../State/PlayerDamagedState'
 import PlayerDeadState from '../../State/PlayerDeadState'
 import PlayerDefendState from '../../State/PlayerDefendState'
@@ -59,6 +62,7 @@ export default abstract class Character extends Unit {
     will: number = 0
     durability: number = 0
     might: number = 0
+    upgrades_generated: number = 5
 
     enlight_timer: number = 35000
     base_regeneration_time: number = 10000
@@ -147,6 +151,9 @@ export default abstract class Character extends Unit {
     using_ability: any
     items_to_buy: Item[] = []
 
+    pierce_rating_mutators: Mutator[] = []
+    critical_rating_mutators: Mutator[] = []
+
     constructor(level: Level) {
         super(level)
         this.box_r = 2.5
@@ -168,6 +175,20 @@ export default abstract class Character extends Unit {
     abstract addCourage(): void
     abstract getRegenTimer(): number
     abstract getPower(): number
+
+    getCritical(){
+        let base = this.critical
+       
+        this.critical_rating_mutators.forEach(elem => {
+            base = elem.mutate(base, this)
+        })
+        
+        return base
+    }
+
+    generateUpgrades(){
+        this.upgrades_generated ++
+    }
 
     succesefulPierce(enemy: Unit): void {
         this.triggers_on_pierce.forEach(elem => elem.trigger(this, enemy))
@@ -213,7 +234,12 @@ export default abstract class Character extends Unit {
     }
 
     getPierce() {
-        return this.pierce
+        let base = this.pierce
+        this.pierce_rating_mutators.forEach(elem => {
+            base = elem.mutate(base, this)
+        })
+
+        return base
     }
 
     succesefulArmourBlock(target: Unit) {

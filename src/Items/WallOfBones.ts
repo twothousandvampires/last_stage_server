@@ -80,6 +80,7 @@ export default class WallOfBones extends Item implements ITrigger {
                 if (this.stack_count < this.count) {
                     this.stack_count++
                     character.armour_rate++
+                    character.fortify++
                 }
 
                 character.newStatus({

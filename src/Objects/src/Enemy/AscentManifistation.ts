@@ -24,6 +24,8 @@ export class AscentManifistation extends Manifistation {
             elem => elem instanceof Grace
         )
 
+        this.activated_by.grace += this.stage - 1
+
         if (this.level.script.portal_is_exist) {
             let portal = this.level.binded_effects.find(elem => elem instanceof Grace)
 

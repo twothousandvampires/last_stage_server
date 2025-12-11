@@ -232,6 +232,7 @@ export default abstract class Enemy extends Unit {
     deadSound() {}
 
     takeDamage(unit: any = undefined, options: any = {}) {
+        let log = '';
         if (this.is_dead) return
         if (!this.can_be_damaged) return
 
@@ -255,11 +256,11 @@ export default abstract class Enemy extends Unit {
                 x: this.x,
                 y: this.y,
             })
-
             let e = new Armour(this.level)
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)
             this.level.effects.push(e)
+
             return
         }
 
@@ -274,31 +275,29 @@ export default abstract class Enemy extends Unit {
             let is_pierce = Func.chance(pierce - this.armour_rate)
 
             if (is_pierce) {
-                damage_value++
+                damage_value ++
                 unit.succesefulPierce(this)
             }
         }
 
-        if (this.crushing > 0) {
+        if (this.crushing > 0) {    
             damage_value += this.crushing
         }
 
         if (is_player_deal_hit && unit.isCrushing()) {
-            this.crushing++
+            this.crushing ++
         }
 
-        if (Func.chance(this.fortify)) {
-            damage_value--
+        if (Func.chance(this.fortify)) { 
+            damage_value --
         }
 
-        if (unit && unit?.critical && Func.chance(unit.critical)) {
-            damage_value *= 2
-            if (is_player_deal_hit) {
-                unit.succesefulCritical(this)
-            }
+        if (is_player_deal_hit && Func.chance(unit.getCritical())) {
+            damage_value *= 2       
+            unit.succesefulCritical(this)  
         }
 
-        if (this.fragility) {
+        if (this.fragility) {  
             damage_value *= 2
         }
 

@@ -21,13 +21,6 @@ import InnerPowerTrigger from '../../../Triggers/InnerPowerTrigger'
 import HeavenIntervention from '../../../Triggers/HeavenIntervention'
 import HeavenWrath from '../../../Abilities/Swordman/HeavenWrath'
 import Upgrade from '../../../Types/Upgrade'
-import FromDefendToAttackTrigger from '../../../Triggers/FromDefendToAttackTrigger'
-import WallOfWillTrigger from '../../../Triggers/WallOfWillTrigger'
-import FirstToStrikeTrigger from '../../../Triggers/FirstToStrikeTrigger'
-import PressingSteps from '../../../Status/PressingSteps'
-import RingFlame from '../../../Triggers/RingFlame'
-import Hurricane from '../../../Triggers/Hurricane'
-import ChainLightning from '../../../Triggers/ChainLightningTrigger'
 
 export default class Swordman extends Character {
     static MIN_ATTACK_SPEED = 150
@@ -367,13 +360,19 @@ export default class Swordman extends Character {
     }
 
     getPierce() {
-        return this.pierce + this.agility
+        let base = this.pierce + this.agility
+        this.pierce_rating_mutators.forEach(elem => {
+            base = elem.mutate(base, this)
+        })
+
+        return base
     }
 
     generateUpgrades() {
         if (!this.can_generate_upgrades) return
         if (this.upgrades.length) return
 
+        super.generateUpgrades()
         //get all upgrades for this class
         let p = Upgrades.getAllUpgrades()
         let all: Upgrade[] = Upgrades.getSwordmanUpgrades().concat(p)
@@ -403,9 +402,31 @@ export default class Swordman extends Character {
         let part2 = filtered.slice(part_size, part_size * 2)
         let part3 = filtered.slice(part_size * 2)
 
-        this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part1))
-        this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part2))
-        this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part3))
+        if(this.upgrades_generated % 5 === 0){
+            let upgrade = Func.getRandomFromArray(part1)
+            this.upgrades = this.upgrades.concat(upgrade)
+            part1 = part1.filter(elem => upgrade.name != elem.name)
+
+            upgrade = Func.getRandomFromArray(part1)
+            this.upgrades = this.upgrades.concat(upgrade)
+            part1 = part1.filter(elem => upgrade.name != elem.name)
+
+            upgrade = Func.getRandomFromArray(part1)
+            this.upgrades = this.upgrades.concat(upgrade)
+            part1 = part1.filter(elem => upgrade.name != elem.name)
+
+            if(this.upgrades.length < 3){
+                this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part2))
+                if(this.upgrades.length < 3){
+                    this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part3))
+                }
+            }
+        }
+        else{
+            this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part1))
+            this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part2))
+            this.upgrades = this.upgrades.concat(Func.getRandomFromArray(part3))
+        }
 
         this.upgrades = this.upgrades.filter(elem => elem)
     }

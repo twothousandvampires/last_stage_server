@@ -13,6 +13,7 @@ import Character from '../Objects/src/Character'
 import Ancient from '../Objects/src/Enemy/Ancient'
 import { AscentManifistation } from '../Objects/src/Enemy/AscentManifistation'
 import Bones from '../Objects/src/Enemy/Bones'
+import ConstactedOne from '../Objects/src/Enemy/ConstactedOne'
 import Enemy from '../Objects/src/Enemy/Enemy'
 import { Flamy } from '../Objects/src/Enemy/Flamy'
 import { FleshManifistation } from '../Objects/src/Enemy/FleshManifistation'
@@ -165,6 +166,7 @@ export default class Default extends Scenario {
         if (this.times === Default.TIMES_NORMAL && this.time_between_wave_ms < this.max_time_wave) {
             this.time_between_wave_ms += 40
         }
+       
 
         let add_count = Math.floor(this.waves_created / 13.5)
         add_count += (level.players.length - 1) * 2
@@ -382,7 +384,7 @@ export default class Default extends Scenario {
         let players: Character = level.players.filter(elem => elem.zone_id === 0)
 
         if (this.waves_created > 1 && this.waves_created % 25 === 0) {
-            let a = new Ancient(level)
+            let a = Math.random() > 0.5 ? new Ancient(level) : new ConstactedOne(level)
             let random = Func.getRandomFromArray(players)
 
             let angle: number = Math.random() * 6.28
@@ -513,7 +515,7 @@ export default class Default extends Scenario {
                     break
                 case 'move_speed':
                     this.add_e_speed += 5
-                    this.minus_create_chance++
+                    this.minus_create_chance += 3
                     break
                 case 'life':
                     this.add_e_life += 1
@@ -526,7 +528,7 @@ export default class Default extends Scenario {
 
             level.addSound('evel upgrade', 40, 40)
         }
-        if (this.waves_created % 90 === 0 && this.max_time_wave > 4000) {
+        if (this.waves_created > 50 && this.waves_created % 60 === 0 && this.max_time_wave > 4000) {
             this.max_time_wave -= 500
             if (this.time_between_wave_ms > this.max_time_wave) {
                 this.time_between_wave_ms = this.max_time_wave
