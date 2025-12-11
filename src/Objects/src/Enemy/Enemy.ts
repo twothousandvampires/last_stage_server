@@ -5,7 +5,6 @@ import EnemyDyingState from '../../../State/EnemyDyingState'
 import EnemyMeleeIdleState from '../../../State/EnemyMeleeIdleState'
 import EnemySpawnState from '../../../State/EnemySpawnState'
 import Armour from '../../Effects/Armour'
-import QuakeEffect from '../../Effects/Quake'
 import SmallTextLanguage2 from '../../Effects/SmallTextLanguage2'
 import Character from '../Character'
 import Unit from '../Unit'
@@ -26,9 +25,9 @@ export default abstract class Enemy extends Unit {
     hit_x: number = 0
     hit_y: number = 0
 
-    create_grace_chance: number = 15
-    create_energy_chance: number = 5
-    create_entity_chance: number = 5
+    create_grace_chance: number = 18
+    create_energy_chance: number = 6
+    create_entity_chance: number = 6
     create_intervention_chance: number = 2
     create_item_chance: number = 0
     create_sorcerers_skull_chance: number = 0

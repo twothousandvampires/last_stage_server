@@ -2,9 +2,7 @@ import EffectBuilder from '../Classes/EffectBuiler'
 import Func from '../Func'
 import Level from '../Level'
 import ClosedGate from '../Objects/Effects/ClosedGate'
-import Effect from '../Objects/Effects/Effects'
 import Grace from '../Objects/Effects/Grace'
-import Soul from '../Objects/Effects/Soul'
 import UltimatumText from '../Objects/Effects/UltimatumText'
 import UltimatumText2 from '../Objects/Effects/UltimatumText2'
 import UltimatumText3 from '../Objects/Effects/UltimatumText3'
@@ -47,7 +45,7 @@ export default class Default extends Scenario {
 
     last_checked: number
     time_between_wave_ms: number
-    max_time_wave: number = 7500
+    max_time_wave: number = 8000
     waves_created: number = 0
     times_count: number = 0
     add_e_life: number = 0
@@ -527,12 +525,6 @@ export default class Default extends Scenario {
             }
 
             level.addSound('evel upgrade', 40, 40)
-        }
-        if (this.waves_created > 50 && this.waves_created % 60 === 0 && this.max_time_wave > 4000) {
-            this.max_time_wave -= 500
-            if (this.time_between_wave_ms > this.max_time_wave) {
-                this.time_between_wave_ms = this.max_time_wave
-            }
         }
     }
 }

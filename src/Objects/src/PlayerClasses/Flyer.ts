@@ -18,6 +18,7 @@ import FragilityWhenHitTrigger from '../../../Triggers/FragilityWhenHitTrigger'
 import Upgrade from '../../../Types/Upgrade'
 import Armour from '../../Effects/Armour'
 import Blood from '../../Effects/Blood'
+import Spirit from '../../Effects/Spirit'
 import ToothExplode from '../../Effects/ToothExplode'
 import { Lightning } from '../../Projectiles/Lightning'
 import Character from '../Character'
@@ -274,11 +275,11 @@ export default class Flyer extends Character {
         if (this.damaged || this.is_dead) return
 
         if (this.ward) {
-            let count = 1
-            if (unit && Func.chance(unit.critical)) {
-                count++
-            }
-            this.loseWard(count)
+            // let count = 1
+            // if (unit && Func.chance(unit.critical)) {
+            //     count++
+            // }
+            this.loseWard(1)
             let e = new ToothExplode(this.level)
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)
@@ -296,6 +297,10 @@ export default class Flyer extends Character {
         this.playerWasHited(unit)
 
         if (this.isSpiritBlock()) {
+            this.level.addSound('spirit', this.x, this.y)
+            let e = new Spirit(this.level)
+            e.setPoint(this.x, this.y)
+            this.level.addEffect(e)
             this.resource--
             return
         }
@@ -346,6 +351,11 @@ export default class Flyer extends Character {
         this.level.effects.push(e)
 
         this.recent_cast = this.recent_cast.filter((elem, index) => index >= 4)
+
+        if (Func.chance(this.getAvoidChance(), this.is_lucky)) {
+            return
+        }
+
         this.subLife(unit, options)
     }
 

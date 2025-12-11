@@ -21,6 +21,7 @@ import InnerPowerTrigger from '../../../Triggers/InnerPowerTrigger'
 import HeavenIntervention from '../../../Triggers/HeavenIntervention'
 import HeavenWrath from '../../../Abilities/Swordman/HeavenWrath'
 import Upgrade from '../../../Types/Upgrade'
+import Spirit from '../../Effects/Spirit'
 
 export default class Swordman extends Character {
     static MIN_ATTACK_SPEED = 150
@@ -232,11 +233,11 @@ export default class Swordman extends Character {
         if (this.damaged || this.is_dead) return
 
         if (this.ward) {
-            let count = 1
-            if (unit && Func.chance(unit.critical)) {
-                count++
-            }
-            this.loseWard(count)
+            // let count = 1
+            // if (unit && Func.chance(unit.critical)) {
+            //     count++
+            // }
+            this.loseWard(1)
             let e = new ToothExplode(this.level)
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)
@@ -252,6 +253,11 @@ export default class Swordman extends Character {
         this.playerWasHited(unit)
 
         if (this.isSpiritBlock()) {
+            this.level.addSound('spirit', this.x, this.y)
+            let e = new Spirit(this.level)
+            e.setPoint(this.x, this.y)
+            this.level.addEffect(e)
+
             this.resource--
             return
         }
@@ -299,6 +305,10 @@ export default class Swordman extends Character {
 
         if (Func.notChance(this.might * 7, this.is_lucky)) {
             this.recent_kills = this.recent_kills.filter((elem, index) => index >= 5)
+        }
+
+        if (Func.chance(this.getAvoidChance(), this.is_lucky)) {
+            return
         }
 
         this.subLife(unit, options)
