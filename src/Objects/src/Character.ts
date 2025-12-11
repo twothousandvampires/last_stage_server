@@ -7,6 +7,9 @@ import IUnitState from '../../Interfaces/IUnitState'
 import Item from '../../Items/Item'
 import item from '../../Items/Item'
 import Level from '../../Level'
+import AnnihilationMutator from '../../Mutators/AnnihilationMutator'
+import CuttingMutator from '../../Mutators/CuttingMutator'
+import { Mutator } from '../../Mutators/Mittor'
 import PlayerDamagedState from '../../State/PlayerDamagedState'
 import PlayerDeadState from '../../State/PlayerDeadState'
 import PlayerDefendState from '../../State/PlayerDefendState'
@@ -148,6 +151,9 @@ export default abstract class Character extends Unit {
     using_ability: any
     items_to_buy: Item[] = []
 
+    pierce_rating_mutators: Mutator[] = []
+    critical_rating_mutators: Mutator[] = []
+
     constructor(level: Level) {
         super(level)
         this.box_r = 2.5
@@ -169,6 +175,16 @@ export default abstract class Character extends Unit {
     abstract addCourage(): void
     abstract getRegenTimer(): number
     abstract getPower(): number
+
+    getCritical(){
+        let base = this.critical
+       
+        this.critical_rating_mutators.forEach(elem => {
+            base = elem.mutate(base, this)
+        })
+        
+        return base
+    }
 
     generateUpgrades(){
         this.upgrades_generated ++
@@ -218,7 +234,12 @@ export default abstract class Character extends Unit {
     }
 
     getPierce() {
-        return this.pierce
+        let base = this.pierce
+        this.pierce_rating_mutators.forEach(elem => {
+            base = elem.mutate(base, this)
+        })
+
+        return base
     }
 
     succesefulArmourBlock(target: Unit) {
@@ -796,29 +817,38 @@ export default abstract class Character extends Unit {
             return
         }
 
+        let log = 'player was hitted; damage is ' + value + '; '
+
         if (
             unit &&
             unit.pierce > this.getTotalArmour() &&
             Func.chance(unit.pierce - this.getTotalArmour())
         ) {
             value++
+            log += 'pierce: damage is ' + value + '; '
         }
 
         if (Func.chance(this.fortify)) {
             value--
+            log += 'fortify: damage is ' + value + '; '
         }
 
         if (unit && Func.chance(unit.critical)) {
             value *= 2
+            log += 'critical: damage is ' + value + '; '
         }
 
         if (this.fragility) {
             value *= 2
+             log += 'fragility: damage is ' + value + '; '
         }
 
         if (unit && Func.chance(unit.power)) {
             value++
+             log += 'power: damage is ' + value + '; '
         }
+
+        this.level.addLog2(log)
 
         if (value > 0) {
             this.last_time_get_hit = this.level.time

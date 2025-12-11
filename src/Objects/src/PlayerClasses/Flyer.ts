@@ -98,7 +98,7 @@ export default class Flyer extends Character {
         let part3 = filtered.slice(part_size * 2)
 
         if(this.upgrades_generated % 5 === 0){
-            console.log('here')
+
             let upgrade = Func.getRandomFromArray(part1)
             this.upgrades = this.upgrades.concat(upgrade)
             part1 = part1.filter(elem => upgrade.name != elem.name)

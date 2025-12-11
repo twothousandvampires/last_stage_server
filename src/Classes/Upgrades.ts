@@ -69,6 +69,8 @@ import FirstToStrikeTrigger from '../Triggers/FirstToStrikeTrigger'
 import PressingSteps from '../Status/PressingSteps'
 import ScreamTrigger from '../Triggers/ScreamTrigger'
 import ImpactTrigger from '../Triggers/ImpactTrigger'
+import CuttingMutator from '../Mutators/CuttingMutator'
+import AnnihilationMutator from '../Mutators/AnnihilationMutator'
 
 export default class Upgrades {
     static getAllUpgrades(): Upgrade[] {
@@ -185,6 +187,38 @@ export default class Upgrades {
                 cost: 3,
                 ascend: 20,
                 desc: 'When you block, you have a chance to increase your block chance',
+            },
+            {
+                name: 'cutting',
+                canUse: (character: Character) => {
+                    return (
+                        !character.pierce_rating_mutators.some(
+                            elem => elem instanceof CuttingMutator
+                        )
+                    )
+                },
+                teach: (character: Character): void => {
+                    character.pierce_rating_mutators.push(new CuttingMutator())
+                },
+                cost: 2,
+                ascend: 20,
+                desc: 'Pierce rating increased by courage',
+            },
+            {
+                name: 'annihilation',
+                canUse: (character: Character) => {
+                    return (
+                        !character.critical_rating_mutators.some(
+                            elem => elem instanceof AnnihilationMutator
+                        )
+                    )
+                },
+                teach: (character: Character): void => {
+                    character.critical_rating_mutators.push(new AnnihilationMutator())
+                },
+                cost: 2,
+                ascend: 20,
+                desc: 'Critical rating increased by energy',
             },
             {
                 name: 'power',

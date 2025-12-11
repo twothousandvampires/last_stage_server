@@ -13,6 +13,7 @@ import Character from '../Objects/src/Character'
 import Ancient from '../Objects/src/Enemy/Ancient'
 import { AscentManifistation } from '../Objects/src/Enemy/AscentManifistation'
 import Bones from '../Objects/src/Enemy/Bones'
+import ConstactedOne from '../Objects/src/Enemy/ConstactedOne'
 import Enemy from '../Objects/src/Enemy/Enemy'
 import { Flamy } from '../Objects/src/Enemy/Flamy'
 import { FleshManifistation } from '../Objects/src/Enemy/FleshManifistation'
@@ -165,6 +166,7 @@ export default class Default extends Scenario {
         if (this.times === Default.TIMES_NORMAL && this.time_between_wave_ms < this.max_time_wave) {
             this.time_between_wave_ms += 40
         }
+       
 
         let add_count = Math.floor(this.waves_created / 13.5)
         add_count += (level.players.length - 1) * 2
@@ -382,7 +384,7 @@ export default class Default extends Scenario {
         let players: Character = level.players.filter(elem => elem.zone_id === 0)
 
         if (this.waves_created > 1 && this.waves_created % 25 === 0) {
-            let a = new Ancient(level)
+            let a = Math.random() > 0.5 ? new Ancient(level) : new ConstactedOne(level)
             let random = Func.getRandomFromArray(players)
 
             let angle: number = Math.random() * 6.28

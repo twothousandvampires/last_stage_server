@@ -232,10 +232,15 @@ export default abstract class Enemy extends Unit {
     deadSound() {}
 
     takeDamage(unit: any = undefined, options: any = {}) {
+        let log = '';
         if (this.is_dead) return
         if (!this.can_be_damaged) return
 
         let is_player_deal_hit = unit instanceof Character
+
+        log += this.name + ' was hitted; '
+        log += 'armour: ' + this.armour_rate + '; '
+        log += 'by player: ' + (is_player_deal_hit ? 'yes; ' : 'no; ')
 
         let instantly =
             options?.instant_death ||
@@ -256,14 +261,20 @@ export default abstract class Enemy extends Unit {
                 y: this.y,
             })
 
+            log += 'armour block: yes; '
+
             let e = new Armour(this.level)
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)
             this.level.effects.push(e)
+
+            this.level.addLog(log)
             return
         }
 
         let damage_value = 1
+
+        log += 'base damage: 1; '
 
         if (options?.damage_value) {
             damage_value = options.damage_value
@@ -274,36 +285,45 @@ export default abstract class Enemy extends Unit {
             let is_pierce = Func.chance(pierce - this.armour_rate)
 
             if (is_pierce) {
-                damage_value++
+                damage_value ++
+                log += 'pierce: damage is ' + damage_value + '; '
                 unit.succesefulPierce(this)
             }
         }
 
         if (this.crushing > 0) {
+           
             damage_value += this.crushing
+            log += 'crushing: damage is ' + damage_value + '; '
         }
 
         if (is_player_deal_hit && unit.isCrushing()) {
-            this.crushing++
+            log += 'crushing proc ; '
+            this.crushing ++
         }
 
         if (Func.chance(this.fortify)) {
-            damage_value--
+            
+            damage_value --
+            log += 'enemy fortify: damage is ' + damage_value + '; '
         }
 
-        if (unit && unit?.critical && Func.chance(unit.critical)) {
+        if (is_player_deal_hit && Func.chance(unit.getCritical())) {
             damage_value *= 2
-            if (is_player_deal_hit) {
-                unit.succesefulCritical(this)
-            }
+            log += 'crit: damage is ' + damage_value + '; '
+            
+            unit.succesefulCritical(this)  
         }
 
         if (this.fragility) {
+             
             damage_value *= 2
+            log += 'fragility: damage is ' + damage_value + '; '
         }
 
         if (is_player_deal_hit && Func.chance(unit.getPower())) {
             damage_value++
+            log += 'power: damage is ' + damage_value + '; '
         }
 
         this.life_status -= damage_value
@@ -330,7 +350,7 @@ export default abstract class Enemy extends Unit {
 
             this.setState(new EnemyDyingState())
         }
-
+        this.level.addLog(log)
         this.level.addSound(this.getWeaponHitedSound())
     }
 

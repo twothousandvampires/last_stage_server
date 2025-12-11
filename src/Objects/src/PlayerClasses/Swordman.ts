@@ -21,13 +21,6 @@ import InnerPowerTrigger from '../../../Triggers/InnerPowerTrigger'
 import HeavenIntervention from '../../../Triggers/HeavenIntervention'
 import HeavenWrath from '../../../Abilities/Swordman/HeavenWrath'
 import Upgrade from '../../../Types/Upgrade'
-import FromDefendToAttackTrigger from '../../../Triggers/FromDefendToAttackTrigger'
-import WallOfWillTrigger from '../../../Triggers/WallOfWillTrigger'
-import FirstToStrikeTrigger from '../../../Triggers/FirstToStrikeTrigger'
-import PressingSteps from '../../../Status/PressingSteps'
-import RingFlame from '../../../Triggers/RingFlame'
-import Hurricane from '../../../Triggers/Hurricane'
-import ChainLightning from '../../../Triggers/ChainLightningTrigger'
 
 export default class Swordman extends Character {
     static MIN_ATTACK_SPEED = 150
@@ -367,7 +360,12 @@ export default class Swordman extends Character {
     }
 
     getPierce() {
-        return this.pierce + this.agility
+        let base = this.pierce + this.agility
+        this.pierce_rating_mutators.forEach(elem => {
+            base = elem.mutate(base, this)
+        })
+
+        return base
     }
 
     generateUpgrades() {
@@ -405,7 +403,6 @@ export default class Swordman extends Character {
         let part3 = filtered.slice(part_size * 2)
 
         if(this.upgrades_generated % 5 === 0){
-            console.log('here')
             let upgrade = Func.getRandomFromArray(part1)
             this.upgrades = this.upgrades.concat(upgrade)
             part1 = part1.filter(elem => upgrade.name != elem.name)
