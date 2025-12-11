@@ -2677,7 +2677,7 @@ export default class Upgrades {
                         character.third_ability.blasted = true
                     }
                 },
-                cost: 4,
+                cost: 3,
                 ascend: 35,
                 desc: 'Provide a chance to instant kill',
             },

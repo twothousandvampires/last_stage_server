@@ -217,6 +217,7 @@ export default abstract class Item {
         'explosive armour',
         'fire presence',
         'fortify when hit',
+        'enchanted armour'
     ]
 
     static forging_list_type_3 = [
