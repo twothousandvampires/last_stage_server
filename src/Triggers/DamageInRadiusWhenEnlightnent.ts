@@ -25,6 +25,7 @@ export default class DamageInRadiusWhenEnlightnent {
             enemies.forEach(elem => {
                 elem.takeDamage(player, {
                     burn: true,
+                    damage_value: player.getSecondResource()
                 })
             })
         }

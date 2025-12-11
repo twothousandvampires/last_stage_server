@@ -6,6 +6,6 @@ export default class WardAfterEnlightTrigger {
     chance: number = 100
 
     trigger(player: Character) {
-        player.addWard(5)
+        player.addWard(player.getSecondResource())
     }
 }

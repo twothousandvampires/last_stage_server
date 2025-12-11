@@ -71,10 +71,35 @@ import ScreamTrigger from '../Triggers/ScreamTrigger'
 import ImpactTrigger from '../Triggers/ImpactTrigger'
 import CuttingMutator from '../Mutators/CuttingMutator'
 import AnnihilationMutator from '../Mutators/AnnihilationMutator'
+import CourageAvoidDamage from '../Mutators/CourageAvoidDamage'
 
 export default class Upgrades {
     static getAllUpgrades(): Upgrade[] {
         return [
+            {
+                name: 'senselessness',
+                canUse: (character: Character) => {
+                    return !character.avaid_damage_mutator.some(elem => elem instanceof CourageAvoidDamage)
+                },
+                teach: (character: Character): void => {
+                    character.avaid_damage_mutator.push(new CourageAvoidDamage())
+                },
+                cost: 3,
+                ascend: 30,
+                desc: 'Increases chance to avoid damage depend on your courage',
+            },
+            {
+                name: 'immaterial',
+                canUse: (character: Character) => {
+                    return character.avoid_damage_chance < 20
+                },
+                teach: (character: Character): void => {
+                    character.avoid_damage_chance += 1
+                },
+                cost: 1,
+                ascend: 25,
+                desc: 'Increases chance to avoid damage',
+            },
             {
                 name: 'overflow',
                 canUse: (character: Character) => {
@@ -87,7 +112,7 @@ export default class Upgrades {
                 },
                 cost: 2,
                 ascend: 14,
-                desc: 'When you gain enlightenment, you deal damage in a large radius',
+                desc: 'When you gain enlightenment, you deal damage in a large radius equlas your courage',
             },
             {
                 name: 'way of enlightenment',
@@ -555,7 +580,7 @@ export default class Upgrades {
                 },
                 cost: 4,
                 ascend: 25,
-                desc: 'You gain 5 wards when you gain enlightenment',
+                desc: 'You gain wards equals your courage when you gain enlightenment',
             },
             {
                 name: 'spirit strikes',

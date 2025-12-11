@@ -115,7 +115,8 @@ export default abstract class Character extends Unit {
     chance_to_get_additional_gold: number = 0
     chance_to_block: number = 0
     chance_to_create_grace: number = 0
-    chance_to_trigger_additional_time = 0
+    chance_to_trigger_additional_time: number = 0
+    avoid_damage_chance: number = 0
 
     enlightenment_threshold: number = 12
     can_get_courage: boolean = true
@@ -153,6 +154,7 @@ export default abstract class Character extends Unit {
 
     pierce_rating_mutators: Mutator[] = []
     critical_rating_mutators: Mutator[] = []
+    avaid_damage_mutator: Mutator[] = []
 
     constructor(level: Level) {
         super(level)
@@ -175,6 +177,16 @@ export default abstract class Character extends Unit {
     abstract addCourage(): void
     abstract getRegenTimer(): number
     abstract getPower(): number
+    
+    getAvoidChance(){
+        let base = this.avoid_damage_chance
+
+        this.avaid_damage_mutator.forEach(elem => {
+            base = elem.mutate(base, this)
+        })
+        
+        return base
+    }
 
     getCritical(){
         let base = this.critical
@@ -483,6 +495,7 @@ export default abstract class Character extends Unit {
             fortification:
                 'Gives a chance to reduce damage by 1 before multiplying of receiving damage',
             'double triggering': 'chance that trigger will triger twice',
+            'avoid damage': 'chance to avoid damage',
         }
         return {
             stats: {
@@ -510,6 +523,7 @@ export default abstract class Character extends Unit {
                 'regeneration rate': this.getRegenTimer() / 1000 + 'sec',
                 power: this.getPower(),
                 'double triggering': this.isSecondTrigger(),
+                'avoid damage': this.getAvoidChance()
             },
             descriptions: descriptions,
         }

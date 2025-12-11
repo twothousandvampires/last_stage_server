@@ -11,10 +11,12 @@ import WanderingEvil from '../../../Abilities/Cultist/WanderingEvil'
 import Upgrades from '../../../Classes/Upgrades'
 import Func from '../../../Func'
 import Level from '../../../Level'
+import CultistWillDamageAvoid from '../../../Mutators/CultistWillDamageAvoid'
 import PlayerDyingState from '../../../State/PlayerDyingState'
 import Immortality from '../../../Status/Immortality'
 import Armour from '../../Effects/Armour'
 import Blood from '../../Effects/Blood'
+import Spirit from '../../Effects/Spirit'
 import ToothExplode from '../../Effects/ToothExplode'
 import Character from '../Character'
 import Unit from '../Unit'
@@ -62,6 +64,7 @@ export default class Cultist extends Character {
 
         this.recent_hits = []
         this.chance_to_block = 65
+        this.avaid_damage_mutator = [new CultistWillDamageAvoid()]
     }
 
     getSkipDamageStateChance() {
@@ -250,11 +253,11 @@ export default class Cultist extends Character {
         }
 
         if (this.ward) {
-            let count = 1
-            if (unit && Func.chance(unit.critical)) {
-                count++
-            }
-            this.loseWard(count)
+            // let count = 1
+            // if (unit && Func.chance(unit.critical)) {
+            //     count++
+            // }
+            this.loseWard(1)
             let e = new ToothExplode(this.level)
             e.setPoint(Func.random(this.x - 2, this.x + 2), this.y)
             e.z = Func.random(2, 8)
@@ -270,6 +273,11 @@ export default class Cultist extends Character {
         this.playerWasHited(unit)
 
         if (this.isSpiritBlock()) {
+            this.level.addSound('spirit', this.x, this.y)
+            let e = new Spirit(this.level)
+            e.setPoint(this.x, this.y)
+            this.level.addEffect(e)
+
             this.resource--
             return
         }
@@ -322,13 +330,7 @@ export default class Cultist extends Character {
         e.z = Func.random(2, 8)
         this.level.effects.push(e)
 
-        let will_avoid = this.will * 2
-
-        if (will_avoid > 50) {
-            will_avoid = 50
-        }
-
-        if (Func.chance(will_avoid, this.is_lucky)) {
+        if (Func.chance(this.getAvoidChance(), this.is_lucky)) {
             return
         }
 
