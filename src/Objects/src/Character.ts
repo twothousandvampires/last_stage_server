@@ -817,38 +817,29 @@ export default abstract class Character extends Unit {
             return
         }
 
-        let log = 'player was hitted; damage is ' + value + '; '
-
         if (
             unit &&
             unit.pierce > this.getTotalArmour() &&
             Func.chance(unit.pierce - this.getTotalArmour())
         ) {
             value++
-            log += 'pierce: damage is ' + value + '; '
         }
 
         if (Func.chance(this.fortify)) {
             value--
-            log += 'fortify: damage is ' + value + '; '
         }
 
         if (unit && Func.chance(unit.critical)) {
             value *= 2
-            log += 'critical: damage is ' + value + '; '
         }
 
         if (this.fragility) {
             value *= 2
-             log += 'fragility: damage is ' + value + '; '
         }
 
         if (unit && Func.chance(unit.power)) {
             value++
-             log += 'power: damage is ' + value + '; '
         }
-
-        this.level.addLog2(log)
 
         if (value > 0) {
             this.last_time_get_hit = this.level.time

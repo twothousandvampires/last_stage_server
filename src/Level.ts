@@ -20,7 +20,8 @@ import SorcerersSkull from './Objects/Effects/SorcerersSkull'
 import UpgradeManager from './Classes/UpgradeManager'
 import Helm from './Objects/Effects/Helm'
 import Message from './Types/Message'
-import Conversation from './Scenarios/Conversation'
+const fs = require('fs');
+const path = require('path');
 
 export default class Level {
     static enemy_list = [
@@ -117,6 +118,16 @@ export default class Level {
         this.enemies.forEach(elem => {
             func(elem)
         })
+    }
+
+    addLog(message) {
+        const logEntry = `${new Date().toISOString()} - ${message}\n`;
+        fs.appendFileSync('app.log', logEntry);
+    }
+
+    addLog2(message) {
+        const logEntry = `${new Date().toISOString()} - ${message}\n`;
+        fs.appendFileSync('app2.log', logEntry);
     }
 
     public playerDead(): void {
