@@ -19,7 +19,7 @@ export default class WallOfBones extends Item implements ITrigger {
         this.name = 'wall of bones'
         this.count = 10
         this.type = 2
-        this.duration = 6000
+        this.duration = 12000
         this.chance = 25
         this.description =
             'if you get hit, you have a chance to receive a bone charge that increases your armor and fortification. If you reach the maximum charge (default 10), there is a chance that the charges will explode and injure enemies.'
@@ -34,7 +34,7 @@ export default class WallOfBones extends Item implements ITrigger {
     }
 
     getSpecialForgings(): string[] {
-        return ['count', 'duration', 'bones when block', 'chance']
+        return ['count', 'duration', 'bones when block']
     }
 
     remove(character) {
