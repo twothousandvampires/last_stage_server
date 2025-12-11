@@ -80,7 +80,7 @@ export default class Quake extends SwordmanAbility implements IUnitState<Charact
             targets.forEach(elem => {
                 if (Func.elipseCollision(first_wave, elem.getBoxElipse())) {
                     hited.push(elem)
-                    let instant_kill = elem != player && this.blasted && Func.chance(20)
+                    let instant_kill = elem != player && this.blasted && Func.chance(30 + second)
                     elem.takeDamage(player, {
                         explode: true,
                         instant_death: instant_kill,

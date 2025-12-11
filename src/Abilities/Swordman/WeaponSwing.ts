@@ -31,7 +31,7 @@ export default class WeaponSwing extends SwordmanAbility {
             attack_elipse.r += 3
         }
 
-        let weapon_angle = this.owner.weapon_angle + second / 10
+        let weapon_angle = this.owner.weapon_angle + (second / 10)
 
         if (this.crushing) {
             weapon_angle += 0.5

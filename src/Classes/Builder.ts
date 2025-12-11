@@ -108,6 +108,7 @@ import Dismemberment from '../Glyphs/Dismemberment'
 import Distorter from '../Items/Distorter'
 import Echo from '../Items/Forgings/Echo'
 import BlessedLife from '../Items/Forgings/BlessedLife'
+import EnchantedArmour from '../Items/Forgings/EnchantedArmour'
 
 export default class Builder {
     static masteryMap = {
@@ -218,7 +219,8 @@ export default class Builder {
         power: Power,
         vampiric: Vampiric,
         echo: Echo,
-        'blessed life': BlessedLife
+        'blessed life': BlessedLife,
+        'enchanted armour': EnchantedArmour
     }
 
     static createCharacter(client: Client, level: Level): Character {

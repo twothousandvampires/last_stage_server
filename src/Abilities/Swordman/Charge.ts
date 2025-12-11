@@ -23,6 +23,10 @@ export default class Charge extends SwordmanAbility implements IUnitState<Charac
         this.mastery_chance = 50
     }
 
+    impact(): void {
+        
+    }
+
     enter(player: Character) {
         player.prepareToAction()
 
@@ -56,10 +60,12 @@ export default class Charge extends SwordmanAbility implements IUnitState<Charac
                 player.addToPoint(next_step_x, next_step_y)
             }
 
-            let stun_power = 2000
+           
 
             let count = player.getTargetsCount()
             let second = player.getSecondResource()
+
+            let stun_power = 2000 + (second * 100)
 
             player.level.enemies.forEach(elem => {
                 if (
@@ -68,7 +74,7 @@ export default class Charge extends SwordmanAbility implements IUnitState<Charac
                 ) {
                     this.hited.push(elem.id)
 
-                    if (count > 0 && this.destroyer && Func.chance(35 + second)) {
+                    if (count > 0 && this.destroyer && Func.chance(35 + (second * 2))) {
                         elem.takeDamage(player, {
                             explode: true,
                         })

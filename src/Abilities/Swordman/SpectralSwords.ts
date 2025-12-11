@@ -41,7 +41,7 @@ export default class SpectralSwords extends SwordmanAbility {
 
             let summon = new SpectralSword(
                 this.owner.level,
-                15000 + this.owner.getSecondResource() * 1000,
+                15000 + (this.owner.getSecondResource() * 1000),
                 this.owner
             )
 

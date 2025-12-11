@@ -18,7 +18,7 @@ export default class CursedWeapon extends SwordmanAbility {
         let second = this.owner.getSecondResource()
 
         let status = new CursedWeaponStatus(this.owner.level.time, this.drinker)
-        status.setDuration(8000 + second * 200)
+        status.setDuration(8000 + (second * 200))
 
         this.owner.level.setStatus(this.owner, status)
 
