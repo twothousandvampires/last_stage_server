@@ -30,7 +30,7 @@ export default class WallOfBones extends Item implements ITrigger {
     }
 
     getTriggerChance(): number {
-        return this.chance
+        return 100
     }
 
     getSpecialForgings(): string[] {
