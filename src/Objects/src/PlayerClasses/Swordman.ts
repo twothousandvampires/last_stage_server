@@ -114,12 +114,7 @@ export default class Swordman extends Character {
         }
 
         this.addLife()
-        this.attack_speed -= 500
-
-        setTimeout(() => {
-            this.attack_speed += 500
-        }, 3000)
-
+       
         this.level.addSound('enlight', this.x, this.y)
         this.playerWasEnlighted()
     }

@@ -26,7 +26,6 @@ import { MasteryManifistation } from '../Objects/src/Enemy/MasteryManifistation'
 import Slime from '../Objects/src/Enemy/Slime'
 import Solid from '../Objects/src/Enemy/Solid'
 import Specter from '../Objects/src/Enemy/Specter'
-import GameObject from '../Objects/src/GameObject'
 import Pile from '../Objects/src/Piles/Pile'
 import BannerOfArmour from '../Status/BannerOfArmour'
 import Bless from '../Status/Bless'
@@ -45,7 +44,8 @@ export default class Default extends Scenario {
 
     last_checked: number
     time_between_wave_ms: number
-    max_time_wave: number = 8000
+    max_time_wave: number = 6500
+    min_time_wave: number = 5000
     waves_created: number = 0
     times_count: number = 0
     add_e_life: number = 0
@@ -66,11 +66,18 @@ export default class Default extends Scenario {
     times: number
     portal_is_exist = false
 
+    waves_plato: number = 100
+    waves_plato_end: number = 140
+    waves_end: number = 150
+
+    time_increment: number = 0
+    time_decrement: number = 0
+
     constructor() {
         super()
         this.last_checked = 0
         this.times = Default.TIMES_NORMAL
-        this.time_between_wave_ms = 4500
+        this.time_between_wave_ms = 4000
         this.monster_upgrades = {
             minor: {
                 cooldown_attack: 0,
@@ -83,6 +90,8 @@ export default class Default extends Scenario {
                 life: 0,
             },
         }
+        this.time_increment = Math.round((this.max_time_wave - this.time_between_wave_ms) / this.waves_plato)
+        this.time_decrement = Math.round((this.max_time_wave - this.min_time_wave) / (this.waves_end - this.waves_plato_end))
     }
     setTimes(times: number) {
         this.times_count = Func.random(6, 8)
@@ -137,9 +146,9 @@ export default class Default extends Scenario {
         let wave_time = this.time_between_wave_ms
 
         if (this.times === Default.TIMES_BAD) {
-            wave_time = Math.round(wave_time * 0.8)
+            wave_time = 4000
         } else if (this.times === Default.TIMES_GOOD) {
-            wave_time = Math.round(wave_time * 1.2)
+            wave_time = 12000
         }
 
         if (level.time - this.last_checked >= wave_time) {
@@ -159,17 +168,13 @@ export default class Default extends Scenario {
     }
 
     async createWave(level: Level) {
-        this.waves_created++
+        this.waves_created ++
 
-        if (this.times === Default.TIMES_NORMAL && this.time_between_wave_ms < this.max_time_wave) {
-            this.time_between_wave_ms += 40
-        }
-       
-
-        let add_count = Math.floor(this.waves_created / 13.5)
+      
+        let add_count = Math.floor(this.waves_created / 16)
         add_count += (level.players.length - 1) * 2
 
-        let count = Func.random(1 + Math.floor(add_count / 3.5), 2 + Math.floor(add_count / 2))
+        let count = Func.random(1 + Math.floor(add_count / 4), 2 + Math.floor(add_count / 2.5))
 
         if (this.times === Default.TIMES_BAD) {
             count = Math.round(count * 1.5)
@@ -180,6 +185,26 @@ export default class Default extends Scenario {
 
             this.createRandomEnemy(level)
         }
+
+        this.updateTimeBetweenWaves()
+    }
+
+    updateTimeBetweenWaves(){
+        if(this.waves_created >= this.waves_plato){
+            this.time_between_wave_ms = Math.round(this.max_time_wave + Func.random(100, 500))
+
+        }
+        else{
+            this.time_between_wave_ms += this.time_increment
+
+            if(this.time_between_wave_ms > this.max_time_wave){
+                this.time_between_wave_ms =  this.max_time_wave
+            }
+            
+        }
+        
+        
+        console.log(this.time_between_wave_ms)
     }
 
     createRandomEnemy(level: Level, list: string[] = []) {

@@ -25,7 +25,7 @@ export default abstract class Enemy extends Unit {
     hit_x: number = 0
     hit_y: number = 0
 
-    create_grace_chance: number = 18
+    create_grace_chance: number = 17
     create_energy_chance: number = 6
     create_entity_chance: number = 6
     create_intervention_chance: number = 2
@@ -197,14 +197,14 @@ export default abstract class Enemy extends Unit {
             damage_value = options.damage_value
         }
 
-        if (is_player_deal_hit) {
-            let pierce = unit.getPierce()
-            let is_pierce = Func.chance(pierce - this.armour_rate)
+        // if (is_player_deal_hit) {
+        //     let pierce = unit.getPierce()
+        //     let is_pierce = Func.chance(pierce - this.armour_rate)
 
-            if (is_pierce) {
-                damage_value ++
-            }
-        }
+        //     if (is_pierce) {
+        //         damage_value ++
+        //     }
+        // }
 
         this.life_status -= damage_value
 
