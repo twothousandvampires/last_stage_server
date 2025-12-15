@@ -6,7 +6,7 @@ export default class Spirit extends Forging {
 
     constructor(item: Item) {
         super(item)
-        this.max_value = 5
+        this.max_value = 15
         this.name = 'spirit'
         this.description = 'increases your spirit'
         this.gold_cost = 5

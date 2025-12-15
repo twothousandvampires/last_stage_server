@@ -17,7 +17,7 @@ export default class StunWhenHit extends Forging implements ITrigger {
         this.max_value = 80
         this.name = 'stun when hit'
         this.description = 'gives chance to stun in radius when you hit enemy'
-        this.gold_cost = 20
+        this.gold_cost = 12
     }
 
     getTriggerChance(player: Character | undefined): number {

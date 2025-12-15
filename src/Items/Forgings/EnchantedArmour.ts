@@ -9,10 +9,10 @@ export default class EnchantedArmour extends Forging {
 
     constructor(item: Item) {
         super(item)
-        this.max_value = 25
+        this.max_value = 35
         this.name = 'enchanted armour'
         this.description = 'give a chance to get ward when you block hit by armour'
-        this.gold_cost = 10
+        this.gold_cost = 8
     }
 
     forge(player: Character) {

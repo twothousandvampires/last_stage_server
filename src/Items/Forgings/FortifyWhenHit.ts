@@ -1,4 +1,4 @@
-import ITrigger from '../../Interfaces/Itrigger'
+import ITrigger from '../../Interfaces/ITrigger'
 import Character from '../../Objects/src/Character'
 import Unit from '../../Objects/src/Unit'
 import Fortify from '../../Status/Fortify'
@@ -13,10 +13,10 @@ export default class FortifyWhenHit extends Forging implements ITrigger {
 
     constructor(item: Item) {
         super(item)
-        this.max_value = 30
+        this.max_value = 35
         this.name = 'fortify'
         this.description = 'when you get hit there is a chance to get fortify'
-        this.gold_cost = 12
+        this.gold_cost = 10
     }
 
     getTriggerChance(): number {

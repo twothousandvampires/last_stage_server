@@ -6,10 +6,10 @@ export default class Impact extends Forging {
 
     constructor(item: Item) {
         super(item)
-        this.max_value = 10
+        this.max_value = 15
         this.name = 'impact'
         this.description = 'increases your impact rating'
-        this.gold_cost = 10
+        this.gold_cost = 7
     }
 
     forge() {

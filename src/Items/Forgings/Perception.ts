@@ -6,10 +6,10 @@ export default class Perception extends Forging {
 
     constructor(item: Item) {
         super(item)
-        this.max_value = 8
+        this.max_value = 10
         this.name = 'perception'
         this.description = 'increases your perception'
-        this.gold_cost = 5
+        this.gold_cost = 6
     }
 
     forge() {

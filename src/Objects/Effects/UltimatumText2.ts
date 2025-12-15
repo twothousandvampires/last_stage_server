@@ -15,6 +15,7 @@ export default class UltimatumText2 extends Effect implements IUltimatumChalleng
     challenge_radius = 25
     effect: any
     pool: (string | number)[] = []
+    kill_trashold: number = 10
 
     constructor(level: Level) {
         super(level)
@@ -100,7 +101,7 @@ export default class UltimatumText2 extends Effect implements IUltimatumChalleng
                     Func.distance(elem, this) <= this.challenge_radius
                 ) {
                     this.pool.push(elem.id)
-                    if (this.pool.length >= 10) {
+                    if (this.pool.length >= this.kill_trashold) {
                         this.success()
                     } else {
                         let e = new Heal(this.level)

@@ -94,7 +94,7 @@ export default class Default extends Scenario {
         this.time_decrement = Math.round((this.max_time_wave - this.min_time_wave) / (this.waves_end - this.waves_plato_end))
     }
     setTimes(times: number) {
-        this.times_count = Func.random(6, 8)
+        this.times_count = Func.random(4, 8)
         this.times = times
     }
 
@@ -159,8 +159,8 @@ export default class Default extends Scenario {
             this.checkUpgrade(level)
 
             if (this.times_count) {
-                this.times_count--
-                if (!this.times_count) {
+                this.times_count --
+                if (this.times_count <= 0) {
                     this.times = Default.TIMES_NORMAL
                 }
             }
@@ -176,9 +176,9 @@ export default class Default extends Scenario {
 
         let count = Func.random(1 + Math.floor(add_count / 4), 2 + Math.floor(add_count / 2.5))
 
-        if (this.times === Default.TIMES_BAD) {
-            count = Math.round(count * 1.5)
-        }
+        // if (this.times === Default.TIMES_BAD) {
+        //     count = Math.round(count * 1.5)
+        // }
 
         for (let i = 0; i < count; i++) {
             await Func.sleep(Func.random(100, 300))
@@ -202,7 +202,6 @@ export default class Default extends Scenario {
             }
             
         }
-        
         
         console.log(this.time_between_wave_ms)
     }

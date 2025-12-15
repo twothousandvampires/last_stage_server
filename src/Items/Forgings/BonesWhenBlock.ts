@@ -10,7 +10,7 @@ export default class BonesWhenBlock extends Forging implements ITrigger {
     value: number = 0
     last_trigger_time: number = 0
     chance: number = 10
-    cd: number = 3000
+    cd: number = 1000
 
     constructor(item: Item) {
         super(item)

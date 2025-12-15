@@ -41,7 +41,7 @@ export class MasterManifestation extends Manifistation {
             targets.forEach(elem => {
                 let s = new Ignite(this.level.time)
                 s.setDuration(3000 + this.stage * 1000)
-                s.setPower(30 + this.stage * 10)
+                s.setPower(30)
 
                 this.level.setStatus(elem, s)
             })
@@ -51,7 +51,7 @@ export class MasterManifestation extends Manifistation {
             targets.forEach(elem => {
                 let s = new ShockStatus(this.level.time)
                 s.setDuration(4000 + this.stage * 1000)
-                s.setPower(30 + this.stage * 10)
+                s.setPower(30)
 
                 this.level.setStatus(elem, s)
             })
