@@ -193,8 +193,11 @@ export default class Default extends Scenario {
 
     updateTimeBetweenWaves(){
         if(this.waves_created >= this.waves_plato){
-            this.time_between_wave_ms = Math.round(this.max_time_wave + Func.random(100, 500))
-
+            if(this.waves_created >= 220 && this.max_time_wave >= 3500){
+                this.max_time_wave -= 20
+            }
+           
+            this.time_between_wave_ms = Math.round(this.max_time_wave + Func.random(100, 1000))
         }
         else{
             this.time_between_wave_ms += this.time_increment
@@ -204,8 +207,6 @@ export default class Default extends Scenario {
             }
             
         }
-        
-        console.log(this.time_between_wave_ms)
     }
 
     createRandomEnemy(level: Level, list: string[] = []) {
