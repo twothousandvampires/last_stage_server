@@ -6,7 +6,6 @@ import GraceShard from './Objects/Effects/GraceShard'
 import Func from './Func'
 import Split from './Objects/Effects/Split'
 import ChargedSphere from './Objects/Effects/ChargedSphere'
-import Intervention from './Objects/Effects/Intervention'
 import Default from './Scenarios/Default'
 import Scenario from './Scenarios/Scenario'
 import { Server, Socket } from 'socket.io'
@@ -136,7 +135,7 @@ export default class Level {
         let are_all_dead: boolean = this.players.every(elem => elem.is_dead)
         if (are_all_dead) {
             this.players.forEach(elem => {
-                this.server.saveData(elem)
+                this.server.saveData(elem, this.players.length === 1 ? 'solo' : 'party')
             })
             setTimeout(() => {
                 if(this.players.length) {
@@ -307,8 +306,6 @@ export default class Level {
                 drop_name = new ChargedSphere(this)
             } else if (drop_name === 'entity') {
                 drop_name = new Split(this)
-            } else if (drop_name === 'intervention') {
-                drop_name = new Intervention(this)
             } else if (drop_name === 'item') {
                 drop_name = new ItemDrop(this)
             } else if (drop_name === 'skull') {

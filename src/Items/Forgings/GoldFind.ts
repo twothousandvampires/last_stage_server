@@ -6,10 +6,10 @@ export default class GoldFind extends Forging {
 
     constructor(item: Item) {
         super(item)
-        this.max_value = 25
+        this.max_value = 30
         this.name = 'gold find'
         this.description = 'increase a chance to get additional gold'
-        this.gold_cost = 10
+        this.gold_cost = 8
     }
 
     forge() {

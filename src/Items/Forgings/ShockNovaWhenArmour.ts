@@ -17,7 +17,7 @@ export default class ShockNovaWhenArmour extends Forging {
         this.max_value = 80
         this.name = 'shock nova when armour'
         this.description = 'chance to shock nearby enemies when you block damage by armour'
-        this.gold_cost = 20
+        this.gold_cost = 12
     }
 
     forge(player: Character) {

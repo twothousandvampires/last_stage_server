@@ -9,10 +9,10 @@ export default class ExplosiveArmour extends Forging {
 
     constructor(item: Item) {
         super(item)
-        this.max_value = 20
+        this.max_value = 35
         this.name = 'explosive armour'
         this.description = 'give a chance to create explode around you when you block hit by armour'
-        this.gold_cost = 12
+        this.gold_cost = 8
     }
 
     forge(player: Character) {

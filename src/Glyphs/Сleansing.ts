@@ -1,5 +1,4 @@
 import Ability from '../Abilities/Ability'
-import Func from '../Func'
 import Heal from '../Objects/Effects/Heal'
 import Character from '../Objects/src/Character'
 import Mastery from './Mastery'

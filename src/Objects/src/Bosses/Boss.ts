@@ -1,7 +1,5 @@
 import Builder from '../../../Classes/Builder'
 import BlindAbility from '../../../EnemyAbilities/BlindAbility'
-import DespairAbility from '../../../EnemyAbilities/DespairAbility'
-import FanOfBonesAbility from '../../../EnemyAbilities/FanOfBonesAbility'
 import UnholyTouch from '../../../EnemyAbilities/UnholyTouch'
 import Level from '../../../Level'
 import ApathyAura from '../../../Status/ApathyAura'

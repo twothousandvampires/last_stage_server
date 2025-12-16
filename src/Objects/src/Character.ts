@@ -68,7 +68,7 @@ export default abstract class Character extends Unit {
     base_regeneration_time: number = 10000
     grace: number = 1
     voice_radius: number = 20
-    gold: number = 0
+    gold: number = 15
     cooldown_redaction: number = 0
     max_life: number = 4
     maximum_resources: number = 7
@@ -177,6 +177,7 @@ export default abstract class Character extends Unit {
     abstract addCourage(): void
     abstract getRegenTimer(): number
     abstract getPower(): number
+    abstract reduceSecondResourse(): void
     
     getAvoidChance(){
         let base = this.avoid_damage_chance

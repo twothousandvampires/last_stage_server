@@ -9,10 +9,10 @@ export default class SparksWhenBlock extends Forging {
 
     constructor(item: Item) {
         super(item)
-        this.max_value = 20
+        this.max_value = 35
         this.name = 'charged shield'
         this.description = 'gives a chance to release sparks when block'
-        this.gold_cost = 12
+        this.gold_cost = 10
     }
 
     forge(player: Character) {

@@ -28,8 +28,8 @@ export default class MassiveImpactTrigger {
                 player.level.effects.push(e)
 
                 player.level.enemies.forEach(elem => {
-                    if (Func.elipseCollision(box, elem.getBoxElipse()) && !elem.is_dead) {
-                        elem.takeDamage(player, {
+                    if (!elem.is_dead && Func.elipseCollision(box, elem.getBoxElipse())) {
+                        elem.takePureDamage(player, {
                             damage_value: impact_damage,
                         })
                     }

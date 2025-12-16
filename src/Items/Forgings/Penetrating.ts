@@ -6,7 +6,7 @@ export default class Penetrating extends Forging {
 
     constructor(item: Item) {
         super(item)
-        this.max_value = 10
+        this.max_value = 20
         this.name = 'crushing'
         this.description = 'increases your crushing rating'
         this.gold_cost = 5

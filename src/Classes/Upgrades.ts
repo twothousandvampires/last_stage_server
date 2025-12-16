@@ -155,7 +155,7 @@ export default class Upgrades {
             {
                 name: 'masterliness',
                 canUse: (character: Character) => {
-                    return Func.chance(30)
+                    return Func.chance(30) && character.third_ability.mastery_chance <= 100
                 },
                 teach: (character: Character): void => {
                     character.first_ability.mastery_chance += 1

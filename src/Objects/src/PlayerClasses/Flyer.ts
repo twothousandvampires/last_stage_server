@@ -382,7 +382,7 @@ export default class Flyer extends Character {
     }
 
     getRegenTimer() {
-        return 15000 - this.durability * 500
+        return this.base_regeneration_time - (this.durability * 100)
     }
 
     getManaRegenTimer() {
@@ -567,6 +567,9 @@ export default class Flyer extends Character {
 
     getSecondResource() {
         return this.recent_cast.length
+    }
+    reduceSecondResourse(){
+        this.recent_cast.pop()
     }
 
     getCastSpeed() {

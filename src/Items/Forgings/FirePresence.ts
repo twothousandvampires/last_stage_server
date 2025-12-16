@@ -10,7 +10,7 @@ export default class FirePresence extends Forging {
 
     constructor(item: Item) {
         super(item)
-        this.max_value = 50
+        this.max_value = 40
         this.name = 'fire presence'
         this.description = 'give a chance to explode nearby ignited enemy'
         this.gold_cost = 10

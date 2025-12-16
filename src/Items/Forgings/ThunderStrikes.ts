@@ -9,7 +9,7 @@ export default class ThunderStrikes extends Forging {
 
     constructor(item: Item) {
         super(item)
-        this.max_value = 5
+        this.max_value = 7
         this.name = 'thunder strikes'
         this.description =
             'when your pierce enemy create lightning bolts that strike behind the target'

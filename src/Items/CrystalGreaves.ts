@@ -9,7 +9,7 @@ export default class CrystalGreaves extends Item {
         this.name = 'crystal greaves'
         this.type = 2
         this.description =
-            'You are fragile (15%) when you move, nearby enemies are frigile when you stand'
+            'You are fragile while you stand, nearby enemies are frigile when you move'
     }
 
     equip(character: Character): void {

@@ -171,7 +171,7 @@ export default class MasterServer {
                     const [results] = await this.db
                         .promise()
                         .query(
-                            `SELECT * FROM (SELECT * FROM game_stats WHERE class = 'swordman' ORDER BY kills DESC LIMIT 3) AS swordman_top UNION ALL SELECT * FROM (SELECT * FROM game_stats WHERE class = 'flyer' ORDER BY kills DESC LIMIT 3) AS flyer_top UNION ALL SELECT * FROM (SELECT * FROM game_stats WHERE class = 'cultist' ORDER BY kills DESC LIMIT 3) AS cultist_top;`
+                            `SELECT * FROM (SELECT * FROM game_stats WHERE class = 'swordman' and game_type = 'solo' ORDER BY kills DESC LIMIT 3) AS swordman_top UNION ALL SELECT * FROM (SELECT * FROM game_stats WHERE class = 'flyer' and game_type = 'solo' ORDER BY kills DESC LIMIT 3) AS flyer_top UNION ALL SELECT * FROM (SELECT * FROM game_stats WHERE class = 'cultist' and game_type = 'solo' ORDER BY kills DESC LIMIT 3) AS cultist_top;`
                         )
 
                     socket.emit('records', JSON.stringify(results))

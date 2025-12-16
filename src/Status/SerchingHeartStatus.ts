@@ -33,7 +33,7 @@ export default class SerchingHeartStatus extends Status {
     }
 
     act(tick_time: number) {
-        if (tick_time - this.last_trigger_time >= this.item.frequency) {
+        if (tick_time - this.last_trigger_time >= this.item.cd) {
             this.last_trigger_time = tick_time
             this.trigger()
         }

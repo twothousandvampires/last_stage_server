@@ -341,6 +341,10 @@ export default class Cultist extends Character {
         return this.recent_hits.length
     }
 
+    reduceSecondResourse(){
+        this.recent_hits.pop()
+    }
+
     getRegenTimer() {
         return this.base_regeneration_time
     }

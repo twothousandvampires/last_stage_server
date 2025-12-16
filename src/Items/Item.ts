@@ -142,7 +142,7 @@ export default abstract class Item {
         {
             name: 'crystal greaves',
             description:
-                'You are fragile (15%) when you move, nearby enemies are frigile when you stand',
+                'You are fragile while you stand, nearby enemies are frigile when you move',
         },
         {
             name: 'flying shards',
@@ -202,6 +202,7 @@ export default abstract class Item {
         'thunder strikes',
         'storm presence',
         'dominance when critical',
+        'fragility on hit'
     ]
 
     static forging_list_type_2 = [

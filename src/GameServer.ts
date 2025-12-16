@@ -241,14 +241,14 @@ class GameServer {
         }
     }
 
-    public async saveData(player: Character){
+    public async saveData(player: Character, game_type: string){
         if(!this.level || !player) return 
 
         await this.db
             .promise()
             .execute(
-                'INSERT INTO game_stats (name, kills, waves, time, class, socket) VALUES (?, ?, ?, ?, ?, ?)',
-                ['unknown', this.level.kill_count, this.level.script instanceof Default ? this.level.script.waves_created : 0, this.level.time - this.level.started, player.name, player.id]
+                'INSERT INTO game_stats (name, kills, waves, time, class, socket, game_type) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                ['unknown', this.level.kill_count, this.level.script instanceof Default ? this.level.script.waves_created : 0, this.level.time - this.level.started, player.name, player.id, game_type]
             )
     }
 
@@ -258,7 +258,7 @@ class GameServer {
                 const [results] = await this.db
                     .promise()
                     .execute(
-                        'SELECT * FROM game_stats WHERE class = ? ORDER BY kills DESC LIMIT 3',
+                        `SELECT * FROM game_stats WHERE class = ? and game_type = 'solo' ORDER BY kills DESC LIMIT 3`,
                         [this.level?.players[0].name]
                     )
 
