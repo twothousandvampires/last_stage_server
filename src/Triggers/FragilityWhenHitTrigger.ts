@@ -19,6 +19,6 @@ export default class FragilityWhenHitTrigger implements ITrigger {
         let s = new Fragility(player.level.time)
         s.setDuration(4000)
 
-        player.level.setStatus(target, s)
+        player.level.setStatus(target, s, true)
     }
 }

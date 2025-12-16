@@ -1,6 +1,8 @@
 import EffectBuilder from '../Classes/EffectBuiler'
 import Func from '../Func'
 import Level from '../Level'
+import CallOfPower from '../Objects/Effects/CallOfPower'
+import CircleOfCalm from '../Objects/Effects/CircleOfCalm'
 import ClosedGate from '../Objects/Effects/ClosedGate'
 import Grace from '../Objects/Effects/Grace'
 import UltimatumText from '../Objects/Effects/UltimatumText'
@@ -404,7 +406,23 @@ export default class Default extends Scenario {
 
     checkUpgrade(level) {
         let players: Character = level.players.filter(elem => elem.zone_id === 0)
+        
+        if(this.waves_created >= 1 && this.waves_created % 14 === 0){
+            
+            let a = Math.random() > 0.5 ? new CircleOfCalm(level) : new CallOfPower(level)
+            let random = Func.getRandomFromArray(players)
 
+            let angle: number = Math.random() * 6.28
+            let distance_x: number = Func.random(12, 17)
+            let distance_y: number = Func.random(12, 17)
+
+            a.setPoint(
+                random.x + Math.sin(angle) * distance_x,
+                random.y + Math.cos(angle) * distance_y
+            )
+
+            level.binded_effects.push(a)
+        }
         if (this.waves_created > 1 && this.waves_created % 25 === 0) {
             let a = Math.random() > 0.5 ? new Ancient(level) : new ConstactedOne(level)
             let random = Func.getRandomFromArray(players)

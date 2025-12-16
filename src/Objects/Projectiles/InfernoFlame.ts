@@ -7,7 +7,7 @@ export class InfernoFlame extends Projectiles {
     w: number
     start_time: number
 
-    constructor(level: Level) {
+    constructor(level: Level, private angle_diff: number = 0.05) {
         super(level)
         this.box_r = 1
         this.name = 'flame'
@@ -25,22 +25,6 @@ export class InfernoFlame extends Projectiles {
         }
 
         let enemies = this.level.enemies
-        let players = this.level.players
-
-        for (let i = 0; i < players.length; i++) {
-            let p = players[i]
-            if (p === this.owner) continue
-            if (
-                p.z < this.w &&
-                !this.hitted.includes(p.id) &&
-                Func.elipseCollision(this.getBoxElipse(), p.getBoxElipse())
-            ) {
-                p.takeDamage(undefined, {
-                    burn: true,
-                })
-                this.hitted.push(p.id)
-            }
-        }
 
         for (let i = 0; i < enemies.length; i++) {
             let e = enemies[i]
@@ -50,6 +34,7 @@ export class InfernoFlame extends Projectiles {
             ) {
                 e.takeDamage(undefined, {
                     burn: true,
+                    damage_value: 3
                 })
                 this.hitted.push(e.id)
             }
@@ -57,7 +42,7 @@ export class InfernoFlame extends Projectiles {
 
         this.moveAct()
 
-        this.angle += 0.05
-        this.move_speed += 0.005
+        this.angle += this.angle_diff
+        this.move_speed += 0.01
     }
 }

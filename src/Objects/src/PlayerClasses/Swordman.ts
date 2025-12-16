@@ -497,6 +497,10 @@ export default class Swordman extends Character {
         return this.recent_kills.length
     }
 
+    reduceSecondResourse(){
+        this.recent_kills.pop()
+    }
+
     getMoveSpeedPenaltyValue() {
         let pen = 70 - this.perception * 2
         if (pen < 0) {

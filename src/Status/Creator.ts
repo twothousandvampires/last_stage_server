@@ -2,9 +2,7 @@ import Func from '../Func'
 import ChargedSphere from '../Objects/Effects/ChargedSphere'
 import Effect from '../Objects/Effects/Effects'
 import GraceShard from '../Objects/Effects/GraceShard'
-import HeavenRay from '../Objects/Effects/HeavenRay'
 import Helm from '../Objects/Effects/Helm'
-import Intervention from '../Objects/Effects/Intervention'
 import ItemDrop from '../Objects/Effects/ItemDrop'
 import SorcerersSkull from '../Objects/Effects/SorcerersSkull'
 import Split from '../Objects/Effects/Split'
@@ -56,7 +54,6 @@ export default class Creator extends Status {
                 ['grace', 20],
                 ['energy', 5],
                 ['entity', 5],
-                ['intervention', 5],
                 ['item', 1],
                 ['skull', 1],
                 ['helm', 1],
@@ -79,8 +76,6 @@ export default class Creator extends Status {
                 drop_name = new ChargedSphere(this.unit.level)
             } else if (drop_name === 'entity') {
                 drop_name = new Split(this.unit.level)
-            } else if (drop_name === 'intervention') {
-                drop_name = new Intervention(this.unit.level)
             } else if (drop_name === 'item') {
                 drop_name = new ItemDrop(this.unit.level)
             } else if (drop_name === 'skull') {

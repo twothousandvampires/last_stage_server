@@ -25,10 +25,9 @@ export default abstract class Enemy extends Unit {
     hit_x: number = 0
     hit_y: number = 0
 
-    create_grace_chance: number = 17
+    create_grace_chance: number = 15
     create_energy_chance: number = 6
     create_entity_chance: number = 6
-    create_intervention_chance: number = 2
     create_item_chance: number = 0
     create_sorcerers_skull_chance: number = 0
     create_helm_of_ascendence_chance: number = 1
@@ -103,7 +102,6 @@ export default abstract class Enemy extends Unit {
             ['grace', this.create_grace_chance],
             ['energy', this.create_energy_chance],
             ['entity', this.create_entity_chance],
-            ['intervention', this.create_intervention_chance],
             ['item', this.create_item_chance],
             ['skull', this.create_sorcerers_skull_chance],
             ['helm', this.create_helm_of_ascendence_chance],

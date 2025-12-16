@@ -202,6 +202,7 @@ export default abstract class Item {
         'thunder strikes',
         'storm presence',
         'dominance when critical',
+        'fragility on hit'
     ]
 
     static forging_list_type_2 = [

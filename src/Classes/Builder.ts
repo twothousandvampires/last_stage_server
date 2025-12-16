@@ -109,6 +109,7 @@ import Distorter from '../Items/Distorter'
 import Echo from '../Items/Forgings/Echo'
 import BlessedLife from '../Items/Forgings/BlessedLife'
 import EnchantedArmour from '../Items/Forgings/EnchantedArmour'
+import FragilityOnHit from '../Items/Forgings/FragilityOnHit'
 
 export default class Builder {
     static masteryMap = {
@@ -220,7 +221,8 @@ export default class Builder {
         vampiric: Vampiric,
         echo: Echo,
         'blessed life': BlessedLife,
-        'enchanted armour': EnchantedArmour
+        'enchanted armour': EnchantedArmour,
+        'fragility on hit': FragilityOnHit
     }
 
     static createCharacter(client: Client, level: Level): Character {
