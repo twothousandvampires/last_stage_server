@@ -30,7 +30,7 @@ export default class Soulrender extends CultistAbility {
             let count = 5
 
             if (this.soul_fragments) {
-                count += 2
+                count += 5
             }
 
             let zones = 6.28 / count
