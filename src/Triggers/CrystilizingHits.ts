@@ -7,7 +7,7 @@ import Fragility from '../Status/Fragility'
 
 export default class CrystilizingHits implements ITrigger {
 
-    cd: number = 4000
+    cd: number = 10000
     last_trigger_time: number = 0
     name: string = 'crystilizing hits'
     description: string = 'Provides a chance to inflict fragility on enemies in a small radius on hit'
