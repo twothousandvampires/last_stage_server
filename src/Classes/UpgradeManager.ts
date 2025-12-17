@@ -15,6 +15,7 @@ export default class UpgradeManager {
             can_buy: player.purchased_items < 2,
             stats: player.getStats(),
             triggers: player.getTriggersInfo(),
+            carved_sparks: player.carved_sparks
         })
     }
 
@@ -85,6 +86,7 @@ export default class UpgradeManager {
         forging.forge(player)
 
         player.level.addSound('forge', player.x, player.y)
+        
 
         UpgradeManager.closeForgings(player)
     }

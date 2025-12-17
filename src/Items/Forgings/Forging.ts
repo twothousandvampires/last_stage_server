@@ -24,6 +24,7 @@ export default abstract class Forging {
         if (!this.item.player) return
 
         this.item.player.gold -= this.gold_cost
+        this.item.player.carved_sparks ++
     }
 
     toJSON() {

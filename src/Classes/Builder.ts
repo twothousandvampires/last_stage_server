@@ -110,6 +110,7 @@ import Echo from '../Items/Forgings/Echo'
 import BlessedLife from '../Items/Forgings/BlessedLife'
 import EnchantedArmour from '../Items/Forgings/EnchantedArmour'
 import FragilityOnHit from '../Items/Forgings/FragilityOnHit'
+import LightningSentries from '../Glyphs/LightningSentries'
 
 export default class Builder {
     static masteryMap = {
@@ -129,6 +130,7 @@ export default class Builder {
         trinity: Trinity,
         'turtle shell': TurtleShell,
         dismemberment: Dismemberment,
+        'lightning sentries': LightningSentries
     }
 
     static itemMap = {

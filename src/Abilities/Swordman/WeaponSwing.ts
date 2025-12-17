@@ -1,4 +1,5 @@
 import Func from '../../Func'
+import LightningSentries from '../../Glyphs/LightningSentries'
 import Swordman from '../../Objects/src/PlayerClasses/Swordman'
 import ImprovedSwingTechnology from '../../Status/ImprovedSwingTechnology'
 import Ability from '../Ability'
