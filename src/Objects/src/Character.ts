@@ -18,7 +18,6 @@ import PlayerIdleState from '../../State/PlayerIdleState'
 import Status from '../../Status/Status'
 import ImpactTrigger from '../../Triggers/ImpactTrigger'
 import LifeAfterKIllTrigger from '../../Triggers/LifeAfterKIllTrigger'
-import MassiveImpactTrigger from '../../Triggers/MassiveImpactTrigger'
 import Sound from '../../Types/Sound'
 import Upgrade from '../../Types/Upgrade'
 import Effect from '../Effects/Effects'
@@ -55,6 +54,7 @@ export default abstract class Character extends Unit {
     last_time_get_hit: number = 0
     dead_time: number = 0
     impact_radius:number = 10
+    base_mana_regen_rate: number = 5000
 
     knowledge: number = 0
     perception: number = 0
@@ -74,7 +74,7 @@ export default abstract class Character extends Unit {
     maximum_resources: number = 7
     resource: number = 0
     crushing_rating: number = 0
-    crushing_cd: number = 2000
+    crushing_cd: number = 1000
     last_crashing_time = 0
     impact: number = 0
     cast_speed: number = 2000
@@ -155,6 +155,7 @@ export default abstract class Character extends Unit {
     pierce_rating_mutators: Mutator[] = []
     critical_rating_mutators: Mutator[] = []
     avaid_damage_mutator: Mutator[] = []
+    carved_sparks: number = 0
 
     constructor(level: Level) {
         super(level)
@@ -212,16 +213,9 @@ export default abstract class Character extends Unit {
     }
 
     isCrushing() {
-        if (Func.chance(this.crushing_rating, this.is_lucky)) {
-            if (this.level.time - this.last_crashing_time >= this.crushing_cd) {
-                this.last_crashing_time = this.level.time
-                return true
-            } else {
-                return false
-            }
-        } else {
-            return false
-        }
+        if(this.crushing_rating <= 0) return false
+        
+        return Func.chance(this.crushing_rating, this.is_lucky)  
     }
 
     playerGetResourse() {

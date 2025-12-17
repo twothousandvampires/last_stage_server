@@ -386,7 +386,7 @@ export default class Flyer extends Character {
     }
 
     getManaRegenTimer() {
-        return 5000 - this.getSecondResource() * 25
+        return this.base_mana_regen_rate - this.getSecondResource() * 25
     }
 
     startGame() {
