@@ -14,6 +14,8 @@ import Level from '../../../Level'
 import CultistWillDamageAvoid from '../../../Mutators/CultistWillDamageAvoid'
 import PlayerDyingState from '../../../State/PlayerDyingState'
 import Immortality from '../../../Status/Immortality'
+import UnbreakableArmour from '../../../Triggers/UnbreakableArmour'
+import UnbreakableSpirit from '../../../Triggers/UnbreakableSpirit'
 import Armour from '../../Effects/Armour'
 import Blood from '../../Effects/Blood'
 import Spirit from '../../Effects/Spirit'
@@ -121,6 +123,17 @@ export default class Cultist extends Character {
             this.utility = new SelfFlagellation(this)
         } else if (utility_name === 'ghost form') {
             this.utility = new GhostForm(this)
+        }
+
+        let passive = abilities.find(elem => elem.type === 5 && elem.selected)
+        
+        if (passive) {
+            if (passive.name === 'unbreakable spirit') {
+                this.triggers_on_get_hit.push(new UnbreakableSpirit())
+            }
+            if (passive.name === 'unbreakable armour') {
+                this.triggers_on_near_dead.push(new UnbreakableArmour())
+            }
         }
     }
 

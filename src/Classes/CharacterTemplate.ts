@@ -353,6 +353,20 @@ export default class characterTemplate {
                     selected: false,
                     desc: 'Become into ghost from getting immune to damage and gives phasing.',
                 },
+                {
+                    id: 8,
+                    name: 'unbreakable spirit',
+                    type: 5,
+                    selected: true,
+                    desc: 'When you get damage where is a chance to restore 1 life.',
+                },
+                {
+                    id: 8,
+                    name: 'unbreakable armour',
+                    type: 5,
+                    selected: false,
+                    desc: 'When you reach 1 life its permanently gives to you 1 armour and fortification rate up to 20',
+                },
             ]
         }
     }

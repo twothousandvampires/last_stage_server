@@ -229,7 +229,6 @@ export default abstract class Enemy extends Unit {
     deadSound() {}
 
     takeDamage(unit: any = undefined, options: any = {}) {
-        let log = '';
         if (this.is_dead) return
         if (!this.can_be_damaged) return
 
@@ -237,10 +236,9 @@ export default abstract class Enemy extends Unit {
 
         let instantly =
             options?.instant_death ||
-            (unit &&
-                unit.chance_to_instant_kill &&
-                Func.chance(unit.chance_to_instant_kill) &&
-                this.can_be_instant_killed)
+            (is_player_deal_hit &&
+            Func.chance(unit.chance_to_instant_kill) &&
+            this.can_be_instant_killed)
 
         if (instantly) {
             this.life_status = 1
