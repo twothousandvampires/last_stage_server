@@ -14,7 +14,14 @@ import Default from './Scenarios/Default'
 
 let port = process.argv[2]
 let httpServer = createServer()
-let socket = new Server(httpServer, { cors: { origin: '*' } })
+const io = new Server(httpServer, {
+    cors: {
+        origin: ['https://laststage.online'],
+        credentials: false
+    },
+    pingTimeout: 20000,
+    pingInterval: 25000
+});
 
 httpServer.listen(port)
 
