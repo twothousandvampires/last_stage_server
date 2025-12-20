@@ -14,7 +14,8 @@ import Default from './Scenarios/Default'
 
 let port = process.argv[2]
 let httpServer = createServer()
-const io = new Server(httpServer, {
+
+let socket = new Server(httpServer, {
     cors: {
         origin: ['https://laststage.online'],
         credentials: false
