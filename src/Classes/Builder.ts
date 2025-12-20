@@ -111,7 +111,7 @@ import BlessedLife from '../Items/Forgings/BlessedLife'
 import EnchantedArmour from '../Items/Forgings/EnchantedArmour'
 import FragilityOnHit from '../Items/Forgings/FragilityOnHit'
 import LightningSentries from '../Glyphs/LightningSentries'
-import MaxLife from '../Items/Forgings/MaxLife'
+import MaxLife from '../Items/Forgings/MaxLIfe'
 import StoneSkin from '../Items/Forgings/StoneSkin'
 import Thunder from '../Items/Forgings/Thunder'
 
