@@ -24,7 +24,7 @@ let socket = new Server(httpServer, {
     pingInterval: 25000
 });
 
-httpServer.listen(port)
+httpServer.listen(+port, '127.0.0.1')
 
 class GameServer {
     static MAX_PLAYERS: number = 4
