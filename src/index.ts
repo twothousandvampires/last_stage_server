@@ -25,6 +25,6 @@ const io = new Server(server, {
 let master = new MasterServer(io, port)
 master.initialize()
 
-server.listen(port, () => {
+server.listen(port, '127.0.0.1', () => {
     console.log(`Server is running on :${port}`)
 })
