@@ -31,7 +31,6 @@ import IgniteWhenHit from '../Items/Forgings/IgniteWhenHit'
 import Impact from '../Items/Forgings/Impact'
 import InstantKill from '../Items/Forgings/InstantKill'
 import Knowledge from '../Items/Forgings/Knowledge'
-import MaxLIfe from '../Items/Forgings/MaxLife'
 import MaxResource from '../Items/Forgings/MaxResource'
 import Might from '../Items/Forgings/Might'
 import NovaThenHit from '../Items/Forgings/NovaThenHit'
@@ -202,7 +201,6 @@ export default class Builder {
         impact: Impact,
         'instant kill': InstantKill,
         knowledge: Knowledge,
-        'max life': MaxLIfe,
         'max resources': MaxResource,
         might: Might,
         'nova when hit': NovaThenHit,
