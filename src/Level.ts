@@ -138,8 +138,7 @@ export default class Level {
                 this.server.saveData(elem, this.players.length === 1 ? 'solo' : 'party')
             })
             setTimeout(() => {
-                if(this.players.length) {
-                    clearImmediate(this.game_loop)
+                if(this.players.length > 0) {
                     this.server.endOfLevel()
                 }
             }, 3000)

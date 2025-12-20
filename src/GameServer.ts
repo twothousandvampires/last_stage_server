@@ -326,6 +326,19 @@ class GameServer {
                     this.updateLobby()
                 })
 
+                socket.on('get_grand_forging', amount => {
+                    if(amount <= 0) return
+                    if (!client.character) return
+
+                    UpgradeManager.getGrandForging(amount, client.character)
+                })
+
+                socket.on('apply_grand_forging', (f_name, i_name) => {
+                    if (!client.character) return
+
+                    UpgradeManager.applyGrandForging(f_name, i_name, client.character)
+                })
+
                 socket.on('forge_item', data => {
                     if (!client.character) return
 

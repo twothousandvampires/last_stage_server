@@ -1,22 +1,22 @@
 import Item from '../Item'
 import Forging from './Forging'
 
-export default class MaxLife extends Forging {
+export default class StoneSkin extends Forging {
 
     value: number = 0
 
-    constructor(item: Item | undefined) {
+    constructor(item: Item) {
         super(item)
-        this.max_value = 1
-        this.name = 'life'
-        this.description = 'increases miximum life'
+        this.max_value = 10
+        this.name = 'stone skin'
+        this.description = 'increases the chance of avoiding damage'
         this.gold_cost = 0
     }
 
     forge() {
         if (this.canBeForged() ) {
-            this.item.player.max_life
-            this.value ++
+            this.item.player.avoid_damage_chance += 10
+            this.value += 10
         }
     }
 
