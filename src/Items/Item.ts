@@ -3,6 +3,7 @@ import Character from '../Objects/src/Character'
 import Forging from './Forgings/Forging'
 
 export default abstract class Item {
+    
     public forge: Forging[] = []
     public distance: number = 0
     public chance: number = 0

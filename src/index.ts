@@ -13,7 +13,14 @@ const requestListener = (req: any, res: any) => {
 }
 
 const server = http.createServer(requestListener)
-const io = new Server(server, { cors: { origin: '*' } })
+const io = new Server(server, {
+    cors: {
+        origin: ['https://laststage.online'],
+        credentials: false
+    },
+    pingTimeout: 20000,
+    pingInterval: 25000
+});
 
 let master = new MasterServer(io, port)
 master.initialize()

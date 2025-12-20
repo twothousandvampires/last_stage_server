@@ -2,21 +2,21 @@ import Item from '../Item'
 import Forging from './Forging'
 
 export default class Charisma extends Forging {
+
     value: number = 0
 
     constructor(item: Item) {
         super(item)
-        this.max_value = 3
+        this.max_value = 7
         this.name = 'charisma'
-        this.description = 'you are more speachfull'
-        this.gold_cost = 8
+        this.description = 'increases the chance of saying something'
+        this.gold_cost = 0
     }
 
     forge() {
-        if (this.canBeForged() && this.costEnough()) {
-            this.value++
-            this.item.player.chance_to_say_phrase += 1
-            this.payCost()
+        if (this.canBeForged() ) {
+            this.item.player.chance_to_say_phrase += 7
+            this.value += 7
         }
     }
 

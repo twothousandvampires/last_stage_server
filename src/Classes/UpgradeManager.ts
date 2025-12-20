@@ -1,3 +1,4 @@
+import Func from '../Func'
 import Forging from '../Items/Forgings/Forging'
 import Item from '../Items/Item'
 import Character from '../Objects/src/Character'
@@ -15,7 +16,8 @@ export default class UpgradeManager {
             can_buy: player.purchased_items < 2,
             stats: player.getStats(),
             triggers: player.getTriggersInfo(),
-            carved_sparks: player.carved_sparks
+            carved_sparks: player.carved_sparks,
+            grand_forgings: player.grand_forgings
         })
     }
 
@@ -72,6 +74,37 @@ export default class UpgradeManager {
 
         UpgradeManager.closeForgings(player)
         UpgradeManager.closeSuggest(player)
+    }
+
+    static getGrandForging(amount: number, player: Character){
+        if(Func.chance(amount)){
+            let name = Func.getRandomFromArray(Object.keys(Builder.greatForgingMap))
+            let f = Builder.createGreatForging(name, undefined)
+
+            player.grand_forgings.push(f)
+
+            UpgradeManager.closeForgings(player)
+        }
+    }
+
+    static applyGrandForging(f_name: string, i_name: string, player: Character){
+        console.log(f_name, i_name)
+        let item = player.item.find(elem => elem.name === i_name)
+
+        if(!item) return
+
+        let f = player.grand_forgings.find(elem => elem.name === f_name)
+
+        if(!f) return
+
+        if(item.forge.length >= item.max_forgings) return
+
+        f.setItem(item)
+        f.forge(player)
+        
+        item.forge.push(f)
+        player.grand_forgings = player.grand_forgings.filter(elem => elem != f)
+        UpgradeManager.closeForgings(player)
     }
 
     static forgeItem(data: any, player: Character): void {

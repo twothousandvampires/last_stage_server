@@ -14,7 +14,14 @@ import Default from './Scenarios/Default'
 
 let port = process.argv[2]
 let httpServer = createServer()
-let socket = new Server(httpServer, { cors: { origin: '*' } })
+const io = new Server(httpServer, {
+    cors: {
+        origin: ['https://laststage.online'],
+        credentials: false
+    },
+    pingTimeout: 20000,
+    pingInterval: 25000
+});
 
 httpServer.listen(port)
 
@@ -324,6 +331,19 @@ class GameServer {
 
                 socket.on('get_lobby_data', () => {
                     this.updateLobby()
+                })
+
+                socket.on('get_grand_forging', amount => {
+                    if(amount <= 0) return
+                    if (!client.character) return
+
+                    UpgradeManager.getGrandForging(amount, client.character)
+                })
+
+                socket.on('apply_grand_forging', (f_name, i_name) => {
+                    if (!client.character) return
+
+                    UpgradeManager.applyGrandForging(f_name, i_name, client.character)
                 })
 
                 socket.on('forge_item', data => {

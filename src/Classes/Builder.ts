@@ -31,7 +31,7 @@ import IgniteWhenHit from '../Items/Forgings/IgniteWhenHit'
 import Impact from '../Items/Forgings/Impact'
 import InstantKill from '../Items/Forgings/InstantKill'
 import Knowledge from '../Items/Forgings/Knowledge'
-import MaxLIfe from '../Items/Forgings/MaxLIfe'
+import MaxLIfe from '../Items/Forgings/MaxLife'
 import MaxResource from '../Items/Forgings/MaxResource'
 import Might from '../Items/Forgings/Might'
 import NovaThenHit from '../Items/Forgings/NovaThenHit'
@@ -111,6 +111,9 @@ import BlessedLife from '../Items/Forgings/BlessedLife'
 import EnchantedArmour from '../Items/Forgings/EnchantedArmour'
 import FragilityOnHit from '../Items/Forgings/FragilityOnHit'
 import LightningSentries from '../Glyphs/LightningSentries'
+import MaxLife from '../Items/Forgings/MaxLife'
+import StoneSkin from '../Items/Forgings/StoneSkin'
+import Thunder from '../Items/Forgings/Thunder'
 
 export default class Builder {
     static masteryMap = {
@@ -168,6 +171,13 @@ export default class Builder {
         'devouring axe': DevouringAxe,
         'flamy nimbus': FlamyNimbus,
         distorter: Distorter,
+    }
+
+    static greatForgingMap = {
+        'max life': MaxLife,
+        charisma: Charisma,
+        'stone skin': StoneSkin,
+        thunder: Thunder
     }
 
     static forgingMap = {
@@ -288,6 +298,17 @@ export default class Builder {
             return new ItemClass(item)
         } else {
             return new ArmourRate(item)
+        }
+    }
+
+    static createGreatForging(name: string, item: Item | undefined) {
+        console.log(name)
+        let ItemClass = Builder.greatForgingMap[name.toLowerCase()]
+
+        if (ItemClass) {
+            return new ItemClass(item)
+        } else {
+            return new MaxLIfe(item)
         }
     }
 }

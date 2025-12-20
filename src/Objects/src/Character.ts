@@ -4,11 +4,10 @@ import UpgradeManager from '../../Classes/UpgradeManager'
 import Func from '../../Func'
 import Mastery from '../../Glyphs/Mastery'
 import IUnitState from '../../Interfaces/IUnitState'
+import Forging from '../../Items/Forgings/Forging'
 import Item from '../../Items/Item'
 import item from '../../Items/Item'
 import Level from '../../Level'
-import AnnihilationMutator from '../../Mutators/AnnihilationMutator'
-import CuttingMutator from '../../Mutators/CuttingMutator'
 import { Mutator } from '../../Mutators/Mittor'
 import PlayerDamagedState from '../../State/PlayerDamagedState'
 import PlayerDeadState from '../../State/PlayerDeadState'
@@ -44,6 +43,7 @@ export default abstract class Character extends Unit {
     passive: any
     item: item[] = []
     masteries: Mastery[] = []
+    grand_forgings: Forging[] = []
 
     max_items: number = 6
     start_move_time: number = 0
@@ -68,7 +68,7 @@ export default abstract class Character extends Unit {
     base_regeneration_time: number = 10000
     grace: number = 1
     voice_radius: number = 20
-    gold: number = 15
+    gold: number = 15222
     cooldown_redaction: number = 0
     max_life: number = 4
     maximum_resources: number = 7
@@ -899,8 +899,20 @@ export default abstract class Character extends Unit {
     }
 
     playerLoseLife() {
+        let time = this.level.time
+
         this.triggers_on_lose_life.forEach(elem => {
-            elem.trigger(this)
+            if (time - elem.last_trigger_time >= elem.cd) {
+                if (Func.chance(elem.getTriggerChance(this), this.is_lucky)) {
+                    elem.trigger(this)
+
+                    if (Func.chance(this.isSecondTrigger())) {
+                        elem.trigger(this)
+                    }
+
+                    elem.last_trigger_time = time
+                }
+            }
         })
     }
 
