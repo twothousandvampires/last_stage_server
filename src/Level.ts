@@ -89,7 +89,7 @@ export default class Level {
     public messedges: Message[] = []
 
     public game_loop: any
-    public script: Scenario = new Default()
+    public script: Scenario = new Learning()
     status_pull: Status[] = []
     private last_id: number = 0
     public kill_count: number = 0

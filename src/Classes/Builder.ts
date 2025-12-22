@@ -113,6 +113,8 @@ import LightningSentries from '../Glyphs/LightningSentries'
 import MaxLife from '../Items/Forgings/MaxLIfe'
 import StoneSkin from '../Items/Forgings/StoneSkin'
 import Thunder from '../Items/Forgings/Thunder'
+import SpikedWeapon from '../Items/Forgings/SpikedWeapon'
+import GoldenReplica from '../Items/Forgings/GoldenReplica'
 
 export default class Builder {
     static masteryMap = {
@@ -176,7 +178,9 @@ export default class Builder {
         'max life': MaxLife,
         charisma: Charisma,
         'stone skin': StoneSkin,
-        thunder: Thunder
+        thunder: Thunder,
+        'spiked weapon': SpikedWeapon,
+        'golden replica': GoldenReplica
     }
 
     static forgingMap = {

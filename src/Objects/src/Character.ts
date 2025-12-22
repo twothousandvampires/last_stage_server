@@ -117,6 +117,7 @@ export default abstract class Character extends Unit {
     chance_to_create_grace: number = 0
     chance_to_trigger_additional_time: number = 0
     avoid_damage_chance: number = 0
+    chance_to_additional_carved_spark: number = 0
 
     enlightenment_threshold: number = 12
     can_get_courage: boolean = true
@@ -137,6 +138,7 @@ export default abstract class Character extends Unit {
     last_ascent_mastery_getting: number = 0
     vampiric_rate: number = 0
 
+
     current_state: IUnitState<Character> | undefined
 
     spend_grace: boolean = false
@@ -155,6 +157,8 @@ export default abstract class Character extends Unit {
     pierce_rating_mutators: Mutator[] = []
     critical_rating_mutators: Mutator[] = []
     avaid_damage_mutator: Mutator[] = []
+    armour_mutators: Mutator[] = []
+
     carved_sparks: number = 0
 
     constructor(level: Level) {
@@ -173,12 +177,22 @@ export default abstract class Character extends Unit {
     abstract getSecondResource(): number
     abstract isBlock(): boolean
     abstract getPenaltyByLifeStatus(): number
-    abstract getTotalArmour(): number
+   
     abstract getMoveSpeedPenaltyValue(): number
     abstract addCourage(): void
     abstract getRegenTimer(): number
     abstract getPower(): number
     abstract reduceSecondResourse(): void
+
+    getTotalArmour(){
+        let base = this.armour_rate
+
+        this.armour_mutators.forEach(elem => {
+            base = elem.mutate(base, this)
+        })
+        
+        return base
+    }
     
     getAvoidChance(){
         let base = this.avoid_damage_chance
@@ -323,6 +337,7 @@ export default abstract class Character extends Unit {
             resource: this.resource,
             maximum_resources: this.maximum_resources,
             life_status: this.life_status,
+            max_life: this.max_life,
             life: this.life_status,
             x: this.x,
             y: this.y,

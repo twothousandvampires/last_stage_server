@@ -11,6 +11,7 @@ import WanderingEvil from '../../../Abilities/Cultist/WanderingEvil'
 import Upgrades from '../../../Classes/Upgrades'
 import Func from '../../../Func'
 import Level from '../../../Level'
+import CultistArmourMutator from '../../../Mutators/CultistArmourMutator'
 import CultistWillDamageAvoid from '../../../Mutators/CultistWillDamageAvoid'
 import PlayerDyingState from '../../../State/PlayerDyingState'
 import Immortality from '../../../Status/Immortality'
@@ -67,6 +68,7 @@ export default class Cultist extends Character {
         this.recent_hits = []
         this.chance_to_block = 65
         this.avaid_damage_mutator = [new CultistWillDamageAvoid()]
+        this.armour_mutators = [new CultistArmourMutator()]
     }
 
     getSkipDamageStateChance() {
@@ -196,10 +198,6 @@ export default class Cultist extends Character {
         this.level.setStatus(this, s)
 
         this.level.addSound('enlight', this.x, this.y)
-    }
-
-    getTotalArmour() {
-        return this.armour_rate + this.might
     }
 
     getPenaltyByLifeStatus(): number {

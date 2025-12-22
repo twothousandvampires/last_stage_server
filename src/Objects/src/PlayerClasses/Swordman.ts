@@ -22,6 +22,7 @@ import HeavenIntervention from '../../../Triggers/HeavenIntervention'
 import HeavenWrath from '../../../Abilities/Swordman/HeavenWrath'
 import Upgrade from '../../../Types/Upgrade'
 import Spirit from '../../Effects/Spirit'
+import SwordmanArmourMutator from '../../../Mutators/SwordmanArmourMutator'
 
 export default class Swordman extends Character {
     static MIN_ATTACK_SPEED = 150
@@ -55,6 +56,7 @@ export default class Swordman extends Character {
         this.base_regeneration_time = 8500
         this.recent_kills = []
         this.chance_to_block = 50
+        this.armour_mutators = [new SwordmanArmourMutator()]
     }
 
     succefullCast() {
@@ -350,10 +352,6 @@ export default class Swordman extends Character {
         } else {
             return 0
         }
-    }
-
-    getTotalArmour() {
-        return this.armour_rate + this.durability
     }
 
     getSkipDamageStateChance() {

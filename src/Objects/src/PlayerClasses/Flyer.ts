@@ -11,6 +11,7 @@ import Teleportation from '../../../Abilities/Flyer/Teleportation'
 import Upgrades from '../../../Classes/Upgrades'
 import Func from '../../../Func'
 import Level from '../../../Level'
+import FlyerArmourMutator from '../../../Mutators/FlyerArmourMutator'
 import FlyerDefendState from '../../../State/FlyerDefendState'
 import PlayerDyingState from '../../../State/PlayerDyingState'
 import Accumulation from '../../../Triggers/Accumulation'
@@ -54,6 +55,7 @@ export default class Flyer extends Character {
         this.recent_cast = []
         this.chance_to_block = 100
         this.enlightenment_threshold = 9
+        this.armour_mutators = [new FlyerArmourMutator()]
     }
 
     getAdditionalRadius() {
@@ -357,14 +359,6 @@ export default class Flyer extends Character {
         }
 
         this.subLife(unit, options)
-    }
-
-    getTotalArmour() {
-        return (
-            this.armour_rate +
-            this.agility * 3 +
-            (this.mental_shield ? this.getSecondResource() * 3 : 0)
-        )
     }
 
     getPenaltyByLifeStatus() {

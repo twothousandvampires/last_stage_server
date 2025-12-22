@@ -72,6 +72,9 @@ import ImpactTrigger from '../Triggers/ImpactTrigger'
 import CuttingMutator from '../Mutators/CuttingMutator'
 import AnnihilationMutator from '../Mutators/AnnihilationMutator'
 import CourageAvoidDamage from '../Mutators/CourageAvoidDamage'
+import FocusingMutator from '../Mutators/FocusingMutator'
+import BlessedWarrioraArmourMutator from '../Mutators/BlessedWarrioraArmourMutator'
+import BlessedWarriorPierceMutator from '../Mutators/BlessedWarriorPierceMutator'
 
 export default class Upgrades {
     static getAllUpgrades(): Upgrade[] {
@@ -370,6 +373,33 @@ export default class Upgrades {
                 desc: 'Your courage expires slower',
             },
             {
+                name: 'forger',
+                canUse: (character: Character) => {
+                    return character.chance_to_additional_carved_spark <= 50
+                },
+                teach: (character: Character): void => {
+                    character.chance_to_additional_carved_spark += 25
+                },
+                cost: 2,
+                ascend: 14,
+                desc: 'Gives a chance to get additional carved spark',
+            },
+            {
+                name: 'blessed fighter',
+                canUse: (character: Character) => {
+                    return !character.armour_mutators.some (elem => {
+                        elem instanceof BlessedWarrioraArmourMutator
+                    })
+                },
+                teach: (character: Character): void => {
+                    character.armour_mutators.push( new BlessedWarrioraArmourMutator())
+                    character.pierce_rating_mutators.push( new BlessedWarriorPierceMutator())
+                },
+                cost: 3,
+                ascend: 25,
+                desc: 'If you are blessed(life more that maximum), you have additional armour and pierce rating',
+            },
+            {
                 name: 'divine pack',
                 canUse: (character: Character) => {
                     return character.max_items < 8
@@ -415,6 +445,22 @@ export default class Upgrades {
                 ascend: 14,
                 desc: 'Gives a chance, depending on your might to create additional impacts',
             },
+            {
+                name: 'focusing',
+                canUse: (character: Character) => {
+                    return (
+                        !character.armour_mutators.some(
+                            elem => elem instanceof FocusingMutator
+                        )
+                    )
+                },
+                teach: (character: Character): void => {
+                    character.armour_mutators.push(new FocusingMutator())
+                },
+                cost: 3,
+                ascend: 14,
+                desc: 'Courage also increases your armour',
+            },         
             {
                 name: 'impactor',
                 canUse: (character: Character) => {
@@ -2304,20 +2350,6 @@ export default class Upgrades {
                 cost: 1,
                 ascend: 20,
                 desc: 'Ignores armour',
-            },
-            {
-                name: 'mental shield',
-                canUse: (character: Character) => {
-                    return character instanceof Flyer && !character.mental_shield
-                },
-                teach: (character: Character) => {
-                    if (character instanceof Flyer) {
-                        character.mental_shield = true
-                    }
-                },
-                cost: 1,
-                ascend: 10,
-                desc: 'Courage also increases your armour',
             },
             {
                 name: 'penetrating lightning',
