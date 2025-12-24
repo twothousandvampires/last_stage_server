@@ -110,11 +110,12 @@ import BlessedLife from '../Items/Forgings/BlessedLife'
 import EnchantedArmour from '../Items/Forgings/EnchantedArmour'
 import FragilityOnHit from '../Items/Forgings/FragilityOnHit'
 import LightningSentries from '../Glyphs/LightningSentries'
-import MaxLife from '../Items/Forgings/MaxLIfe'
+import MaxLife from '../Items/Forgings/MaxLife'
 import StoneSkin from '../Items/Forgings/StoneSkin'
 import Thunder from '../Items/Forgings/Thunder'
 import SpikedWeapon from '../Items/Forgings/SpikedWeapon'
 import GoldenReplica from '../Items/Forgings/GoldenReplica'
+import ShockWave from '../Items/Forgings/ShockWave'
 
 export default class Builder {
     static masteryMap = {
@@ -180,7 +181,9 @@ export default class Builder {
         'stone skin': StoneSkin,
         thunder: Thunder,
         'spiked weapon': SpikedWeapon,
-        'golden replica': GoldenReplica
+        'golden replica': GoldenReplica,
+        echo: Echo,
+        'shock wave': ShockWave
     }
 
     static forgingMap = {
@@ -233,7 +236,6 @@ export default class Builder {
         'storm presence': StormPresence,
         power: Power,
         vampiric: Vampiric,
-        echo: Echo,
         'blessed life': BlessedLife,
         'enchanted armour': EnchantedArmour,
         'fragility on hit': FragilityOnHit
@@ -310,7 +312,7 @@ export default class Builder {
         if (ItemClass) {
             return new ItemClass(item)
         } else {
-            return new MaxLIfe(item)
+            return new MaxLife(item)
         }
     }
 }

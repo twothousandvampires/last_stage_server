@@ -75,10 +75,25 @@ import CourageAvoidDamage from '../Mutators/CourageAvoidDamage'
 import FocusingMutator from '../Mutators/FocusingMutator'
 import BlessedWarrioraArmourMutator from '../Mutators/BlessedWarrioraArmourMutator'
 import BlessedWarriorPierceMutator from '../Mutators/BlessedWarriorPierceMutator'
+import SpiritStrikes from '../Triggers/SpiritStrikes'
+import SpiritStrikesMutator from '../Mutators/SpiritStrikesMutator'
 
 export default class Upgrades {
     static getAllUpgrades(): Upgrade[] {
         return [
+             {
+                name: 'equiped',
+                canUse: (character: Character) => {
+                    return character.item.length >=5
+                },
+                teach: (character: Character): void => {
+                    character.pierce += 15
+                    character.armour_rate += 15
+                },
+                cost: 2,
+                ascend: 25,
+                desc: 'If you have more that 5 items, get 15 armour and pierce rating',
+            },
             {
                 name: 'senselessness',
                 canUse: (character: Character) => {
@@ -387,8 +402,8 @@ export default class Upgrades {
             {
                 name: 'blessed fighter',
                 canUse: (character: Character) => {
-                    return !character.armour_mutators.some (elem => {
-                        elem instanceof BlessedWarrioraArmourMutator
+                    return !character.armour_mutators.some(elem => {
+                        return elem instanceof BlessedWarrioraArmourMutator
                     })
                 },
                 teach: (character: Character): void => {
@@ -631,14 +646,15 @@ export default class Upgrades {
             {
                 name: 'spirit strikes',
                 canUse: (character: Character) => {
-                    return !character.spirit_strikes && character.will >= 6
+                    return !character.triggers_on_impact.some(elem => elem instanceof SpiritStrikes) && character.will >= 6
                 },
                 teach: (character: Character): void => {
-                    character.spirit_strikes = true
+                    character.triggers_on_impact.push(new SpiritStrikes())
+                    character.impact_mutators.push(new SpiritStrikesMutator())
                 },
                 cost: 2,
                 ascend: 16,
-                desc: 'Impact rating increased by your amount of ward',
+                desc: 'Impact rating increased by your amount of ward, then you impact there is a chance to get ward',
             },
             {
                 name: 'immune to freeze',

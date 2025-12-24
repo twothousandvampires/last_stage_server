@@ -13,7 +13,9 @@ export default abstract class Forging {
 
     constructor(protected item: Item | undefined) {}
 
-    abstract forge(player: Character | undefined): void
+    forge(player: Character | undefined, force: boolean = false): void{
+
+    }
     
     getValue(): string | number{
         return this.value
@@ -35,7 +37,7 @@ export default abstract class Forging {
         if (!this.item.player) return
 
         this.item.player.gold -= this.gold_cost
-        this.item.player.carved_sparks ++
+        this.item.player.carved_sparks += Func.random(1, 3)
         
         if(Func.chance(this.item.player.chance_to_additional_carved_spark)){
             this.item.player.carved_sparks ++

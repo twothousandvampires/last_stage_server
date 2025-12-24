@@ -17,6 +17,7 @@ import PlayerIdleState from '../../State/PlayerIdleState'
 import Status from '../../Status/Status'
 import ImpactTrigger from '../../Triggers/ImpactTrigger'
 import LifeAfterKIllTrigger from '../../Triggers/LifeAfterKIllTrigger'
+import ShockWaveTrigger from '../../Triggers/ShockWaveTrigger'
 import Sound from '../../Types/Sound'
 import Upgrade from '../../Types/Upgrade'
 import Effect from '../Effects/Effects'
@@ -68,7 +69,7 @@ export default abstract class Character extends Unit {
     base_regeneration_time: number = 10000
     grace: number = 1
     voice_radius: number = 20
-    gold: number = 15222
+    gold: number = 15
     cooldown_redaction: number = 0
     max_life: number = 4
     maximum_resources: number = 7
@@ -158,6 +159,7 @@ export default abstract class Character extends Unit {
     critical_rating_mutators: Mutator[] = []
     avaid_damage_mutator: Mutator[] = []
     armour_mutators: Mutator[] = []
+    impact_mutators: Mutator[] = []
 
     carved_sparks: number = 0
 
@@ -313,9 +315,9 @@ export default abstract class Character extends Unit {
     getImpactRating() {
         let base = this.impact
 
-        if (this.spirit_strikes) {
-            base += this.ward * 3
-        }
+        this.impact_mutators.forEach(elem => {
+            base = elem.mutate(base, this)
+        })
 
         return base
     }
@@ -497,7 +499,7 @@ export default abstract class Character extends Unit {
             resist: 'Increases your chance of not geting bad status(ignite, shock, etc).',
             spirit: 'Increases your chance of losing energy instead of life.',
             pierce: 'Increases your chance to deal damage by reducing enemy armour.',
-            impact: 'Increases your chance to damage adjacent targets in addition to your primary target.',
+            impact: 'Increases your chance to damage adjacent targets in addition to your primary target. Rating above 100 gives a chance to create additional impcats.',
             critical: 'Increases your chance to deal double damage.',
             crushing:
                 'Increases your chance to crush an enemy, every time when enemy being crushed they take additional damage next time.',
@@ -516,6 +518,7 @@ export default abstract class Character extends Unit {
                 agility: this.agility,
                 perception: this.perception,
                 '~~~': '~~~~~~~~~~~~~~~~~',
+                'max life': this.max_life,
                 armour: this.getTotalArmour(),
                 resist: this.getResistValue() + '%',
                 spirit: this.spirit + '%',

@@ -1,3 +1,4 @@
+import Character from '../../Objects/src/Character'
 import Item from '../Item'
 import Forging from './Forging'
 
@@ -13,9 +14,9 @@ export default class MaxLife extends Forging {
         this.gold_cost = 0
     }
 
-    forge() {
-        if (this.canBeForged() ) {
-            this.item.player.max_life
+    forge(player: Character, force = false) {
+        if (this.canBeForged() || force) {
+            player.max_life ++
             this.value ++
         }
     }

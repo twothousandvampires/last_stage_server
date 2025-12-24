@@ -34,6 +34,37 @@ export default class ImpactTrigger implements ITrigger {
                     damage_value: damage_value,
                 })
             }
-        })  
+        })
+        
+        let rating = player.getImpactRating()
+
+        while(rating - 100 > 0){
+            rating -= 100
+
+            if(Func.chance(rating)){
+                let a = Func.random() * 6.28
+                let d = Func.random(2, 6)
+
+                let x = enemy.x + Math.sin(a) * d
+                let y = enemy.y + Math.cos(a) * d
+
+                let e = new Impact(player.level)
+                e.setPoint(x, y)
+                player.level.effects.push(e)
+
+                let box = player.getBoxElipse()
+                box.x = x
+                box.y = y
+                box.r = player.impact_radius
+
+                player.level.enemies.forEach(elem => {
+                    if (!elem.is_dead && Func.elipseCollision(box, elem.getBoxElipse())){
+                        elem.takePureDamage(player, {
+                            damage_value: damage_value,
+                        })
+                    }
+                })
+            }
+        }
     }
 }

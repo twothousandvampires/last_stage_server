@@ -234,7 +234,6 @@ export default abstract class Item {
         'overcharge',
         'ice presence',
         'cold heart',
-        'echo',
     ]
 
     name: string = ''

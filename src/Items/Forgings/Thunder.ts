@@ -16,8 +16,8 @@ export default class Thunder extends Forging {
         this.gold_cost = 0
     }
 
-    forge(player: Character) {
-        if (this.canBeForged() && this.item) {
+    forge(player: Character, force = false) {
+        if (this.canBeForged() || force) {
 
             if (!this.trigger) {
                 this.trigger = new ThunderTrigger()
@@ -40,6 +40,20 @@ export default class Thunder extends Forging {
                     this.max_value = 10
                     player.triggers_on_lose_life.push(this.trigger)
                 }            
+            }
+            else{
+                if(this.item.type === 1){
+                    this.trigger.chance += 7
+                    this.value += 7
+                }
+                else if(this.item.type === 2){
+                    this.trigger.chance += 15
+                    this.value += 15
+                }
+                else if(this.item.type === 3){
+                    this.trigger.chance += 10
+                    this.value += 10
+                } 
             }
         }
     }

@@ -77,11 +77,11 @@ export default class UpgradeManager {
     }
 
     static getGrandForging(amount: number, player: Character){
-        // if(amount > player.carved_sparks) return
+        if(amount > player.carved_sparks) return
 
         player.carved_sparks -= amount
 
-        if(true){
+        if(Func.chance(amount)){
             let name = Func.getRandomFromArray(Object.keys(Builder.greatForgingMap))
             let f = Builder.createGreatForging(name, undefined)
 
@@ -112,13 +112,19 @@ export default class UpgradeManager {
             }
         }
         else{
-            if(item.forge.length >= item.max_forgings) return
+            let exist = item.forge.find(elem => elem.name === f.name)
+            if(exist){
+                exist.forge(player, true)
+                player.grand_forgings = player.grand_forgings.filter(elem => elem != f)
+            }
+            else{
+                if(item.forge.length >= item.max_forgings) return
 
-            f.setItem(item)
-            f.forge(player)
-            
-            item.forge.push(f)
-            player.grand_forgings = player.grand_forgings.filter(elem => elem != f)
+                f.setItem(item)
+                f.forge(player)
+                item.forge.push(f)
+                player.grand_forgings = player.grand_forgings.filter(elem => elem != f)
+            }       
         }
       
         UpgradeManager.closeForgings(player)
