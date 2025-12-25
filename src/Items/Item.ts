@@ -180,7 +180,7 @@ export default abstract class Item {
     static forging_list_all = [
         'critical',
         'pierce',
-        'sacredness',
+        'soul pulling',
         'toughness',
         'gold find',
         // 'charisma',

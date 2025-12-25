@@ -1,12 +1,10 @@
-import Func from '../../Func'
-import SmallShockNova from '../../Objects/Effects/SmallShockNova'
 import Character from '../../Objects/src/Character'
-import Unit from '../../Objects/src/Unit'
 import ShockNovaWhenArmourBlock from '../../Triggers/ShockNovaWhenArmourBlock'
 import Item from '../Item'
 import Forging from './Forging'
 
 export default class ShockNovaWhenArmour extends Forging {
+    
     value: number = 0
     freq: number = 3000
     last_trigger_time: number = 0

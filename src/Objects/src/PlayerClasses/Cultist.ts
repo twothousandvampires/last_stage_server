@@ -58,7 +58,7 @@ export default class Cultist extends Character {
         this.maximum_resources = 7
         this.hit_x = undefined
         this.hit_y = undefined
-        this.enlightenment_threshold = 7
+        this.enlightenment_threshold = 8
 
         this.base_regeneration_time = 8000
         this.service = false
@@ -69,6 +69,8 @@ export default class Cultist extends Character {
         this.chance_to_block = 65
         this.avaid_damage_mutator = [new CultistWillDamageAvoid()]
         this.armour_mutators = [new CultistArmourMutator()]
+
+        this.courage_expire_timer = 20000
     }
 
     getSkipDamageStateChance() {
@@ -352,8 +354,8 @@ export default class Cultist extends Character {
         return this.recent_hits.length
     }
 
-    reduceSecondResourse(){
-        this.recent_hits.pop()
+    reduceSecondResourse(amount: number = 1){
+        this.recent_hits.splice(-amount)
     }
 
     getRegenTimer() {
@@ -430,7 +432,7 @@ export default class Cultist extends Character {
     }
 
     getSecondResourceTimer() {
-        return this.courage_expire_timer + this.knowledge * 300
+        return this.courage_expire_timer + this.knowledge * 150
     }
 
     regen() {

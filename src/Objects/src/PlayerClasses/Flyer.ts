@@ -562,8 +562,8 @@ export default class Flyer extends Character {
     getSecondResource() {
         return this.recent_cast.length
     }
-    reduceSecondResourse(){
-        this.recent_cast.pop()
+    reduceSecondResourse(amount: number = 1){
+        this.recent_cast.splice(-amount)
     }
 
     getCastSpeed() {

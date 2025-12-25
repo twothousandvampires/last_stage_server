@@ -18,6 +18,7 @@ export default class Fear extends Status {
             this.unit.statusWasApplied()
 
             this.unit.can_be_controlled_by_player = false
+            this.unit.reduceSecondResourse(100)
 
             this.unit.newStatus({
                 name: 'fear',

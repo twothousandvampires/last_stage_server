@@ -215,7 +215,7 @@ export default class Builder {
         pierce: Pierce,
         'regen time': Regen,
         resist: Resist,
-        sacredness: Sacredness,
+        'soul pulling': Sacredness,
         'shock nova when armour': ShockNovaWhenArmour,
         'stun when hit': StunWhenHit,
         toughness: Toughness,

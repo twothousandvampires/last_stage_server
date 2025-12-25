@@ -217,7 +217,7 @@ export default abstract class Enemy extends Unit {
             }
 
             if (is_player_deal_hit) {
-                this.create_grace_chance += unit.chance_to_create_grace
+                this.create_chance += unit.chance_to_create_grace
                 unit.succesefulKill(this)
                 unit.addGold(this.gold_revard)
             }

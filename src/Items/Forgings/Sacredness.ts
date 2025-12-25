@@ -6,9 +6,9 @@ export default class Sacredness extends Forging {
 
     constructor(item: Item) {
         super(item)
-        this.max_value = 15
-        this.name = 'sacredness'
-        this.description = 'increases your chance to get grace after killing enemy'
+        this.max_value = 10
+        this.name = 'soul pulling'
+        this.description = 'increases a chance to create sphere after enemy dead'
         this.gold_cost = 8
     }
 

@@ -338,9 +338,9 @@ export default class Default extends Scenario {
         enemy.fortify += this.add_e_fortify
         enemy.critical += this.add_critical
 
-        if (enemy.create_chance <= 3) {
-            enemy.create_chance = 3
-        }
+        // if (enemy.create_chance <= 0) {
+        //     enemy.create_chance = 0
+        // }
 
         if (enemy.attack_speed < 150) {
             enemy.attack_speed = 150
@@ -511,7 +511,7 @@ export default class Default extends Scenario {
             level.binded_effects.push(e)
         }
 
-        if (this.waves_created % 12 === 0) {
+        if (this.waves_created % 10 === 0) {
             let min = undefined
             let name = undefined
             for (let minor in this.monster_upgrades.minor) {
@@ -529,14 +529,14 @@ export default class Default extends Scenario {
                     this.add_cooldown_attack += 50
                     break
                 case 'pierce':
-                    this.add_e_pierce += 3
+                    this.add_e_pierce += 5
                     break
                 case 'armour':
-                    this.add_e_armour += 3
+                    this.add_e_armour += 5
                     break
             }
         }
-        if (this.waves_created % 22 === 0) {
+        if (this.waves_created % 20 === 0) {
             let min = undefined
             let name = undefined
             for (let major in this.monster_upgrades.major) {
@@ -552,15 +552,15 @@ export default class Default extends Scenario {
             switch (name) {
                 case 'attack_speed':
                     this.add_attack_speed += 50
-                    this.add_critical += 3
+                    this.add_critical += 6
                     break
                 case 'move_speed':
-                    this.add_e_speed += 5
+                    this.add_e_speed += 6
                     this.minus_create_chance += 3
                     break
                 case 'life':
                     this.add_e_life += 1
-                    this.add_e_fortify += 3
+                    this.add_e_fortify += 5
                     if (this.add_e_elem_resist < 60) {
                         this.add_e_elem_resist += 15
                     }

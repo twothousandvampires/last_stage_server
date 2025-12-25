@@ -184,7 +184,7 @@ export default abstract class Character extends Unit {
     abstract addCourage(): void
     abstract getRegenTimer(): number
     abstract getPower(): number
-    abstract reduceSecondResourse(): void
+    abstract reduceSecondResourse(amount: number): void
 
     getTotalArmour(){
         let base = this.armour_rate

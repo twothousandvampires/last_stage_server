@@ -63,36 +63,36 @@ export default class BurningCircleStatus extends Status {
                     elem.takeDamage(this.unit, {
                         burn: true,
                     })
-                }
 
-                if (this.hatred && elem.is_dead && Func.chance(30)) {
-                    let effect = new FireExplosion(this.unit.level)
-                    let hit = elem.getBoxElipse()
-                    hit.r = 8
+                    if (this.hatred && elem.is_dead && Func.chance(30)) {
+                        let effect = new FireExplosion(this.unit.level)
+                        let hit = elem.getBoxElipse()
+                        hit.r = 8
 
-                    effect.setPoint(hit.x, hit.y)
+                        effect.setPoint(hit.x, hit.y)
 
-                    this.unit.level.enemies.forEach(enemy => {
-                        if (!enemy.is_dead && Func.elipseCollision(enemy.getBoxElipse(), hit)) {
-                            enemy.takeDamage()
-                        }
-                    })
+                        this.unit.level.enemies.forEach(enemy => {
+                            if (!enemy.is_dead && Func.elipseCollision(enemy.getBoxElipse(), hit)) {
+                                enemy.takeDamage()
+                            }
+                        })
 
-                    this.unit.level.players.forEach(player => {
-                        if (
-                            player != this.unit &&
-                            !player.is_dead &&
-                            Func.elipseCollision(player.getBoxElipse(), hit)
-                        ) {
-                            player.takeDamage()
-                        }
-                    })
+                        this.unit.level.players.forEach(player => {
+                            if (
+                                player != this.unit &&
+                                !player.is_dead &&
+                                Func.elipseCollision(player.getBoxElipse(), hit)
+                            ) {
+                                player.takeDamage()
+                            }
+                        })
 
-                    this.unit.level.effects.push(effect)
-                }
+                        this.unit.level.effects.push(effect)
+                    }
 
-                if (this.devouring && elem.is_dead && Func.chance(20)) {
-                    this.time += 200
+                    if (this.devouring && elem.is_dead && Func.chance(20)) {
+                        this.time += 200
+                    }
                 }
             })
 
@@ -101,36 +101,6 @@ export default class BurningCircleStatus extends Status {
                     elem.takeDamage(this.unit, {
                         burn: true,
                     })
-                }
-
-                if (this.hatred && elem.is_dead && Func.chance(30)) {
-                    let effect = new FireExplosion(this.unit.level)
-                    let hit = elem.getBoxElipse()
-                    hit.r = 8
-
-                    effect.setPoint(hit.x, hit.y)
-
-                    this.unit.level.enemies.forEach(enemy => {
-                        if (!enemy.is_dead && Func.elipseCollision(enemy.getBoxElipse(), hit)) {
-                            enemy.takeDamage()
-                        }
-                    })
-
-                    this.unit.level.players.forEach(player => {
-                        if (
-                            player != this.unit &&
-                            !player.is_dead &&
-                            Func.elipseCollision(player.getBoxElipse(), hit)
-                        ) {
-                            player.takeDamage()
-                        }
-                    })
-
-                    this.unit.level.effects.push(effect)
-                }
-
-                if (this.devouring && elem.is_dead && Func.chance(20)) {
-                    this.time += 200
                 }
             })
         }

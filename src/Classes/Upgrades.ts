@@ -188,11 +188,7 @@ export default class Upgrades {
             {
                 name: 'pressing steps',
                 canUse: (character: Character) => {
-                    return (
-                        !character.level.status_pull.find(
-                            elem => elem.unit === character && elem instanceof PressingSteps
-                        ) && character.power >= 20
-                    )
+                    return character.power >= 20 && !character.level.status_pull.find(elem => elem.unit === character && elem instanceof PressingSteps)  
                 },
                 teach: (character: Character): void => {
                     character.level.setStatus(character, new PressingSteps(character.level.time))
@@ -361,10 +357,8 @@ export default class Upgrades {
             {
                 name: 'crushing wave',
                 canUse: (character: Character) => {
-                    return (
-                        character.crushing_rating >= 30 &&
-                        !character.level.status_pull.some(elem => elem instanceof CrushingWave)
-                    )
+                    return character.crushing_rating >= 30 && !character.level.status_pull.find(elem => elem.unit === character && elem instanceof CrushingWave)
+                    
                 },
                 teach: (character: Character): void => {
                     let s = new CrushingWave(character.level.time)
@@ -845,7 +839,7 @@ export default class Upgrades {
                 teach: (character: Character) => {
                     character.armour_rate += 3
                 },
-                cost: 2,
+                cost: 1,
                 desc: 'Increases your armour',
             },
             {
