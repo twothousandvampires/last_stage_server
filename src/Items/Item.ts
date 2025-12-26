@@ -175,51 +175,54 @@ export default abstract class Item {
             name: 'distorter',
             description: 'gives 5% chance that a trigger triggered twice',
         },
+        {
+            name: 'crusher',
+            description: 'increases crushing rating by 5 and give a chance that killed crushed enemy will explode and deal damage in radius'
+        }
     ]
 
     static forging_list_all = [
-        'critical',
         'pierce',
         'soul pulling',
         'toughness',
         'gold find',
-        // 'charisma',
         'impact',
         'penetrating',
         'spirit',
         'power',
-        'vampiric',
+        'vampiric',  
+        'armour rate',   
     ]
 
     static forging_list_type_1 = [
         'attack speed',
-        'might',
-        'durability',
+        'perception',
+        'agility',
         'instant kill',
-        'when critical',
         'ignite when hit',
         'frost shpere when kill',
         'stun when hit',
         'thunder strikes',
-        'storm presence',
+        'critical',
         'dominance when critical',
-        'fragility on hit'
+        'fragility on hit',
+        'storm presence',
+        'energy weapon'
     ]
 
     static forging_list_type_2 = [
-        'armour rate',
-        'perception',
-        'agility',
+        'might',
+        'durability',   
         'regen time',
         'block chance',
-        'when hit',
         'freeze when hited',
         'sparks when block',
         'shock nova when armour',
         'explosive armour',
         'fire presence',
         'fortify when hit',
-        'enchanted armour'
+        'enchanted armour',
+        'ascension armor'
     ]
 
     static forging_list_type_3 = [
@@ -234,6 +237,7 @@ export default abstract class Item {
         'overcharge',
         'ice presence',
         'cold heart',
+        'gift of enlightenment'
     ]
 
     name: string = ''

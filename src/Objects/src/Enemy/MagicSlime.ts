@@ -23,7 +23,7 @@ export default class MagicSlime extends Enemy {
         this.create_item_chance = 1
         this.create_sorcerers_skull_chance = 10
         this.retreat_distance = 12
-        this.gold_revard = 3
+        this.gold_revard = 2
         this.cooldown_attack = 4500
     }
 

@@ -77,6 +77,11 @@ import BlessedWarrioraArmourMutator from '../Mutators/BlessedWarrioraArmourMutat
 import BlessedWarriorPierceMutator from '../Mutators/BlessedWarriorPierceMutator'
 import SpiritStrikes from '../Triggers/SpiritStrikes'
 import SpiritStrikesMutator from '../Mutators/SpiritStrikesMutator'
+import BreakingBonesTrigger from '../Triggers/BreakingBonesTrigger'
+import BreakingArmorTrigger from '../Triggers/BreakingArmorTrigger'
+import LethalStrikesOnCritical from '../Triggers/LethalStrikesOnCritical'
+import ThroughAndThrough from '../Triggers/ThroughAndThrough'
+import GoldenChainmailMutator from '../Mutators/GoldenChainmailMutator'
 
 export default class Upgrades {
     static getAllUpgrades(): Upgrade[] {
@@ -87,8 +92,8 @@ export default class Upgrades {
                     return character.item.length >=5
                 },
                 teach: (character: Character): void => {
-                    character.pierce += 15
-                    character.armour_rate += 15
+                    character.pierce += 5
+                    character.armour_rate += 5
                 },
                 cost: 2,
                 ascend: 25,
@@ -107,6 +112,30 @@ export default class Upgrades {
                 desc: 'Increases chance to avoid damage depend on your courage',
             },
             {
+                name: 'lethal strikes',
+                canUse: (character: Character) => {
+                    return character.critical >= 20 && !character.triggers_on_critical.some(elem => elem instanceof LethalStrikesOnCritical)
+                },
+                teach: (character: Character): void => {
+                    character.triggers_on_critical.push(new LethalStrikesOnCritical())
+                },
+                cost: 2,
+                ascend: 20,
+                desc: 'When you lead critical strike there is a chance to get lethal strikes',
+            },
+            {
+                name: 'through and through',
+                canUse: (character: Character) => {
+                    return character.critical >= 15 && !character.triggers_on_critical.some(elem => elem instanceof ThroughAndThrough)
+                },
+                teach: (character: Character): void => {
+                    character.triggers_on_critical.push(new ThroughAndThrough())
+                },
+                cost: 2,
+                ascend: 15,
+                desc: 'Your critical hits have a chance to damage a target behind your primary target',
+            },           
+            {
                 name: 'immaterial',
                 canUse: (character: Character) => {
                     return character.avoid_damage_chance < 20
@@ -117,6 +146,54 @@ export default class Upgrades {
                 cost: 1,
                 ascend: 25,
                 desc: 'Increases chance to avoid damage',
+            },
+            {
+                name: 'golden chainmail',
+                canUse: (character: Character) => {
+                    return character.gold >= 250 && !character.armour_mutators.some(elem => elem instanceof GoldenChainmailMutator)
+                },
+                teach: (character: Character) => {
+                    character.armour_mutators.push(new GoldenChainmailMutator())
+                },
+                cost: 3,
+                ascend: 20,
+                desc: 'Your armour is increased by you gold',
+            },
+            {
+                name: 'cast speed',
+                canUse: (character: Character) => {
+                    return character.cast_speed > 600
+                },
+                teach: (character: Character) => {
+                    character.cast_speed -= 60
+                },
+                cost: 2,
+                ascend: 12,
+                desc: 'Increases cast speed',
+            },
+            {
+                name: 'beaking armor',
+                canUse: (character: Character) => {
+                    return character.crushing_rating >= 30 && !character.triggers_on_crushing.some(elem => elem instanceof BreakingArmorTrigger)
+                },
+                teach: (character: Character): void => {
+                    character.triggers_on_crushing.push(new BreakingArmorTrigger())
+                },
+                cost: 2,
+                ascend: 20,
+                desc: 'When you crush enemy, where is a chance to reduce their armour',
+            },
+            {
+                name: 'breaking bones',
+                canUse: (character: Character) => {
+                    return character.crushing_rating >= 15 && !character.triggers_on_crushing.some(elem => elem instanceof BreakingBonesTrigger)
+                },
+                teach: (character: Character): void => {
+                    character.triggers_on_crushing.push(new BreakingBonesTrigger())
+                },
+                cost: 1,
+                ascend: 12,
+                desc: 'When you crush enemy, where is a chance to reduce their move speed',
             },
             {
                 name: 'overflow',
@@ -791,10 +868,10 @@ export default class Upgrades {
                     return character.chance_to_create_grace < 50
                 },
                 teach: (character: Character) => {
-                    character.chance_to_create_grace += 5
+                    character.chance_to_create_grace += 3
                 },
                 cost: 3,
-                ascend: 16,
+                ascend: 25,
                 desc: `Icreases your chance to gain grace after an enemy's death`,
             },
             {
@@ -1125,6 +1202,19 @@ export default class Upgrades {
                 cost: 3,
                 ascend: 15,
                 desc: 'You will create an additional rune for each energy, but it now costs 1 more',
+            },
+            {
+                name: 'attack speed',
+                canUse: (character: Character) => {
+                    return character.attack_speed > 600
+                },
+                teach: (character: Character) => {
+                    if (character instanceof Swordman) {
+                        character.attack_speed -= 40
+                    }
+                },
+                cost: 2,
+                desc: 'Increases attack speed',
             },
             {
                 name: 'explosive runes',
@@ -2163,10 +2253,8 @@ export default class Upgrades {
                 name: 'ice genesis',
                 type: 'frostnova',
                 canUse: (character: Character) => {
-                    return (
-                        character.third_ability instanceof Frostnova &&
-                        !character.third_ability.ice_genesis
-                    )
+                    return character.third_ability instanceof Frostnova && !character.third_ability.ice_genesis
+                    
                 },
                 teach: (character: Character) => {
                     if (

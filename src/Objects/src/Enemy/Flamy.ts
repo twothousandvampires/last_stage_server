@@ -18,7 +18,7 @@ export class Flamy extends Enemy {
         this.spawn_time = 1400
         this.player_check_radius = 25
         this.say_z = 8
-        this.gold_revard = 2
+        this.gold_revard = 1
     }
 
     getIdleStateInstance() {

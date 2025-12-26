@@ -1,13 +1,15 @@
 import Func from '../../Func'
+import ITrigger from '../../Interfaces/Itrigger'
 import Character from '../../Objects/src/Character'
 import Unit from '../../Objects/src/Unit'
 import Dominance from '../../Status/Dominance'
 import Item from '../Item'
 import Forging from './Forging'
 
-export default class DominanceWhenCritical extends Forging {
+export default class DominanceWhenCritical extends Forging implements ITrigger{
+
     value: number = 0
-    freq: number = 3000
+    cd: number = 3000
     last_trigger_time: number = 0
     chance: number = 0
 
@@ -15,9 +17,12 @@ export default class DominanceWhenCritical extends Forging {
         super(item)
         this.max_value = 30
         this.name = 'dominance'
-        this.description =
-            'when you lead critical strike there is a chance to get dominance (+30 power)'
+        this.description = 'when you lead critical strike there is a chance to get dominance (+30 power)'
         this.gold_cost = 10
+    }
+
+    getTriggerChance(player: Character | undefined): number {
+        return this.chance
     }
 
     forge(player: Character) {
@@ -43,16 +48,10 @@ export default class DominanceWhenCritical extends Forging {
     }
 
     trigger(player: Character, target: Unit) {
-        if (Func.notChance(this.chance, player.is_lucky)) return
+        let s = new Dominance(player.level.time)
+        s.setDuration(5000)
 
-        if (player.level.time - this.last_trigger_time >= this.freq) {
-            this.last_trigger_time = player.level.time
-
-            let s = new Dominance(player.level.time)
-            s.setDuration(5000)
-
-            player.level.setStatus(player, s, true)
-        }
+        player.level.setStatus(player, s, true)
     }
 
     canBeForged(): boolean {

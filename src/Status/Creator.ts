@@ -9,15 +9,15 @@ import Split from '../Objects/Effects/Split'
 import Status from './Status'
 
 export default class Creator extends Status {
+    
+    frequency: number = 5000
     last_checked: number
 
     constructor(
         public time: number,
-        private frequency = 500
     ) {
         super(time)
         this.last_checked = time
-        this.frequency = 5000
     }
 
     apply(unit: any) {

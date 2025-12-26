@@ -46,7 +46,7 @@ export default class Default extends Scenario {
 
     last_checked: number
     time_between_wave_ms: number
-    max_time_wave: number = 6500
+    max_time_wave: number = 6000
     min_time_wave: number = 5000
     waves_created: number = 0
     times_count: number = 0
@@ -171,17 +171,18 @@ export default class Default extends Scenario {
 
     async createWave(level: Level) {
         this.waves_created ++
-
+        console.log('--------------------')
       
-        let add_count = Math.floor(this.waves_created / 16)
+        let add_count = Math.floor(this.waves_created / 22)
         add_count += (level.players.length - 1) * 2
 
-        let count = Func.random(1 + Math.floor(add_count / 4), 2 + Math.floor(add_count / 2.5))
+        let count = Func.random(1 + Math.floor(add_count / 4.5), 2 + Math.floor(add_count / 3))
 
         // if (this.times === Default.TIMES_BAD) {
         //     count = Math.round(count * 1.5)
         // }
 
+        console.log('enemies spawned: ' + count)
         for (let i = 0; i < count; i++) {
             await Func.sleep(Func.random(100, 300))
 
@@ -193,11 +194,11 @@ export default class Default extends Scenario {
 
     updateTimeBetweenWaves(){
         if(this.waves_created >= this.waves_plato){
-            if(this.waves_created >= 220 && this.max_time_wave >= 3500){
+            if(this.waves_created >= 150 && this.max_time_wave >= 4000){
                 this.max_time_wave -= 20
             }
            
-            this.time_between_wave_ms = Math.round(this.max_time_wave + Func.random(100, 1000))
+            this.time_between_wave_ms = Math.round(this.max_time_wave + Func.random(250, 500))
         }
         else{
             this.time_between_wave_ms += this.time_increment
@@ -207,6 +208,8 @@ export default class Default extends Scenario {
             }
             
         }
+
+        console.log('waving rate: ' + this.time_between_wave_ms)
     }
 
     createRandomEnemy(level: Level, list: string[] = []) {
@@ -250,7 +253,7 @@ export default class Default extends Scenario {
         } else if (enemy_name === 'impy') {
             enemy = new Impy(level)
         } else if (enemy_name === 'gifter') {
-            enemy = new Gifter(level)
+            enemy = new Gifter(level, this.waves_created)
         } else if (enemy_name === 'ghost') {
             enemy = new Ghost(level)
         } else if (enemy_name === 'slime') {

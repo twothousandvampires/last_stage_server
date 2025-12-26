@@ -6,7 +6,7 @@ export default class SpiritStrikes implements ITrigger {
 
     cd: number = 2000
     last_trigger_time: number = 0
-    chance: number = 5
+    chance: number = 7
     name: string = 'spirit strikes'
     description: string = 'Then you impact there is a chance to get ward'
 

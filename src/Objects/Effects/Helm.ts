@@ -25,17 +25,17 @@ export default class Helm extends Effect {
 
                 let r = Func.random(1, 6)
                 if (r === 1) {
-                    elem.might++
+                    elem.might ++
                 } else if (r === 2) {
-                    elem.durability++
+                    elem.durability ++
                 } else if (r === 3) {
-                    elem.knowledge++
+                    elem.knowledge ++
                 } else if (r === 4) {
-                    elem.will++
+                    elem.will ++
                 } else if (r === 5) {
-                    elem.agility++
+                    elem.agility ++
                 } else {
-                    elem.perception++
+                    elem.perception ++
                 }
 
                 this.level.deleted.push(this.id)

@@ -7,8 +7,9 @@ import Pile from '../Piles/Pile'
 export default class Gifter extends Pile {
     start_time: any
     last_grace_spawn_time: number = 0
+    waves: number
 
-    constructor(level: Level) {
+    constructor(level: Level, waves: number = 0) {
         super(level)
         this.name = 'gifter'
         this.box_r = 2.4
@@ -21,13 +22,19 @@ export default class Gifter extends Pile {
         this.create_chance = 0
         this.abilities = []
         this.duration = 20000
+        this.waves = waves
     }
 
     takeDamage(unit: any = undefined, options: any = {}) {
         super.takeDamage()
 
+        let explode_chance = 0
+        explode_chance += Math.round(this.waves / 5)
+        if(explode_chance > 90){
+            explode_chance = 90
+        }
         if (this.level.time - this.last_grace_spawn_time >= 1000) {
-            if (Func.chance(30)) {
+            if (Func.chance(explode_chance)) {
                 let hit = this.getBoxElipse()
                 hit.r = 10
 

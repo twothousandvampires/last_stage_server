@@ -1,4 +1,3 @@
-import Func from '../Func'
 import ITrigger from '../Interfaces/Itrigger'
 import { FrostSphereProjectile } from '../Objects/Projectiles/FrostSphereProjectile'
 import Character from '../Objects/src/Character'

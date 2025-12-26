@@ -116,6 +116,10 @@ import Thunder from '../Items/Forgings/Thunder'
 import SpikedWeapon from '../Items/Forgings/SpikedWeapon'
 import GoldenReplica from '../Items/Forgings/GoldenReplica'
 import ShockWave from '../Items/Forgings/ShockWave'
+import EnergyWeapon from '../Items/Forgings/EnergyWeapon'
+import GiftOfEnlightment from '../Items/Forgings/GiftOfEnlightment'
+import AscensionArmour from '../Items/Forgings/AscensionArmour'
+import Crusher from '../Items/Crusher'
 
 export default class Builder {
     static masteryMap = {
@@ -173,6 +177,7 @@ export default class Builder {
         'devouring axe': DevouringAxe,
         'flamy nimbus': FlamyNimbus,
         distorter: Distorter,
+        'crusher': Crusher
     }
 
     static greatForgingMap = {
@@ -193,7 +198,6 @@ export default class Builder {
         'bones when block': BonesWhenBlock,
         'cast speed': CastSpeed,
         chance: Chance,
-        // 'charisma': Charisma,
         'cooldown reduction': CooldownReduction,
         count: Count,
         critical: Critical,
@@ -238,7 +242,10 @@ export default class Builder {
         vampiric: Vampiric,
         'blessed life': BlessedLife,
         'enchanted armour': EnchantedArmour,
-        'fragility on hit': FragilityOnHit
+        'fragility on hit': FragilityOnHit,
+        'energy weapon': EnergyWeapon,
+        'gift of enlightenment': GiftOfEnlightment,
+        'ascension armor': AscensionArmour
     }
 
     static createCharacter(client: Client, level: Level): Character {

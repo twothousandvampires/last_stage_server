@@ -27,7 +27,7 @@ export default class LightBeacon extends FlyerAbility implements IUnitState<Flye
         this.need_to_pay = true
         this.type = Ability.TYPE_CUSTOM
         this.mastery_chance = 75
-        this.cd = 10000
+        this.cd = 15000
     }
 
     enter(unit: Flyer): void {
@@ -73,7 +73,7 @@ export default class LightBeacon extends FlyerAbility implements IUnitState<Flye
 
                         unit.level.enemies.forEach(elem => {
                             if (Func.elipseCollision(elem.getBoxElipse(), box)) {
-                                elem.takeDamage()
+                                elem.takeDamage(this.owner)
                             }
                         })
                     }, timer_freq)

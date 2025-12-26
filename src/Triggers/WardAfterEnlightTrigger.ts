@@ -1,9 +1,17 @@
+import ITrigger from '../Interfaces/Itrigger'
 import Character from '../Objects/src/Character'
 
-export default class WardAfterEnlightTrigger {
+export default class WardAfterEnlightTrigger implements ITrigger {
+    
     name: string = 'afterlight'
     description: string = 'You gain 5 ward'
     chance: number = 100
+    last_trigger_time: number = 0
+    cd: number = 2000
+
+    getTriggerChance(player: Character | undefined): number {
+        return this.chance
+    }
 
     trigger(player: Character) {
         player.addWard(player.getSecondResource())

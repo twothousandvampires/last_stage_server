@@ -275,8 +275,9 @@ export default abstract class Enemy extends Unit {
             damage_value += this.crushing
         }
 
-        if (is_player_deal_hit && unit.isCrushing()) {
+        if (is_player_deal_hit && unit.isCrushing()) {    
             this.crushing ++
+            unit.playerApplyCrushing(this)
         }
 
         if (Func.chance(this.fortify)) { 
