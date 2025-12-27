@@ -171,18 +171,18 @@ export default class Default extends Scenario {
 
     async createWave(level: Level) {
         this.waves_created ++
-        console.log('--------------------')
+        // console.log('--------------------')
       
-        let add_count = Math.floor(this.waves_created / 22)
+        let add_count = Math.floor(this.waves_created / 23)
         add_count += (level.players.length - 1) * 2
 
-        let count = Func.random(1 + Math.floor(add_count / 4.5), 2 + Math.floor(add_count / 3))
+        let count = Func.random(1 + Math.floor(add_count / 4.7), 2 + Math.floor(add_count / 3.2))
 
         // if (this.times === Default.TIMES_BAD) {
         //     count = Math.round(count * 1.5)
         // }
 
-        console.log('enemies spawned: ' + count)
+        // console.log('enemies spawned: ' + count)
         for (let i = 0; i < count; i++) {
             await Func.sleep(Func.random(100, 300))
 
@@ -209,7 +209,7 @@ export default class Default extends Scenario {
             
         }
 
-        console.log('waving rate: ' + this.time_between_wave_ms)
+        // console.log('waving rate: ' + this.time_between_wave_ms)
     }
 
     createRandomEnemy(level: Level, list: string[] = []) {
@@ -327,6 +327,8 @@ export default class Default extends Scenario {
             let status = new Reanimator(level.time)
             level.setStatus(enemy, status)
         }
+
+        enemy.can_be_instant_killed = false
 
         return enemy
     }
@@ -514,7 +516,7 @@ export default class Default extends Scenario {
             level.binded_effects.push(e)
         }
 
-        if (this.waves_created % 10 === 0) {
+        if (this.waves_created % 9 === 0) {
             let min = undefined
             let name = undefined
             for (let minor in this.monster_upgrades.minor) {
@@ -539,7 +541,7 @@ export default class Default extends Scenario {
                     break
             }
         }
-        if (this.waves_created % 20 === 0) {
+        if (this.waves_created % 19 === 0) {
             let min = undefined
             let name = undefined
             for (let major in this.monster_upgrades.major) {
@@ -559,7 +561,7 @@ export default class Default extends Scenario {
                     break
                 case 'move_speed':
                     this.add_e_speed += 6
-                    this.minus_create_chance += 3
+                    this.minus_create_chance += 4
                     break
                 case 'life':
                     this.add_e_life += 1

@@ -16,8 +16,8 @@ export default class StoneSkin extends Forging {
 
     forge(player: Character, force = false) {
         if (this.canBeForged() || force) {
-            player.avoid_damage_chance += 10
-            this.value += 10
+            player.avoid_damage_chance += 5
+            this.value += 5
         }
     }
 

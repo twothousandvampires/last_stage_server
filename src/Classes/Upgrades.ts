@@ -82,11 +82,38 @@ import BreakingArmorTrigger from '../Triggers/BreakingArmorTrigger'
 import LethalStrikesOnCritical from '../Triggers/LethalStrikesOnCritical'
 import ThroughAndThrough from '../Triggers/ThroughAndThrough'
 import GoldenChainmailMutator from '../Mutators/GoldenChainmailMutator'
+import AscendedPierceMutator from '../Mutators/AscendedPierceMutator'
+import AscendedArmourMutator from '../Mutators/AscendedArmourMutator'
 
 export default class Upgrades {
     static getAllUpgrades(): Upgrade[] {
         return [
-             {
+            {
+                name: 'taste of blood',
+                canUse: (character: Character) => {
+                    return character.kills >= 150
+                },
+                teach: (character: Character): void => {
+                    
+                },
+                cost: 2,
+                ascend: 20,
+                desc: 'Give me more!',
+            },
+            {
+                name: 'ascended',
+                canUse: (character: Character) => {
+                    return character.grace >= 10 && !character.pierce_rating_mutators.some(elem => elem instanceof AscendedPierceMutator)
+                },
+                teach: (character: Character): void => {
+                    character.pierce_rating_mutators.push(new AscendedPierceMutator())
+                    character.armour_mutators.push(new AscendedArmourMutator())
+                },
+                cost: 1,
+                ascend: 30,
+                desc: 'Your pierce and armour rating increased by you grace amount',
+            },
+            {
                 name: 'equiped',
                 canUse: (character: Character) => {
                     return character.item.length >=5
@@ -712,7 +739,7 @@ export default class Upgrades {
                 },
                 cost: 4,
                 ascend: 25,
-                desc: 'You gain wards equals your courage when you gain enlightenment',
+                desc: 'You get 3 ward when you become enlightenment',
             },
             {
                 name: 'spirit strikes',
@@ -865,12 +892,12 @@ export default class Upgrades {
             {
                 name: 'chosen one',
                 canUse: (character: Character) => {
-                    return character.chance_to_create_grace < 50
+                    return character.chance_to_create_grace < 10
                 },
                 teach: (character: Character) => {
-                    character.chance_to_create_grace += 3
+                    character.chance_to_create_grace += 1
                 },
-                cost: 3,
+                cost: 2,
                 ascend: 25,
                 desc: `Icreases your chance to gain grace after an enemy's death`,
             },

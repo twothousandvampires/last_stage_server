@@ -1,5 +1,5 @@
 import Func from '../Func'
-import ITrigger from '../Interfaces/Itrigger'
+import ITrigger from '../Interfaces/ITrigger'
 import Impact from '../Objects/Effects/Impact'
 import Character from '../Objects/src/Character'
 
@@ -12,7 +12,7 @@ export default class MassiveImpactTrigger implements ITrigger{
     chance: number = 0
 
     getTriggerChance(player: Character): number {
-        return player.might * 7
+        return player.might * 3
     }
 
     trigger(player: Character, target: any = undefined, impact_damage: number = 1) {

@@ -41,6 +41,7 @@ export default abstract class Enemy extends Unit {
     can_be_burned: boolean = true
     abilities: any[] = []
     dead_time: number = 5000
+    killed_by: Character | undefined
 
     constructor(level: Level) {
         super(level)
@@ -217,7 +218,8 @@ export default abstract class Enemy extends Unit {
             }
 
             if (is_player_deal_hit) {
-                this.create_chance += unit.chance_to_create_grace
+                this.killed_by = unit
+
                 unit.succesefulKill(this)
                 unit.addGold(this.gold_revard)
             }
@@ -314,7 +316,7 @@ export default abstract class Enemy extends Unit {
             }
 
             if (is_player_deal_hit) {
-                this.create_grace_chance += unit.chance_to_create_grace
+                this.killed_by = unit
                 unit.succesefulKill(this)
                 unit.addGold(this.gold_revard)
             }

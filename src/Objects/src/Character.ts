@@ -138,6 +138,7 @@ export default abstract class Character extends Unit {
     courage_expire_timer: number = 8000
     last_ascent_mastery_getting: number = 0
     vampiric_rate: number = 0
+    kills: number = 0
 
 
     current_state: IUnitState<Character> | undefined
@@ -576,8 +577,9 @@ export default abstract class Character extends Unit {
                 durability: this.durability,
                 agility: this.agility,
                 perception: this.perception,
-                '~~~': '~~~~~~~~~~~~~~~~~',
+                '~~~': '~~~~~~~~~~~~~~~~~',       
                 'max life': this.max_life,
+                ward: this.ward,
                 armour: this.getTotalArmour(),
                 resist: this.getResistValue() + '%',
                 spirit: this.spirit + '%',
@@ -1041,6 +1043,8 @@ export default abstract class Character extends Unit {
         if (!enemy) return
         let time = this.level.time
 
+        this.kills ++
+
         this.triggers_on_kill.forEach(elem => {
             if (time - elem.last_trigger_time >= elem.cd) {
                 if (Func.chance(elem.getTriggerChance(this), this.is_lucky)) {
@@ -1385,15 +1389,14 @@ export default abstract class Character extends Unit {
     prepareToAction() {
         this.is_attacking = true
 
-        let rel_x = Math.round(this.pressed.canvas_x + this.x - 40)
-        let rel_y = Math.round(this.pressed.canvas_y + this.y - 40)
-
+        let rel_x = Math.round(this.pressed.canvas_x + this.x)
+        let rel_y = Math.round(this.pressed.canvas_y + this.y)
         this.c_x = rel_x
         this.c_y = rel_y
 
         if (!this.c_x || this.c_y) {
-            this.c_x = Math.round(this.pressed.over_x + this.x - 40)
-            this.c_y = Math.round(this.pressed.over_y + this.y - 40)
+            this.c_x = Math.round(this.pressed.over_x + this.x)
+            this.c_y = Math.round(this.pressed.over_y + this.y)
         }
 
         if (rel_x < this.x) {

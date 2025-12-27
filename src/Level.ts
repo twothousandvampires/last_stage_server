@@ -284,7 +284,13 @@ export default class Level {
     }
 
     check(enemy: Enemy) {
-        if (Func.chance(enemy.create_chance)) {
+        let chance = enemy.create_chance
+        let add = 0
+        if(enemy.killed_by){
+            add = enemy.killed_by.chance_to_create_grace
+            chance += add
+        }
+        if (Func.chance(chance)) {
             let drop_name: Effect | undefined | string = undefined
 
             let total_weights = enemy.getTotalWeights()
@@ -314,6 +320,7 @@ export default class Level {
             }
 
             if (drop_name instanceof Effect) {
+                console.log('Dropped by ' + enemy.name + ', with chance ' + chance + ' base :' + enemy.create_chance + ' add: ' + add)
                 drop_name.setPoint(enemy.x, enemy.y)
                 this.binded_effects.push(drop_name)
             }

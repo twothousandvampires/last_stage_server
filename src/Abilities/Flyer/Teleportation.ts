@@ -35,8 +35,8 @@ export default class Teleportation extends FlyerAbility implements IUnitState<Ch
             return
         }
 
-        this.teleport_x = Math.round(this.owner.pressed.over_x + this.owner.x - 40)
-        this.teleport_y = Math.round(this.owner.pressed.over_y + this.owner.y - 40)
+        this.teleport_x = Math.round(this.owner.pressed.over_x + this.owner.x)
+        this.teleport_y = Math.round(this.owner.pressed.over_y + this.owner.y)
 
         if (
             !this.teleport_x ||

@@ -183,7 +183,6 @@ export default abstract class Item {
 
     static forging_list_all = [
         'pierce',
-        'soul pulling',
         'toughness',
         'gold find',
         'impact',
@@ -191,7 +190,8 @@ export default abstract class Item {
         'spirit',
         'power',
         'vampiric',  
-        'armour rate',   
+        'armour rate',
+        'resist',   
     ]
 
     static forging_list_type_1 = [
@@ -226,7 +226,6 @@ export default abstract class Item {
     ]
 
     static forging_list_type_3 = [
-        'resist',
         'will',
         'knowledge',
         'max resources',
@@ -237,7 +236,8 @@ export default abstract class Item {
         'overcharge',
         'ice presence',
         'cold heart',
-        'gift of enlightenment'
+        'gift of enlightenment',
+        'soul pulling',
     ]
 
     name: string = ''
