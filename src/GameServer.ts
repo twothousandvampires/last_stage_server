@@ -20,8 +20,10 @@ let socket = new Server(httpServer, {
         origin: ['https://laststage.online'],
         credentials: false
     },
-    pingTimeout: 20000,
-    pingInterval: 25000
+    transports: ['websocket'],
+    pingTimeout: 5000,
+    pingInterval: 5000,
+    connectTimeout: 15000
 });
 
 httpServer.listen(+port, '127.0.0.1')

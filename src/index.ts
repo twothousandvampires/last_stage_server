@@ -18,8 +18,10 @@ const io = new Server(server, {
         origin: ['https://laststage.online'],
         credentials: false
     },
-    pingTimeout: 20000,
-    pingInterval: 25000
+    transports: ['websocket'],
+    pingTimeout: 5000,
+    pingInterval: 5000,
+    connectTimeout: 15000
 });
 
 let master = new MasterServer(io, port)
