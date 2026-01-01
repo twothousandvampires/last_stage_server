@@ -5,6 +5,7 @@ import Character from '../Objects/src/Character'
 import Unit from '../Objects/src/Unit'
 
 export default class ShockNovaWhenArmourBlock implements ITrigger {
+    
     cd: number = 1200
     last_trigger_time: number = 0
     chance: number = 0
@@ -39,7 +40,7 @@ export default class ShockNovaWhenArmourBlock implements ITrigger {
                 Func.elipseCollision(wave, elem.getBoxElipse()) &&
                 elem != player
             ) {
-                let timer = Func.random(200, 1400)
+                let timer = Func.random(1000, 3000)
                 elem.setZap(timer)
                 if (!was_sound) {
                     player.level.addSound('zap', elem.x, elem.y)

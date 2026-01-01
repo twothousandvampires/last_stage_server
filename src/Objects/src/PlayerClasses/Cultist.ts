@@ -11,6 +11,7 @@ import WanderingEvil from '../../../Abilities/Cultist/WanderingEvil'
 import Upgrades from '../../../Classes/Upgrades'
 import Func from '../../../Func'
 import Level from '../../../Level'
+import CultistArmourMutator from '../../../Mutators/CultistArmourMutator'
 import CultistWillDamageAvoid from '../../../Mutators/CultistWillDamageAvoid'
 import PlayerDyingState from '../../../State/PlayerDyingState'
 import Immortality from '../../../Status/Immortality'
@@ -57,7 +58,7 @@ export default class Cultist extends Character {
         this.maximum_resources = 7
         this.hit_x = undefined
         this.hit_y = undefined
-        this.enlightenment_threshold = 7
+        this.enlightenment_threshold = 8
 
         this.base_regeneration_time = 8000
         this.service = false
@@ -67,6 +68,9 @@ export default class Cultist extends Character {
         this.recent_hits = []
         this.chance_to_block = 65
         this.avaid_damage_mutator = [new CultistWillDamageAvoid()]
+        this.armour_mutators = [new CultistArmourMutator()]
+
+        this.courage_expire_timer = 20000
     }
 
     getSkipDamageStateChance() {
@@ -196,10 +200,6 @@ export default class Cultist extends Character {
         this.level.setStatus(this, s)
 
         this.level.addSound('enlight', this.x, this.y)
-    }
-
-    getTotalArmour() {
-        return this.armour_rate + this.might
     }
 
     getPenaltyByLifeStatus(): number {
@@ -354,8 +354,8 @@ export default class Cultist extends Character {
         return this.recent_hits.length
     }
 
-    reduceSecondResourse(){
-        this.recent_hits.pop()
+    reduceSecondResourse(amount: number = 1){
+        this.recent_hits.splice(-amount)
     }
 
     getRegenTimer() {
@@ -432,7 +432,7 @@ export default class Cultist extends Character {
     }
 
     getSecondResourceTimer() {
-        return this.courage_expire_timer + this.knowledge * 300
+        return this.courage_expire_timer + this.knowledge * 150
     }
 
     regen() {

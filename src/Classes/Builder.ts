@@ -110,9 +110,16 @@ import BlessedLife from '../Items/Forgings/BlessedLife'
 import EnchantedArmour from '../Items/Forgings/EnchantedArmour'
 import FragilityOnHit from '../Items/Forgings/FragilityOnHit'
 import LightningSentries from '../Glyphs/LightningSentries'
-import MaxLife from '../Items/Forgings/MaxLIfe'
+import MaxLife from '../Items/Forgings/MaxLife'
 import StoneSkin from '../Items/Forgings/StoneSkin'
 import Thunder from '../Items/Forgings/Thunder'
+import SpikedWeapon from '../Items/Forgings/SpikedWeapon'
+import GoldenReplica from '../Items/Forgings/GoldenReplica'
+import ShockWave from '../Items/Forgings/ShockWave'
+import EnergyWeapon from '../Items/Forgings/EnergyWeapon'
+import GiftOfEnlightment from '../Items/Forgings/GiftOfEnlightment'
+import AscensionArmour from '../Items/Forgings/AscensionArmour'
+import Crusher from '../Items/Crusher'
 
 export default class Builder {
     static masteryMap = {
@@ -170,13 +177,18 @@ export default class Builder {
         'devouring axe': DevouringAxe,
         'flamy nimbus': FlamyNimbus,
         distorter: Distorter,
+        'crusher': Crusher
     }
 
     static greatForgingMap = {
         'max life': MaxLife,
         charisma: Charisma,
         'stone skin': StoneSkin,
-        thunder: Thunder
+        thunder: Thunder,
+        'spiked weapon': SpikedWeapon,
+        'golden replica': GoldenReplica,
+        echo: Echo,
+        'shock wave': ShockWave
     }
 
     static forgingMap = {
@@ -186,7 +198,6 @@ export default class Builder {
         'bones when block': BonesWhenBlock,
         'cast speed': CastSpeed,
         chance: Chance,
-        // 'charisma': Charisma,
         'cooldown reduction': CooldownReduction,
         count: Count,
         critical: Critical,
@@ -208,7 +219,7 @@ export default class Builder {
         pierce: Pierce,
         'regen time': Regen,
         resist: Resist,
-        sacredness: Sacredness,
+        'soul pulling': Sacredness,
         'shock nova when armour': ShockNovaWhenArmour,
         'stun when hit': StunWhenHit,
         toughness: Toughness,
@@ -229,10 +240,12 @@ export default class Builder {
         'storm presence': StormPresence,
         power: Power,
         vampiric: Vampiric,
-        echo: Echo,
         'blessed life': BlessedLife,
         'enchanted armour': EnchantedArmour,
-        'fragility on hit': FragilityOnHit
+        'fragility on hit': FragilityOnHit,
+        'energy weapon': EnergyWeapon,
+        'gift of enlightenment': GiftOfEnlightment,
+        'ascension armor': AscensionArmour
     }
 
     static createCharacter(client: Client, level: Level): Character {
@@ -306,7 +319,7 @@ export default class Builder {
         if (ItemClass) {
             return new ItemClass(item)
         } else {
-            return new MaxLIfe(item)
+            return new MaxLife(item)
         }
     }
 }

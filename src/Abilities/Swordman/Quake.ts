@@ -69,13 +69,13 @@ export default class Quake extends SwordmanAbility implements IUnitState<Charact
             add += second
 
             let first_wave = player.getBoxElipse()
-            first_wave.r = 5 + add
+            first_wave.r = 8 + add
 
             let second_wave = player.getBoxElipse()
-            second_wave.r = 8 + add
+            second_wave.r = 12 + add
 
             let third_wave = player.getBoxElipse()
-            third_wave.r = 11 + add
+            third_wave.r = 16 + add
 
             targets.forEach(elem => {
                 if (Func.elipseCollision(first_wave, elem.getBoxElipse())) {

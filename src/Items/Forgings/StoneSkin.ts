@@ -1,3 +1,4 @@
+import Character from '../../Objects/src/Character'
 import Item from '../Item'
 import Forging from './Forging'
 
@@ -13,10 +14,10 @@ export default class StoneSkin extends Forging {
         this.gold_cost = 0
     }
 
-    forge() {
-        if (this.canBeForged() ) {
-            this.item.player.avoid_damage_chance += 10
-            this.value += 10
+    forge(player: Character, force = false) {
+        if (this.canBeForged() || force) {
+            player.avoid_damage_chance += 5
+            this.value += 5
         }
     }
 

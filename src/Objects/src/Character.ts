@@ -5,6 +5,7 @@ import Func from '../../Func'
 import Mastery from '../../Glyphs/Mastery'
 import IUnitState from '../../Interfaces/IUnitState'
 import Forging from '../../Items/Forgings/Forging'
+import ShockWave from '../../Items/Forgings/ShockWave'
 import Item from '../../Items/Item'
 import item from '../../Items/Item'
 import Level from '../../Level'
@@ -68,7 +69,7 @@ export default abstract class Character extends Unit {
     base_regeneration_time: number = 10000
     grace: number = 1
     voice_radius: number = 20
-    gold: number = 15222
+    gold: number = 15
     cooldown_redaction: number = 0
     max_life: number = 4
     maximum_resources: number = 7
@@ -108,6 +109,7 @@ export default abstract class Character extends Unit {
     triggers_on_critical: any[] = []
     triggers_on_enlight: any[] = []
     triggers_on_impact: any[] = []
+    triggers_on_crushing: any[] = []
 
     chance_to_instant_kill: number = 0
     chance_to_avoid_damage_state: number = 0
@@ -117,6 +119,7 @@ export default abstract class Character extends Unit {
     chance_to_create_grace: number = 0
     chance_to_trigger_additional_time: number = 0
     avoid_damage_chance: number = 0
+    chance_to_additional_carved_spark: number = 0
 
     enlightenment_threshold: number = 12
     can_get_courage: boolean = true
@@ -136,6 +139,8 @@ export default abstract class Character extends Unit {
     courage_expire_timer: number = 8000
     last_ascent_mastery_getting: number = 0
     vampiric_rate: number = 0
+    kills: number = 0
+
 
     current_state: IUnitState<Character> | undefined
 
@@ -155,7 +160,11 @@ export default abstract class Character extends Unit {
     pierce_rating_mutators: Mutator[] = []
     critical_rating_mutators: Mutator[] = []
     avaid_damage_mutator: Mutator[] = []
+    armour_mutators: Mutator[] = []
+    impact_mutators: Mutator[] = []
+
     carved_sparks: number = 0
+
 
     constructor(level: Level) {
         super(level)
@@ -173,12 +182,22 @@ export default abstract class Character extends Unit {
     abstract getSecondResource(): number
     abstract isBlock(): boolean
     abstract getPenaltyByLifeStatus(): number
-    abstract getTotalArmour(): number
+   
     abstract getMoveSpeedPenaltyValue(): number
     abstract addCourage(): void
     abstract getRegenTimer(): number
     abstract getPower(): number
-    abstract reduceSecondResourse(): void
+    abstract reduceSecondResourse(amount: number): void
+
+    getTotalArmour(){
+        let base = this.armour_rate
+
+        this.armour_mutators.forEach(elem => {
+            base = elem.mutate(base, this)
+        })
+        
+        return base
+    }
     
     getAvoidChance(){
         let base = this.avoid_damage_chance
@@ -209,7 +228,39 @@ export default abstract class Character extends Unit {
     }
 
     impactHit(enemy: any = undefined, impact_damage: number = 1) {
-        this.triggers_on_impact.forEach(elem => elem.trigger(this, enemy, impact_damage))
+        let time = this.level.time
+
+        this.triggers_on_impact.forEach(elem => {
+            if (time - elem.last_trigger_time >= elem.cd) {
+                if (Func.chance(elem.getTriggerChance(this), this.is_lucky)) {
+                    this.triggers_on_impact.forEach(elem => elem.trigger(this, enemy, impact_damage))
+
+                    if (Func.chance(this.isSecondTrigger())) {
+                        this.triggers_on_impact.forEach(elem => elem.trigger(this, enemy, impact_damage))
+                    }
+
+                    elem.last_trigger_time = time
+                }
+            }
+        })
+    }
+
+    playerApplyCrushing(enemy: Unit){
+        let time = this.level.time
+
+        this.triggers_on_crushing.forEach(elem => {
+            if (time - elem.last_trigger_time >= elem.cd) {
+                if (Func.chance(elem.getTriggerChance(this), this.is_lucky)) {
+                    elem.trigger(this, enemy)
+
+                    if (Func.chance(this.isSecondTrigger())) {
+                        elem.trigger(this, enemy)
+                    }
+
+                    elem.last_trigger_time = time
+                }
+            }
+        })
     }
 
     isCrushing() {
@@ -299,9 +350,9 @@ export default abstract class Character extends Unit {
     getImpactRating() {
         let base = this.impact
 
-        if (this.spirit_strikes) {
-            base += this.ward * 3
-        }
+        this.impact_mutators.forEach(elem => {
+            base = elem.mutate(base, this)
+        })
 
         return base
     }
@@ -323,6 +374,7 @@ export default abstract class Character extends Unit {
             resource: this.resource,
             maximum_resources: this.maximum_resources,
             life_status: this.life_status,
+            max_life: this.max_life,
             life: this.life_status,
             x: this.x,
             y: this.y,
@@ -347,7 +399,21 @@ export default abstract class Character extends Unit {
     }
 
     succesefulCritical(enemy: Enemy): void {
-        this.triggers_on_critical.forEach(elem => elem.trigger(this, enemy))
+        let time = this.level.time
+
+        this.triggers_on_critical.forEach(elem => {
+            if (time - elem.last_trigger_time >= elem.cd) {
+                if (Func.chance(elem.getTriggerChance(this), this.is_lucky)) {
+                    elem.trigger(this, enemy)
+
+                    if (Func.chance(this.isSecondTrigger())) {
+                        elem.trigger(this, enemy)
+                    }
+
+                    elem.last_trigger_time = time
+                }
+            }
+        })
     }
 
     getIdleState() {
@@ -396,8 +462,20 @@ export default abstract class Character extends Unit {
     }
 
     playerWasEnlighted() {
+        let time = this.level.time
+
         this.triggers_on_enlight.forEach(elem => {
-            elem.trigger(this)
+            if (time - elem.last_trigger_time >= elem.cd) {
+                if (Func.chance(elem.getTriggerChance(this), this.is_lucky)) {
+                    elem.trigger(this)
+
+                    if (Func.chance(this.isSecondTrigger())) {
+                        elem.trigger(this)
+                    }
+
+                    elem.last_trigger_time = time
+                }
+            }
         })
     }
 
@@ -420,7 +498,7 @@ export default abstract class Character extends Unit {
         this.gold += value
 
         if (Func.chance(this.chance_to_get_additional_gold, this.is_lucky)) {
-            this.gold++
+            this.gold ++
         }
     }
 
@@ -482,7 +560,7 @@ export default abstract class Character extends Unit {
             resist: 'Increases your chance of not geting bad status(ignite, shock, etc).',
             spirit: 'Increases your chance of losing energy instead of life.',
             pierce: 'Increases your chance to deal damage by reducing enemy armour.',
-            impact: 'Increases your chance to damage adjacent targets in addition to your primary target.',
+            impact: 'Increases your chance to damage adjacent targets in addition to your primary target. Rating above 100 gives a chance to create additional impcats.',
             critical: 'Increases your chance to deal double damage.',
             crushing:
                 'Increases your chance to crush an enemy, every time when enemy being crushed they take additional damage next time.',
@@ -500,7 +578,9 @@ export default abstract class Character extends Unit {
                 durability: this.durability,
                 agility: this.agility,
                 perception: this.perception,
-                '~~~': '~~~~~~~~~~~~~~~~~',
+                '~~~': '~~~~~~~~~~~~~~~~~',       
+                'max life': this.max_life,
+                ward: this.ward,
                 armour: this.getTotalArmour(),
                 resist: this.getResistValue() + '%',
                 spirit: this.spirit + '%',
@@ -638,6 +718,8 @@ export default abstract class Character extends Unit {
         result['critical strike'] = this.getTriggers(this.triggers_on_critical)
         result['enlightenment'] = this.getTriggers(this.triggers_on_enlight)
         result['impact'] = this.getTriggers(this.triggers_on_impact)
+        result['crushing'] = this.getTriggers(this.triggers_on_crushing)
+
         result[this.first_ability.name] = this.getTriggersFromAbility(
             this.first_ability.after_use_triggers,
             this.first_ability.mastery_chance
@@ -961,6 +1043,8 @@ export default abstract class Character extends Unit {
     public succesefulKill(enemy: Unit): void {
         if (!enemy) return
         let time = this.level.time
+
+        this.kills ++
 
         this.triggers_on_kill.forEach(elem => {
             if (time - elem.last_trigger_time >= elem.cd) {
@@ -1306,15 +1390,14 @@ export default abstract class Character extends Unit {
     prepareToAction() {
         this.is_attacking = true
 
-        let rel_x = Math.round(this.pressed.canvas_x + this.x - 40)
-        let rel_y = Math.round(this.pressed.canvas_y + this.y - 40)
-
+        let rel_x = Math.round(this.pressed.canvas_x + this.x)
+        let rel_y = Math.round(this.pressed.canvas_y + this.y)
         this.c_x = rel_x
         this.c_y = rel_y
 
         if (!this.c_x || this.c_y) {
-            this.c_x = Math.round(this.pressed.over_x + this.x - 40)
-            this.c_y = Math.round(this.pressed.over_y + this.y - 40)
+            this.c_x = Math.round(this.pressed.over_x + this.x)
+            this.c_y = Math.round(this.pressed.over_y + this.y)
         }
 
         if (rel_x < this.x) {

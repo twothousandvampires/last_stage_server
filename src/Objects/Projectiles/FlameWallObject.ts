@@ -15,7 +15,7 @@ export class FlameWallObject extends Projectiles {
         public duration = 3000
     ) {
         super(level)
-        this.box_r = 2
+        this.box_r = 3
         this.name = 'flame'
         this.move_speed = 0
         this.interval = undefined
@@ -68,7 +68,7 @@ export class FlameWallObject extends Projectiles {
                 !this.hitted.includes(e.id) &&
                 Func.elipseCollision(this.getBoxElipse(), e.getBoxElipse())
             ) {
-                e.takeDamage(undefined, {
+                e.takePureDamage(this.owner, {
                     burn: true,
                 })
                 this.hitted.push(e.id)

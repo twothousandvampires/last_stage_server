@@ -22,6 +22,8 @@ import HeavenIntervention from '../../../Triggers/HeavenIntervention'
 import HeavenWrath from '../../../Abilities/Swordman/HeavenWrath'
 import Upgrade from '../../../Types/Upgrade'
 import Spirit from '../../Effects/Spirit'
+import SwordmanArmourMutator from '../../../Mutators/SwordmanArmourMutator'
+import ShatteredWeapon from '../../../Abilities/Swordman/ShatteredWeapon'
 
 export default class Swordman extends Character {
     static MIN_ATTACK_SPEED = 150
@@ -55,6 +57,7 @@ export default class Swordman extends Character {
         this.base_regeneration_time = 8500
         this.recent_kills = []
         this.chance_to_block = 50
+        this.armour_mutators = [new SwordmanArmourMutator()]
     }
 
     succefullCast() {
@@ -352,10 +355,6 @@ export default class Swordman extends Character {
         }
     }
 
-    getTotalArmour() {
-        return this.armour_rate + this.durability
-    }
-
     getSkipDamageStateChance() {
         return this.chance_to_avoid_damage_state + this.will * 5
     }
@@ -497,8 +496,8 @@ export default class Swordman extends Character {
         return this.recent_kills.length
     }
 
-    reduceSecondResourse(){
-        this.recent_kills.pop()
+    reduceSecondResourse(amount: number = 1){
+        this.recent_kills.splice(-amount)
     }
 
     getMoveSpeedPenaltyValue() {
@@ -546,6 +545,8 @@ export default class Swordman extends Character {
 
     addPoint(count: number = 1, ignore_limit = false) {
         if (this.energy_by_hit_added) return
+        if (!this.can_regen_resource) return
+
         this.playerGetResourse()
 
         if (this.resource >= this.maximum_resources) {

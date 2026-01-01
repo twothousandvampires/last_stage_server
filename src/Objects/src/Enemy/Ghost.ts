@@ -24,10 +24,10 @@ export default class Ghost extends Undead {
         this.create_grace_chance = 30
         this.create_chance = 80
         this.want_to_cast = true
-        this.gold_revard = 5
+        this.gold_revard = 4
         this.invisible = true
         this.can_be_burned = false
-        this.dying_time = 1200
+
         this.phasing = true
         this.create_item_chance = 3
 

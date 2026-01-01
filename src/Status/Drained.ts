@@ -23,29 +23,25 @@ export default class Drained extends Status {
     }
 
     drain() {
-        if (this.unit.might > 0) {
-            this.unit.might--
-            this.might_drained++
-        }
-        if (this.unit.perception > 0) {
-            this.unit.perception--
-            this.perception_drained++
-        }
-        if (this.unit.will > 0) {
-            this.unit.will--
-            this.will_drained++
-        }
-        if (this.unit.knowledge > 0) {
-            this.unit.knowledge--
-            this.knowledge_drained++
-        }
-        if (this.unit.durability > 0) {
-            this.unit.durability--
-            this.durability_drained++
-        }
-        if (this.unit.agility > 0) {
-            this.unit.agility--
-            this.agility_drained++
+       
+        if (this.unit instanceof Character) {
+             this.unit.might -= 2
+            this.might_drained += 2  
+
+            this.unit.perception -= 2
+            this.perception_drained += 2
+            
+            this.unit.will -= 2
+            this.will_drained += 2  
+    
+            this.unit.knowledge -= 2
+            this.knowledge_drained += 2  
+
+            this.unit.durability -= 2
+            this.durability_drained += 2  
+
+            this.unit.agility -= 2
+            this.agility_drained += 2  
         }
     }
 

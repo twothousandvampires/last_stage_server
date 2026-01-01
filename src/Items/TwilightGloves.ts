@@ -4,7 +4,7 @@ import Item from './Item'
 
 export default class TwilightGloves extends Item {
     unit: any
-    frequency: number = 5000
+    frequency: number = 4000
 
     constructor() {
         super()
@@ -13,11 +13,11 @@ export default class TwilightGloves extends Item {
         this.description = 'periodically create clots of energy on enemies'
         this.count = 1
         this.distance = 15
-        this.chance = 40
+        this.chance = 50
     }
 
     getSpecialForgings(): string[] {
-        return ['count', 'frequency', 'distance', 'chance']
+        return ['count', 'frequency', 'chance']
     }
 
     equip(character: Character): void {

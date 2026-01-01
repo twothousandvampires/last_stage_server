@@ -37,21 +37,28 @@ export default class Fireball extends FlyerAbility {
         this.owner.level.projectiles.push(proj)
 
         if (this.fire_splitting) {
-            let half = Math.floor(this.owner.getSecondResource() / 2)
-            if (half) {
-                for (let i = -half; i < half; i++) {
-                    if (i === 0) continue
 
-                    let angle = a + i * 0.45
+            let u = 0
+            let d = 0
 
-                    let proj = new FireballProjectile(this.owner.level, this.body_melting)
-                    proj.ignite = this.ignite
-                    proj.setOwner(this.owner)
-                    proj.setAngle(angle)
-                    proj.setPoint(this.owner.x, this.owner.y)
-
-                    this.owner.level.projectiles.push(proj)
+            let count = Math.floor(this.owner.getSecondResource() / 2)
+    
+            for (let i = 1; i <= count; i++) {
+                let proj = new FireballProjectile(this.owner.level, this.body_melting)
+     
+                if (i % 2 === 0) {
+                    u += 0.5
+                    proj.setAngle(a - u)
+                } else {
+                    d += 0.5
+                    proj.setAngle(a + d)
                 }
+                
+                proj.ignite = this.ignite
+                proj.setOwner(this.owner)
+                proj.setPoint(this.owner.x, this.owner.y)
+
+                this.owner.level.projectiles.push(proj)
             }
         }
     }

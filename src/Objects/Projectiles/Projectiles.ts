@@ -19,6 +19,11 @@ export default abstract class Projectiles extends GameObject {
         this.level.projectiles = this.level.projectiles.filter(elem => elem != this)
     }
 
+    delete(){
+        this.level.projectiles = this.level.projectiles.filter(elem => elem != this)
+        this.level.deleted.push(this.id)
+    }
+
     setAngle(angle: number) {
         this.angle = angle
     }

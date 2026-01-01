@@ -25,24 +25,31 @@ export default class ShatteredWeapon extends SwordmanAbility {
         }
         a = a ? a : this.owner.attack_angle
 
-        let count = 3 + second
-        let zone_per_tooth = 0.6
+        if(!a){
+            return
+        }
 
-        a -= Math.round(count / 2) * zone_per_tooth
+        let count = 3 + (Math.round(second / 2))
 
-        a = a ? a : this.owner.attack_angle
+        let u = 0
+        let d = 0
 
-        for (let i = 1; i <= count; i++) {
-            let min_a = a + (i - 1) * zone_per_tooth
-            let max_a = a + i * zone_per_tooth
+        for (let i = 0; i <count; i++) {
+            let l = new WeaponFragment(this.owner.level)
+            l.setPoint(this.owner.x + Math.sin(a) * 2, this.owner.y + Math.cos(a) * 2)
+            l.setOwner(this.owner)
 
-            let angle = Math.random() * (max_a - min_a) + min_a
-            let proj = new WeaponFragment(this.owner.level)
-            proj.setAngle(angle)
-            proj.setPoint(this.owner.x, this.owner.y)
-            proj.setOwner(this.owner)
+            if (i === 0) {
+                l.setAngle(a)
+            } else if (i % 2 === 0) {
+                u += 0.5
+                l.setAngle(a - u)
+            } else {
+                d += 0.5
+                l.setAngle(a + d)
+            }
 
-            this.owner.level.projectiles.push(proj)
+            this.owner.level.projectiles.push(l)
         }
 
         this.afterUse()

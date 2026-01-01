@@ -67,7 +67,7 @@ export default class SparklingHelmetStatus extends Status {
                 Func.elipseCollision(wave, elem.getBoxElipse()) &&
                 elem != this.unit
             ) {
-                let timer = Func.random(500, 2500)
+                let timer = Func.random(1500, 2500)
                 elem.setZap(timer)
                 if (!was_sound) {
                     this.unit.level.addSound('zap', elem.x, elem.y)

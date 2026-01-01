@@ -3,6 +3,7 @@ import FanOfBonesAbility from '../../../EnemyAbilities/FanOfBonesAbility'
 import GhostGripAbility from '../../../EnemyAbilities/GhostGripAbility'
 import Func from '../../../Func'
 import Level from '../../../Level'
+import EnemyRangeIdleState from '../../../State/EnemyRangeIdleState'
 import Undead from './Undead'
 
 export default class FlyingBones extends Undead {
@@ -31,7 +32,7 @@ export default class FlyingBones extends Undead {
         this.create_chance = 80
         this.ressurect_chance = 30
         this.want_to_cast = true
-        this.gold_revard = 4
+        this.gold_revard = 3
         this.create_item_chance = 3
         this.create_sorcerers_skull_chance = 15
         this.abilities = [
@@ -41,7 +42,11 @@ export default class FlyingBones extends Undead {
         ]
     }
 
-    hitImpact(): void {
+    getIdleStateInstance() {
+        return new EnemyRangeIdleState()
+    }
+
+    castImpact(): void {
         if (Func.chance(30)) {
             this.level.sounds.push({
                 x: this.x,

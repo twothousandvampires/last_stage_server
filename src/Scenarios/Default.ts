@@ -12,6 +12,7 @@ import UltimatumText4 from '../Objects/Effects/UltimatumText4'
 import Character from '../Objects/src/Character'
 import Ancient from '../Objects/src/Enemy/Ancient'
 import { AscentManifistation } from '../Objects/src/Enemy/AscentManifistation'
+import BindedRocks from '../Objects/src/Enemy/BindedRocks'
 import Bones from '../Objects/src/Enemy/Bones'
 import ConstactedOne from '../Objects/src/Enemy/ConstactedOne'
 import Enemy from '../Objects/src/Enemy/Enemy'
@@ -25,6 +26,7 @@ import Impy from '../Objects/src/Enemy/Impy'
 import MagicSlime from '../Objects/src/Enemy/MagicSlime'
 import { MasterManifestation } from '../Objects/src/Enemy/MasterManifestation'
 import { MasteryManifistation } from '../Objects/src/Enemy/MasteryManifistation'
+import Plague from '../Objects/src/Enemy/Plague'
 import Slime from '../Objects/src/Enemy/Slime'
 import Solid from '../Objects/src/Enemy/Solid'
 import Specter from '../Objects/src/Enemy/Specter'
@@ -45,9 +47,9 @@ export default class Default extends Scenario {
     static TIMES_BAD = 2
 
     last_checked: number
-    time_between_wave_ms: number
-    max_time_wave: number = 6500
-    min_time_wave: number = 5000
+    time_between_wave_ms: number = 3500
+    max_time_wave: number = 6000
+    min_time_wave: number = 4000
     waves_created: number = 0
     times_count: number = 0
     add_e_life: number = 0
@@ -79,7 +81,6 @@ export default class Default extends Scenario {
         super()
         this.last_checked = 0
         this.times = Default.TIMES_NORMAL
-        this.time_between_wave_ms = 4000
         this.monster_upgrades = {
             minor: {
                 cooldown_attack: 0,
@@ -171,17 +172,18 @@ export default class Default extends Scenario {
 
     async createWave(level: Level) {
         this.waves_created ++
-
+        console.log('--------------------')
       
-        let add_count = Math.floor(this.waves_created / 16)
+        let add_count = Math.floor(this.waves_created / 23)
         add_count += (level.players.length - 1) * 2
 
-        let count = Func.random(1 + Math.floor(add_count / 4), 2 + Math.floor(add_count / 2.5))
+        let count = Func.random(1 + Math.floor(add_count / 4.7), 2 + Math.floor(add_count / 3.2))
 
         // if (this.times === Default.TIMES_BAD) {
         //     count = Math.round(count * 1.5)
         // }
 
+        // console.log('enemies spawned: ' + count)
         for (let i = 0; i < count; i++) {
             await Func.sleep(Func.random(100, 300))
 
@@ -193,11 +195,12 @@ export default class Default extends Scenario {
 
     updateTimeBetweenWaves(){
         if(this.waves_created >= this.waves_plato){
-            if(this.waves_created >= 220 && this.max_time_wave >= 3500){
-                this.max_time_wave -= 20
+            if(this.waves_created >= 150 && this.max_time_wave >= 4000){
+                this.max_time_wave -= 30
+                
             }
-           
-            this.time_between_wave_ms = Math.round(this.max_time_wave + Func.random(100, 1000))
+            
+            this.time_between_wave_ms = this.max_time_wave
         }
         else{
             this.time_between_wave_ms += this.time_increment
@@ -207,6 +210,8 @@ export default class Default extends Scenario {
             }
             
         }
+
+        // console.log('waving rate: ' + this.time_between_wave_ms)
     }
 
     createRandomEnemy(level: Level, list: string[] = []) {
@@ -217,7 +222,7 @@ export default class Default extends Scenario {
         if (list.length) {
             enemy_list = Level.enemy_list.filter(elem => list.includes(elem.name))
         } else {
-            enemy_list = Level.enemy_list
+            enemy_list = Level.enemy_list.filter(elem => !elem.wave || (elem.wave <= this.waves_created))
         }
 
         let w = Math.random() * enemy_list.reduce((acc, elem) => acc + elem.weight, 0)
@@ -250,7 +255,7 @@ export default class Default extends Scenario {
         } else if (enemy_name === 'impy') {
             enemy = new Impy(level)
         } else if (enemy_name === 'gifter') {
-            enemy = new Gifter(level)
+            enemy = new Gifter(level, this.waves_created)
         } else if (enemy_name === 'ghost') {
             enemy = new Ghost(level)
         } else if (enemy_name === 'slime') {
@@ -259,7 +264,12 @@ export default class Default extends Scenario {
             enemy = new MagicSlime(level)
         } else if (enemy_name === 'pile') {
             enemy = new Pile(level)
+        } else if (enemy_name === 'plague') {
+            enemy = new Plague(level)
+        } else if (enemy_name === 'binded rocks') {
+            enemy = new BindedRocks(level)
         }
+        
 
         if (!enemy) {
             return
@@ -289,12 +299,14 @@ export default class Default extends Scenario {
 
         if (
             Func.chance(elite_chance) &&
-            (enemy instanceof Solid || enemy instanceof FlyingBones || enemy instanceof Specter)
+            (enemy instanceof Solid || enemy instanceof FlyingBones || enemy instanceof Specter || enemy instanceof Plague || enemy instanceof BindedRocks)
         ) {
             enemy = this.createElite(enemy, level)
         }
 
-        enemy = this.upgradeEnemy(enemy)
+        enemy.upgradeByWave(this.waves_created)
+
+        // enemy = this.upgradeEnemy(enemy)
 
         level.enemies.push(enemy)
     }
@@ -325,6 +337,8 @@ export default class Default extends Scenario {
             level.setStatus(enemy, status)
         }
 
+        enemy.can_be_instant_killed = false
+
         return enemy
     }
 
@@ -334,13 +348,20 @@ export default class Default extends Scenario {
         enemy.pierce += this.add_e_pierce
         enemy.move_speed_penalty += this.add_e_speed
         enemy.attack_speed -= this.add_attack_speed
-        enemy.create_chance -= this.minus_create_chance
+       
+        if(enemy.create_chance <= 20){
+            enemy.create_chance -= this.minus_create_chance
+        }
+        else{
+            enemy.create_chance -= (this.minus_create_chance * 2)
+        }
+
         enemy.fortify += this.add_e_fortify
         enemy.critical += this.add_critical
 
-        if (enemy.create_chance <= 3) {
-            enemy.create_chance = 3
-        }
+        // if (enemy.create_chance <= 0) {
+        //     enemy.create_chance = 0
+        // }
 
         if (enemy.attack_speed < 150) {
             enemy.attack_speed = 150
@@ -511,63 +532,63 @@ export default class Default extends Scenario {
             level.binded_effects.push(e)
         }
 
-        if (this.waves_created % 12 === 0) {
-            let min = undefined
-            let name = undefined
-            for (let minor in this.monster_upgrades.minor) {
-                if (min === undefined || this.monster_upgrades.minor[minor] < min) {
-                    min = this.monster_upgrades.minor[minor]
-                    name = minor
-                }
-            }
-            if (!name) return
+        // if (this.waves_created % 9 === 0) {
+        //     let min = undefined
+        //     let name = undefined
+        //     for (let minor in this.monster_upgrades.minor) {
+        //         if (min === undefined || this.monster_upgrades.minor[minor] < min) {
+        //             min = this.monster_upgrades.minor[minor]
+        //             name = minor
+        //         }
+        //     }
+        //     if (!name) return
 
-            this.monster_upgrades.minor[name]++
+        //     this.monster_upgrades.minor[name]++
 
-            switch (name) {
-                case 'cooldown_attack':
-                    this.add_cooldown_attack += 50
-                    break
-                case 'pierce':
-                    this.add_e_pierce += 3
-                    break
-                case 'armour':
-                    this.add_e_armour += 3
-                    break
-            }
-        }
-        if (this.waves_created % 22 === 0) {
-            let min = undefined
-            let name = undefined
-            for (let major in this.monster_upgrades.major) {
-                if (min === undefined || this.monster_upgrades.major[major] < min) {
-                    min = this.monster_upgrades.major[major]
-                    name = major
-                }
-            }
-            if (!name) return
+        //     switch (name) {
+        //         case 'cooldown_attack':
+        //             this.add_cooldown_attack += 50
+        //             break
+        //         case 'pierce':
+        //             this.add_e_pierce += 5
+        //             break
+        //         case 'armour':
+        //             this.add_e_armour += 5
+        //             break
+        //     }
+        // }
+        // if (this.waves_created % 19 === 0) {
+        //     let min = undefined
+        //     let name = undefined
+        //     for (let major in this.monster_upgrades.major) {
+        //         if (min === undefined || this.monster_upgrades.major[major] < min) {
+        //             min = this.monster_upgrades.major[major]
+        //             name = major
+        //         }
+        //     }
+        //     if (!name) return
 
-            this.monster_upgrades.major[name]++
+        //     this.monster_upgrades.major[name]++
 
-            switch (name) {
-                case 'attack_speed':
-                    this.add_attack_speed += 50
-                    this.add_critical += 3
-                    break
-                case 'move_speed':
-                    this.add_e_speed += 5
-                    this.minus_create_chance += 3
-                    break
-                case 'life':
-                    this.add_e_life += 1
-                    this.add_e_fortify += 3
-                    if (this.add_e_elem_resist < 60) {
-                        this.add_e_elem_resist += 15
-                    }
-                    break
-            }
+        //     switch (name) {
+        //         case 'attack_speed':
+        //             this.add_attack_speed += 50
+        //             this.add_critical += 6
+        //             break
+        //         case 'move_speed':
+        //             this.add_e_speed += 6
+        //             this.minus_create_chance += 4
+        //             break
+        //         case 'life':
+        //             this.add_e_life += 1
+        //             this.add_e_fortify += 5
+        //             if (this.add_e_elem_resist < 60) {
+        //                 this.add_e_elem_resist += 15
+        //             }
+        //             break
+        //     }
 
-            level.addSound('evel upgrade', 40, 40)
-        }
+        //     level.addSound('evel upgrade', 40, 40)
+        // }
     }
 }

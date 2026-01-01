@@ -77,6 +77,10 @@ export default class UpgradeManager {
     }
 
     static getGrandForging(amount: number, player: Character){
+        if(amount > player.carved_sparks) return
+
+        player.carved_sparks -= amount
+
         if(Func.chance(amount)){
             let name = Func.getRandomFromArray(Object.keys(Builder.greatForgingMap))
             let f = Builder.createGreatForging(name, undefined)
@@ -88,7 +92,7 @@ export default class UpgradeManager {
     }
 
     static applyGrandForging(f_name: string, i_name: string, player: Character){
-        console.log(f_name, i_name)
+        
         let item = player.item.find(elem => elem.name === i_name)
 
         if(!item) return
@@ -97,13 +101,32 @@ export default class UpgradeManager {
 
         if(!f) return
 
-        if(item.forge.length >= item.max_forgings) return
+        if(f.consumable){
+            f.setItem(item)
+            if(f.canBeForged()){
+                f.forge(player)
+                player.grand_forgings = player.grand_forgings.filter(elem => elem != f)
+            }
+            else {
+                f.setItem(undefined)
+            }
+        }
+        else{
+            let exist = item.forge.find(elem => elem.name === f.name)
+            if(exist){
+                exist.forge(player, true)
+                player.grand_forgings = player.grand_forgings.filter(elem => elem != f)
+            }
+            else{
+                if(item.forge.length >= item.max_forgings) return
 
-        f.setItem(item)
-        f.forge(player)
-        
-        item.forge.push(f)
-        player.grand_forgings = player.grand_forgings.filter(elem => elem != f)
+                f.setItem(item)
+                f.forge(player)
+                item.forge.push(f)
+                player.grand_forgings = player.grand_forgings.filter(elem => elem != f)
+            }       
+        }
+      
         UpgradeManager.closeForgings(player)
     }
 
@@ -120,7 +143,6 @@ export default class UpgradeManager {
 
         player.level.addSound('forge', player.x, player.y)
         
-
         UpgradeManager.closeForgings(player)
     }
 

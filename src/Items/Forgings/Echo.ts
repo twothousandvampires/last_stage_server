@@ -1,3 +1,4 @@
+import Character from '../../Objects/src/Character'
 import Item from '../Item'
 import Forging from './Forging'
 
@@ -6,17 +7,16 @@ export default class Echo extends Forging {
 
     constructor(item: Item) {
         super(item)
-        this.max_value = 20
+        this.max_value = 5
         this.name = 'echo'
         this.description = 'gives a chance that a trigger triggered twice'
-        this.gold_cost = 8
+        this.gold_cost = 0
     }
 
-    forge() {
-        if (this.canBeForged() && this.costEnough()) {
-            this.value += 2
-            this.item.player.chance_to_trigger_additional_time += 2
-            this.payCost()
+    forge(player: Character, force = false) {
+        if (this.canBeForged() || force) {
+            this.value += 5
+            player.chance_to_trigger_additional_time += 5
         }
     }
 

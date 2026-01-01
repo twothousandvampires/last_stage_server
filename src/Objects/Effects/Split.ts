@@ -8,7 +8,7 @@ export default class Split extends Effect {
     constructor(level: Level) {
         super(level)
         this.name = 'split'
-        this.box_r = 2
+        this.box_r = 2.2
         this.time = Date.now()
     }
 

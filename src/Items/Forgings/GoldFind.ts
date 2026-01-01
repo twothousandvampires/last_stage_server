@@ -15,7 +15,7 @@ export default class GoldFind extends Forging {
     forge() {
         if (this.canBeForged() && this.costEnough()) {
             this.value += 3
-            this.item.player.chance_to_get_additional_gold += 3
+            this.item.player.chance_to_get_additional_gold += 2
             this.payCost()
         }
     }

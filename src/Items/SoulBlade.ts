@@ -1,14 +1,15 @@
-import ITrigger from '../Interfaces/Itrigger'
+import ITrigger from '../Interfaces/ITrigger'
 import Soul from '../Objects/Effects/Soul'
 import Character from '../Objects/src/Character'
 import Enemy from '../Objects/src/Enemy/Enemy'
 import Item from './Item'
 
 export default class SoulBlade extends Item implements ITrigger {
+
     cd: number = 4000
     last_trigger_time: number = 0
     chance: number = 2
-    max_chance: number = 10
+    max_chance: number = 5
 
     constructor() {
         super()
@@ -22,7 +23,7 @@ export default class SoulBlade extends Item implements ITrigger {
     }
 
     getSpecialForgings(): string[] {
-        return ['frequency', 'chance']
+        return ['frequency']
     }
 
     equip(character: Character): void {

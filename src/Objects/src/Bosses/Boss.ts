@@ -43,6 +43,8 @@ export default class Boss extends Undead {
     }
 
     takeDamage(unit: any = undefined, options = {}) {
+        if(!this || this.is_dead) return
+
         super.takeDamage(unit, options)
 
         if (this.life_status <= 0) {
@@ -51,7 +53,11 @@ export default class Boss extends Undead {
                 elem.masteries.push(mastery)
                 elem.level.addMessedge('you have got ' + mastery.name + ' mastery', elem.id)
             })
-            this.level.script.end(this.level)
+
+            if(this.level){
+                this.level.script.end(this.level)
+            }
+            
         }
     }
 }

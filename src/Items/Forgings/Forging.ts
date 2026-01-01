@@ -1,3 +1,4 @@
+import Func from '../../Func'
 import Character from '../../Objects/src/Character'
 import Item from '../Item'
 
@@ -8,10 +9,13 @@ export default abstract class Forging {
     gold_cost: number = 1
     name: string = ''
     value: number = 0
+    consumable: boolean = false
 
     constructor(protected item: Item | undefined) {}
 
-    abstract forge(player: Character | undefined): void
+    forge(player: Character | undefined, force: boolean = false): void{
+
+    }
     
     getValue(): string | number{
         return this.value
@@ -24,7 +28,7 @@ export default abstract class Forging {
         return this.item.player.gold >= this.gold_cost
     }
 
-    setItem(item: Item){
+    setItem(item: Item| undefined){
         this.item = item
     }
 
@@ -33,7 +37,11 @@ export default abstract class Forging {
         if (!this.item.player) return
 
         this.item.player.gold -= this.gold_cost
-        this.item.player.carved_sparks ++
+        this.item.player.carved_sparks += Func.random(1, 4)
+        
+        if(Func.chance(this.item.player.chance_to_additional_carved_spark)){
+            this.item.player.carved_sparks ++
+        }
     }
 
     toJSON() {

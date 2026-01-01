@@ -1,5 +1,5 @@
-import Func from '../Func'
-import ITrigger from '../Interfaces/ITrigger'
+
+import ITrigger from '../Interfaces/Itrigger'
 import { SmokeDaggerShard } from '../Objects/Projectiles/SmokeDaggerShard'
 import Character from '../Objects/src/Character'
 import Item from './Item'
@@ -8,7 +8,7 @@ export default class DaggerOfSmoke extends Item implements ITrigger {
     last_trigger_time: number = 0
     constructor() {
         super()
-        this.chance = 40
+        this.chance = 50
         this.name = 'dagger of smoke'
         this.type = 1
         this.count = 3
@@ -31,9 +31,6 @@ export default class DaggerOfSmoke extends Item implements ITrigger {
         if (this.disabled) return
 
         character.level.addSound('blood', character.x, character.y)
-
-        let box = character.getBoxElipse()
-        box.r = 9
 
         let count = this.count
 
