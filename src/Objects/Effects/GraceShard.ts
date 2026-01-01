@@ -8,7 +8,7 @@ export default class GraceShard extends Effect {
     constructor(level: Level) {
         super(level)
         this.name = 'grace shard'
-        this.box_r = 2
+        this.box_r = 2.2
         this.time = Date.now()
     }
 
@@ -20,8 +20,8 @@ export default class GraceShard extends Effect {
 
         this.level.players.forEach(elem => {
             if (Func.elipseCollision(elem.getBoxElipse(), this.getBoxElipse())) {
-                elem.grace++
-                let status = new Grace(elem.time)
+                elem.grace ++
+                let status = new Grace(elem.level.time)
                 status.setDuration(8000)
 
                 this.level.setStatus(elem, status, true)

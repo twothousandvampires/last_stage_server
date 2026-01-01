@@ -27,7 +27,7 @@ export default class Ghost extends Undead {
         this.gold_revard = 4
         this.invisible = true
         this.can_be_burned = false
-        this.dying_time = 1200
+
         this.phasing = true
         this.create_item_chance = 3
 

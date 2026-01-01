@@ -1,47 +1,48 @@
 import Character from '../Objects/src/Character'
 import Status from './Status'
 
-export default class EnvelopingMucus extends Status {
+export default class Disorientation extends Status {
     name: string
-    stack: number = 1
-    effect_per_stack: number = 12
+    armour_decrease: number = 0
 
     constructor(public time: number) {
         super(time)
-        this.name = 'enveloping mucus'
+        this.name = 'disorientation'
         this.need_to_check_resist = true
     }
 
     apply(unit: any) {
         this.unit = unit
         if (this.unit instanceof Character) {
-            this.unit.addMoveSpeedPenalty(-this.effect_per_stack)
             this.unit.statusWasApplied()
+            this.unit.move_speed_penalty -= 25
+
+            this.armour_decrease = Math.round(this.unit.armour_rate * 0.3)
+
+            this.unit.armour_rate -= this.armour_decrease
 
             this.unit.newStatus({
-                name: 'enveloping mucus',
+                name: 'disorientation',
                 duration: this.duration,
-                desc: 'movement is reduced',
+                desc: 'move speed and armour are reduced',
             })
         }
     }
 
     clear() {
         if (this.unit instanceof Character) {
-            this.unit.addMoveSpeedPenalty(this.effect_per_stack * this.stack)
+            this.unit.move_speed_penalty += 25
+            this.unit.armour_rate += this.armour_decrease
         }
     }
 
     update(status: any) {
         this.time = Date.now()
-        this.stack ++
-
-        this.unit.addMoveSpeedPenalty(-this.effect_per_stack)
 
         this.unit.newStatus({
-            name: 'enveloping mucus',
+            name: 'disorientation',
             duration: this.duration,
-            desc: 'movement is reduced',
+            desc: 'move speed and armour are reduced',
         })
     }
 }

@@ -28,7 +28,6 @@ export default class Solid extends Enemy {
         this.say_z = 18
         this.gold_revard = 4
         this.create_item_chance = 2
-        this.dying_time = 1200
         this.dead_time = 1200
         this.abilities = [new DemonicEmpowering(), new ExplodingSkulls()]
     }

@@ -19,7 +19,7 @@ export default abstract class Enemy extends Unit {
     spawn_time: number = 1200
     dead_type: string | undefined
     cooldown_attack: number = 2000
-    retreat_distance: number = 0
+    retreat_distance: number = 10
     retreat_angle: number | undefined
     ranged: boolean = false
     hit_x: number = 0
@@ -42,6 +42,7 @@ export default abstract class Enemy extends Unit {
     abilities: any[] = []
     dead_time: number = 5000
     killed_by: Character | undefined
+    wave_start = 0
 
     constructor(level: Level) {
         super(level)
@@ -49,6 +50,41 @@ export default abstract class Enemy extends Unit {
     }
 
     hitImpact() {}
+    castImpact() {}
+
+    upgradeByWave(waves: number = 0){
+        let wave = waves - this.wave_start
+        if(wave <= 0) return
+ 
+        let minor_times = Math.floor(wave / 27)
+
+        if(minor_times){
+            console.log('minor: ' + minor_times)
+            this.armour_rate += minor_times * 5
+            this.pierce += minor_times * 5
+            this.cooldown_attack -= minor_times * 50
+        }
+
+        let major_times = Math.floor(wave / 57)
+        
+        if(major_times){
+            console.log('major: ' + major_times)
+            this.life_status += major_times
+            this.fortify += major_times * 4
+
+            let status = major_times * 10
+            if (status > 60) {
+                status = 60
+            }
+            this.elemental_status_resist += status 
+
+            this.move_speed_penalty += major_times * 6
+            this.create_chance -= major_times * 3
+
+            this.attack_speed -= major_times * 50
+            this.critical += major_times * 3
+        }   
+    }
 
     whenDead() {}
 

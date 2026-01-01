@@ -3,6 +3,7 @@ import FanOfBonesAbility from '../../../EnemyAbilities/FanOfBonesAbility'
 import GhostGripAbility from '../../../EnemyAbilities/GhostGripAbility'
 import Func from '../../../Func'
 import Level from '../../../Level'
+import EnemyRangeIdleState from '../../../State/EnemyRangeIdleState'
 import Undead from './Undead'
 
 export default class FlyingBones extends Undead {
@@ -41,7 +42,11 @@ export default class FlyingBones extends Undead {
         ]
     }
 
-    hitImpact(): void {
+    getIdleStateInstance() {
+        return new EnemyRangeIdleState()
+    }
+
+    castImpact(): void {
         if (Func.chance(30)) {
             this.level.sounds.push({
                 x: this.x,

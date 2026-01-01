@@ -14,6 +14,7 @@ export default class StunnedState implements IUnitState<Unit> {
 
         if (unit instanceof Character) {
             unit.can_be_controlled_by_player = false
+            unit.chance_to_avoid_damage_state += 100
         }
     }
 
@@ -26,6 +27,7 @@ export default class StunnedState implements IUnitState<Unit> {
     exit(unit: Unit) {
         if (unit instanceof Character) {
             unit.can_be_controlled_by_player = true
+            unit.chance_to_avoid_damage_state -= 100
         }
     }
 }

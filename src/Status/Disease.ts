@@ -1,47 +1,48 @@
 import Character from '../Objects/src/Character'
 import Status from './Status'
 
-export default class EnvelopingMucus extends Status {
+export default class Disease extends Status {
     name: string
-    stack: number = 1
-    effect_per_stack: number = 12
+    pierce_decrease: number = 0
 
     constructor(public time: number) {
         super(time)
-        this.name = 'enveloping mucus'
+        this.name = 'disease'
         this.need_to_check_resist = true
     }
 
     apply(unit: any) {
         this.unit = unit
         if (this.unit instanceof Character) {
-            this.unit.addMoveSpeedPenalty(-this.effect_per_stack)
             this.unit.statusWasApplied()
+            this.unit.status_resistance -= 30
+
+            this.pierce_decrease = Math.round(this.unit.pierce * 0.3)
+
+            this.unit.pierce -= this.pierce_decrease
 
             this.unit.newStatus({
-                name: 'enveloping mucus',
+                name: 'disease',
                 duration: this.duration,
-                desc: 'movement is reduced',
+                desc: 'resist and pierce are reduced',
             })
         }
     }
 
     clear() {
         if (this.unit instanceof Character) {
-            this.unit.addMoveSpeedPenalty(this.effect_per_stack * this.stack)
+            this.unit.status_resistance += 30
+            this.unit.pierce += this.pierce_decrease
         }
     }
 
     update(status: any) {
         this.time = Date.now()
-        this.stack ++
-
-        this.unit.addMoveSpeedPenalty(-this.effect_per_stack)
 
         this.unit.newStatus({
-            name: 'enveloping mucus',
+            name: 'disease',
             duration: this.duration,
-            desc: 'movement is reduced',
+            desc: 'resist and pierce are reduced',
         })
     }
 }

@@ -23,6 +23,7 @@ import HeavenWrath from '../../../Abilities/Swordman/HeavenWrath'
 import Upgrade from '../../../Types/Upgrade'
 import Spirit from '../../Effects/Spirit'
 import SwordmanArmourMutator from '../../../Mutators/SwordmanArmourMutator'
+import ShatteredWeapon from '../../../Abilities/Swordman/ShatteredWeapon'
 
 export default class Swordman extends Character {
     static MIN_ATTACK_SPEED = 150
@@ -544,6 +545,8 @@ export default class Swordman extends Character {
 
     addPoint(count: number = 1, ignore_limit = false) {
         if (this.energy_by_hit_added) return
+        if (!this.can_regen_resource) return
+
         this.playerGetResourse()
 
         if (this.resource >= this.maximum_resources) {

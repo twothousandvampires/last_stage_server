@@ -706,14 +706,14 @@ export default class Upgrades {
             {
                 name: 'titanic strikes',
                 canUse: (character: Character) => {
-                    return character.might >= 7 && character.impact < 100
+                    return character.might >= 12
                 },
                 teach: (character: Character): void => {
-                    character.impact += 20
+                    character.impact += 12
                 },
-                cost: 3,
+                cost: 2,
                 ascend: 25,
-                desc: 'Increases your impact rating by 20',
+                desc: 'Increases your impact rating by 12',
             },
             {
                 name: 'clear mind',

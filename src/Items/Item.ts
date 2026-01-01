@@ -161,7 +161,7 @@ export default abstract class Item {
         },
         {
             name: 'royal mace',
-            description: 'increases impact, crushing and critical rating',
+            description: 'increases impact, crushing and critical rating by 7',
         },
         {
             name: 'devouring axe',
@@ -183,7 +183,7 @@ export default abstract class Item {
 
     static forging_list_all = [
         'pierce',
-        'toughness',
+        // 'toughness',
         'gold find',
         'impact',
         'penetrating',

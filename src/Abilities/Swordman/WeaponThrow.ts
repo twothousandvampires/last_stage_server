@@ -5,19 +5,15 @@ import Ability from '../Ability'
 import SwordmanAbility from './SwordmanAbility'
 
 export default class WeaponThrow extends SwordmanAbility {
-    light_grip: boolean
-    returning: boolean
-    shattering: boolean
-    multiple: boolean
+    light_grip: boolean = false
+    returning: boolean = false
+    shattering: boolean = false
+    multiple: boolean = false
 
     constructor(owner: Swordman) {
         super(owner)
         this.cd = 2500
-        this.light_grip = false
-        this.returning = false
-        this.shattering = false
         this.name = 'weapon throw'
-        this.multiple = false
         this.type = Ability.TYPE_ATTACK
         this.mastery_chance = 7
     }
@@ -43,11 +39,12 @@ export default class WeaponThrow extends SwordmanAbility {
         let second = this.owner.getSecondResource()
 
         let is_returning = !this.shattering && this.returning && Func.chance(40 + second * 5)
-
+        let is_shatter = false
+        
         if (is_returning) {
             proj.returned = true
         } else {
-            let is_shatter = this.shattering && !this.returning && Func.chance(40 + second * 5)
+            is_shatter = this.shattering && !this.returning && Func.chance(40 + second * 5)
             if (is_shatter) {
                 proj.shattered = true
             }
@@ -55,36 +52,37 @@ export default class WeaponThrow extends SwordmanAbility {
 
         let target = this.owner.getTarget()
 
-        proj.setAngle(
-            target
-                ? Func.angle(this.owner.x, this.owner.y, target.x, target.y)
-                : this.owner.attack_angle
-        )
+        let a = target ? Func.angle(this.owner.x, this.owner.y, target.x, target.y) : this.owner.attack_angle
+
+        proj.setAngle(a)
+            
         proj.setOwner(this.owner)
         proj.setPoint(this.owner.x, this.owner.y)
 
         this.owner.level.projectiles.push(proj)
 
         if (this.multiple) {
-            let chance = Func.chance(50 + second * 5)
-            if (chance) {
+            let count  = Func.random(1, 2 + Math.floor(second / 5))
+          
+            let u = 0
+            let d = 0
+    
+            for (let i = 1; i <= count; i++) {
                 let add_proj = new ThrowedWeapon(this.owner.level)
-                add_proj.shattered = proj.shattered
-                add_proj.returned = proj.returned
-
-                add_proj.setAngle(proj.angle - 0.31)
                 add_proj.setOwner(this.owner)
                 add_proj.setPoint(this.owner.x, this.owner.y)
-                this.owner.level.projectiles.push(add_proj)
+                add_proj.returned = is_returning
+                add_proj.shattered = is_shatter
 
-                let add_proj2 = new ThrowedWeapon(this.owner.level)
-                add_proj2.shattered = proj.shattered
-                add_proj2.returned = proj.returned
-
-                add_proj2.setAngle(proj.angle + 0.31)
-                add_proj2.setOwner(this.owner)
-                add_proj2.setPoint(this.owner.x, this.owner.y)
-                this.owner.level.projectiles.push(add_proj2)
+                if (i % 2 === 0) {
+                    u += 0.5
+                    add_proj.setAngle(a - u)
+                } else {
+                    d += 0.5
+                    add_proj.setAngle(a + d)
+                }
+    
+                this.owner.level.projectiles.push(add_proj)     
             }
         }
 

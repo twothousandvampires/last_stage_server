@@ -8,7 +8,7 @@ export default class ShockWave extends Forging {
     value: number = 0
     trigger: any = undefined
 
-    constructor(item: Item) {
+    constructor(item: Item | undefined) {
         super(item)
         this.max_value = 100
         this.name = 'shock wave'

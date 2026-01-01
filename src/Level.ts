@@ -63,10 +63,21 @@ export default class Level {
         {
             name: 'specter',
             weight: 2,
+            wave: 40
         },
         {
             name: 'gifter',
             weight: 2,
+        },
+        {
+            name: 'plague',
+            weight: 5,
+            wave: 80
+        },
+        {
+            name: 'binded rocks',
+            weight: 4,
+            wave: 120
         },
     ]
 
@@ -320,7 +331,7 @@ export default class Level {
             }
 
             if (drop_name instanceof Effect) {
-                console.log('Dropped by ' + enemy.name + ', with chance ' + chance + ' base :' + enemy.create_chance + ' add: ' + add)
+                // console.log('Dropped by ' + enemy.name + ', with chance ' + chance + ' base :' + enemy.create_chance + ' add: ' + add)
                 drop_name.setPoint(enemy.x, enemy.y)
                 this.binded_effects.push(drop_name)
             }

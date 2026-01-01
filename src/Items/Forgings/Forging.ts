@@ -37,7 +37,7 @@ export default abstract class Forging {
         if (!this.item.player) return
 
         this.item.player.gold -= this.gold_cost
-        this.item.player.carved_sparks += Func.random(1, 3)
+        this.item.player.carved_sparks += Func.random(1, 4)
         
         if(Func.chance(this.item.player.chance_to_additional_carved_spark)){
             this.item.player.carved_sparks ++
