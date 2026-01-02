@@ -16,10 +16,14 @@ let port = process.argv[2]
 let httpServer = createServer()
 
 let socket = new Server(httpServer, {
-      cors: {
-        origin: '*'},
+    cors: {
+        origin: ['https://laststage.online'],
+        credentials: false
+    },
+    transports: ['websocket'],
     pingTimeout: 5000,
-    pingInterval: 5000
+    pingInterval: 5000,
+    connectTimeout: 15000
 });
 
 httpServer.listen(+port, '127.0.0.1')
