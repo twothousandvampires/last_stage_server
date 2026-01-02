@@ -1,13 +1,17 @@
 import Func from '../../Func'
 import Level from '../../Level'
 import Projectiles from './Projectiles'
+import { ThrowedWeaponShard } from './ThrowedWeaponShard'
 
 export class WeaponFragment extends Projectiles {
+
     max_distance: number
     hited: boolean
     start_x: number | undefined
     start_y: number | undefined
-    point_added: boolean
+
+    sharp_fragments: boolean = false
+    shrapnel: boolean = false
 
     constructor(level: Level) {
         super(level)
@@ -15,7 +19,6 @@ export class WeaponFragment extends Projectiles {
         this.name = 'weapon fragment'
         this.move_speed = 1
         this.max_distance = 18
-        this.point_added = false
         this.hited = false
     }
 
@@ -31,9 +34,17 @@ export class WeaponFragment extends Projectiles {
             let b = this.getBoxElipse()
             if(this.owner && Func.elipseCollision(this.owner.getBoxElipse(), b)){       
                 this.owner.armour_rate += 4
+
+                if(this.sharp_fragments){
+                    this.owner.critical += 4
+                }
                 setTimeout(() => {
                     if (this.owner) {
                         this.owner.armour_rate -= 4
+
+                        if(this.sharp_fragments){
+                            this.owner.critical -= 4
+                        }
                     }
                 }, 4000)
 
@@ -76,8 +87,27 @@ export class WeaponFragment extends Projectiles {
         this.moveAct()
     }
 
-    impact() {    
-        this.hited = true
-        this.angle = Func.angle(this.x, this.y, this.start_x, this.start_y)  
+    impact() {
+        if(this.shrapnel && Func.chance(50)){
+            let count = 3
+            let zones = 6.28 / count
+            
+            for (let i = 1; i <= count; i++) {
+                let min_a = (i - 1) * zones
+                let max_a = i * zones
+    
+                let angle = Math.random() * (max_a - min_a) + min_a
+                let proj = new ThrowedWeaponShard(this.level)
+                proj.setOwner(this.owner)
+                proj.setAngle(angle)
+                proj.setPoint(this.x, this.y)
+    
+                this.level.projectiles.push(proj)
+            }
+        }   
+        else{
+            this.hited = true
+            this.angle = Func.angle(this.x, this.y, this.start_x, this.start_y)  
+        }    
     }
 }

@@ -5,6 +5,10 @@ import Ability from '../Ability'
 import SwordmanAbility from './SwordmanAbility'
 
 export default class ShatteredWeapon extends SwordmanAbility {
+
+    sharp_fragments: boolean = false
+    shrapnel: boolean = false
+    
     constructor(owner: Swordman) {
         super(owner)
         this.name = 'shattered weapon'
@@ -36,6 +40,10 @@ export default class ShatteredWeapon extends SwordmanAbility {
 
         for (let i = 0; i <count; i++) {
             let l = new WeaponFragment(this.owner.level)
+
+            l.sharp_fragments = this.sharp_fragments
+            l.shrapnel = this.shrapnel
+
             l.setPoint(this.owner.x + Math.sin(a) * 2, this.owner.y + Math.cos(a) * 2)
             l.setOwner(this.owner)
 

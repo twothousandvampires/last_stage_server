@@ -53,6 +53,8 @@ export default class Rune extends CultistAbility {
             let count = this.owner.getSecondResource()
             let zones = 6.28 / count
 
+            this.cd = count * 500
+
             for (let i = 1; i <= count; i++) {
                 await Func.sleep(300)
                 let distance_x = Func.random(5, 9)
@@ -76,6 +78,9 @@ export default class Rune extends CultistAbility {
 
                 this.owner.level.binded_effects.push(rune)
             }
+        }
+        else{
+            this.cd = 0
         }
 
         this.afterUse()

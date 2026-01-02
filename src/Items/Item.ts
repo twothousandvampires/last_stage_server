@@ -182,8 +182,6 @@ export default abstract class Item {
     ]
 
     static forging_list_all = [
-        'pierce',
-        // 'toughness',
         'gold find',
         'impact',
         'penetrating',
@@ -191,7 +189,8 @@ export default abstract class Item {
         'power',
         'vampiric',  
         'armour rate',
-        'resist',   
+        'resist',
+        'pierce',   
     ]
 
     static forging_list_type_1 = [

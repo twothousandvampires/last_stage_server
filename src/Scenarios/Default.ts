@@ -291,7 +291,7 @@ export default class Default extends Scenario {
             )
         }
 
-        let elite_chance = 5 + Math.floor(this.waves_created / 5)
+        let elite_chance = 4 + Math.floor(this.waves_created / 8)
 
         if (this.times === Default.TIMES_GOOD) {
             enemy.create_chance += 15

@@ -2,6 +2,7 @@ import Func from '../../Func'
 import IUnitState from '../../Interfaces/IUnitState'
 import QuakeEffect from '../../Objects/Effects/Quake'
 import RocksFromCeil from '../../Objects/Effects/RocksFromCeil'
+import QuakeManager from '../../Objects/Managers/QuakeManager'
 import Character from '../../Objects/src/Character'
 import Swordman from '../../Objects/src/PlayerClasses/Swordman'
 import Weakness from '../../Status/Weakness'
@@ -34,7 +35,7 @@ export default class Quake extends SwordmanAbility implements IUnitState<Charact
     enter(player: Character) {
         player.prepareToAction()
         player.state = 'jump'
-        player.chance_to_avoid_damage_state += 100
+  
         player.addMoveSpeedPenalty(-50)
 
         this.start = player.level.time
@@ -42,7 +43,7 @@ export default class Quake extends SwordmanAbility implements IUnitState<Charact
     }
 
     exit(player: Character) {
-        player.chance_to_avoid_damage_state -= 100
+       
         player.addMoveSpeedPenalty(50)
         this.impact_hit = false
         this.z_add = 0.5
@@ -53,76 +54,8 @@ export default class Quake extends SwordmanAbility implements IUnitState<Charact
 
     update(player: Character) {
         if (this.impact_hit) {
-            let second = player.getSecondResource()
-            let enemies = player.level.enemies
-            let players = player.level.players
-
-            if (this.selfcare) {
-                players = players.filter(elem => elem != player)
-            }
-
-            let targets = enemies.concat(players)
-
-            let hited: any = []
-            let add = this.consequences ? 7 : 0
-
-            add += second
-
-            let first_wave = player.getBoxElipse()
-            first_wave.r = 8 + add
-
-            let second_wave = player.getBoxElipse()
-            second_wave.r = 12 + add
-
-            let third_wave = player.getBoxElipse()
-            third_wave.r = 16 + add
-
-            targets.forEach(elem => {
-                if (Func.elipseCollision(first_wave, elem.getBoxElipse())) {
-                    hited.push(elem)
-                    let instant_kill = elem != player && this.blasted && Func.chance(30 + second)
-                    elem.takeDamage(player, {
-                        explode: true,
-                        instant_death: instant_kill,
-                    })
-                }
-            })
-
-            targets.forEach(elem => {
-                if (
-                    !hited.includes(elem) &&
-                    Func.elipseCollision(second_wave, elem.getBoxElipse())
-                ) {
-                    hited.push(elem)
-                    elem.setStun(4000)
-                }
-            })
-
-            targets.forEach(elem => {
-                if (
-                    !hited.includes(elem) &&
-                    Func.elipseCollision(third_wave, elem.getBoxElipse())
-                ) {
-                    elem.addMoveSpeedPenalty(-60)
-                    setTimeout(() => {
-                        elem.addMoveSpeedPenalty(60)
-                    }, 5000)
-                }
-            })
-
-            let effect = new QuakeEffect(player.level)
-            effect.setPoint(player.x, player.y)
-
-            player.level.effects.push(effect)
-
-            let effect2 = new RocksFromCeil(player.level)
-            effect2.setPoint(player.x, player.y)
-
-            player.level.effects.push(effect2)
-            let status = new Weakness(player.level.time)
-            status.setDuration(this.consequences ? 6000 : 3000)
-
-            player.level.setStatus(player, status)
+            let manager = new QuakeManager(this.owner.level, this.owner, this)
+            this.owner.level.binded_effects.push(manager)
 
             this.afterUse()
             player.getState()

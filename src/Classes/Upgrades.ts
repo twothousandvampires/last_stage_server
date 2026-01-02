@@ -2900,7 +2900,37 @@ export default class Upgrades {
                 },
                 cost: 2,
                 ascend: 12,
-                desc: 'Fires fragments of your weapon that return to you when they hit walls or enemies, increasing your armor',
+                desc: 'Fires shards of your weapon that return to you when they hit walls or enemies, increasing your armor if you catch them as they return',
+            },
+            {
+                name: 'sharp fragments',
+                type: 'shattered weapon',
+                canUse: (character: Character) => {
+                    return character.second_ability instanceof ShatteredWeapon && !character.second_ability.sharp_fragments
+                },
+                teach: (character: Character) => {
+                    if(character.second_ability instanceof ShatteredWeapon){
+                        character.second_ability.sharp_fragments = true
+                    }         
+                },
+                cost: 2,
+                ascend: 20,
+                desc: 'Also increases your critical chance',
+            },
+            {
+                name: 'shrapnel',
+                type: 'shattered weapon',
+                canUse: (character: Character) => {
+                    return character.second_ability instanceof ShatteredWeapon && !character.second_ability.shrapnel
+                },
+                teach: (character: Character) => {
+                    if(character.second_ability instanceof ShatteredWeapon){
+                        character.second_ability.shrapnel = true
+                    }         
+                },
+                cost: 2,
+                ascend: 20,
+                desc: 'The shard has a 50% chance of not returning and exploding into 3 shards.',
             },
             {
                 name: 'searching weapon',

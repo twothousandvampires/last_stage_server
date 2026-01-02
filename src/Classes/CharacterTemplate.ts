@@ -98,7 +98,7 @@ export default class characterTemplate {
                     name: 'quake',
                     type: 3,
                     selected: false,
-                    desc: 'You jump and create three waves upon landing. This ability deals damage to YOU ​​by default. The first explodes enemies, the second stuns them, and the third slows them. After using it, you become weaker for 5 seconds.',
+                    desc: 'Creates waves that rip apart enemies. Each new wave has a larger radius, and the number of waves depends on your health. The first wave deals damage to you and apply weakness.',
                 },
                 {
                     id: 6,
